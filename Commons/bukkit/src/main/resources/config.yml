@@ -1,0 +1,10 @@
+authentication:
+  enabled: false                                # Enabled when server is used for authentication
+  redirect: main_lobby                          # Group of servers where redirect after authentication
+  coords:                                       # Teleport coordinates when session login
+    x: 0
+    y: 0
+    z: 0
+    world: world
+    yaw: 0
+    pitch: 0

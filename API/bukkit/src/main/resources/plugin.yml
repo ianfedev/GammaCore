@@ -1,0 +1,5 @@
+name: API-Bukkit
+main: net.seocraft.api.bukkit.BukkitAPI
+version: ${project.version}-${git.commit.id.abbrev}
+loadbefore: [Commons]
+author: Seocraft Network

@@ -1,0 +1,3 @@
+api:
+  cluster: 0123456789abcdef01234567   # _id field from the cluster document (should be 24 hex digits)
+  type: SPECIAL                       # Server model type (Ex: SPECIAL - BUNGEE - LOBBY - GAME)

@@ -1,0 +1,5 @@
+name: Commons
+main: net.seocraft.commons.bukkit.CommonsBukkit
+version: ${project.version}-${git.commit.id.abbrev}
+depend: [API-Bukkit]
+author: Seocraft Network
