@@ -1,10 +1,13 @@
 package net.seocraft.api.bukkit;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import lombok.Getter;
 import lombok.Setter;
 import net.seocraft.api.bukkit.server.ServerLoadManager;
+import net.seocraft.api.shared.SharedModule;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
@@ -24,9 +27,10 @@ public class BukkitAPI extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        System.out.println("Me ejecute primero: onEnable");
         instance = this;
-        loadConfig();
         moduleInjector();
+        loadConfig();
         loadServer();
     }
 
@@ -35,6 +39,7 @@ public class BukkitAPI extends JavaPlugin {
         Injector injector = module.createInjector();
         injector.injectMembers(this);
     }
+
 
     private void loadServer() {
         try {

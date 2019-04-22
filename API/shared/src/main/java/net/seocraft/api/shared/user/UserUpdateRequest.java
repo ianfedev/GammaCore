@@ -1,7 +1,5 @@
 package net.seocraft.api.shared.user;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import net.seocraft.api.shared.http.HttpRequest;
@@ -17,7 +15,6 @@ import java.util.Map;
 
 public class UserUpdateRequest extends HttpRequest {
 
-    @Inject private ListeningExecutorService executorService;
     @Inject private Gson gson;
     private HashMap<String, String> headers = new HashMap<>();
     private String id;

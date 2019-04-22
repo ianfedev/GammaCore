@@ -63,6 +63,7 @@ public class AuthenticationLanguageSelectListener implements Listener {
                         ChatAlertLibrary.errorChatAlert(player,
                                 this.translator.getUnspacedField(user.getLanguage(), "authentication_language_update_same") + "."
                         );
+                        player.closeInventory();
                     }
                 });
             }

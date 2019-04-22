@@ -1,7 +1,6 @@
 package net.seocraft.commons.bukkit;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
@@ -12,7 +11,6 @@ import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectLi
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -42,7 +40,6 @@ public class CommonsBukkit extends JavaPlugin {
         parametricCommandHandler = new ParametricCommandHandler(this.commandSenderAuthorizer, this.getLogger());
         BukkitCommandHandler dispatcher = new BukkitCommandHandler(this.getLogger());
         loadConfig();
-        moduleInjector();
         parametricCommandHandler.registerCommand(this.loginCommand);
         parametricCommandHandler.registerCommand(this.registerCommand);
         // --- Authentication mode related listeners //
@@ -54,10 +51,9 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
     }
 
-    private void moduleInjector() {
-        BukkitModule module = new BukkitModule(this);
-        Injector injector = module.createInjector();
-        injector.injectMembers(this);
+    @Override
+    public void configure() {
+        this.bind(CommonsBukkit.class).toInstance(this);
     }
 
     private void loadConfig(){

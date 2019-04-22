@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 public class UserStore {
 
     @Inject private UserDataRequest request;
-    @Inject private ListeningExecutorService executorService;
+    private ListeningExecutorService executorService = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8));
     @Inject private UserDeserializer userDeserializer;
     @Inject private ServerTokenQuery tokenHandler;
     @Inject private Gson gson;

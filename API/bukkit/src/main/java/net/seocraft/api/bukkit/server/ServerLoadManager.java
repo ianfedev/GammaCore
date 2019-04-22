@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.logging.Level;
 
-@Singleton
 public class ServerLoadManager {
 
     private BukkitAPI instance = BukkitAPI.getInstance();

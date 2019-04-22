@@ -17,6 +17,7 @@ public class JsonUtils {
     }
 
     public String errorContext(String error) {
+        System.out.println(error);
         JsonElement message = this.parser.parse(error);
         JsonObject object = message.getAsJsonObject();
         return object.get("message").getAsString();

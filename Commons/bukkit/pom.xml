@@ -21,6 +21,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.github.paperspigot</groupId>
+            <artifactId>paperspigot</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>us.sparknetwork</groupId>
             <artifactId>BCM-Bukkit</artifactId>
             <scope>compile</scope>
@@ -31,15 +36,6 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!--       <dependency>
-                   <groupId>com.google.guava</groupId>
-                   <artifactId>guava</artifactId>
-               </dependency> -->
     </dependencies>
 
     <build>
