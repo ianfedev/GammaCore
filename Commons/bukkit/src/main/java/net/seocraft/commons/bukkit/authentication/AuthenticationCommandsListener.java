@@ -22,7 +22,7 @@ import java.util.logging.Level;
 
 public class AuthenticationCommandsListener implements Listener {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
+    @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
     @Inject private UserStore userStorage;
 

@@ -24,7 +24,7 @@ import java.util.logging.Level;
 
 public class RegisterCommand extends AbstractAdvancedCommand {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
+    @Inject private CommonsBukkit instance;
     @Inject private ServerTokenQuery tokenQuery;
     @Inject private TranslatableField translator;
     @Inject private UserRegisterRequest userRegisterRequest;

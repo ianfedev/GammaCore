@@ -1,0 +1,51 @@
+# ----------------------------- #
+#  %%black%% = Black            #
+#  %%dark_blue%% = Dark Blue    #
+#  %%dark_green%% = Dark Green  #
+#  %%dark_aqua%% = Dark Aqua    #
+#  %%dark_red%% = Dark Red      #
+#  %%dark_purple%% = Dark Purp. #
+#  %%gold%% = Gold              #
+#  %%gray%% = Gray              #
+#  %%dark_gray%% = Dark Gray    #
+#  %%blue%% = Blue              #
+#  %%green%% = Green            #
+#  %%aqua%% = Aqua              #
+#  %%red%% = Red                #
+#  %%light_purple%% = Light P.  #
+#  %%yellow%% = Yellow          #
+#  %%white%% = White            #
+# ----------------------------- #
+
+# Authentication related translations
+authentication_registered_title: Hola
+authentication_registered_sub: Ingresa utilizando
+authentication_unregistered_title: Bienvenido
+authentication_unregistered_sub: Registrate con
+authentication_not_authenticated: Por favor registrate o inicia sesión para continuar
+authentication_password_weak: Tu contraseña debe tener más de 7 dígitos
+authentication_already_registered: Ya te encuentras registrado, por favor inicia sesión con
+authentication_register_error: Ha ocurrido un error al registrarte, ingresa de nuevo
+authenticatino_login_error: Ha ocurrido un error al iniciar sesión, ingresa de nuevo
+authentication_register_success: Te haz registrado correctamente.
+authentication_not_registered: No te haz registrado en el servidor, por favor registrate con
+authentication_incorrect_password: Has ingresado una contraseña incorrecta. ¡Por favor intentalo de nuevo!
+authentication_too_many_attempts: ¡Has fallado el ingreso de tu contraseña muchas veces!
+authentication_try_again_delay: Puedes volver a ingresar en
+authentication_welcome_new: Te haz registrado correctamente. ¡Bienvenido a %%server%%!
+authentication_logged_main: Haz iniciado sesión correctamente. ¡Serás redirigido al %%main_lobby%%! # Main Lobby variable
+authentication_logged_secondary: Haz iniciado sesión correctamente. ¡Serás redirigido a %%game%%! # Last game variable
+authentication_language_menu: Elegir lenguaje
+authentication_language_update_error: ¡Ha ocurrido un error al actualizar tu idioma!
+authentication_language_update_success: ¡Tu lenguaje ha sido actualizado a %%language%%!
+authentication_language_update_same: Ya has seleccionado este idioma antes
+
+# Commons general translations
+commons_plugin_developer: Nuestros plugins han sido creados por nuestro equipo de desarrolladores, conoce más en
+commons_commands_disabled: No puedes utilizar comandos en este momento
+
+# Common words translations
+commons_main_lobby: Lobby Principal
+commons_password: contraseña
+commons_error_type: Tipo de Error
+commons_language_placeholder: Español

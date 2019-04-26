@@ -22,7 +22,12 @@ public class UserDeserializer implements Deserializer<User> {
         User user = gson.fromJson(object, User.class);
         HashMap<String, Group> parsedGroups = new HashMap<>();
         JsonArray groups = object.get("group").getAsJsonArray();
-        groups.forEach(group -> parsedGroups.put(group.getAsJsonObject().get("_id").getAsJsonObject().get("name").getAsString(), gson.fromJson(group.getAsJsonObject().get("_id").getAsJsonObject(), Group.class)));
+        groups.forEach(group ->
+                parsedGroups.put(
+                    group.getAsJsonObject().get("_id").getAsJsonObject().get("name").getAsString(),
+                    gson.fromJson(group.getAsJsonObject().get("_id").getAsJsonObject(), Group.class
+                )
+        ));
         user.setGroups(parsedGroups);
         return user;
     }

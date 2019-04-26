@@ -1,13 +1,12 @@
 package net.seocraft.commons.bukkit;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
-import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener;
-import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
-import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
-import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
+import net.seocraft.api.shared.SharedModule;
+import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -29,14 +28,12 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
 
-    private static CommonsBukkit instance;
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
 
     @Override
     public void onEnable() {
-        instance = this;
         parametricCommandHandler = new ParametricCommandHandler(this.commandSenderAuthorizer, this.getLogger());
         BukkitCommandHandler dispatcher = new BukkitCommandHandler(this.getLogger());
         loadConfig();
@@ -53,16 +50,13 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure() {
-        this.bind(CommonsBukkit.class).toInstance(this);
+        bind(CommonsBukkit.class).toInstance(this);
+        expose(CommonsBukkit.class);
     }
 
     private void loadConfig(){
         getConfig().options().copyDefaults(true);
         saveConfig();
-    }
-
-    public static CommonsBukkit getInstance() {
-        return instance;
     }
 
 }

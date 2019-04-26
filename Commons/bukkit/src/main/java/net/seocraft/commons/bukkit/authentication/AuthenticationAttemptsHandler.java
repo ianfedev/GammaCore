@@ -12,7 +12,7 @@ import java.util.Date;
 @Singleton
 public class AuthenticationAttemptsHandler {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
+    @Inject private CommonsBukkit instance;
     @Inject private RedisClient client;
 
     public void setAttemptLock(String uuid, String date) {

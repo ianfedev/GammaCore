@@ -26,7 +26,7 @@ public class UserUpdateRequest extends HttpRequest {
     }
 
     public HttpType getType() {
-        return HttpType.POST;
+        return HttpType.PUT;
     }
 
     public String getURL() {

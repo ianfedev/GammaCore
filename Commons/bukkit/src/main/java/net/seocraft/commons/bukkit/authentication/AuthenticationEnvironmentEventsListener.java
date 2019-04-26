@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class AuthenticationEnvironmentEventsListener implements Listener {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
+    @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
     @Inject private UserStore userStorage;
 

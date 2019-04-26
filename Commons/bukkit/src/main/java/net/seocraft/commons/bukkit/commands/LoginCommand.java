@@ -27,7 +27,7 @@ import java.util.logging.Level;
 
 public class LoginCommand extends AbstractAdvancedCommand {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
+    @Inject private CommonsBukkit instance;
     @Inject private ServerTokenQuery tokenQuery;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private TranslatableField translator;

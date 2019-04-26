@@ -8,12 +8,8 @@ import net.seocraft.api.shared.redis.RedisClient;
 @Singleton
 public class ServerTokenQuery {
 
-    private BukkitAPI instance = BukkitAPI.getInstance();
-    private RedisClient redis;
-
-    @Inject ServerTokenQuery(RedisClient redis) {
-        this.redis = redis;
-    }
+    @Inject private BukkitAPI instance;
+    @Inject private RedisClient redis;
 
     public String getToken() {
         return this.redis.getHashFields("authorization").get(instance.getServerRecord().getSlug());

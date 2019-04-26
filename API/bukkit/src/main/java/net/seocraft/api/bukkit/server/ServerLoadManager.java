@@ -20,19 +20,11 @@ import java.util.logging.Level;
 
 public class ServerLoadManager {
 
-    private BukkitAPI instance = BukkitAPI.getInstance();
-    private JsonUtils parser;
-    private Gson gson;
-    private RedisClient redis;
-    private ServerConnectRequest connectRequest;
-
-    @Inject
-    public ServerLoadManager(JsonUtils parser, ServerConnectRequest connectRequest, RedisClient redis, Gson gson) {
-        this.parser = parser;
-        this.connectRequest = connectRequest;
-        this.gson = gson;
-        this.redis = redis;
-    }
+    @Inject BukkitAPI instance;
+    @Inject private JsonUtils parser;
+    @Inject private Gson gson;
+    @Inject private RedisClient redis;
+    @Inject private ServerConnectRequest connectRequest;
 
     public void setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
         Server setupServer = new Server(UUID.randomUUID().toString());

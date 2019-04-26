@@ -47,6 +47,7 @@ public class AuthenticationLanguageSelectListener implements Listener {
                         user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
                         try {
                             String response = this.userUpdateRequest.executeRequest(user, this.tokenQuery.getToken());
+                            System.out.println(response);
                             this.userStorage.storeUser(player.getName(), parser.parseObject(response, "user").toString());
                             ChatAlertLibrary.infoAlert(player,
                                     this.translator.getUnspacedField(

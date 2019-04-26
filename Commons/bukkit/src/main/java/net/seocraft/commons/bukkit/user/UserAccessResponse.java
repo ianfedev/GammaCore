@@ -27,7 +27,7 @@ import java.util.logging.Level;
 
 public class UserAccessResponse implements Listener {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
+    @Inject private CommonsBukkit instance;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private JsonUtils parser;

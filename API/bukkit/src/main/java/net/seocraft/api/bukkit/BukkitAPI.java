@@ -1,9 +1,7 @@
 package net.seocraft.api.bukkit;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import lombok.Getter;
 import lombok.Setter;
 import net.seocraft.api.bukkit.server.ServerLoadManager;
@@ -20,26 +18,23 @@ import java.util.logging.Level;
 
 public class BukkitAPI extends JavaPlugin {
 
-    private static BukkitAPI instance;
     @Inject private ServerLoadManager loadManager;
     @Getter private String preSelectedMap;
     @Getter @Setter private Server serverRecord;
 
     @Override
     public void onEnable() {
-        System.out.println("Me ejecute primero: onEnable");
-        instance = this;
-        moduleInjector();
         loadConfig();
         loadServer();
     }
 
-    private void moduleInjector() {
-        BukkitModule module = new BukkitModule(this);
-        Injector injector = module.createInjector();
-        injector.injectMembers(this);
+    @Override
+    public void configure() {
+        install(new SharedModule());
+        bind(BukkitAPI.class).toInstance(this);
+        expose(ListeningExecutorService.class);
+        expose(BukkitAPI.class);
     }
-
 
     private void loadServer() {
         try {
@@ -54,10 +49,6 @@ public class BukkitAPI extends JavaPlugin {
     private void loadConfig(){
         getConfig().options().copyDefaults(true);
         saveConfig();
-    }
-
-    public static BukkitAPI getInstance() {
-        return instance;
     }
 
 }

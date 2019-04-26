@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.minecraft.PlayerTitleHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -10,18 +11,17 @@ import org.bukkit.entity.Player;
 
 public class AuthenticationLoginListener {
 
-    private CommonsBukkit instance = CommonsBukkit.getInstance();
-    private FileConfiguration config = instance.getConfig();
+    @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
     @Inject private PlayerTitleHandler titleHandler;
 
     public void authenticationLoginListener(Player player, Boolean registered, String language) {
-        World w = Bukkit.getServer().getWorld(config.getString("authentication.coords.world"));
-        int x = config.getInt("authentication.coords.x");
-        int y = config.getInt("authentication.coords.y");
-        int z = config.getInt("authentication.coords.z");
-        int yaw = config.getInt("authentication.coords.yaw");
-        int pitch = config.getInt("authentication.coords.pitch");
+        World w = Bukkit.getServer().getWorld(this.instance.getConfig().getString("authentication.coords.world"));
+        int x = this.instance.getConfig().getInt("authentication.coords.x");
+        int y = this.instance.getConfig().getInt("authentication.coords.y");
+        int z = this.instance.getConfig().getInt("authentication.coords.z");
+        int yaw = this.instance.getConfig().getInt("authentication.coords.yaw");
+        int pitch = this.instance.getConfig().getInt("authentication.coords.pitch");
         player.getInventory().clear();
         player.setGameMode(GameMode.ADVENTURE);
         player.setHealth(20);
