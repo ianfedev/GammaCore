@@ -16,17 +16,17 @@ public class Group implements Model {
     @Setter(AccessLevel.NONE)
     private String id = UUID.randomUUID().toString();
     private String name;
-    private Integer priority;
+    private int priority;
     @SerializedName("minecraft_flairs") private Set<MinecraftFlair> minecraftFlairs;
     @SerializedName("minecraft_permissions") private Set<String> permissions;
-    private Boolean staff;
+    private boolean staff;
 
     public String id() {
         return id;
     }
 
     @Getter @Setter
-    public class MinecraftFlair {
+    private class MinecraftFlair {
         private String realm;
         private String color;
         private String symbol;

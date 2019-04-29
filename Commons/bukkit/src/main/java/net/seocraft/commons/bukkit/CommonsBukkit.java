@@ -1,11 +1,10 @@
 package net.seocraft.commons.bukkit;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
+import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
-import net.seocraft.api.shared.SharedModule;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
@@ -49,9 +48,9 @@ public class CommonsBukkit extends JavaPlugin {
     }
 
     @Override
-    public void configure() {
-        bind(CommonsBukkit.class).toInstance(this);
-        expose(CommonsBukkit.class);
+    public void configure(ProtectedBinder binder) {
+        binder.bind(CommonsBukkit.class).toInstance(this);
+        binder.expose(CommonsBukkit.class);
     }
 
     private void loadConfig(){

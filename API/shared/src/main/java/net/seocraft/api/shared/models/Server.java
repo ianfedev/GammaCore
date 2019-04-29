@@ -1,5 +1,6 @@
 package net.seocraft.api.shared.models;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,11 +17,11 @@ public class Server implements Model {
     private String slug;
     private Type type;
     @Nullable private String gamemode;
-    @Nullable private String sub_gamemode;
-    @Nullable private Integer max_running;
-    @Nullable private Integer max_total;
-    @Nullable private Integer played_matches;
-    private String started_at;
+    @SerializedName("sub_gamemode") @Nullable private String subGamemode;
+    @SerializedName("max_running") @Nullable private int maxRunning;
+    @SerializedName("max_total") @Nullable private int maxTotal;
+    @SerializedName("played_matches") @Nullable private int playedMatches;
+    @SerializedName("started_at") private String startedAt;
     private List<String> players;
     private String cluster;
     @Nullable private List<String> matches;

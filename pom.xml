@@ -100,7 +100,7 @@
             <dependency>
                 <groupId>org.github.paperspigot</groupId>
                 <artifactId>paperspigot</artifactId>
-                <version>1.8.8-R0.1-20190422.021343-1</version>
+                <version>1.8.8-R0.1-20190428.035602-1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

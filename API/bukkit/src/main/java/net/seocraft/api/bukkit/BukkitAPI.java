@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
+import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.server.ServerLoadManager;
 import net.seocraft.api.shared.SharedModule;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
@@ -29,11 +30,11 @@ public class BukkitAPI extends JavaPlugin {
     }
 
     @Override
-    public void configure() {
-        install(new SharedModule());
-        bind(BukkitAPI.class).toInstance(this);
-        expose(ListeningExecutorService.class);
-        expose(BukkitAPI.class);
+    public void configure(ProtectedBinder binder) {
+        binder.install(new SharedModule());
+        binder.bind(BukkitAPI.class).toInstance(this);
+        binder.expose(ListeningExecutorService.class);
+        binder.expose(BukkitAPI.class);
     }
 
     private void loadServer() {
