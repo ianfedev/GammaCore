@@ -1,12 +1,16 @@
 package net.seocraft.api.shared.redis;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Deque;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class RedisChannel<O> implements Channel<O> {
@@ -20,6 +24,8 @@ public class RedisChannel<O> implements Channel<O> {
 
     private Deque<ChannelListener<O>> channelListeners;
 
+    private String serverChannelId = UUID.randomUUID().toString();
+
     RedisChannel(String name, TypeToken<O> type, JedisPool pool, Gson gson) {
         this.name = name;
         this.type = type;
@@ -31,7 +37,16 @@ public class RedisChannel<O> implements Channel<O> {
         pubSub = new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
-                O object = gson.fromJson(message, type.getType());
+                JsonParser parser = new JsonParser();
+                JsonObject wrappedObject = parser.parse(message).getAsJsonObject();
+
+                String id = wrappedObject.get("id").getAsString();
+
+                if(id.equals(serverChannelId)){
+                    return;
+                }
+
+                O object = gson.fromJson(wrappedObject.getAsJsonObject("object"), type.getType());
 
                 channelListeners.forEach(listener -> {
                     listener.receiveMessage(object);
@@ -59,7 +74,15 @@ public class RedisChannel<O> implements Channel<O> {
     @Override
     public void sendMessage(O object) {
         try (Jedis jedis = pool.getResource()) {
-            jedis.publish(name, gson.toJson(object));
+
+            JsonElement jsonObject = gson.toJsonTree(object);
+
+            JsonObject wrapper = new JsonObject();
+
+            wrapper.addProperty("id", serverChannelId);
+            wrapper.add("object", jsonObject);
+
+            jedis.publish(name, wrapper.toString());
         }
     }
 
