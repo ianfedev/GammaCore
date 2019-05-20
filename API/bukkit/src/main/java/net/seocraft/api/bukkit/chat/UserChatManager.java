@@ -21,8 +21,9 @@ public class UserChatManager {
             }
         }
         for (int i = 0; i < userFormat.length(); i++) {
-            if (userFormat.substring(i).equalsIgnoreCase(" ")) {
-                
+            String character = "" + userFormat.charAt(i);
+            if (character.equalsIgnoreCase(" ")) {
+                userFormat = userFormat.substring(i);
             } else {
                 break;
             }
