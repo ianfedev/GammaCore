@@ -17,18 +17,11 @@ public class Group implements Model {
     private String id = UUID.randomUUID().toString();
     private String name;
     private int priority;
-    @SerializedName("minecraft_flairs") private Set<MinecraftFlair> minecraftFlairs;
+    @SerializedName("minecraft_flair") private Set<MinecraftFlair> minecraftFlairs;
     @SerializedName("minecraft_permissions") private Set<String> permissions;
     private boolean staff;
 
     public String id() {
         return id;
-    }
-
-    @Getter @Setter
-    private class MinecraftFlair {
-        private String realm;
-        private String color;
-        private String symbol;
     }
 }

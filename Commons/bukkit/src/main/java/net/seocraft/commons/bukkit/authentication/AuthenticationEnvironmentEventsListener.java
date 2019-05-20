@@ -7,6 +7,7 @@ import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -28,17 +29,19 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onChatEvent(AsyncPlayerChatEvent event) {
-        Player player = event.getPlayer();
-        ChatAlertLibrary.errorChatAlert(
-                player,
-                this.translator.getUnspacedField(
-                        this.userStorage.getUserObjectSync(player.getName()).getLanguage(),
-                        "authentication_not_authenticated"
-                ) + "."
-        );
-        event.setCancelled(true);
+        if (this.instance.getConfig().getBoolean("authentication.enabled")) {
+            Player player = event.getPlayer();
+            ChatAlertLibrary.errorChatAlert(
+                    player,
+                    this.translator.getUnspacedField(
+                            this.userStorage.getUserObjectSync(player.getName()).getLanguage(),
+                            "authentication_not_authenticated"
+                    ) + "."
+            );
+            event.setCancelled(true);
+        }
     }
 
 }

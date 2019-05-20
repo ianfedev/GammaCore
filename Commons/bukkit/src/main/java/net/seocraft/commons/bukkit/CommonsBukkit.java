@@ -9,6 +9,7 @@ import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
+import net.seocraft.commons.bukkit.user.UserChatListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -20,6 +21,8 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private AuthenticationLanguageMenuListener authenticationLanguageMenuListener;
     @Inject private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
     @Inject private AuthenticationCommandsListener authenticationCommandsListener;
+
+    @Inject private UserChatListener userChatListener;
     @Inject private UserAccessResponse userAccessResponse;
 
     @Inject private LoginCommand loginCommand;
@@ -44,6 +47,7 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.authenticationLanguageSelectListener, this);
         getServer().getPluginManager().registerEvents(this.authenticationMovementListener, this);
 
+        getServer().getPluginManager().registerEvents(this.userChatListener, this);
         getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
     }
 

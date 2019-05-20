@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.user;
 
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.chat.UserChatManager;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserStore;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
@@ -28,6 +29,7 @@ import java.util.logging.Level;
 public class UserAccessResponse implements Listener {
 
     @Inject private CommonsBukkit instance;
+    @Inject private UserChatManager chatManager;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private JsonUtils parser;

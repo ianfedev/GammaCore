@@ -31,7 +31,7 @@ public class ServerLoadManager {
         // TODO: Setup server slug with Cloud API setupServer.setSlug();
         setupServer.setSlug("test-1");
         setupServer.setCluster(this.instance.getConfig().getString("api.cluster"));
-        setupServer.setStarted_at("" + (System.currentTimeMillis() / 1000L));
+        setupServer.setStartedAt("" + (System.currentTimeMillis() / 1000L));
         setupServer.setPlayers(new ArrayList<>());
         try {
             setupServer.setType(Server.Type.valueOf(this.instance.getConfig().getString("api.type")));
