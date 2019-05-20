@@ -51,9 +51,7 @@ public class UserStore {
         this.client.setExpiration(name, 120);
 
         User user = gson.fromJson(model, User.class);
-        String id = user.id();
-
-        storeUser(id, user);
+        storeUser(user);
     }
 
     public ListenableFuture<User> getUserObject(String name) {
