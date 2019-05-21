@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.whisper;
+package net.seocraft.commons.bukkit.whisper;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -8,23 +8,25 @@ import net.seocraft.api.shared.models.User;
 import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
+import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
 public class WhisperManagerImpl implements WhisperManager {
 
+    @Inject private OnlinePlayersApi onlinePlayersApi;
+    @Inject private TranslatableField translator;
     private ListeningExecutorService executorService;
     private Channel<Whisper> whisperChannel;
-
-    @Inject
-    private OnlinePlayersApi onlinePlayersApi;
 
     @Inject
     WhisperManagerImpl(ListeningExecutorService executorService, Messager messager) {
         this.executorService = executorService;
         whisperChannel = messager.getChannel("whisper", Whisper.class);
+        whisperChannel.registerListener(new WhisperListener());
     }
 
     @Override
@@ -36,9 +38,14 @@ public class WhisperManagerImpl implements WhisperManager {
             Player playerFrom = Bukkit.getPlayer(fromUserId);
             Player playerTo = Bukkit.getPlayer(toUserId);
 
-            // Someone set this to some sort of format
-            playerFrom.sendMessage(content);
-            playerTo.sendMessage(content);
+            playerFrom.sendMessage(
+                    ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_from") +
+                            ChatColor.GRAY + playerFrom.getName() + ": " + content
+            );
+            playerTo.sendMessage(
+                    ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_to") +
+                            ChatColor.GRAY + playerFrom.getName() + ": " + content
+            );
 
             return Futures.immediateFuture(WhisperResponse.getSucessResponse(new WhisperImpl(from, to, content)));
         }

@@ -10,24 +10,27 @@ public class UserChatManager {
     public String getUserFormat(User user, String realm) {
         String userFormat = ChatColor.GRAY + user.getUsername();
         Group primaryGroup = new Group();
-        primaryGroup.setPriority(0);
+        primaryGroup.setPriority(999999999); // Change priority if needed deeper groups
         for (Group group: user.getGroups()) {
-            System.out.println(group.getName() + ": " + group.getPriority());
-            if (group.getPriority() > primaryGroup.getPriority()) primaryGroup = group;
+            if (group.getPriority() < primaryGroup.getPriority()) primaryGroup = group;
         }
+        System.out.println(primaryGroup.getName());
         for (MinecraftFlair flair: primaryGroup.getMinecraftFlairs()) {
-            if (flair.getRealm().equalsIgnoreCase(realm)) {
-                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + flair.getSymbol() + " " + user.getUsername() + ChatColor.WHITE;
-            }
-        }
-        for (int i = 0; i < userFormat.length(); i++) {
-            String character = "" + userFormat.charAt(i);
-            if (character.equalsIgnoreCase(" ")) {
-                userFormat = userFormat.substring(i);
-            } else {
+            if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {
+                String symbol = flair.getSymbol();
+                for (int i = 0; i < symbol.length(); i++) {
+                    String character = "" + flair.getSymbol().charAt(0);
+                    if (character.equalsIgnoreCase(" ")) {
+                        symbol = symbol.substring(i);
+                    } else {
+                        break;
+                    }
+                }
+                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + symbol + " " + user.getUsername() + ChatColor.WHITE;
                 break;
             }
         }
+
         return userFormat;
     }
 

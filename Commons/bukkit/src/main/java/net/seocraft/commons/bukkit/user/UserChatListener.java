@@ -7,7 +7,6 @@ import net.seocraft.api.bukkit.chat.UserChatManager;
 import net.seocraft.api.bukkit.user.UserStore;
 import net.seocraft.api.shared.models.User;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,8 +30,7 @@ public class UserChatListener implements Listener {
                                         userData,
                                         this.bukkitAPI.getConfig().getString("realm")
                                 ) + ": "
-                        ),
-                        new TextComponent(event.getMessage())
+                        + event.getMessage())
                 )
         );
     }

@@ -8,6 +8,7 @@ import me.ggamer55.bcm.parametric.ParametricCommandHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
+import net.seocraft.commons.bukkit.commands.WhisperCommand;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,6 +29,8 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private LoginCommand loginCommand;
     @Inject private RegisterCommand registerCommand;
 
+    @Inject private WhisperCommand whisperCommand;
+
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
@@ -41,6 +44,7 @@ public class CommonsBukkit extends JavaPlugin {
         loadConfig();
         parametricCommandHandler.registerCommand(this.loginCommand);
         parametricCommandHandler.registerCommand(this.registerCommand);
+        dispatcher.registerCommandClass(this.whisperCommand);
         // --- Authentication mode related listeners //
         getServer().getPluginManager().registerEvents(this.authenticationCommandsListener, this);
         getServer().getPluginManager().registerEvents(this.authenticationLanguageMenuListener, this);

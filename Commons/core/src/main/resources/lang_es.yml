@@ -40,9 +40,18 @@ authentication_language_update_error: ¡Ha ocurrido un error al actualizar tu id
 authentication_language_update_success: ¡Tu lenguaje ha sido actualizado a %%language%%!
 authentication_language_update_same: Ya has seleccionado este idioma antes
 
-# Commons general translations
+# General translations
 commons_plugin_developer: Nuestros plugins han sido creados por nuestro equipo de desarrolladores, conoce más en
 commons_commands_disabled: No puedes utilizar comandos en este momento
+
+# Message translations
+commons_message_from: De
+commons_message_to: Para
+
+# Error translations
+commons_system_nulled: Haz nulleado el sistema. ¡Bien hecho!
+commons_player_offline: El jugador %%player no se encuentra conectado
+commons_system_error: Ha ocurrido un error, por favor contacta a un administrador tan pronto sea posible.
 
 # Common words translations
 commons_main_lobby: Lobby Principal

@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.whisper;
+package net.seocraft.commons.bukkit.whisper;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
