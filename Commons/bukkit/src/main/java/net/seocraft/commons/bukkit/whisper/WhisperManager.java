@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.whisper;
+package net.seocraft.commons.bukkit.whisper;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.shared.models.User;

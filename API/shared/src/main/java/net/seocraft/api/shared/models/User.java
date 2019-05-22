@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,7 +19,7 @@ public class User implements Model {
     private String username;
     @SerializedName("username_lowercase") private String usernameLowercase;
     @Nullable private String email;
-    private Map<String, Group> groups;
+    private List<Group> groups;
     private String skin;
     @SerializedName("last_seen") private String lastSeen;
     @SerializedName("last_game") private String lastGame;

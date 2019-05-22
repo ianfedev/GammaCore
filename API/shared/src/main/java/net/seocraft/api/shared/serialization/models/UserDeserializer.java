@@ -9,7 +9,8 @@ import net.seocraft.api.shared.models.Group;
 import net.seocraft.api.shared.models.User;
 import net.seocraft.api.shared.serialization.JsonUtils;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 @Singleton
 public class UserDeserializer implements Deserializer<User> {
@@ -20,14 +21,9 @@ public class UserDeserializer implements Deserializer<User> {
     public User deserializeModel(String json) {
         JsonObject object = this.parser.parseObject(json);
         User user = gson.fromJson(object, User.class);
-        HashMap<String, Group> parsedGroups = new HashMap<>();
+        List<Group> parsedGroups = new ArrayList<>();
         JsonArray groups = object.get("group").getAsJsonArray();
-        groups.forEach(group ->
-                parsedGroups.put(
-                    group.getAsJsonObject().get("_id").getAsJsonObject().get("name").getAsString(),
-                    gson.fromJson(group.getAsJsonObject().get("_id").getAsJsonObject(), Group.class
-                )
-        ));
+        groups.forEach(group -> parsedGroups.add(gson.fromJson(group.getAsJsonObject().get("_id").getAsJsonObject(), Group.class)));
         user.setGroups(parsedGroups);
         return user;
     }
