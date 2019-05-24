@@ -5,12 +5,20 @@ import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
+import net.seocraft.commons.bukkit.adminchat.AdminChatManager;
+import net.seocraft.commons.bukkit.adminchat.AdminChatManagerImpl;
+import net.seocraft.commons.bukkit.adminchat.AdminChatMessage;
+import net.seocraft.commons.bukkit.adminchat.AdminChatMessageImpl;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.commands.WhisperCommand;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
+import net.seocraft.commons.bukkit.whisper.Whisper;
+import net.seocraft.commons.bukkit.whisper.WhisperImpl;
+import net.seocraft.commons.bukkit.whisper.WhisperManager;
+import net.seocraft.commons.bukkit.whisper.WhisperManagerImpl;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
@@ -58,6 +66,10 @@ public class CommonsBukkit extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(CommonsBukkit.class).toInstance(this);
+        binder.bind(Whisper.class).to(WhisperImpl.class);
+        binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
+        binder.bind(AdminChatManager.class).to(AdminChatManagerImpl.class);
+        binder.bind(AdminChatMessage.class).to(AdminChatMessageImpl.class);
         binder.expose(CommonsBukkit.class);
     }
 

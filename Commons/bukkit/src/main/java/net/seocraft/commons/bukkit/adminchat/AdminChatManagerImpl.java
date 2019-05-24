@@ -1,4 +1,4 @@
-package net.seocraft.commons.core.adminchat;
+package net.seocraft.commons.bukkit.adminchat;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -8,7 +8,6 @@ import net.seocraft.api.shared.models.User;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.IRedisClient;
 import net.seocraft.api.shared.redis.Messager;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +33,7 @@ public class AdminChatManagerImpl implements AdminChatManager {
 
 
     @Override
-    public ListenableFuture<AdminChatMessage> sendMessage(@NotNull User user, @NotNull String content, boolean important) {
+    public ListenableFuture<AdminChatMessage> sendMessage(User user, String content, boolean important) {
         return executorService.submit(() -> {
             AdminChatMessageImpl chatMessage = new AdminChatMessageImpl(user, content, important);
 
@@ -54,17 +53,17 @@ public class AdminChatManagerImpl implements AdminChatManager {
     }
 
     @Override
-    public ListenableFuture<Void> removePlayerFromAdminChat(@NotNull UUID uniqueId) {
+    public ListenableFuture<Void> removePlayerFromAdminChat(UUID uniqueId) {
         return null;
     }
 
     @Override
-    public ListenableFuture<Void> addPlayerToAdminChat(@NotNull UUID uniqueId, boolean active) {
+    public ListenableFuture<Void> addPlayerToAdminChat(UUID uniqueId, boolean active) {
         return null;
     }
 
     @Override
-    public ListenableFuture<Boolean> hasPlayerAdminChatActive(@NotNull UUID uniqueId) {
+    public ListenableFuture<Boolean> hasPlayerAdminChatActive(UUID uniqueId) {
         return null;
     }
 

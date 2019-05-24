@@ -21,14 +21,19 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.github.paperspigot</groupId>
+            <groupId>net.seocraft</groupId>
             <artifactId>paperspigot</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>us.sparknetwork</groupId>
-            <artifactId>BCM-Bukkit</artifactId>
+            <groupId>net.seocraft</groupId>
+            <artifactId>bcm</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
