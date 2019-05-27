@@ -17,17 +17,17 @@ public class RedisMessager implements Messager {
     private Map<String, TypeToken> registeredTypes;
     private Map<String, Channel> registeredChannels;
 
-    private JedisPool pool;
+    private RedisClient client;
     private Gson gson;
 
     @Inject
-    RedisMessager(JedisPool jedisPool, Gson gson) {
+    RedisMessager(RedisClient client, Gson gson) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
         registeredTypes = new HashMap<>();
 
-        pool = jedisPool;
+        this.client = client;
         this.gson = gson;
     }
 
@@ -45,7 +45,7 @@ public class RedisMessager implements Messager {
                 return registeredChannels.get(name);
             }
 
-            Channel<O> channel = new RedisChannel<>(name, type, pool, gson);
+            Channel<O> channel = new RedisChannel<>(name, type, this.client.getPool(), gson);
 
             registeredChannels.put(name, channel);
             registeredTypes.put(name, type);

@@ -21,7 +21,11 @@ public class RedisClient implements IRedisClient {
     }
 
     public JedisPool getPool() {
-        return new JedisPool(this.config.getAddress(), this.config.getPort());
+        if (this.pool == null) {
+            return new JedisPool(this.config.getAddress(), this.config.getPort());
+        } else {
+            return this.pool;
+        }
     }
 
     public void setString(String key, String value) {

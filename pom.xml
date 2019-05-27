@@ -17,23 +17,23 @@
 
     <repositories>
         <repository>
-            <id>seocraft-snapshots</id>
-            <url>https://repo.seocraft.net/repository/seocraft-snapshots</url>
+            <id>gamma-snapshots</id>
+            <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
         </repository>
         <repository>
-            <id>seocraft-releases</id>
-            <url>https://repo.seocraft.net/repository/seocraft-releases</url>
+            <id>gamma-releases</id>
+            <url>https://repo.seocraft.net/repository/gamma-releases</url>
         </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
-            <id>seocraft-snapshots</id>
-            <url>https://repo.seocraft.net/repository/seocraft-releases</url>
+            <id>gamma-snapshots</id>
+            <url>https://repo.seocraft.net/repository/gamma-releases</url>
         </repository>
         <snapshotRepository>
-            <id>seocraft-releases</id>
-            <url>https://repo.seocraft.net/repository/seocraft-snapshots</url>
+            <id>gamma-releases</id>
+            <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 

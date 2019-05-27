@@ -12,8 +12,13 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.models.Server;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersImpl;
+import net.seocraft.api.shared.redis.Messager;
+import net.seocraft.api.shared.redis.RedisClient;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import redis.clients.jedis.JedisPool;
 
 import java.util.logging.Level;
 
@@ -35,6 +40,8 @@ public class BukkitAPI extends JavaPlugin {
         binder.bind(BukkitAPI.class).toInstance(this);
         binder.expose(ListeningExecutorService.class);
         binder.expose(BukkitAPI.class);
+        binder.expose(Messager.class);
+        binder.expose(OnlinePlayersApi.class);
     }
 
     private void loadServer() {

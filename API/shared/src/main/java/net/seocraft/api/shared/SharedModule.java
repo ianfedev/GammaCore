@@ -23,7 +23,6 @@ public class SharedModule extends AbstractModule {
                     .setPrettyPrinting()
                     .create();
         }).in(Scopes.SINGLETON);
-        requireBinding(JedisPool.class);
         bind(Messager.class).to(RedisMessager.class).in(Scopes.SINGLETON);
     }
 }

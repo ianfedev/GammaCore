@@ -66,10 +66,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(CommonsBukkit.class).toInstance(this);
-        binder.bind(Whisper.class).to(WhisperImpl.class);
         binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
-        binder.bind(AdminChatManager.class).to(AdminChatManagerImpl.class);
-        binder.bind(AdminChatMessage.class).to(AdminChatMessageImpl.class);
         binder.expose(CommonsBukkit.class);
     }
 
