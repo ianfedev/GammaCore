@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersImpl;
 import net.seocraft.api.shared.redis.Messager;
 import net.seocraft.api.shared.redis.RedisMessager;
 import redis.clients.jedis.JedisPool;
@@ -23,6 +25,7 @@ public class SharedModule extends AbstractModule {
                     .setPrettyPrinting()
                     .create();
         }).in(Scopes.SINGLETON);
+        bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
         bind(Messager.class).to(RedisMessager.class).in(Scopes.SINGLETON);
     }
 }
