@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -17,7 +17,8 @@ public class User implements Model {
     @SerializedName("_id") private String id;
     private String username;
     @SerializedName("username_lowercase") private String usernameLowercase;
-    @Nullable private String email;
+    @Nullable
+    private String email;
     private List<Group> groups;
     private String skin;
     @SerializedName("last_seen") private String lastSeen;

@@ -10,7 +10,6 @@ import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
 import net.seocraft.api.shared.onlineplayers.OnlinePlayersImpl;
 import net.seocraft.api.shared.redis.Messager;
 import net.seocraft.api.shared.redis.RedisMessager;
-import redis.clients.jedis.JedisPool;
 
 import java.util.concurrent.Executors;
 
