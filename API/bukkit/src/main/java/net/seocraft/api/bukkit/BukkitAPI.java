@@ -1,6 +1,5 @@
 package net.seocraft.api.bukkit;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,11 +1,11 @@
-package net.seocraft.api.bukkit.chat;
+package net.seocraft.api.bukkit.user;
 
 import net.seocraft.api.shared.models.Group;
 import net.seocraft.api.shared.models.MinecraftFlair;
 import net.seocraft.api.shared.models.User;
 import org.bukkit.ChatColor;
 
-public class UserChatManager {
+public class UserChat {
 
     public String getUserFormat(User user, String realm) {
         String userFormat = ChatColor.GRAY + user.getUsername();
@@ -14,7 +14,6 @@ public class UserChatManager {
         for (Group group: user.getGroups()) {
             if (group.getPriority() < primaryGroup.getPriority()) primaryGroup = group;
         }
-        System.out.println(primaryGroup.getName());
         for (MinecraftFlair flair: primaryGroup.getMinecraftFlairs()) {
             if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {
                 String symbol = flair.getSymbol();
