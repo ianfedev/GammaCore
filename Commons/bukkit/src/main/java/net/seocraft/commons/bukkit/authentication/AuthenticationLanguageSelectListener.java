@@ -42,13 +42,12 @@ public class AuthenticationLanguageSelectListener implements Listener {
         if ((entity instanceof Player)) {
             Player player = (Player) entity;
             if (event.getClick().equals(ClickType.LEFT) && NBTTagHandler.hasString(clickedItem, "language_accessor")) {
-                CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getName()), user -> {
+                CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getUniqueId()), user -> {
                     if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {
                         user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
                         try {
-                            String response = this.userUpdateRequest.executeRequest(user, this.tokenQuery.getToken());
-                            System.out.println(response);
-                            this.userStorage.storeUser(player.getName(), parser.parseObject(response, "user").toString());
+                            this.userUpdateRequest.executeRequest(user, this.tokenQuery.getToken());
+                            this.userStorage.storeUser(user, player.getUniqueId());
                             ChatAlertLibrary.infoAlert(player,
                                     this.translator.getUnspacedField(
                                             user.getLanguage(),

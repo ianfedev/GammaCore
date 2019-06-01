@@ -61,14 +61,14 @@ public class UserAccessResponse implements Listener {
                 .replace("/", "");
         JsonObject request = new JsonObject();
         request.addProperty("username", player.getName());
+        request.addProperty("uuid", player.getUniqueId().toString());
         request.addProperty("ip", ip);
         try {
             String response = this.request.executeRequest(request, tokenHandler.getToken());
-            User user = this.userStorage.getUserObjectSync(player.getName());
+            User user = this.userStorage.getUserObjectSync(player.getUniqueId());
             if (parser.parseJson(response, "multi").getAsBoolean()) {
                 // TODO: Handle multi-account issue
             } else {
-                this.userStorage.storeUser(player.getName(), parser.parseObject(response, "user").toString());
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     if (this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
                         this.loginListener.authenticationLoginListener(
@@ -84,9 +84,9 @@ public class UserAccessResponse implements Listener {
                         );
                     }
                     event.setJoinMessage("");
-                    playerField.set(player, new UserPermissions(player));
                 }
-
+                playerField.set(player, new UserPermissions(player, this.userStorage));
+                System.out.println(player.hasPermission("commons.example.test"));
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());

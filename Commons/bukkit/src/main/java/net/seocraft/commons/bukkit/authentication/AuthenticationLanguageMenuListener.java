@@ -27,7 +27,7 @@ public class AuthenticationLanguageMenuListener implements Listener {
         ItemStack handItem = player.getItemInHand();
         if (NBTTagHandler.hasString(handItem, "accessor") &&
                 NBTTagHandler.getString(handItem, "accessor").equalsIgnoreCase("language")) {
-            CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getName()), user -> {
+            CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getUniqueId()), user -> {
                 Inventory languageSelector = InventoryUtils.createInventory(
                         this.translator.getUnspacedField(user.getLanguage(), "authentication_language_menu"),
                         9,

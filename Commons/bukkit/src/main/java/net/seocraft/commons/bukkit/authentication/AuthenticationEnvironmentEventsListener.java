@@ -36,7 +36,7 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
             ChatAlertLibrary.errorChatAlert(
                     player,
                     this.translator.getUnspacedField(
-                            this.userStorage.getUserObjectSync(player.getName()).getLanguage(),
+                            this.userStorage.getUserObjectSync(player.getUniqueId()).getLanguage(),
                             "authentication_not_authenticated"
                     ) + "."
             );

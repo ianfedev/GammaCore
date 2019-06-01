@@ -31,8 +31,8 @@ public class WhisperManagerImpl implements WhisperManager {
 
     @Override
     public ListenableFuture<WhisperResponse> sendMessage(User from, User to, String content) {
-        final UUID fromUserId = UUID.fromString(from.id());
-        final UUID toUserId = UUID.fromString(to.id());
+        final UUID fromUserId = from.getGameUUID();
+        final UUID toUserId = to.getGameUUID();
 
         if (Bukkit.getPlayer(toUserId) != null) {
             Player playerFrom = Bukkit.getPlayer(fromUserId);
@@ -58,7 +58,7 @@ public class WhisperManagerImpl implements WhisperManager {
             }
 
             try {
-                Player playerFrom = Bukkit.getPlayer(UUID.fromString(from.id()));
+                Player playerFrom = Bukkit.getPlayer(from.getGameUUID());
 
                 // Set some sort of format
                 playerFrom.sendMessage(content);

@@ -31,7 +31,7 @@ public class AuthenticationCommandsListener implements Listener {
         Namespace namespace = new Namespace();
         namespace.setObject(CommandSender.class, "sender", event.getPlayer());
         Player player = event.getPlayer();
-        String userLanguage = this.userStorage.getUserObjectSync(player.getName()).getLanguage();
+        String userLanguage = this.userStorage.getUserObjectSync(player.getUniqueId()).getLanguage();
         if((event.getMessage().equals("/pl")) || (event.getMessage().equals("/plugins"))) {
             ChatAlertLibrary.infoAlert(
                     player,

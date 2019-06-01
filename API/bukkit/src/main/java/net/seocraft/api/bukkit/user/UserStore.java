@@ -20,73 +20,18 @@ import java.util.UUID;
 @Singleton
 public class UserStore {
 
-    @Inject
-    private UserDataRequest request;
-    @Inject
-    private ListeningExecutorService executorService;
-    @Inject
-    private UserDeserializer userDeserializer;
-    @Inject
-    private ServerTokenQuery tokenHandler;
-    @Inject
-    private Gson gson;
-    @Inject
-    private RedisClient client;
-
-    /**
-     * @deprecated Use storeUser(User) as replacement of this
-     */
-    @Deprecated
-    public void storeUser(String name, User model) {
-        storeUser(name, gson.toJson(model));
-    }
-
-    /**
-     * @deprecated Use storeUser(User) as replacement of this
-     */
-    @Deprecated
-    public void storeUser(String name, String model) {
-        name = name.toLowerCase();
-        this.client.setString(name, model);
-        this.client.setExpiration(name, 120);
-
-        User user = gson.fromJson(model, User.class);
-        storeUser(user);
-    }
-
-    public ListenableFuture<User> getUserObject(String name) {
-        return this.executorService.submit(() -> getUserObjectSync(name));
-    }
-
-    public User getUserObjectSync(String name) {
-        name = name.toLowerCase();
-        if (this.client.existsKey("user.name:" + name)) {
-            return this.gson.fromJson(this.client.getString(name), User.class);
-        } else {
-            return getUser(name);
-        }
-    }
-
-    private User getUser(String name) {
-        try {
-            User deserializeUser = this.userDeserializer.deserializeModel(
-                    this.request.executeRequest(name, this.tokenHandler.getToken())
-            );
-
-            storeUser(deserializeUser);
-            return deserializeUser;
-        } catch (Unauthorized | InternalServerError | NotFound | BadRequest error) {
-            return null;
-        }
-    }
+    @Inject private UserDataRequest request;
+    @Inject private ListeningExecutorService executorService;
+    @Inject private UserDeserializer userDeserializer;
+    @Inject private ServerTokenQuery tokenHandler;
+    @Inject private Gson gson;
+    @Inject private RedisClient client;
 
 
-    public void storeUser(User model) {
-        this.client.setString("user:" + model.id(), gson.toJson(model));
-        this.client.setExpiration(model.id(), 120);
-
-        this.client.setString("user.name:" + model.getUsername(), gson.toJson(model));
-        this.client.setExpiration(model.id(), 120);
+    public void storeUser(User model, UUID uuid) {
+        String idString = uuid.toString();
+        this.client.setString("user:" + idString, gson.toJson(model));
+        this.client.setExpiration("user:" + idString, 120);
     }
 
     public ListenableFuture<User> getUserObject(UUID id) {
@@ -95,7 +40,6 @@ public class UserStore {
 
     public User getUserObjectSync(UUID id) {
         String idString = id.toString();
-
         if (this.client.existsKey("user:" + idString)) {
             return this.gson.fromJson(this.client.getString("user:" + idString), User.class);
         } else {
@@ -105,13 +49,11 @@ public class UserStore {
 
     private User getUser(UUID id) {
         String idString = id.toString();
-
         try {
             User deserializeUser = this.userDeserializer.deserializeModel(
                     this.request.executeRequest(idString, this.tokenHandler.getToken())
             );
-
-            storeUser(deserializeUser);
+            storeUser(deserializeUser, id);
             return deserializeUser;
         } catch (Unauthorized | InternalServerError | NotFound | BadRequest error) {
             return null;

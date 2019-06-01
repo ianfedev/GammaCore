@@ -10,12 +10,13 @@ import org.bukkit.permissions.Permission;
 
 public class UserPermissions extends PermissibleBase {
 
-    @Inject private UserStore userStore;
+    private UserStore userStore;
     private Player player;
 
 
-    public UserPermissions(Player player) {
+    public UserPermissions(Player player, UserStore userStore) {
         super(player);
+        this.userStore = userStore;
         this.player = player;
     }
 
@@ -24,6 +25,14 @@ public class UserPermissions extends PermissibleBase {
         for (Group group: user.getGroups()) {
             for (String permission: group.getPermissions()) {
                 if (permission.equalsIgnoreCase(s)) return true;
+                String[] requestedTree = s.split("\\.");
+                int scanningLength = requestedTree.length;
+                String[] permissionTree = permission.split("\\.");
+                if (permissionTree.length < scanningLength) scanningLength = permissionTree.length;
+                for (int i = 0; i < scanningLength; i++) {
+                    if (permissionTree[i].equalsIgnoreCase("*")) return true;
+                    if (!requestedTree[i].equalsIgnoreCase(permissionTree[i])) break;
+                }
             }
         }
         return false;

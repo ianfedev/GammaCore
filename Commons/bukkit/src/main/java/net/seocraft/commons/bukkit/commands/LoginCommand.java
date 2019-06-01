@@ -52,7 +52,7 @@ public class LoginCommand extends AbstractAdvancedCommand {
     @Override
     public boolean execute(CommandContext commandContext) {
         Player player = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getName()), user -> {
+        CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getUniqueId()), user -> {
             if (!this.instance.unregisteredPlayers.contains(player.getUniqueId())) {
                 try {
                     this.userLoginRequest.executeRequest(

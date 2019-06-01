@@ -20,7 +20,7 @@ public class UserChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void userChatListener(AsyncPlayerChatEvent event) {
-        User userData = this.userStore.getUserObjectSync(event.getPlayer().getName());
+        User userData = this.userStore.getUserObjectSync(event.getPlayer().getUniqueId());
         if (event.isCancelled()) { return; }
         event.setCancelled(true);
         Bukkit.getOnlinePlayers().forEach( player ->

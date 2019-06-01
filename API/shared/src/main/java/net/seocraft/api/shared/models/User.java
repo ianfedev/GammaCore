@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter @Setter
 public class User implements Model {
@@ -24,6 +25,7 @@ public class User implements Model {
     @SerializedName("last_seen") private String lastSeen;
     @SerializedName("last_game") private String lastGame;
     @SerializedName("member_since") private int memberSince;
+    @SerializedName("uuid") private UUID gameUUID;
     private boolean verified;
     private int level;
     private int experience;
