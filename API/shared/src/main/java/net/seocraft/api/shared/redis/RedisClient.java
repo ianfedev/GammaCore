@@ -12,12 +12,11 @@ import java.util.Map;
 public class RedisClient implements IRedisClient {
 
     private final RedisClientConfiguration config;
-    private final JedisPool pool;
+    private JedisPool pool;
 
     @Inject
     RedisClient(RedisClientConfiguration config) {
         this.config = config;
-        this.pool = getPool();
     }
 
     public JedisPool getPool() {
