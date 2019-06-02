@@ -11,12 +11,15 @@ import net.seocraft.api.shared.onlineplayers.OnlinePlayersImpl;
 import net.seocraft.api.shared.redis.Messager;
 import net.seocraft.api.shared.redis.RedisMessager;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SharedModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(ExecutorService.class).to(ListeningExecutorService.class);
         bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8)));
+
         bind(Gson.class).toProvider(() -> {
             return new GsonBuilder()
                     .serializeNulls()
