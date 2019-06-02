@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Deque;
@@ -17,7 +16,7 @@ public class RedisChannel<O> implements Channel<O> {
     private String name;
     private TypeToken<O> type;
 
-    private JedisPool pool;
+    private RedisClient redis;
     private JedisPubSub pubSub;
 
     private Gson gson;
@@ -26,11 +25,11 @@ public class RedisChannel<O> implements Channel<O> {
 
     private String serverChannelId = UUID.randomUUID().toString();
 
-    RedisChannel(String name, TypeToken<O> type, JedisPool pool, Gson gson) {
+    RedisChannel(String name, TypeToken<O> type, RedisClient redis, Gson gson) {
         this.name = name;
         this.type = type;
 
-        this.pool = pool;
+        this.redis = redis;
 
         this.gson = gson;
 
@@ -54,7 +53,7 @@ public class RedisChannel<O> implements Channel<O> {
             }
         };
 
-        try (Jedis jedis = pool.getResource()) {
+        try (Jedis jedis = redis.getPool().getResource()) {
             jedis.subscribe(pubSub, name);
         }
 
@@ -73,7 +72,7 @@ public class RedisChannel<O> implements Channel<O> {
 
     @Override
     public void sendMessage(O object) {
-        try (Jedis jedis = pool.getResource()) {
+        try (Jedis jedis = redis.getPool().getResource()) {
 
             JsonElement jsonObject = gson.toJsonTree(object);
 
