@@ -11,6 +11,7 @@ import redis.clients.jedis.JedisPubSub;
 import java.util.Deque;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutorService;
 
 public class RedisChannel<O> implements Channel<O> {
     private String name;
@@ -25,7 +26,7 @@ public class RedisChannel<O> implements Channel<O> {
 
     private String serverChannelId = UUID.randomUUID().toString();
 
-    RedisChannel(String name, TypeToken<O> type, RedisClient redis, Gson gson) {
+    RedisChannel(String name, TypeToken<O> type, RedisClient redis, Gson gson, ExecutorService executorService) {
         this.name = name;
         this.type = type;
 
@@ -53,9 +54,11 @@ public class RedisChannel<O> implements Channel<O> {
             }
         };
 
-        try (Jedis jedis = redis.getPool().getResource()) {
-            jedis.subscribe(pubSub, name);
-        }
+        executorService.submit(() -> {
+            try (Jedis jedis = redis.getPool().getResource()) {
+                jedis.subscribe(pubSub, name);
+            }
+        });
 
         channelListeners = new ConcurrentLinkedDeque<>();
     }

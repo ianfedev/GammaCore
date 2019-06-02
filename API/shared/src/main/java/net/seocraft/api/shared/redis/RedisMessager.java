@@ -6,6 +6,7 @@ import com.google.inject.Inject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -19,8 +20,10 @@ public class RedisMessager implements Messager {
     private RedisClient client;
     private Gson gson;
 
+    private ExecutorService executorService;
+
     @Inject
-    RedisMessager(RedisClient client, Gson gson) {
+    RedisMessager(RedisClient client, Gson gson, ExecutorService executorService) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
@@ -28,6 +31,8 @@ public class RedisMessager implements Messager {
 
         this.client = client;
         this.gson = gson;
+
+        this.executorService = executorService;
     }
 
     @Override
@@ -44,7 +49,7 @@ public class RedisMessager implements Messager {
                 return registeredChannels.get(name);
             }
 
-            Channel<O> channel = new RedisChannel<>(name, type, client, gson);
+            Channel<O> channel = new RedisChannel<>(name, type, client, gson, executorService);
 
             registeredChannels.put(name, channel);
             registeredTypes.put(name, type);
