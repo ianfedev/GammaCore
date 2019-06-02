@@ -28,7 +28,7 @@ public class RedisClient implements IRedisClient {
     }
 
     public void setString(String key, String value) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             //TODO: Fix password/database issue
             /*client.auth(this.config.getPassword());
             client.select(this.config.getDatabase());*/
@@ -37,55 +37,55 @@ public class RedisClient implements IRedisClient {
     }
 
     public void deleteString(String key) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             client.del(key);
         }
     }
 
     public String getLastStringElement(String key) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             return client.lpop(key);
         }
     }
 
     public Map<String, String> getHashFields(String key) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             return client.hgetAll(key);
         }
     }
 
     public String getString(String key) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             return client.get(key);
         }
     }
 
     public void setLastStringElement(String key) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             client.lpush(key);
         }
     }
 
     public void setHash(String key, String field, @Nullable String value) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             client.hset(key, field, value);
         }
     }
 
     public void deleteHash(String key, String field) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             client.hdel(key, field);
         }
     }
 
     public void setExpiration(String key, Integer seconds) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             client.expire(key, seconds);
         }
     }
 
     public Boolean existsKey(String key) {
-        try (Jedis client = this.pool.getResource()) {
+        try (Jedis client = getPool().getResource()) {
             return client.exists(key);
         }
     }
