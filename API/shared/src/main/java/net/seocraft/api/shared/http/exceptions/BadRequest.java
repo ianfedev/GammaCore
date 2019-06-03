@@ -1,6 +1,6 @@
 package net.seocraft.api.shared.http.exceptions;
 
-public class BadRequest extends Exception {
+public class BadRequest extends Exception implements HTTPException {
 
     private String reason;
 
@@ -11,5 +11,10 @@ public class BadRequest extends Exception {
     @Override
     public String getMessage() {
         return this.reason;
+    }
+
+    @Override
+    public int statusCode() {
+        return 400;
     }
 }

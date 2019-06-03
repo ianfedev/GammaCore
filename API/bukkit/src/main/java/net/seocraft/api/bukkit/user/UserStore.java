@@ -28,8 +28,8 @@ public class UserStore {
     @Inject private RedisClient client;
 
 
-    public void storeUser(User model, UUID uuid) {
-        String idString = uuid.toString();
+    public void storeUser(User model) {
+        String idString = model.getGameUUID().toString();
         this.client.setString("user:" + idString, gson.toJson(model));
         this.client.setExpiration("user:" + idString, 120);
     }
@@ -53,7 +53,7 @@ public class UserStore {
             User deserializeUser = this.userDeserializer.deserializeModel(
                     this.request.executeRequest(idString, this.tokenHandler.getToken())
             );
-            storeUser(deserializeUser, id);
+            storeUser(deserializeUser);
             return deserializeUser;
         } catch (Unauthorized | InternalServerError | NotFound | BadRequest error) {
             return null;

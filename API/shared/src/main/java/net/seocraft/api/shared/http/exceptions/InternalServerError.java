@@ -1,6 +1,6 @@
 package net.seocraft.api.shared.http.exceptions;
 
-public class InternalServerError extends Throwable {
+public class InternalServerError extends Throwable implements HTTPException {
     private String reason;
 
     public InternalServerError(String reason) {
@@ -10,5 +10,10 @@ public class InternalServerError extends Throwable {
     @Override
     public String getMessage() {
         return this.reason;
+    }
+
+    @Override
+    public int statusCode() {
+        return 500;
     }
 }

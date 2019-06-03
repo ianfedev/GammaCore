@@ -33,6 +33,6 @@ public class WhisperResponse {
     }
 
     public enum Response {
-        SUCCESS, PLAYER_OFFLINE, ERROR;
+        SUCCESS, PLAYER_OFFLINE, ERROR
     }
 }
