@@ -17,10 +17,6 @@ public class AsyncResponse<T> {
         this.response = response;
     }
 
-    public static <T> AsyncResponse getSucessResponse(T response) {
-        return new AsyncResponse<>(null, Status.SUCCESS, response);
-    }
-
     @Nullable
     public HTTPException getThrowedException() {
         return throwedException;

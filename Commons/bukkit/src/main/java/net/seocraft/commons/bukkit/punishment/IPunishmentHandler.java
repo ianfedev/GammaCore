@@ -3,6 +3,7 @@ package net.seocraft.commons.bukkit.punishment;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
 import net.seocraft.api.shared.http.AsyncResponse;
@@ -11,8 +12,7 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.models.Match;
-import net.seocraft.api.shared.punishment.PunishmentCreateRequest;
-import net.seocraft.api.shared.punishment.PunishmentGetRequest;
+import net.seocraft.api.shared.punishment.*;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
 import org.jetbrains.annotations.NotNull;
@@ -27,26 +27,27 @@ public class IPunishmentHandler implements PunishmentHandler {
     private ListeningExecutorService executorService;
     private Messager messager;
     private Channel<Punishment> punishmentChannel;
-    private String serverToken;
     @Inject private PunishmentCreateRequest punishmentCreateRequest;
     @Inject private PunishmentGetRequest punishmentGetRequest;
+    @Inject private PunishmentGetLastRequest punishmentGetLastRequest;
+    @Inject private PunishmentListRequest punishmentListRequest;
+    @Inject private PunishmentUpdateRequest punishmentUpdateRequest;
     @Inject private ServerTokenQuery serverTokenQuery;
 
-    @Inject IPunishmentHandler(ListeningExecutorService executorService, Messager messager, Gson gson, ServerTokenQuery serverTokenQuery) {
+    @Inject IPunishmentHandler(ListeningExecutorService executorService, Messager messager, Gson gson) {
         this.executorService = executorService;
         this.messager = messager;
         this.gson = gson;
         this.punishmentChannel = this.messager.getChannel("punishments", Punishment.class);
-        this.serverTokenQuery = serverTokenQuery;
-        this.serverToken = this.serverTokenQuery.getToken();
         // TODO: Create punishment event / listener registration
     }
 
     @Override
-    public @NotNull Punishment createPunishment(@NotNull PunishmentType punishmentType, @NotNull String punisher, @NotNull String punished, @NotNull String server, @Nullable Match match, @NotNull String lastIp, @NotNull String reason, @NotNull String evidence, long expiration, boolean automatic, boolean silent) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @NotNull Punishment createPunishment(@NotNull PunishmentType punishmentType, @NotNull String punisher, @NotNull String punished, @NotNull String server, @Nullable Match match, @NotNull String lastIp, @NotNull String reason, long expiration, boolean automatic, boolean silent) throws Unauthorized, BadRequest, NotFound, InternalServerError {
 
         if (punishmentType.equals(PunishmentType.BAN)) {
             Punishment previousPunishment = getLastPunishmentSync(punishmentType, punished);
+
             if (previousPunishment != null) {
                 previousPunishment.setActive(false);
                 updatePunishmentSync(previousPunishment);
@@ -55,11 +56,10 @@ public class IPunishmentHandler implements PunishmentHandler {
 
         Punishment punishment = new IPunishment(UUID.randomUUID().toString(), punishmentType, punisher, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent);
 
-        //TODO: Execute request
         this.punishmentCreateRequest.executeRequest(
                 this.gson.toJson(
                         punishment,
-                        Punishment.class
+                        IPunishment.class
                 ),
                 this.serverTokenQuery.getToken()
         );
@@ -70,9 +70,9 @@ public class IPunishmentHandler implements PunishmentHandler {
     public ListenableFuture<AsyncResponse<Punishment>> getPunishmentById(@NotNull String id) {
         return this.executorService.submit(() -> {
             try {
-                return AsyncResponse.getSucessResponse(getPunishmentByIdSync(id));
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getPunishmentByIdSync(id));
             } catch (Unauthorized | InternalServerError | NotFound exception) {
-                return new AsyncResponse<Punishment>(exception, AsyncResponse.Status.ERROR,null);
+                return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
             }
         });
     }
@@ -80,38 +80,74 @@ public class IPunishmentHandler implements PunishmentHandler {
     @Override
     public @Nullable Punishment getPunishmentByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         return this.gson.fromJson(
-                this.punishmentGetRequest.executeRequest(id, this.serverToken),
-                Punishment.class
+                this.punishmentGetRequest.executeRequest(id, this.serverTokenQuery.getToken()),
+                IPunishment.class
         );
     }
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<Punishment>> getLastPunishment(@NotNull PunishmentType type, @NotNull String playerId) {
-        return null;
+    public @NotNull ListenableFuture<AsyncResponse<Punishment>> getLastPunishment(@Nullable PunishmentType type, @NotNull String playerId) {
+        return this.executorService.submit(() -> {
+            try {
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getLastPunishmentSync(type, playerId));
+            } catch (Unauthorized | InternalServerError | NotFound exception) {
+                return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
+            }
+        });
     }
 
     @Override
-    public @Nullable Punishment getLastPunishmentSync(@NotNull PunishmentType type, @NotNull String playerId) {
-        return null;
+    public @Nullable Punishment getLastPunishmentSync(@Nullable PunishmentType type, @NotNull String playerId) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        String typeString = null;
+        if (type != null) typeString = type.toString();
+        return this.gson.fromJson(
+                this.punishmentGetLastRequest.executeRequest(typeString, playerId, this.serverTokenQuery.getToken()),
+                IPunishment.class
+        );
+    }
+
+
+    @Override
+    public @NotNull ListenableFuture<AsyncResponse<List<Punishment>>> getPunishments(@Nullable PunishmentType type, @Nullable String playerId, boolean active) {
+        return this.executorService.submit(() -> {
+            try {
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getPunishmentsSync(type, playerId, active));
+            } catch (Unauthorized | InternalServerError | NotFound exception) {
+                return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
+            }
+        });
     }
 
     @Override
-    public ListenableFuture<AsyncResponse<List<Punishment>>> getPunishments(@Nullable PunishmentType type, @Nullable String playerId, boolean active) {
-        return null;
-    }
-
-    @Override
-    public List<Punishment> getPunishmentsSync(@Nullable PunishmentType type, @Nullable String playerId, boolean active) {
-        return null;
+    public List<Punishment> getPunishmentsSync(@Nullable PunishmentType type, @Nullable String playerId, boolean active) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        String typeString = null;
+        if (type != null) typeString = type.toString();
+        return this.gson.fromJson(
+                this.punishmentListRequest.executeRequest(typeString, playerId, active, this.serverTokenQuery.getToken()),
+                new TypeToken<List<IPunishment>>(){}.getType()
+        );
     }
 
     @Override
     public @NotNull ListenableFuture<AsyncResponse<Punishment>> updatePunishment(@NotNull Punishment punishment) {
-        return null;
+        return this.executorService.submit(() -> {
+            try {
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, updatePunishmentSync(punishment));
+            } catch (Unauthorized | InternalServerError | NotFound exception) {
+                return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
+            }
+        });
     }
 
     @Override
-    public Punishment updatePunishmentSync(@NotNull Punishment punishment) {
-        return null;
+    public Punishment updatePunishmentSync(@NotNull Punishment punishment) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        return this.gson.fromJson(
+                this.punishmentUpdateRequest.executeRequest(
+                        this.gson.toJson(punishment, IPunishment.class),
+                        punishment.id(),
+                        this.serverTokenQuery.getToken()
+                ),
+                IPunishment.class
+        );
     }
 }

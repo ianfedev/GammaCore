@@ -1,6 +1,6 @@
 package net.seocraft.api.shared.http.exceptions;
 
-public class NotFound extends Throwable implements HTTPException {
+public class NotFound extends Exception implements HTTPException {
     private String reason;
     public NotFound(String reason) {
         this.reason = reason;

@@ -21,25 +21,24 @@ public interface PunishmentHandler {
                                          @Nullable Match match,
                                          @NotNull String lastIp,
                                          @NotNull String reason,
-                                         @NotNull String evidence,
                                          long expiration,
                                          boolean automatic,
                                          boolean silent) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    ListenableFuture getPunishmentById(@NotNull String id);
+    ListenableFuture<AsyncResponse<Punishment>> getPunishmentById(@NotNull String id);
 
     @Nullable Punishment getPunishmentByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    @NotNull ListenableFuture<AsyncResponse<Punishment>> getLastPunishment(@NotNull PunishmentType type, @NotNull String playerId);
+    @NotNull ListenableFuture<AsyncResponse<Punishment>> getLastPunishment(@Nullable PunishmentType type, @NotNull String playerId);
 
-    @Nullable Punishment getLastPunishmentSync(@NotNull PunishmentType type, @NotNull String playerId);
+    @Nullable Punishment getLastPunishmentSync(@Nullable PunishmentType type, @NotNull String playerId) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    ListenableFuture<AsyncResponse<List<Punishment>>> getPunishments(@Nullable PunishmentType type, @Nullable String playerId, boolean active);
+    @NotNull ListenableFuture<AsyncResponse<List<Punishment>>> getPunishments(@Nullable PunishmentType type, @Nullable String playerId, boolean active);
 
-    List<Punishment> getPunishmentsSync(@Nullable PunishmentType type, @Nullable String playerId, boolean active);
+    @Nullable List<Punishment> getPunishmentsSync(@Nullable PunishmentType type, @Nullable String playerId, boolean active) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
     @NotNull ListenableFuture<AsyncResponse<Punishment>> updatePunishment(@NotNull Punishment punishment);
 
-    Punishment updatePunishmentSync(@NotNull Punishment punishment);
+    Punishment updatePunishmentSync(@NotNull Punishment punishment) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
 }

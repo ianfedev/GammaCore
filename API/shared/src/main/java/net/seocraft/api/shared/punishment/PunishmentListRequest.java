@@ -6,18 +6,24 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PunishmentGetRequest extends HttpRequest {
+public class PunishmentListRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
-    private String punishmentId;
+    private HashMap<String, String> params = new HashMap<>();
 
     @Override
     public Map<String, String> getHeaders() {
         return this.headers;
+    }
+
+    @Override
+    public Map<String, String> getQueryStrings() {
+        return this.params;
     }
 
     public HttpType getType() {
@@ -25,11 +31,13 @@ public class PunishmentGetRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "punishment/get-model/" + this.punishmentId;
+        return "punishment/list-model";
     }
 
-    public String executeRequest(String punishmentId, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.punishmentId = punishmentId;
+    public String executeRequest(@Nullable String type, @Nullable String playerId, boolean active, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.params.put("type", type);
+        this.params.put("id", playerId);
+        this.params.put("active", Boolean.toString(active));
         this.headers.put("authorization", token);
         return getResponse();
     }

@@ -1,6 +1,6 @@
 package net.seocraft.api.shared.http.exceptions;
 
-public class Unauthorized extends Throwable implements HTTPException {
+public class Unauthorized extends Exception implements HTTPException {
     private String reason;
 
     public Unauthorized(String reason) {

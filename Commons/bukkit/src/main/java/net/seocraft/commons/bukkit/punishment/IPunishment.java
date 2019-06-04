@@ -1,34 +1,35 @@
 package net.seocraft.commons.bukkit.punishment;
 
+import com.google.gson.annotations.SerializedName;
 import net.seocraft.api.shared.models.Match;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class IPunishment implements Punishment {
 
-    private @NotNull String id;
-    private @NotNull PunishmentType punishmentType;
-    private @NotNull String punisherId;
-    private @NotNull String punishedId;
+    @SerializedName("_id") private @NotNull String id;
+    @SerializedName("type") private @NotNull PunishmentType punishmentType;
+    @SerializedName("punisher") private @NotNull String punisherId;
+    @SerializedName("punished") private @NotNull String punishedId;
     private @NotNull String server;
     private @Nullable Match match;
-    private @NotNull String lastIp;
+    @SerializedName("last_ip") private @Nullable String lastIp;
     private @NotNull String reason;
-    private long expiration;
-    private long createdAt;
+    @SerializedName("expires") private long expiration;
+    @SerializedName("created_at") private long createdAt;
     private boolean automatic;
     private boolean appealed;
     private boolean silent;
     private boolean active;
 
-    public IPunishment(@NotNull String id, @NotNull PunishmentType punishmentType, @NotNull String punisherId, @NotNull String punishedId, @NotNull String server, @Nullable Match match, @NotNull String getLastIp, @NotNull String reason, long expiration, long createdAt, boolean automatic, boolean appealed, boolean silent) {
+    IPunishment(@NotNull String id, @NotNull PunishmentType punishmentType, @NotNull String punisherId, @NotNull String punishedId, @NotNull String server, @Nullable Match match, @Nullable String lastIp, @NotNull String reason, long expiration, long createdAt, boolean automatic, boolean appealed, boolean silent) {
         this.id = id;
         this.punishmentType = punishmentType;
         this.punisherId = punisherId;
         this.punishedId = punishedId;
         this.server = server;
         this.match = match;
-        this.lastIp = getLastIp;
+        this.lastIp = lastIp;
         this.reason = reason;
         this.expiration = expiration;
         this.createdAt = createdAt;

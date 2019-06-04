@@ -5,18 +5,15 @@ import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
-import net.seocraft.commons.bukkit.adminchat.AdminChatManager;
-import net.seocraft.commons.bukkit.adminchat.AdminChatManagerImpl;
-import net.seocraft.commons.bukkit.adminchat.AdminChatMessage;
-import net.seocraft.commons.bukkit.adminchat.AdminChatMessageImpl;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.commands.WhisperCommand;
+import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
+import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
+import net.seocraft.commons.bukkit.punishment.TestPunishment;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
-import net.seocraft.commons.bukkit.whisper.Whisper;
-import net.seocraft.commons.bukkit.whisper.WhisperImpl;
 import net.seocraft.commons.bukkit.whisper.WhisperManager;
 import net.seocraft.commons.bukkit.whisper.WhisperManagerImpl;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,6 +37,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private WhisperCommand whisperCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
+    @Inject private TestPunishment testPunishment;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
@@ -61,13 +59,14 @@ public class CommonsBukkit extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(this.userChatListener, this);
         getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
+        this.testPunishment.testPunishment();
     }
 
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(CommonsBukkit.class).toInstance(this);
         binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
-
+        binder.bind(PunishmentHandler.class).to(IPunishmentHandler.class);
         binder.expose(CommonsBukkit.class);
         binder.expose(WhisperManager.class);
     }
