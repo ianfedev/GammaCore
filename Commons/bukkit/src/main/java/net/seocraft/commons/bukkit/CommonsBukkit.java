@@ -37,7 +37,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private LoginCommand loginCommand;
     @Inject private RegisterCommand registerCommand;
 
-    //@Inject private WhisperCommand whisperCommand;
+    @Inject private WhisperCommand whisperCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
 
@@ -52,7 +52,7 @@ public class CommonsBukkit extends JavaPlugin {
         loadConfig();
         parametricCommandHandler.registerCommand(this.loginCommand);
         parametricCommandHandler.registerCommand(this.registerCommand);
-        //dispatcher.registerCommandClass(this.whisperCommand);
+        dispatcher.registerCommandClass(this.whisperCommand);
         // --- Authentication mode related listeners //
         getServer().getPluginManager().registerEvents(this.authenticationCommandsListener, this);
         getServer().getPluginManager().registerEvents(this.authenticationLanguageMenuListener, this);
@@ -66,10 +66,10 @@ public class CommonsBukkit extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(CommonsBukkit.class).toInstance(this);
-        //binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
+        binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
 
         binder.expose(CommonsBukkit.class);
-        //binder.expose(WhisperManager.class);
+        binder.expose(WhisperManager.class);
     }
 
     private void loadConfig(){
