@@ -2,10 +2,8 @@ package net.seocraft.commons.bukkit.user;
 
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.user.UserChat;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
-import net.seocraft.api.bukkit.user.UserPermissions;
-import net.seocraft.api.bukkit.user.UserStore;
+import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
@@ -32,11 +30,10 @@ import java.util.logging.Level;
 public class UserAccessResponse implements Listener {
 
     @Inject private CommonsBukkit instance;
-    @Inject private UserChat chatManager;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private JsonUtils parser;
-    @Inject private UserStore userStorage;
+    @Inject private UserStoreHandler userStorage;
     @Inject private UserAccessRequest request;
     @Inject private ServerTokenQuery tokenHandler;
     @Inject private TranslatableField translator;
@@ -65,8 +62,10 @@ public class UserAccessResponse implements Listener {
         request.addProperty("ip", ip);
         try {
             String response = this.request.executeRequest(request, tokenHandler.getToken());
-            User user = this.userStorage.getUserObjectSync(player.getUniqueId());
-            if (parser.parseJson(response, "multi").getAsBoolean()) {
+            String playerIdentifier = this.parser.parseJson(response, "user").getAsString();
+            this.instance.playerIdentifier.put(player.getUniqueId(), playerIdentifier);
+            User user = this.userStorage.getCachedUserSync(playerIdentifier);
+            if (this.parser.parseJson(response, "multi").getAsBoolean()) {
                 // TODO: Handle multi-account issue
             } else {
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
@@ -85,8 +84,7 @@ public class UserAccessResponse implements Listener {
                     }
                     event.setJoinMessage("");
                 }
-                playerField.set(player, new UserPermissions(player, this.userStorage));
-                System.out.println(player.hasPermission("commons.example.test"));
+                playerField.set(player, new UserPermissions(player, user));
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());

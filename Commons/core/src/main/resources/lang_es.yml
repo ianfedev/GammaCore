@@ -47,11 +47,13 @@ commons_commands_disabled: No puedes utilizar comandos en este momento
 # Message translations
 commons_message_from: De
 commons_message_to: Para
+commons_message_error: Ha ocurrido un error al enviar un mensaje.
 
 # Error translations
 commons_system_nulled: Haz nulleado el sistema. ¡Bien hecho!
 commons_player_offline: El jugador %%player no se encuentra conectado
 commons_system_error: Ha ocurrido un error, por favor contacta a un administrador tan pronto sea posible.
+commons_permissions_error: Ha ocurrido un error al obtener tus permisos, así que se te ha denegado el acceso.
 
 # Common words translations
 commons_main_lobby: Lobby Principal

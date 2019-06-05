@@ -1,7 +1,11 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.user.UserStore;
+import net.seocraft.api.bukkit.user.UserStoreHandler;
+import net.seocraft.api.shared.http.exceptions.BadRequest;
+import net.seocraft.api.shared.http.exceptions.InternalServerError;
+import net.seocraft.api.shared.http.exceptions.NotFound;
+import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -17,7 +21,7 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
 
     @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
-    @Inject private UserStore userStorage;
+    @Inject private UserStoreHandler userStoreHandler;
 
     @EventHandler
     public void authenticationMovementListener(PlayerMoveEvent event) {
@@ -31,16 +35,25 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChatEvent(AsyncPlayerChatEvent event) {
+
         if (this.instance.getConfig().getBoolean("authentication.enabled")) {
             Player player = event.getPlayer();
-            ChatAlertLibrary.errorChatAlert(
-                    player,
-                    this.translator.getUnspacedField(
-                            this.userStorage.getUserObjectSync(player.getUniqueId()).getLanguage(),
-                            "authentication_not_authenticated"
-                    ) + "."
-            );
-            event.setCancelled(true);
+            try {
+                ChatAlertLibrary.errorChatAlert(
+                        player,
+                        this.translator.getUnspacedField(
+                                this.userStoreHandler.getCachedUserSync(this.instance.playerIdentifier.get(player.getUniqueId())).getLanguage(),
+                                "authentication_not_authenticated"
+                        ) + "."
+                );
+            } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
+                ChatAlertLibrary.errorChatAlert(
+                        player,
+                        null
+                );
+            } finally {
+                event.setCancelled(true);
+            }
         }
     }
 

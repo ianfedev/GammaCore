@@ -10,7 +10,7 @@ import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserDataRequest extends HttpRequest {
+public class UserGetRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
     private String username;

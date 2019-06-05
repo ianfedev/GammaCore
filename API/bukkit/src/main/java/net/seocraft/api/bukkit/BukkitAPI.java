@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.server.ServerLoadManager;
+import net.seocraft.api.bukkit.user.IUserStoreHandler;
+import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.SharedModule;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
@@ -31,8 +33,8 @@ public class BukkitAPI extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.publicBinder().install(new SharedModule()); // This should be changed when bungee also has the same ProtectedModule
-
         binder.bind(BukkitAPI.class).toInstance(this);
+        binder.bind(UserStoreHandler.class).to(IUserStoreHandler.class);
         binder.expose(BukkitAPI.class);
     }
 

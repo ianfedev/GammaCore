@@ -11,7 +11,6 @@ import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.commands.WhisperCommand;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
-import net.seocraft.commons.bukkit.punishment.TestPunishment;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
 import net.seocraft.commons.bukkit.whisper.WhisperManager;
@@ -37,10 +36,10 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private WhisperCommand whisperCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
-    @Inject private TestPunishment testPunishment;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
+    public Map<UUID, String> playerIdentifier = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
 
     @Override
@@ -59,7 +58,6 @@ public class CommonsBukkit extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(this.userChatListener, this);
         getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
-        this.testPunishment.testPunishment();
     }
 
     @Override

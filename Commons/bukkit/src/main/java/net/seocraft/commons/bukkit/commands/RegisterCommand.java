@@ -4,12 +4,14 @@ import com.google.inject.Inject;
 import me.ggamer55.bcm.AbstractAdvancedCommand;
 import me.ggamer55.bcm.CommandContext;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
-import net.seocraft.api.bukkit.user.UserStore;
+import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
+import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
+import net.seocraft.api.shared.models.User;
 import net.seocraft.api.shared.user.UserRegisterRequest;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
@@ -28,7 +30,7 @@ public class RegisterCommand extends AbstractAdvancedCommand {
     @Inject private ServerTokenQuery tokenQuery;
     @Inject private TranslatableField translator;
     @Inject private UserRegisterRequest userRegisterRequest;
-    @Inject private UserStore userStorage;
+    @Inject private UserStoreHandler userStoreHandler;
 
     public RegisterCommand() {
         super(
@@ -48,43 +50,51 @@ public class RegisterCommand extends AbstractAdvancedCommand {
     @Override
     public boolean execute(CommandContext commandContext) {
         Player player = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        CallbackWrapper.addCallback(this.userStorage.getUserObject(player.getUniqueId()), user -> {
-            if (this.instance.unregisteredPlayers.contains(player.getUniqueId())) {
-                String password = commandContext.getArgument(0);
-                if (password.length() > 7) {
-                    try {
-                        this.userRegisterRequest.executeRequest(
-                                player.getName(),
-                                player.getAddress().toString().split(":")[0].replace("/", ""),
-                                password,
-                                this.tokenQuery.getToken()
+        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                User user = userAsyncResponse.getResponse();
+                if (this.instance.unregisteredPlayers.contains(player.getUniqueId())) {
+                    String password = commandContext.getArgument(0);
+                    if (password.length() > 7) {
+                        try {
+                            this.userRegisterRequest.executeRequest(
+                                    player.getName(),
+                                    player.getAddress().toString().split(":")[0].replace("/", ""),
+                                    password,
+                                    this.tokenQuery.getToken()
+                            );
+                        } catch (InternalServerError | Unauthorized | NotFound | BadRequest error) {
+                            Bukkit.getLogger().log(Level.WARNING,
+                                    "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
+                                    new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
+                            Bukkit.getScheduler().runTask(this.instance, () -> player.kickPlayer(ChatColor.RED +
+                                    this.translator.getUnspacedField(user.getLanguage(), "authentication_register_error") +
+                                    ". \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName()
+                            ));
+                        }
+                        ChatAlertLibrary.infoAlert(player,
+                                ChatColor.AQUA +
+                                        this.translator.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
+                                                .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
                         );
-                    } catch (InternalServerError | Unauthorized | NotFound | BadRequest error) {
-                        Bukkit.getLogger().log(Level.WARNING,
-                                "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
-                                new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
-                        Bukkit.getScheduler().runTask(this.instance, () -> player.kickPlayer(ChatColor.RED +
-                                this.translator.getUnspacedField(user.getLanguage(), "authentication_register_error") +
-                                ". \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName()
-                        ));
+                        //TODO: Give welcome message, handle request, send to server group
+                    } else {
+                        ChatAlertLibrary.errorChatAlert(player,
+                                this.translator.getUnspacedField(user.getLanguage(),"authentication_password_weak")
+                        );
                     }
-                    ChatAlertLibrary.infoAlert(player,
-                            ChatColor.AQUA +
-                                    this.translator.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
-                            .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
-                    );
-                    //TODO: Give welcome message, handle request, send to server group
                 } else {
                     ChatAlertLibrary.errorChatAlert(player,
-                            this.translator.getUnspacedField(user.getLanguage(),"authentication_password_weak")
+                            this.translator.getField(user.getLanguage(),"authentication_already_registered") +
+                                    ChatColor.YELLOW + "/login <" +
+                                    this.translator.getUnspacedField(user.getLanguage(),"commons_password")
+                                    + ">"
                     );
                 }
             } else {
-                ChatAlertLibrary.errorChatAlert(player,
-                        this.translator.getField(user.getLanguage(),"authentication_already_registered") +
-                                ChatColor.YELLOW + "/login <" +
-                                this.translator.getUnspacedField(user.getLanguage(),"commons_password")
-                                + ">"
+                ChatAlertLibrary.errorChatAlert(
+                        player,
+                        null
                 );
             }
         });
