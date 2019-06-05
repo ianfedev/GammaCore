@@ -35,6 +35,7 @@ public class BukkitAPI extends JavaPlugin {
         binder.publicBinder().install(new SharedModule()); // This should be changed when bungee also has the same ProtectedModule
         binder.bind(BukkitAPI.class).toInstance(this);
         binder.bind(UserStoreHandler.class).to(IUserStoreHandler.class);
+        binder.expose(UserStoreHandler.class);
         binder.expose(BukkitAPI.class);
     }
 

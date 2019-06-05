@@ -5,6 +5,7 @@ import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
+import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
