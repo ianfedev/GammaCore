@@ -44,6 +44,15 @@ public class User implements Model {
         return id;
     }
 
+    public Group getPrimaryGroup() {
+        Group primaryGroup = new Group();
+        primaryGroup.setPriority(999999999); // Change priority if needed deeper groups
+        for (Group group: getGroups()) {
+            if (group.getPriority() < primaryGroup.getPriority()) primaryGroup = group;
+        }
+        return primaryGroup;
+    }
+
     @Getter @Setter
     public class IpRecord {
         private String number;

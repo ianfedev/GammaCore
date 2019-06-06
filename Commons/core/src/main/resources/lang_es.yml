@@ -40,6 +40,10 @@ authentication_language_update_error: ¡Ha ocurrido un error al actualizar tu id
 authentication_language_update_success: ¡Tu lenguaje ha sido actualizado a %%language%%!
 authentication_language_update_same: Ya has seleccionado este idioma antes
 
+# Punishment translations
+commons_punish_offline: No puedes sancionar a un usuario desconectado. Sancionalo con las pruebas necesarias en %%url%%
+commons_punish_error: Ha ocurrido un error al sancionar al usuario.
+
 # General translations
 commons_plugin_developer: Nuestros plugins han sido creados por nuestro equipo de desarrolladores, conoce más en
 commons_commands_disabled: No puedes utilizar comandos en este momento

@@ -25,7 +25,6 @@ public class IPunishmentHandler implements PunishmentHandler {
 
     private Gson gson;
     private ListeningExecutorService executorService;
-    private Messager messager;
     private Channel<Punishment> punishmentChannel;
     @Inject private PunishmentCreateRequest punishmentCreateRequest;
     @Inject private PunishmentGetRequest punishmentGetRequest;
@@ -36,10 +35,9 @@ public class IPunishmentHandler implements PunishmentHandler {
 
     @Inject IPunishmentHandler(ListeningExecutorService executorService, Messager messager, Gson gson) {
         this.executorService = executorService;
-        this.messager = messager;
         this.gson = gson;
-        this.punishmentChannel = this.messager.getChannel("punishments", Punishment.class);
-        // TODO: Create punishment event / listener registration
+        this.punishmentChannel = messager.getChannel("punishments", Punishment.class);
+        this.punishmentChannel.registerListener(new PunishmentListener());
     }
 
     @Override
@@ -55,7 +53,6 @@ public class IPunishmentHandler implements PunishmentHandler {
         }
 
         Punishment punishment = new IPunishment(UUID.randomUUID().toString(), punishmentType, punisher, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent);
-
         this.punishmentCreateRequest.executeRequest(
                 this.gson.toJson(
                         punishment,
@@ -63,6 +60,7 @@ public class IPunishmentHandler implements PunishmentHandler {
                 ),
                 this.serverTokenQuery.getToken()
         );
+        this.punishmentChannel.sendMessage(punishment);
         return punishment;
     }
 
@@ -140,7 +138,7 @@ public class IPunishmentHandler implements PunishmentHandler {
     }
 
     @Override
-    public Punishment updatePunishmentSync(@NotNull Punishment punishment) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @NotNull Punishment updatePunishmentSync(@NotNull Punishment punishment) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         return this.gson.fromJson(
                 this.punishmentUpdateRequest.executeRequest(
                         this.gson.toJson(punishment, IPunishment.class),

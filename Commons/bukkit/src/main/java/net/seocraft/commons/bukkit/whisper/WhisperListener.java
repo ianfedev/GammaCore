@@ -11,8 +11,7 @@ import java.util.UUID;
 
 public class WhisperListener implements ChannelListener<Whisper> {
 
-    @Inject
-    private TranslatableField translator;
+    @Inject private TranslatableField translator;
 
     @Override
     public void receiveMessage(Whisper object) {

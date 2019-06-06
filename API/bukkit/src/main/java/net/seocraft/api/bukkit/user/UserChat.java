@@ -9,11 +9,7 @@ public class UserChat {
 
     public String getUserFormat(User user, String realm) {
         String userFormat = ChatColor.GRAY + user.getUsername();
-        Group primaryGroup = new Group();
-        primaryGroup.setPriority(999999999); // Change priority if needed deeper groups
-        for (Group group: user.getGroups()) {
-            if (group.getPriority() < primaryGroup.getPriority()) primaryGroup = group;
-        }
+        Group primaryGroup = user.getPrimaryGroup();
         for (MinecraftFlair flair: primaryGroup.getMinecraftFlairs()) {
             if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {
                 String symbol = flair.getSymbol();
