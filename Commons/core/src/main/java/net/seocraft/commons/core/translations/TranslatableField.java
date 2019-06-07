@@ -16,7 +16,9 @@ public class TranslatableField {
                 .getClassLoader()
                 .getResourceAsStream("lang_" + language + ".yml");
         Map<String, Object> hashMap = parser.load(inputStream);
-        return String.valueOf(hashMap.get(field));
+        String response = String.valueOf(hashMap.get(field));
+        if (response.equalsIgnoreCase("null")) return field;
+        return response;
     }
 
     public String getField(String language, String field) {
@@ -24,6 +26,8 @@ public class TranslatableField {
                 .getClassLoader()
                 .getResourceAsStream("lang_" + language + ".yml");
         Map<String, Object> hashMap = parser.load(inputStream);
+        String response = String.valueOf(hashMap.get(field));
+        if (response.equalsIgnoreCase("null")) return field;
         return hashMap.get(field) + " ";
     }
 

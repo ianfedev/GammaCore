@@ -1,9 +1,7 @@
 package net.seocraft.api.shared.onlineplayers;
 
-import java.util.UUID;
-
 public interface OnlinePlayersApi {
-    boolean isPlayerOnline(UUID id);
+    boolean isPlayerOnline(String id);
 
-    void setPlayerOnlineStatus(UUID id, boolean onlineStatus);
+    void setPlayerOnlineStatus(String id, boolean onlineStatus);
 }

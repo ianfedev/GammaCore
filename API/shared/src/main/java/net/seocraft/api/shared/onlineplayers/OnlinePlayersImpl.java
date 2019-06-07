@@ -14,25 +14,25 @@ public class OnlinePlayersImpl implements OnlinePlayersApi {
     private static final String PREFIX = "users.online";
 
     @Override
-    public boolean isPlayerOnline(UUID id) {
+    public boolean isPlayerOnline(String id) {
         try (Jedis jedis = client.getPool().getResource()) {
-            return jedis.sismember(PREFIX, id.toString());
+            return jedis.sismember(PREFIX, id);
         }
     }
 
     @Override
-    public void setPlayerOnlineStatus(UUID id, boolean onlineStatus) {
+    public void setPlayerOnlineStatus(String id, boolean onlineStatus) {
         try (Jedis jedis = client.getPool().getResource()) {
-            boolean idIsMember = jedis.sismember(PREFIX, id.toString());
+            boolean idIsMember = jedis.sismember(PREFIX, id);
 
             if (onlineStatus && !idIsMember) {
-                jedis.sadd(PREFIX, id.toString());
+                jedis.sadd(PREFIX, id);
 
                 return;
             }
 
             if (!onlineStatus && idIsMember) {
-                jedis.srem(PREFIX, id.toString());
+                jedis.srem(PREFIX, id);
 
                 return;
             }

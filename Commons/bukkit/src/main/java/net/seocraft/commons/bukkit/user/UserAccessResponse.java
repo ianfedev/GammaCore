@@ -3,12 +3,14 @@ package net.seocraft.commons.bukkit.user;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.user.IUserStoreHandler;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
 import net.seocraft.api.shared.serialization.JsonUtils;
 import net.seocraft.api.shared.user.UserAccessRequest;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -84,7 +86,7 @@ public class UserAccessResponse implements Listener {
                     }
                     event.setJoinMessage("");
                 }
-                playerField.set(player, new UserPermissions(player, user));
+                playerField.set(player, new UserPermissions(player, user, userStorage, instance, translator));
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());

@@ -13,27 +13,30 @@ import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
-import org.bukkit.permissions.Permission;
 
 
 public class UserPermissions extends PermissibleBase {
 
-    @Inject private UserStoreHandler userStoreHandler;
-    @Inject private CommonsBukkit instance;
-    @Inject private TranslatableField translatableField;
+    private UserStoreHandler userStoreHandler;
+    private CommonsBukkit instance;
+    private TranslatableField translatableField;
     private Player player;
     private User user;
 
 
-    UserPermissions(Player player, User user) {
+    UserPermissions(Player player, User user, UserStoreHandler userStoreHandler, CommonsBukkit instance, TranslatableField translatableField) {
         super(player);
         this.player = player;
+        this.userStoreHandler = userStoreHandler;
+        this.instance = instance;
+        this.translatableField = translatableField;
         this.user = user;
     }
 
     public boolean hasPermission(String s) {
         try {
-            User newUser = this.userStoreHandler.getCachedUserSync(this.instance.playerIdentifier.get(player.getUniqueId()));
+            String playerId = this.instance.playerIdentifier.get(player.getUniqueId());
+            User newUser = this.userStoreHandler.getCachedUserSync(playerId);
             for (Group group: newUser.getGroups()) {
                 for (String permission: group.getPermissions()) {
                     if (permission.equalsIgnoreCase(s)) return true;
@@ -54,10 +57,6 @@ public class UserPermissions extends PermissibleBase {
             );
         }
         return false;
-    }
-
-    public boolean hasPermission(Permission p) {
-        return hasPermission(p.getName());
     }
 
 }

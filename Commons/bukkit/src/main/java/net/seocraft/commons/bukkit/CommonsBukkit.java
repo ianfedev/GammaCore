@@ -5,9 +5,11 @@ import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
-import net.seocraft.api.bukkit.user.UserStoreHandler;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
+import net.seocraft.api.shared.onlineplayers.OnlinePlayersImpl;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.commands.LoginCommand;
+import net.seocraft.commons.bukkit.commands.PunishmentCommand;
 import net.seocraft.commons.bukkit.commands.RegisterCommand;
 import net.seocraft.commons.bukkit.commands.WhisperCommand;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
@@ -35,6 +37,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private RegisterCommand registerCommand;
 
     @Inject private WhisperCommand whisperCommand;
+    @Inject private PunishmentCommand punishmentCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
 
@@ -51,6 +54,7 @@ public class CommonsBukkit extends JavaPlugin {
         parametricCommandHandler.registerCommand(this.loginCommand);
         parametricCommandHandler.registerCommand(this.registerCommand);
         dispatcher.registerCommandClass(this.whisperCommand);
+        dispatcher.registerCommandClass(this.punishmentCommand);
         // --- Authentication mode related listeners //
         getServer().getPluginManager().registerEvents(this.authenticationCommandsListener, this);
         getServer().getPluginManager().registerEvents(this.authenticationLanguageMenuListener, this);
@@ -64,6 +68,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(CommonsBukkit.class).toInstance(this);
+        binder.bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
         binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
         binder.bind(PunishmentHandler.class).to(IPunishmentHandler.class);
         binder.expose(CommonsBukkit.class);
