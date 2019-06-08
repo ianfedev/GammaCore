@@ -53,7 +53,7 @@ public class UserPermissions extends PermissibleBase {
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
             ChatAlertLibrary.errorChatAlert(
                     player,
-                    this.translatableField.getField(user.getLanguage(), "commons_permissions_error")
+                    this.translatableField.getField(user.getLanguage(), "commons_permissions_error") + "."
             );
         }
         return false;

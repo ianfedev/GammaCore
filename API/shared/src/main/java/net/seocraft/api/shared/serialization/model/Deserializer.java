@@ -1,4 +1,4 @@
-package net.seocraft.api.shared.serialization.models;
+package net.seocraft.api.shared.serialization.model;
 
 
 public interface Deserializer<T> {

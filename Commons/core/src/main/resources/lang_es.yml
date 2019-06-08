@@ -42,13 +42,17 @@ authentication_language_update_same: Ya has seleccionado este idioma antes
 
 # Punishment translations
 commons_punish_offline: No puedes sancionar a un usuario desconectado. Sancionalo con las pruebas necesarias en %%url%%
-commons_punish_error: Ha ocurrido un error al sancionar al usuario.
-commons_punish_lower_permissions: No puedes sancionar a este usuario ya que tiene un rango mayor que tú.
+commons_punish_error: Ha ocurrido un error al sancionar al usuario
+commons_punish_lower_permissions: No puedes sancionar a este usuario ya que tiene un rango mayor que tú
 commons_punish_ban: Suspensión
+commons_punish_temporal: Temporal
+commons_punish_permanent: Permanente
 commons_punish_kick: Expulsión
 commons_punish_warn: Advertencia
 commons_punish_no_reason: Sin razón
 commons_punish_yourself: No te puedes sancionar a tí mismo
+commons_punish_appeal: Visita %%website%% para apelar
+commons_punish_expires: Expira en
 
 # General translations
 commons_plugin_developer: Nuestros plugins han sido creados por nuestro equipo de desarrolladores, conoce más en
@@ -62,12 +66,13 @@ commons_message_error: Ha ocurrido un error al enviar un mensaje.
 # Error translations
 commons_system_nulled: Haz nulleado el sistema. ¡Bien hecho!
 commons_player_offline: El jugador %%player no se encuentra conectado
-commons_system_error: Ha ocurrido un error, por favor contacta a un administrador tan pronto sea posible.
-commons_permissions_error: Ha ocurrido un error al obtener tus permisos, así que se te ha denegado el acceso.
-commons_insufficient_permissions: No tienes los permisos suficientes para realizar esta acción.
+commons_system_error: Ha ocurrido un error, por favor contacta a un administrador tan pronto sea posible
+commons_permissions_error: Ha ocurrido un error al obtener tus permisos, así que se te ha denegado el acceso
+commons_insufficient_permissions: No tienes los permisos suficientes para realizar esta acción
 
 # Common words translations
 commons_main_lobby: Lobby Principal
 commons_password: contraseña
 commons_error_type: Tipo de Error
 commons_language_placeholder: Español
+commons_not_found: El jugador que buscas no se ha registrado en el servidor

@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.commands;
+package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
 import me.ggamer55.bcm.parametric.CommandClass;
@@ -6,12 +6,12 @@ import me.ggamer55.bcm.parametric.annotation.Command;
 import me.ggamer55.bcm.parametric.annotation.JoinedString;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.model.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.whisper.WhisperManager;
 import net.seocraft.commons.bukkit.whisper.WhisperResponse;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

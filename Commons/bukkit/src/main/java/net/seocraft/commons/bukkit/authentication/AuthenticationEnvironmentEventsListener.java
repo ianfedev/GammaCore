@@ -7,7 +7,7 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -3,17 +3,14 @@ package net.seocraft.api.shared.server;
 import com.google.gson.Gson;
 import net.seocraft.api.shared.http.HttpRequest;
 import net.seocraft.api.shared.http.HttpType;
-import net.seocraft.api.shared.http.QueryBuilder;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.Server;
-import org.apache.http.client.ResponseHandler;
+import net.seocraft.api.shared.model.Server;
 
 import javax.annotation.Nullable;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

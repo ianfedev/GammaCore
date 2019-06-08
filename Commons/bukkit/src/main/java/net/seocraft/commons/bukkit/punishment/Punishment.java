@@ -36,7 +36,7 @@ public interface Punishment extends Model {
     void setActive(boolean active);
 
     default boolean isPermanent() {
-        return getExpiration() > 0;
+        return getExpiration() < 0;
     }
 
 }

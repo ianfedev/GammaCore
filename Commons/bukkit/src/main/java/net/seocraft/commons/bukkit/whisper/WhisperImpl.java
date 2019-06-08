@@ -1,6 +1,6 @@
 package net.seocraft.commons.bukkit.whisper;
 
-import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.model.User;
 
 import java.util.Objects;
 

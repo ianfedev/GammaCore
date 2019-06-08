@@ -5,10 +5,10 @@ import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
 import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.model.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
-import net.seocraft.commons.bukkit.utils.InventoryUtils;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.util.InventoryUtils;
 import net.seocraft.commons.core.translations.TranslatableField;
 
 import org.bukkit.entity.Player;

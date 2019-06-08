@@ -13,7 +13,6 @@ public class AuthenticationLoginListener {
 
     @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
-    @Inject private PlayerTitleHandler titleHandler;
 
     public void authenticationLoginListener(Player player, Boolean registered, String language) {
         World w = Bukkit.getServer().getWorld(this.instance.getConfig().getString("authentication.coords.world"));
@@ -33,13 +32,13 @@ public class AuthenticationLoginListener {
         }
         player.getInventory().setItem(4, AuthenticationHeadHandler.getLanguageHead());
         if (registered) {
-            this.titleHandler.sendTitle(player,
+            PlayerTitleHandler.sendTitle(player,
                     ChatColor.AQUA + this.translator.getField(language, "authentication_registered_title") + ChatColor.YELLOW + player.getName(),
                     ChatColor.YELLOW + this.translator.getField(language, "authentication_registered_sub") + ChatColor.RED + "/login <" + this.translator.getField(language, "commons_password") + ">"
             );
             this.instance.loginAttempts.put(player.getUniqueId(), 0);
         } else {
-            this.titleHandler.sendTitle(player,
+            PlayerTitleHandler.sendTitle(player,
                     ChatColor.AQUA + this.translator.getField(language, "authentication_unregistered_title") + ChatColor.YELLOW + player.getName(),
                     ChatColor.YELLOW + this.translator.getField(language, "authentication_unregistered_sub") + ChatColor.RED + "/register <" + this.translator.getField(language, "commons_password") + ">"
             );

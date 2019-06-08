@@ -13,8 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class WhisperManagerImpl implements WhisperManager {
 
     @Inject private OnlinePlayersApi onlinePlayersApi;

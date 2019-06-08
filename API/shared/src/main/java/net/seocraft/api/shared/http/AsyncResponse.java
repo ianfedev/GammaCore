@@ -17,8 +17,7 @@ public class AsyncResponse<T> {
         this.response = response;
     }
 
-    @Nullable
-    public HTTPException getThrowedException() {
+    @NotNull public HTTPException getThrowedException() {
         return throwedException;
     }
 

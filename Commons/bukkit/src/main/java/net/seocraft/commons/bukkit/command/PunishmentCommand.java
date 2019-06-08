@@ -16,10 +16,10 @@ import net.seocraft.api.shared.models.User;
 import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
 import net.seocraft.api.shared.serialization.TimeUtils;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
-import net.seocraft.commons.bukkit.punishment.PunishmentType;
+import net.seocraft.commons.bukkit.punishment.*;
 import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Objects;
 
 public class PunishmentCommand implements CommandClass {
 
@@ -34,10 +35,8 @@ public class PunishmentCommand implements CommandClass {
     @Inject private TranslatableField translator;
     @Inject private OnlinePlayersApi onlinePlayers;
     @Inject private PunishmentHandler punishmentHandler;
+    @Inject private PunishmentActions punishmentActions;
     @Inject private UserStoreHandler userStoreHandler;
-
-    //TODO: Remove duplicated code
-    //TODO: Change default answer of "NotFound"
 
     @Command(names = {"ban", "tempban", "suspender", "st", "tb", "tban", "pban", "sp"}, permission = "commons.staff.punish", min = 1, usage = "/<command> <target> [duration] [reason] [-s]")
     public boolean banCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
@@ -64,10 +63,7 @@ public class PunishmentCommand implements CommandClass {
 
                             // Detecting if player is online
                             if (this.onlinePlayers.isPlayerOnline(targetRecord.id())) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                        user.getLanguage(), "commons_punish_offline".replace("%%url%%",
-                                                ChatColor.YELLOW + "https://www.seocraft.net" + ChatColor.RED + "."
-                                        )));
+                                alertOfflineTarget(player, user.getLanguage());
                                 return;
                             }
 
@@ -92,7 +88,7 @@ public class PunishmentCommand implements CommandClass {
                                 }
 
                                 try {
-                                    this.punishmentHandler.createPunishment(
+                                    Punishment punishment = this.punishmentHandler.createPunishment(
                                             PunishmentType.BAN,
                                             user.id(),
                                             targetRecord.id(),
@@ -105,6 +101,7 @@ public class PunishmentCommand implements CommandClass {
                                             false,
                                             silent
                                     );
+                                    this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
                                 } catch (Unauthorized | BadRequest | InternalServerError | NotFound unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                             user.getLanguage(),
@@ -141,7 +138,7 @@ public class PunishmentCommand implements CommandClass {
                                         Duration.ofMillis(millisDuration)
                                 ));
                                 try {
-                                    this.punishmentHandler.createPunishment(
+                                    Punishment punishment = this.punishmentHandler.createPunishment(
                                             PunishmentType.BAN,
                                             user.id(),
                                             targetRecord.id(),
@@ -153,6 +150,7 @@ public class PunishmentCommand implements CommandClass {
                                             false,
                                             silent
                                     );
+                                    this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
                                 } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                             user.getLanguage(),
@@ -175,7 +173,7 @@ public class PunishmentCommand implements CommandClass {
 
                             String banReason = context.getJoinedArgs(1);
                             try {
-                                this.punishmentHandler.createPunishment(
+                                Punishment punishment = this.punishmentHandler.createPunishment(
                                         PunishmentType.BAN,
                                         user.id(),
                                         targetRecord.id(),
@@ -187,15 +185,22 @@ public class PunishmentCommand implements CommandClass {
                                         false,
                                         silent
                                 );
+                                Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment));
                             } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
                                         "commons_punish_error") + ".");
                             }
                         } else {
-                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_punish_error") + ".");
+                            if (targetAsyncResponse.getThrowedException().statusCode() == 404) {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(),
+                                        "commons_not_found") + ".");
+                            } else {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(),
+                                        "commons_punish_error") + ".");
+                            }
                         }
                     });
 
@@ -232,10 +237,7 @@ public class PunishmentCommand implements CommandClass {
 
                             // Detecting if player is online
                             if (this.onlinePlayers.isPlayerOnline(targetRecord.id())) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                        user.getLanguage(), "commons_punish_offline".replace("%%url%%",
-                                                ChatColor.YELLOW + "https://www.seocraft.net" + ChatColor.RED + "."
-                                        )));
+                                alertOfflineTarget(player, user.getLanguage());
                                 return;
                             }
 
@@ -250,7 +252,7 @@ public class PunishmentCommand implements CommandClass {
                             if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
 
                             try {
-                                this.punishmentHandler.createPunishment(
+                                Punishment punishment = this.punishmentHandler.createPunishment(
                                         PunishmentType.KICK,
                                         user.id(),
                                         targetRecord.id(),
@@ -262,18 +264,24 @@ public class PunishmentCommand implements CommandClass {
                                         false,
                                         silent
                                 );
+                                Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.kickPlayer(target.getPlayer(), targetRecord, punishment));
                             } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
                                         "commons_punish_error") + ".");
                             }
                         } else {
-                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                    user.getLanguage(),
-                                    "commons_punish_error") + ".");
+                            if (targetAsyncResponse.getThrowedException().statusCode() == 404) {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(),
+                                        "commons_not_found") + ".");
+                            } else {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(),
+                                        "commons_punish_error") + ".");
+                            }
                         }
                     });
-
                 } else {
                     ChatAlertLibrary.errorChatAlert(player, null);
                 }
@@ -307,10 +315,7 @@ public class PunishmentCommand implements CommandClass {
 
                             // Detecting if player is online
                             if (this.onlinePlayers.isPlayerOnline(targetRecord.id())) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                        user.getLanguage(), "commons_punish_offline".replace("%%url%%",
-                                                ChatColor.YELLOW + "https://www.seocraft.net" + ChatColor.RED + "."
-                                        )));
+                                alertOfflineTarget(player, user.getLanguage());
                                 return;
                             }
 
@@ -325,7 +330,7 @@ public class PunishmentCommand implements CommandClass {
                             if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
 
                             try {
-                                this.punishmentHandler.createPunishment(
+                                Punishment punishment = this.punishmentHandler.createPunishment(
                                         PunishmentType.WARN,
                                         user.id(),
                                         targetRecord.id(),
@@ -337,15 +342,22 @@ public class PunishmentCommand implements CommandClass {
                                         false,
                                         silent
                                 );
+                                Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.warnPlayer(target.getPlayer(), targetRecord, punishment));
                             } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
                                         "commons_punish_error") + ".");
                             }
                         } else {
-                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                    user.getLanguage(),
-                                    "commons_punish_error") + ".");
+                            if (targetAsyncResponse.getThrowedException().statusCode() == 404) {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(),
+                                        "commons_not_found") + ".");
+                            } else {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(),
+                                        "commons_punish_error") + ".");
+                            }
                         }
                     });
 
@@ -361,6 +373,13 @@ public class PunishmentCommand implements CommandClass {
         ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                 language,
                 "commons_punish_lower_permissions")  + ".");
+    }
+
+    private void alertOfflineTarget(Player player, String language) {
+        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                language, "commons_punish_offline".replace("%%url%%",
+                        ChatColor.YELLOW + "https://www.seocraft.net" + ChatColor.RED + "."
+                )));
     }
 
     private String getFormattedIp(Player player) {

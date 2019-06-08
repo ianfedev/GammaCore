@@ -1,17 +1,18 @@
 package net.seocraft.commons.bukkit;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;
 import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
-import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
-import net.seocraft.api.shared.onlineplayers.OnlinePlayersImpl;
 import net.seocraft.commons.bukkit.authentication.*;
-import net.seocraft.commons.bukkit.commands.LoginCommand;
+import net.seocraft.commons.bukkit.command.LoginCommand;
 import net.seocraft.commons.bukkit.commands.PunishmentCommand;
-import net.seocraft.commons.bukkit.commands.RegisterCommand;
-import net.seocraft.commons.bukkit.commands.WhisperCommand;
+import net.seocraft.commons.bukkit.command.RegisterCommand;
+import net.seocraft.commons.bukkit.command.WhisperCommand;
+import net.seocraft.commons.bukkit.listener.PunishmentEventListener;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -32,6 +33,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private UserChatListener userChatListener;
     @Inject private UserAccessResponse userAccessResponse;
+    @Inject private PunishmentEventListener punishmentEventListener;
 
     @Inject private LoginCommand loginCommand;
     @Inject private RegisterCommand registerCommand;
@@ -43,7 +45,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
-    public Map<UUID, String> playerIdentifier = new HashMap<>();
+    public BiMap<UUID, String> playerIdentifier = HashBiMap.create();
     public ParametricCommandHandler parametricCommandHandler;
 
     @Override
@@ -62,13 +64,13 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.authenticationMovementListener, this);
 
         getServer().getPluginManager().registerEvents(this.userChatListener, this);
+        getServer().getPluginManager().registerEvents(this.punishmentEventListener, this);
         getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
     }
 
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(CommonsBukkit.class).toInstance(this);
-        binder.bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
         binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
         binder.bind(PunishmentHandler.class).to(IPunishmentHandler.class);
         binder.expose(CommonsBukkit.class);

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
@@ -15,6 +16,7 @@ import net.seocraft.api.shared.models.Match;
 import net.seocraft.api.shared.punishment.*;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
+import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +28,10 @@ public class IPunishmentHandler implements PunishmentHandler {
     private Gson gson;
     private ListeningExecutorService executorService;
     private Channel<Punishment> punishmentChannel;
+    @Inject private CommonsBukkit instance;
+    @Inject private UserStoreHandler userStoreHandler;
     @Inject private PunishmentCreateRequest punishmentCreateRequest;
+    @Inject private PunishmentActions punishmentActions;
     @Inject private PunishmentGetRequest punishmentGetRequest;
     @Inject private PunishmentGetLastRequest punishmentGetLastRequest;
     @Inject private PunishmentListRequest punishmentListRequest;
@@ -37,7 +42,7 @@ public class IPunishmentHandler implements PunishmentHandler {
         this.executorService = executorService;
         this.gson = gson;
         this.punishmentChannel = messager.getChannel("punishments", Punishment.class);
-        this.punishmentChannel.registerListener(new PunishmentListener());
+        this.punishmentChannel.registerListener(new PunishmentListener(this.instance, this.userStoreHandler, this.punishmentActions));
     }
 
     @Override

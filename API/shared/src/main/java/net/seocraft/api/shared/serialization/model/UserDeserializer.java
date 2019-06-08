@@ -1,12 +1,12 @@
-package net.seocraft.api.shared.serialization.models;
+package net.seocraft.api.shared.serialization.model;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.seocraft.api.shared.models.Group;
-import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.model.Group;
+import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.serialization.JsonUtils;
 
 import java.util.ArrayList;

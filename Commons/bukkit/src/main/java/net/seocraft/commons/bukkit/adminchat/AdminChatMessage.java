@@ -1,6 +1,6 @@
 package net.seocraft.commons.bukkit.adminchat;
 
-import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.model.User;
 
 public interface AdminChatMessage {
 

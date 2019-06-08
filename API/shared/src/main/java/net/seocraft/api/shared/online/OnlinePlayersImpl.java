@@ -1,11 +1,8 @@
-package net.seocraft.api.shared.onlineplayers;
+package net.seocraft.api.shared.online;
 
 import com.google.inject.Inject;
 import net.seocraft.api.shared.redis.RedisClient;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
-import java.util.UUID;
 
 public class OnlinePlayersImpl implements OnlinePlayersApi {
 

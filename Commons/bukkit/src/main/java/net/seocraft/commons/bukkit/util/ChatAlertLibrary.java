@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.utils;
+package net.seocraft.commons.bukkit.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;

@@ -2,13 +2,12 @@ package net.seocraft.api.bukkit.server;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.Server;
+import net.seocraft.api.shared.model.Server;
 import net.seocraft.api.shared.redis.RedisClient;
 import net.seocraft.api.shared.serialization.JsonUtils;
 import net.seocraft.api.shared.server.ServerConnectRequest;

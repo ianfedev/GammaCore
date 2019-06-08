@@ -12,7 +12,7 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.Server;
+import net.seocraft.api.shared.model.Server;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

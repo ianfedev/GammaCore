@@ -6,7 +6,7 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.User;
+import net.seocraft.api.shared.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

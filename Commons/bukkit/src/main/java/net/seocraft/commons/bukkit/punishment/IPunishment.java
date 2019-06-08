@@ -1,7 +1,7 @@
 package net.seocraft.commons.bukkit.punishment;
 
 import com.google.gson.annotations.SerializedName;
-import net.seocraft.api.shared.models.Match;
+import net.seocraft.api.shared.model.Match;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

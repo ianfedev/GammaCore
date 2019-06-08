@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public class PlayerTitleHandler {
 
-    public void sendTitle(Player player, String title, String subTitle) {
+    public static void sendTitle(Player player, String title, String subTitle) {
         player.sendTitle(title, subTitle);
     }
 }

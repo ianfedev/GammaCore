@@ -1,4 +1,4 @@
-package net.seocraft.api.shared.models;
+package net.seocraft.api.shared.model;
 
 public class Match implements Model {
 
