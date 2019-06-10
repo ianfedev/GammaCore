@@ -6,6 +6,7 @@ import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.InventoryUtils;
@@ -22,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 public class AuthenticationLanguageMenuListener implements Listener {
 
     @Inject private TranslatableField translator;
-    @Inject private CommonsBukkit instance;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserStoreHandler userStoreHandler;
 
     @EventHandler
@@ -31,7 +32,7 @@ public class AuthenticationLanguageMenuListener implements Listener {
         ItemStack handItem = player.getItemInHand();
         if (NBTTagHandler.hasString(handItem, "accessor") &&
                 NBTTagHandler.getString(handItem, "accessor").equalsIgnoreCase("language")) {
-            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     User user = userAsyncResponse.getResponse();
                     Inventory languageSelector = InventoryUtils.createInventory(

@@ -24,14 +24,11 @@ public class OnlinePlayersImpl implements OnlinePlayersApi {
 
             if (onlineStatus && !idIsMember) {
                 jedis.sadd(PREFIX, id);
-
                 return;
             }
 
             if (!onlineStatus && idIsMember) {
                 jedis.srem(PREFIX, id);
-
-                return;
             }
 
         }

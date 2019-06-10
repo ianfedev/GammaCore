@@ -10,6 +10,7 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -28,8 +29,8 @@ import java.util.logging.Level;
 
 public class AuthenticationLanguageSelectListener implements Listener {
 
-    @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserStoreHandler userStoreHandler;
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -40,7 +41,7 @@ public class AuthenticationLanguageSelectListener implements Listener {
         if ((entity instanceof Player)) {
             Player player = (Player) entity;
             if (event.getClick().equals(ClickType.LEFT) && NBTTagHandler.hasString(clickedItem, "language_accessor")) {
-                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), asyncResponse -> {
+                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()), asyncResponse -> {
                     if (asyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User user = asyncResponse.getResponse();
                         if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {

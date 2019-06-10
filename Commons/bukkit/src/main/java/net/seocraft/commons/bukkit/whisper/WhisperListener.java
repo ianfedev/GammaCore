@@ -19,8 +19,7 @@ public class WhisperListener implements ChannelListener<Whisper> {
             return;
         }
 
-        final UUID fromUserId = object.from().getGameUUID();
-        final UUID toUserId = object.to().getGameUUID();
+        final String toUserId = object.to().getUsername();
 
         Player playerTo = Bukkit.getPlayer(toUserId);
 

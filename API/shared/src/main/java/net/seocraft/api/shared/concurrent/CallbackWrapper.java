@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
 public class CallbackWrapper {
+
     private static <T> FutureCallback<T> wrapCallback(Callback<T> callback) {
         return new FutureCallback<T>() {
             @Override

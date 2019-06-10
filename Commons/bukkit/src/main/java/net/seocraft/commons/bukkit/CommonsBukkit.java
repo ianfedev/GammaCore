@@ -9,10 +9,9 @@ import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.command.LoginCommand;
-import net.seocraft.commons.bukkit.commands.PunishmentCommand;
+import net.seocraft.commons.bukkit.command.PunishmentCommand;
 import net.seocraft.commons.bukkit.command.RegisterCommand;
 import net.seocraft.commons.bukkit.command.WhisperCommand;
-import net.seocraft.commons.bukkit.listener.PunishmentEventListener;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -33,7 +32,6 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private UserChatListener userChatListener;
     @Inject private UserAccessResponse userAccessResponse;
-    @Inject private PunishmentEventListener punishmentEventListener;
 
     @Inject private LoginCommand loginCommand;
     @Inject private RegisterCommand registerCommand;
@@ -45,7 +43,6 @@ public class CommonsBukkit extends JavaPlugin {
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
-    public BiMap<UUID, String> playerIdentifier = HashBiMap.create();
     public ParametricCommandHandler parametricCommandHandler;
 
     @Override
@@ -64,7 +61,6 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.authenticationMovementListener, this);
 
         getServer().getPluginManager().registerEvents(this.userChatListener, this);
-        getServer().getPluginManager().registerEvents(this.punishmentEventListener, this);
         getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
     }
 

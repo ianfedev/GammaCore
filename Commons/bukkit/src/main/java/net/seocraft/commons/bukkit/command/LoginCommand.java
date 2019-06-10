@@ -13,6 +13,7 @@ import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.serialization.TimeUtils;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.UserLoginRequest;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
@@ -34,6 +35,7 @@ public class LoginCommand extends AbstractAdvancedCommand {
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private TranslatableField translator;
     @Inject private UserLoginRequest userLoginRequest;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserStoreHandler userStoreHandler;
 
     public LoginCommand() {
@@ -54,7 +56,7 @@ public class LoginCommand extends AbstractAdvancedCommand {
     @Override
     public boolean execute(CommandContext commandContext) {
         Player player = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
                 if (!this.instance.unregisteredPlayers.contains(player.getUniqueId())) {

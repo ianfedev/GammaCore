@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
@@ -12,7 +13,7 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.Match;
+import net.seocraft.api.shared.model.Match;
 import net.seocraft.api.shared.punishment.*;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+@Singleton
 public class IPunishmentHandler implements PunishmentHandler {
 
     private Gson gson;

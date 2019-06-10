@@ -12,6 +12,7 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.UserRegisterRequest;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -30,6 +31,7 @@ public class RegisterCommand extends AbstractAdvancedCommand {
     @Inject private ServerTokenQuery tokenQuery;
     @Inject private TranslatableField translator;
     @Inject private UserRegisterRequest userRegisterRequest;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserStoreHandler userStoreHandler;
 
     public RegisterCommand() {
@@ -50,7 +52,7 @@ public class RegisterCommand extends AbstractAdvancedCommand {
     @Override
     public boolean execute(CommandContext commandContext) {
         Player player = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
                 if (this.instance.unregisteredPlayers.contains(player.getUniqueId())) {

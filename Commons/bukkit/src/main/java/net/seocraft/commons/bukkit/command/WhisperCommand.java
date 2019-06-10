@@ -7,6 +7,7 @@ import me.ggamer55.bcm.parametric.annotation.JoinedString;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.whisper.WhisperManager;
 import net.seocraft.commons.bukkit.whisper.WhisperResponse;
@@ -25,6 +26,7 @@ public class WhisperCommand implements CommandClass {
     @Inject private CommonsBukkit instance;
     @Inject private WhisperManager whisperManager;
     @Inject private UserStoreHandler userStoreHandler;
+    @Inject private SessionHandler sessionHandler;
     @Inject private TranslatableField translator;
 
     @Command(names = {"msg", "whisper", "tell", "w", "m", "t"}, min = 2, usage = "/<command> <target> <message...>")
@@ -36,10 +38,10 @@ public class WhisperCommand implements CommandClass {
         Player sender = (Player) commandSender;
 
 
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(sender.getUniqueId())), asyncUserSender -> {
+        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(sender.getName()).getPlayerId()), asyncUserSender -> {
             if (asyncUserSender.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User userSender = asyncUserSender.getResponse();
-                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(target.getUniqueId())), asyncTargetUser -> {
+                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(sender.getName()).getPlayerId()), asyncTargetUser -> {
                     if (asyncTargetUser.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User targetUser = asyncTargetUser.getResponse();
                         CallbackWrapper.addCallback(whisperManager.sendMessage(userSender, targetUser, message), response -> {

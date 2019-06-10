@@ -13,6 +13,8 @@ import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.redis.RedisClient;
 import net.seocraft.api.shared.serialization.model.UserDeserializer;
+import net.seocraft.api.shared.session.GameSession;
+import net.seocraft.api.shared.session.GameSessionImp;
 import net.seocraft.api.shared.user.UserGetRequest;
 import net.seocraft.api.shared.user.UserUpdateRequest;
 import org.jetbrains.annotations.NotNull;

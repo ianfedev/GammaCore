@@ -6,6 +6,7 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -21,6 +22,7 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
 
     @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserStoreHandler userStoreHandler;
 
     @EventHandler
@@ -42,7 +44,7 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
                 ChatAlertLibrary.errorChatAlert(
                         player,
                         this.translator.getUnspacedField(
-                                this.userStoreHandler.getCachedUserSync(this.instance.playerIdentifier.get(player.getUniqueId())).getLanguage(),
+                                this.userStoreHandler.getCachedUserSync(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()).getLanguage(),
                                 "authentication_not_authenticated"
                         ) + "."
                 );

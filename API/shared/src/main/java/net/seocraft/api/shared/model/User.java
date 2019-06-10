@@ -18,14 +18,13 @@ public class User implements Model {
     @SerializedName("_id") private String id;
     private String username;
     @SerializedName("username_lowercase") private String usernameLowercase;
-    @Nullable
-    private String email;
+    @Nullable private String email;
     private List<Group> groups;
     private String skin;
+    private String actualIp;
     @SerializedName("last_seen") private String lastSeen;
     @SerializedName("last_game") private String lastGame;
     @SerializedName("member_since") private int memberSince;
-    @SerializedName("uuid") private UUID gameUUID;
     private boolean verified;
     private int level;
     private int experience;

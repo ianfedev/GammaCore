@@ -1,15 +1,15 @@
 package net.seocraft.commons.bukkit.user;
 
-import com.google.inject.Inject;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.Group;
-import net.seocraft.api.shared.models.User;
-import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
+import net.seocraft.api.shared.model.Group;
+import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.session.GameSession;
+import net.seocraft.api.shared.session.SessionHandler;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
@@ -18,35 +18,37 @@ import org.bukkit.permissions.PermissibleBase;
 public class UserPermissions extends PermissibleBase {
 
     private UserStoreHandler userStoreHandler;
-    private CommonsBukkit instance;
+    private SessionHandler sessionHandler;
     private TranslatableField translatableField;
     private Player player;
     private User user;
 
 
-    UserPermissions(Player player, User user, UserStoreHandler userStoreHandler, CommonsBukkit instance, TranslatableField translatableField) {
+    UserPermissions(Player player, User user, UserStoreHandler userStoreHandler, SessionHandler sessionHandler, TranslatableField translatableField) {
         super(player);
         this.player = player;
         this.userStoreHandler = userStoreHandler;
-        this.instance = instance;
+        this.sessionHandler = sessionHandler;
         this.translatableField = translatableField;
         this.user = user;
     }
 
     public boolean hasPermission(String s) {
+        GameSession session = this.sessionHandler.getCachedSession(player.getName());
         try {
-            String playerId = this.instance.playerIdentifier.get(player.getUniqueId());
-            User newUser = this.userStoreHandler.getCachedUserSync(playerId);
-            for (Group group: newUser.getGroups()) {
-                for (String permission: group.getPermissions()) {
-                    if (permission.equalsIgnoreCase(s)) return true;
-                    String[] requestedTree = s.split("\\.");
-                    int scanningLength = requestedTree.length;
-                    String[] permissionTree = permission.split("\\.");
-                    if (permissionTree.length < scanningLength) scanningLength = permissionTree.length;
-                    for (int i = 0; i < scanningLength; i++) {
-                        if (permissionTree[i].equalsIgnoreCase("*")) return true;
-                        if (!requestedTree[i].equalsIgnoreCase(permissionTree[i])) break;
+            if (session != null) {
+                User newUser = this.userStoreHandler.getCachedUserSync(session.getPlayerId());
+                for (Group group: newUser.getGroups()) {
+                    for (String permission: group.getPermissions()) {
+                        if (permission.equalsIgnoreCase(s)) return true;
+                        String[] requestedTree = s.split("\\.");
+                        int scanningLength = requestedTree.length;
+                        String[] permissionTree = permission.split("\\.");
+                        if (permissionTree.length < scanningLength) scanningLength = permissionTree.length;
+                        for (int i = 0; i < scanningLength; i++) {
+                            if (permissionTree[i].equalsIgnoreCase("*")) return true;
+                            if (!requestedTree[i].equalsIgnoreCase(permissionTree[i])) break;
+                        }
                     }
                 }
             }

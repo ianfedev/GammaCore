@@ -10,6 +10,8 @@ import net.seocraft.api.shared.online.OnlinePlayersApi;
 import net.seocraft.api.shared.online.OnlinePlayersImpl;
 import net.seocraft.api.shared.redis.Messager;
 import net.seocraft.api.shared.redis.RedisMessager;
+import net.seocraft.api.shared.session.SessionHandler;
+import net.seocraft.api.shared.session.SessionHandlerImp;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,6 +30,7 @@ public class SharedModule extends AbstractModule {
                     .create();
         }).in(Scopes.SINGLETON);
         bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
+        bind(SessionHandler.class).to(SessionHandlerImp.class);
         bind(Messager.class).to(RedisMessager.class).in(Scopes.SINGLETON);
     }
 }

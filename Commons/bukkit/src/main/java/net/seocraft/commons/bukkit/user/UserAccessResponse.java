@@ -9,11 +9,14 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.online.OnlinePlayersApi;
 import net.seocraft.api.shared.serialization.JsonUtils;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.UserAccessRequest;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLoginListener;
+import net.seocraft.commons.bukkit.punishment.PunishmentActions;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,8 +37,11 @@ public class UserAccessResponse implements Listener {
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private JsonUtils parser;
     @Inject private UserStoreHandler userStorage;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserAccessRequest request;
+    @Inject private OnlinePlayersApi onlinePlayersApi;
     @Inject private ServerTokenQuery tokenHandler;
+    @Inject private PunishmentActions punishmentActions;
     @Inject private TranslatableField translator;
     private static Field playerField;
 
@@ -50,24 +56,29 @@ public class UserAccessResponse implements Listener {
 
     @EventHandler
     public void userAccessResponse(PlayerJoinEvent event) {
+
+        // Define needed player variables
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
-        String ip = player.getAddress()
-                .toString()
-                .split(":")[0]
-                .replace("/", "");
+        String ip = player.getAddress().toString().split(":")[0].replace("/", "");
+
+        // Create
         JsonObject request = new JsonObject();
         request.addProperty("username", player.getName());
-        request.addProperty("uuid", player.getUniqueId().toString());
         request.addProperty("ip", ip);
         try {
             String response = this.request.executeRequest(request, tokenHandler.getToken());
             String playerIdentifier = this.parser.parseJson(response, "user").getAsString();
-            this.instance.playerIdentifier.put(player.getUniqueId(), playerIdentifier);
             User user = this.userStorage.getCachedUserSync(playerIdentifier);
+            this.sessionHandler.createGameSession(user,  ip, "1.8.9"); // TODO: Handle version get
             if (this.parser.parseJson(response, "multi").getAsBoolean()) {
                 // TODO: Handle multi-account issue
             } else {
+
+                // Detect if player has a punishment
+                this.punishmentActions.checkBan(player, user);
+
+                // Execute authentication handler
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     if (this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
                         this.loginListener.authenticationLoginListener(
@@ -84,7 +95,8 @@ public class UserAccessResponse implements Listener {
                     }
                     event.setJoinMessage("");
                 }
-                playerField.set(player, new UserPermissions(player, user, userStorage, instance, translator));
+                this.onlinePlayersApi.setPlayerOnlineStatus(user.id(), true); //TODO: Set at commons bungee
+                playerField.set(player, new UserPermissions(player, user, userStorage, sessionHandler, translator));
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());

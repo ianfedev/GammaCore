@@ -1,7 +1,7 @@
 package net.seocraft.commons.bukkit.punishment;
 
-import net.seocraft.api.shared.models.Match;
-import net.seocraft.api.shared.models.Model;
+import net.seocraft.api.shared.model.Match;
+import net.seocraft.api.shared.model.Model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

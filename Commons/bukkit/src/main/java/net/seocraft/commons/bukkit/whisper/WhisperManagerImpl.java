@@ -4,8 +4,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import net.seocraft.api.shared.models.User;
-import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
+import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.online.OnlinePlayersApi;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -56,7 +56,7 @@ public class WhisperManagerImpl implements WhisperManager {
             }
 
             try {
-                Player playerFrom = Bukkit.getPlayer(from.getGameUUID());
+                Player playerFrom = Bukkit.getPlayer(from.getUsername());
 
                 // Set some sort of format
                 playerFrom.sendMessage(content);

@@ -11,6 +11,7 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -28,6 +29,7 @@ public class AuthenticationCommandsListener implements Listener {
 
     @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
+    @Inject private SessionHandler sessionHandler;
     @Inject private UserStoreHandler userStoreHandler;
 
     @EventHandler
@@ -37,7 +39,7 @@ public class AuthenticationCommandsListener implements Listener {
         Player player = event.getPlayer();
         if (this.instance.getConfig().getBoolean("authentication.enabled")) {
             try {
-                String userLanguage = this.userStoreHandler.getCachedUserSync(this.instance.playerIdentifier.get(player.getUniqueId())).getLanguage();
+                String userLanguage = this.userStoreHandler.getCachedUserSync(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()).getLanguage();
                 if((event.getMessage().equals("/pl")) || (event.getMessage().equals("/plugins"))) {
                     ChatAlertLibrary.infoAlert(
                             player,

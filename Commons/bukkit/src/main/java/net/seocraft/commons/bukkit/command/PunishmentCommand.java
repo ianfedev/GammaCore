@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.commands;
+package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
 import me.ggamer55.bcm.CommandContext;
@@ -12,14 +12,14 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.models.User;
-import net.seocraft.api.shared.onlineplayers.OnlinePlayersApi;
+import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.online.OnlinePlayersApi;
 import net.seocraft.api.shared.serialization.TimeUtils;
-import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.api.shared.session.GameSession;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.punishment.*;
-import net.seocraft.commons.bukkit.utils.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -27,14 +27,13 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.Objects;
 
 public class PunishmentCommand implements CommandClass {
 
-    @Inject private CommonsBukkit instance;
     @Inject private TranslatableField translator;
     @Inject private OnlinePlayersApi onlinePlayers;
     @Inject private PunishmentHandler punishmentHandler;
+    @Inject private SessionHandler sessionHandler;
     @Inject private PunishmentActions punishmentActions;
     @Inject private UserStoreHandler userStoreHandler;
 
@@ -43,7 +42,8 @@ public class PunishmentCommand implements CommandClass {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+            GameSession playerSession = this.sessionHandler.getCachedSession(player.getName());
+            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     User user = userAsyncResponse.getResponse();
 
@@ -56,22 +56,19 @@ public class PunishmentCommand implements CommandClass {
                     }
 
                     // Get online player data
-                    CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(target.getUniqueId())), targetAsyncResponse -> {
+                    CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
                             String serverName = "test"; //TODO: Get server from Cloud API
 
                             // Detecting if player is online
-                            if (this.onlinePlayers.isPlayerOnline(targetRecord.id())) {
-                                alertOfflineTarget(player, user.getLanguage());
-                                return;
-                            }
+                            if (isTargetOffline(player, targetRecord.id(), user.getLanguage())) return;
+
+                            // Get player session
+                            GameSession targetSession = this.sessionHandler.getCachedSession(target.getName());
 
                             // Check if user has lower priority
-                            if (user.getPrimaryGroup().getPriority() > targetRecord.getPrimaryGroup().getPriority()) {
-                                alertLowerPermissions(player, user.getLanguage());
-                                return;
-                            }
+                            if (hasLowerPermissions(user, targetRecord, player)) return;
 
                             // Create punishment if reason or duration is provided
                             if (context.getArgumentsLength() == 1) {
@@ -94,7 +91,7 @@ public class PunishmentCommand implements CommandClass {
                                             targetRecord.id(),
                                             "unknown",
                                             null,
-                                            getFormattedIp(target.getPlayer()),
+                                            targetSession.getAddress(),
                                             this.translator.getField(targetRecord.getLanguage(), "commons_punish_ban")
                                                     + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase(),
                                             -1,
@@ -102,7 +99,7 @@ public class PunishmentCommand implements CommandClass {
                                             silent
                                     );
                                     this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
-                                } catch (Unauthorized | BadRequest | InternalServerError | NotFound unauthorized) {
+                                                                    } catch (Unauthorized | BadRequest | InternalServerError | NotFound unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                             user.getLanguage(),
                                             "commons_punish_error") + ".");
@@ -144,7 +141,7 @@ public class PunishmentCommand implements CommandClass {
                                             targetRecord.id(),
                                             serverName,
                                             null,
-                                            getFormattedIp(target.getPlayer()),
+                                            targetSession.getAddress(),
                                             banReason,
                                             expirationDate,
                                             false,
@@ -179,13 +176,13 @@ public class PunishmentCommand implements CommandClass {
                                         targetRecord.id(),
                                         serverName,
                                         null,
-                                        getFormattedIp(target.getPlayer()),
+                                        targetSession.getAddress(),
                                         banReason,
                                         -1,
                                         false,
                                         silent
                                 );
-                                Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment));
+                                this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
                             } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
@@ -217,7 +214,8 @@ public class PunishmentCommand implements CommandClass {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+            GameSession playerSession = this.sessionHandler.getCachedSession(player.getName());
+            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     User user = userAsyncResponse.getResponse();
 
@@ -230,22 +228,19 @@ public class PunishmentCommand implements CommandClass {
                     }
 
                     // Get online player data
-                    CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(target.getUniqueId())), targetAsyncResponse -> {
+                    CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
                             String serverName = "test"; //TODO: Get server from Cloud API
 
                             // Detecting if player is online
-                            if (this.onlinePlayers.isPlayerOnline(targetRecord.id())) {
-                                alertOfflineTarget(player, user.getLanguage());
-                                return;
-                            }
+                            if (isTargetOffline(player, targetRecord.id(), user.getLanguage())) return;
+
+                            // Get player session
+                            GameSession targetSession = this.sessionHandler.getCachedSession(target.getName());
 
                             // Check if user has lower priority
-                            if (user.getPrimaryGroup().getPriority() > targetRecord.getPrimaryGroup().getPriority()) {
-                                alertLowerPermissions(player, user.getLanguage());
-                                return;
-                            }
+                            if (hasLowerPermissions(user, targetRecord, player)) return;
 
                             String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_kick")
                                     + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
@@ -258,13 +253,13 @@ public class PunishmentCommand implements CommandClass {
                                         targetRecord.id(),
                                         serverName,
                                         null,
-                                        getFormattedIp(target.getPlayer()),
+                                        targetSession.getAddress(),
                                         reason,
                                         -1,
                                         false,
                                         silent
                                 );
-                                Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.kickPlayer(target.getPlayer(), targetRecord, punishment));
+                                this.punishmentActions.kickPlayer(target.getPlayer(), targetRecord, punishment);
                             } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
@@ -295,7 +290,7 @@ public class PunishmentCommand implements CommandClass {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(player.getUniqueId())), userAsyncResponse -> {
+            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     User user = userAsyncResponse.getResponse();
 
@@ -308,22 +303,19 @@ public class PunishmentCommand implements CommandClass {
                     }
 
                     // Get online player data
-                    CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.instance.playerIdentifier.get(target.getUniqueId())), targetAsyncResponse -> {
+                    CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
                             String serverName = "test"; //TODO: Get server from Cloud API
 
                             // Detecting if player is online
-                            if (this.onlinePlayers.isPlayerOnline(targetRecord.id())) {
-                                alertOfflineTarget(player, user.getLanguage());
-                                return;
-                            }
+                            if (isTargetOffline(player, targetRecord.id(), user.getLanguage())) return;
+
+                            // Get player session
+                            GameSession targetSession = this.sessionHandler.getCachedSession(target.getName());
 
                             // Check if user has lower priority
-                            if (user.getPrimaryGroup().getPriority() > targetRecord.getPrimaryGroup().getPriority()) {
-                                alertLowerPermissions(player, user.getLanguage());
-                                return;
-                            }
+                            if (hasLowerPermissions(user, targetRecord, player)) return;
 
                             String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_warn")
                                     + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
@@ -336,13 +328,13 @@ public class PunishmentCommand implements CommandClass {
                                         targetRecord.id(),
                                         serverName,
                                         null,
-                                        getFormattedIp(target.getPlayer()),
+                                        targetSession.getAddress(),
                                         reason,
                                         -1,
                                         false,
                                         silent
                                 );
-                                Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.warnPlayer(target.getPlayer(), targetRecord, punishment));
+                                this.punishmentActions.warnPlayer(target.getPlayer(), targetRecord, punishment);
                             } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
@@ -369,23 +361,26 @@ public class PunishmentCommand implements CommandClass {
         return true;
     }
 
-    private void alertLowerPermissions(Player player, String language) {
-        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                language,
-                "commons_punish_lower_permissions")  + ".");
+    private boolean hasLowerPermissions(User user, User target, Player player) {
+        if (user.getPrimaryGroup().getPriority() > target.getPrimaryGroup().getPriority()) {
+            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                    user.getLanguage(),
+                    "commons_punish_lower_permissions")  + ".");
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    private void alertOfflineTarget(Player player, String language) {
-        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                language, "commons_punish_offline".replace("%%url%%",
-                        ChatColor.YELLOW + "https://www.seocraft.net" + ChatColor.RED + "."
-                )));
-    }
-
-    private String getFormattedIp(Player player) {
-        return player.getAddress()
-                .toString()
-                .split(":")[0]
-                .replace("/", "");
+    private boolean isTargetOffline(Player player, String id, String language) {
+        if (!this.onlinePlayers.isPlayerOnline(id)) {
+            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                    language, "commons_punish_offline").replace("%%url%%",
+                    ChatColor.YELLOW + "https://www.seocraft.net" + ChatColor.RED + "."
+            ));
+            return true;
+        } else {
+            return false;
+        }
     }
 }
