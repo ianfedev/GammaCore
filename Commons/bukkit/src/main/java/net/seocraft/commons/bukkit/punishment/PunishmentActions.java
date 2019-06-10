@@ -15,6 +15,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.util.Date;
+
 public class PunishmentActions {
 
     @Inject private TranslatableField translator;
@@ -109,9 +111,20 @@ public class PunishmentActions {
     public void checkBan(Player target, User targetData) throws InternalServerError {
         try {
             Punishment lastPunishment = this.punishmentHandler.getLastPunishmentSync(PunishmentType.BAN, targetData.id());
+
             if (lastPunishment == null || lastPunishment.id() == null || !lastPunishment.isActive()) {
                 return;
             }
+
+            if (!lastPunishment.isPermanent()) {
+                Date expireDate = TimeUtils.parseUnixStamp((int) lastPunishment.getExpiration());
+                if (expireDate.before(new Date())) {
+                    lastPunishment.setActive(false);
+                    this.punishmentHandler.updatePunishmentSync(lastPunishment);
+                    return;
+                }
+            }
+
             banPlayer(target, targetData, lastPunishment);
         } catch (Unauthorized | BadRequest | InternalServerError | NotFound error) {
             throw new InternalServerError(error.getMessage());
