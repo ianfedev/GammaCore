@@ -71,22 +71,20 @@ public class PunishmentActions {
 
     public void kickPlayer(Player target, User targetData, Punishment punishment) {
         if (target == null) return;
-        Bukkit.getScheduler().runTask(this.instance, () -> {
-            target.kickPlayer(ChatColor.RED +
-                    this.translator.getField(
-                            targetData.getLanguage(), "commons_punish_kick"
-                    ) +
-                    ChatColor.GOLD + "\u00BB " + ChatColor.AQUA + punishment.getReason() + "\n\n" +
-                    ChatColor.YELLOW +
-                    this.translator.getUnspacedField(
-                            targetData.getLanguage(), "commons_punish_appeal"
-                    ).replace("%%website%%",
-                            ChatColor.GOLD
-                                    + "seocraft.net/apelar"
-                                    + ChatColor.YELLOW
-                    )
-            );
-        });
+        Bukkit.getScheduler().runTask(this.instance, () -> target.kickPlayer(ChatColor.RED +
+                this.translator.getField(
+                        targetData.getLanguage(), "commons_punish_kick"
+                ) +
+                ChatColor.GOLD + "\u00BB " + ChatColor.AQUA + punishment.getReason() + "\n\n" +
+                ChatColor.YELLOW +
+                this.translator.getUnspacedField(
+                        targetData.getLanguage(), "commons_punish_appeal"
+                ).replace("%%website%%",
+                        ChatColor.GOLD
+                                + "seocraft.net/apelar"
+                                + ChatColor.YELLOW
+                )
+        ));
 
     }
 

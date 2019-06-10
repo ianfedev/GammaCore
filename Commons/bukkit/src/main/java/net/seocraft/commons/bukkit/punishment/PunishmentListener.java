@@ -30,15 +30,15 @@ public class PunishmentListener implements ChannelListener<Punishment> {
             if (target != null && targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 switch (punishment.getPunishmentType()) {
                     case BAN: {
-                        Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.banPlayer(target.getPlayer(), targetData, punishment));
+                        this.punishmentActions.banPlayer(target.getPlayer(), targetData, punishment);
                         break;
                     }
                     case KICK: {
-                        Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.kickPlayer(target.getPlayer(), targetData, punishment));
+                        this.punishmentActions.kickPlayer(target.getPlayer(), targetData, punishment);
                         break;
                     }
                     case WARN: {
-                        Bukkit.getScheduler().runTask(instance, () -> this.punishmentActions.warnPlayer(target.getPlayer(), targetData, punishment));
+                        this.punishmentActions.warnPlayer(target.getPlayer(), targetData, punishment);
                         break;
                     }
                     default: break;
