@@ -1,6 +1,6 @@
 package net.seocraft.api.shared.session;
 
-import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.user.model.User;
 import org.jetbrains.annotations.NotNull;
 
 public interface SessionHandler {

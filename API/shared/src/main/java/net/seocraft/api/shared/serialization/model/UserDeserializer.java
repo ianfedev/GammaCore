@@ -6,8 +6,9 @@ import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.seocraft.api.shared.model.Group;
-import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.serialization.JsonUtils;
+import net.seocraft.api.shared.user.model.User;
+import net.seocraft.api.shared.user.model.UserImp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class UserDeserializer implements Deserializer<User> {
 
     public User deserializeModel(String json) {
         JsonObject object = this.parser.parseObject(json);
-        User user = gson.fromJson(object, User.class);
+        User user = gson.fromJson(object, UserImp.class);
         List<Group> parsedGroups = new ArrayList<>();
         JsonArray groups = object.get("group").getAsJsonArray();
         groups.forEach(group -> parsedGroups.add(gson.fromJson(group.getAsJsonObject().get("_id").getAsJsonObject(), Group.class)));

@@ -10,13 +10,12 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.redis.RedisClient;
 import net.seocraft.api.shared.serialization.model.UserDeserializer;
-import net.seocraft.api.shared.session.GameSession;
-import net.seocraft.api.shared.session.GameSessionImp;
 import net.seocraft.api.shared.user.UserGetRequest;
 import net.seocraft.api.shared.user.UserUpdateRequest;
+import net.seocraft.api.shared.user.model.User;
+import net.seocraft.api.shared.user.model.UserImp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +50,7 @@ public class IUserStoreHandler implements UserStoreHandler {
     @Override
     public @NotNull User getCachedUserSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         if (this.client.existsKey("user:" + id)) {
-            return this.gson.fromJson(this.client.getString("user:" + id), User.class);
+            return this.gson.fromJson(this.client.getString("user:" + id), UserImp.class);
         } else {
             return findUserByIdSync(id);
         }

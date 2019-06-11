@@ -4,10 +4,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.IRedisClient;
 import net.seocraft.api.shared.redis.Messager;
+import net.seocraft.api.shared.user.model.User;
 
 import java.util.Map;
 import java.util.UUID;

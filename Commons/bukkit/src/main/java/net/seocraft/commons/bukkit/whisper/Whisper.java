@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.whisper;
 
-import net.seocraft.api.shared.model.User;
+
+import net.seocraft.api.shared.user.model.User;
 
 public interface Whisper {
     User from();

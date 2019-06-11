@@ -6,9 +6,8 @@ import me.ggamer55.bcm.parametric.annotation.Command;
 import me.ggamer55.bcm.parametric.annotation.JoinedString;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.session.SessionHandler;
-import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.api.shared.user.model.User;
 import net.seocraft.commons.bukkit.whisper.WhisperManager;
 import net.seocraft.commons.bukkit.whisper.WhisperResponse;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
@@ -23,7 +22,6 @@ import java.util.logging.Level;
 
 public class WhisperCommand implements CommandClass {
 
-    @Inject private CommonsBukkit instance;
     @Inject private WhisperManager whisperManager;
     @Inject private UserStoreHandler userStoreHandler;
     @Inject private SessionHandler sessionHandler;
@@ -70,7 +68,6 @@ public class WhisperCommand implements CommandClass {
                                                 "commons_system_error"
                                         ));
                                 Bukkit.getLogger().log(Level.SEVERE, "An error ocurred while executing the whisper command", response.getThrowedException());
-                                return;
                             }
                         });
                     } else {

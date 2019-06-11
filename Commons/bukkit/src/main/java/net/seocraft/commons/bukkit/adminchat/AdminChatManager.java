@@ -1,7 +1,7 @@
 package net.seocraft.commons.bukkit.adminchat;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.user.model.User;
 
 import java.util.Map;
 import java.util.UUID;

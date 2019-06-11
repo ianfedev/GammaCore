@@ -2,10 +2,9 @@ package net.seocraft.api.shared.session;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import net.seocraft.api.shared.model.User;
 import net.seocraft.api.shared.redis.RedisClient;
+import net.seocraft.api.shared.user.model.User;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class SessionHandlerImp implements SessionHandler {
 
@@ -14,8 +13,8 @@ public class SessionHandlerImp implements SessionHandler {
 
     @Override
     public void createGameSession(@NotNull User user, String address, String version) {
-        if (!this.client.existsKey("session:" + user.getUsernameLowercase())) {
-            this.client.setString("session:" + user.getUsernameLowercase(),
+        if (!this.client.existsKey("session:" + user.getUsername().toLowerCase())) {
+            this.client.setString("session:" + user.getUsername().toLowerCase(),
                     this.gson.toJson(new GameSessionImp(user.id(), address, version))
             );
         }

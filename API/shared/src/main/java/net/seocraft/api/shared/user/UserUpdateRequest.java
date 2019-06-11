@@ -8,7 +8,8 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.user.model.User;
+import net.seocraft.api.shared.user.model.UserImp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class UserUpdateRequest extends HttpRequest {
     public String executeRequest(User user, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.headers.put("authorization", token);
         this.id = user.id();
-        this.body = this.gson.toJson(user, User.class);
+        this.body = this.gson.toJson(user, UserImp.class);
         return getResponse();
     }
 }

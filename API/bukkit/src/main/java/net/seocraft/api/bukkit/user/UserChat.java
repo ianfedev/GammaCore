@@ -2,7 +2,7 @@ package net.seocraft.api.bukkit.user;
 
 import net.seocraft.api.shared.model.Group;
 import net.seocraft.api.shared.model.MinecraftFlair;
-import net.seocraft.api.shared.model.User;
+import net.seocraft.api.shared.user.model.User;
 import org.bukkit.ChatColor;
 
 public class UserChat {
