@@ -7,6 +7,7 @@ import redis.clients.jedis.JedisPool;
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class RedisClient implements IRedisClient {
@@ -88,6 +89,12 @@ public class RedisClient implements IRedisClient {
     public Boolean existsKey(String key) {
         try (Jedis client = getPool().getResource()) {
             return client.exists(key);
+        }
+    }
+
+    public Set<String> getKeys(String pattern) {
+        try (Jedis client = getPool().getResource()) {
+            return client.keys(pattern);
         }
     }
 

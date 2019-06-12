@@ -3,6 +3,7 @@ package net.seocraft.api.shared.redis;
 import redis.clients.jedis.JedisPool;
 
 import java.util.Map;
+import java.util.Set;
 
 public interface IRedisClient {
 
@@ -27,5 +28,7 @@ public interface IRedisClient {
     void deleteHash(String key, String field);
 
     Boolean existsKey(String key);
+
+    Set<String> getKeys(String pattern);
 
 }
