@@ -199,9 +199,5 @@ public class UserImp implements User {
     public boolean isShowingStatus() {
         return showStatus;
     }
-
-    @Override
-    public boolean areFriends(String name) {
-        return false;
-    }
+    
 }

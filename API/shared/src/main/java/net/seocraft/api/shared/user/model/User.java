@@ -70,6 +70,4 @@ public interface User extends Model {
 
     boolean isShowingStatus();
 
-    boolean areFriends(String name);
-
 }

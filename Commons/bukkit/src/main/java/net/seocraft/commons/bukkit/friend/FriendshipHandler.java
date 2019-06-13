@@ -18,7 +18,7 @@ public interface FriendshipHandler {
 
     void acceptFriendRequest(@NotNull String sender, @NotNull String receiver) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    boolean checkFriendshipStatus(@NotNull String sender, @NotNull String receiver) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    boolean checkFriendshipStatus(@NotNull String sender, @NotNull String receiver);
 
     void rejectFriendRequest(@NotNull String sender, @NotNull String receiver);
 
@@ -31,6 +31,8 @@ public interface FriendshipHandler {
     @NotNull ListenableFuture<AsyncResponse<List<User>>> getRequests(@NotNull String id);
 
     @Nullable List<User> getRequestsSync(@NotNull String id);
+
+    boolean requestIsSent(@NotNull String sender, @NotNull String receiver);
 
     void toggleFriendRequests(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 

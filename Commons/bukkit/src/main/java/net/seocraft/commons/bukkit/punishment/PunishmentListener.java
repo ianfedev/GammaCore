@@ -11,12 +11,10 @@ import org.bukkit.entity.Player;
 
 public class PunishmentListener implements ChannelListener<Punishment> {
 
-    private CommonsBukkit instance;
     private UserStoreHandler userStoreHandler;
     private PunishmentActions punishmentActions;
 
-    PunishmentListener(CommonsBukkit instance, UserStoreHandler userStoreHandler, PunishmentActions punishmentActions) {
-        this.instance = instance;
+    PunishmentListener( UserStoreHandler userStoreHandler, PunishmentActions punishmentActions) {
         this.userStoreHandler = userStoreHandler;
         this.punishmentActions = punishmentActions;
     }

@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 
 public class ChatAlertLibrary {
 
+
+
     public static void errorChatAlert(@NotNull Player player, @Nullable String message) {
         player.playSound(player.getLocation(), Sound.NOTE_BASS, 1f, 1f);
         if (message == null) message = "Error executing the last action, please contact an administrator.";

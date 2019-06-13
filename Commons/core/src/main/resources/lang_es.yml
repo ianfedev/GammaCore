@@ -70,9 +70,23 @@ commons_system_error: Ha ocurrido un error, por favor contacta a un administrado
 commons_permissions_error: Ha ocurrido un error al obtener tus permisos, así que se te ha denegado el acceso
 commons_insufficient_permissions: No tienes los permisos suficientes para realizar esta acción
 
+# Friend translations
+commons_friends_title: Comandos de amistad
+commons_friends_help: Muestra este menú
+commons_friends_help_add: Envía una solicitud a un usuario para ser amigos
+commons_friends_help_accept: Acepta la solicitud de amistad de otra persona
+commons_friends_help_deny: Rechaza la solicitud de amistad de un usuario
+commons_friends_help_list: Muestra una lista con tus amigos
+commons_friends_help_remove: Elimina a un usuario de tu lista de amigos
+commons_friends_help_requests: Muestra una lista con tus solicitudes pendientes
+commons_friends_help_removeall: Elimina a todos los usuarios de tu lista de amigos
+commons_friends_help_force: Fuerza la amistad entre dos jugadores
+commons_friends_disabled_requests: El jugador tiene desactivadas las solicitudes de amistad
+commons_friends_already: %%player%% y tú ya son amigos.
+
 # Common words translations
 commons_main_lobby: Lobby Principal
 commons_password: contraseña
-commons_error_type: Tipo de Error
+commons_error_type: Tipo de error
 commons_language_placeholder: Español
 commons_not_found: El jugador que buscas no se ha registrado en el servidor

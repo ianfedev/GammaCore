@@ -30,7 +30,6 @@ public class IPunishmentHandler implements PunishmentHandler {
     private Gson gson;
     private ListeningExecutorService executorService;
     private Channel<Punishment> punishmentChannel;
-    @Inject private CommonsBukkit instance;
     @Inject private UserStoreHandler userStoreHandler;
     @Inject private PunishmentCreateRequest punishmentCreateRequest;
     @Inject private PunishmentActions punishmentActions;
@@ -44,7 +43,7 @@ public class IPunishmentHandler implements PunishmentHandler {
         this.executorService = executorService;
         this.gson = gson;
         this.punishmentChannel = messager.getChannel("punishments", Punishment.class);
-        this.punishmentChannel.registerListener(new PunishmentListener(this.instance, this.userStoreHandler, this.punishmentActions));
+        this.punishmentChannel.registerListener(new PunishmentListener(this.userStoreHandler, this.punishmentActions));
     }
 
     @Override

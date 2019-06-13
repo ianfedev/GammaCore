@@ -8,10 +8,7 @@ import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
 import net.seocraft.commons.bukkit.authentication.*;
-import net.seocraft.commons.bukkit.command.LoginCommand;
-import net.seocraft.commons.bukkit.command.PunishmentCommand;
-import net.seocraft.commons.bukkit.command.RegisterCommand;
-import net.seocraft.commons.bukkit.command.WhisperCommand;
+import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -38,6 +35,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private WhisperCommand whisperCommand;
     @Inject private PunishmentCommand punishmentCommand;
+    @Inject private FriendCommand friendCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
 
@@ -54,6 +52,7 @@ public class CommonsBukkit extends JavaPlugin {
         parametricCommandHandler.registerCommand(this.registerCommand);
         dispatcher.registerCommandClass(this.whisperCommand);
         dispatcher.registerCommandClass(this.punishmentCommand);
+        dispatcher.registerCommandClass(this.friendCommand);
         // --- Authentication mode related listeners //
         getServer().getPluginManager().registerEvents(this.authenticationCommandsListener, this);
         getServer().getPluginManager().registerEvents(this.authenticationLanguageMenuListener, this);

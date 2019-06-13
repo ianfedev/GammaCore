@@ -73,11 +73,13 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     }
 
     @Override
-    public boolean checkFriendshipStatus(@NotNull String sender, @NotNull String receiver) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        return this.jsonParser.parseJson(
-                this.friendCheckRequest.executeRequest(sender, receiver, this.serverTokenQuery.getToken()),
-                "status"
-        ).getAsBoolean();
+    public boolean checkFriendshipStatus(@NotNull String sender, @NotNull String receiver) {
+        try {
+            return this.jsonParser.parseJson(
+                    this.friendCheckRequest.executeRequest(sender, receiver, this.serverTokenQuery.getToken()),
+                    "status"
+            ).getAsBoolean();
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError ignore) { return false; }
     }
 
     @Override
@@ -141,6 +143,11 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
             } catch (Unauthorized | BadRequest | NotFound | InternalServerError ignore) {}
         });
         return userList;
+    }
+
+    @Override
+    public boolean requestIsSent(@NotNull String sender, @NotNull String receiver) {
+        return this.client.existsKey("friendship:" + receiver + ":" + sender);
     }
 
     @Override
