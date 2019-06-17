@@ -9,6 +9,10 @@ import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.command.*;
+import net.seocraft.commons.bukkit.friend.Friendship;
+import net.seocraft.commons.bukkit.friend.FriendshipHandler;
+import net.seocraft.commons.bukkit.friend.FriendshipHandlerImpl;
+import net.seocraft.commons.bukkit.friend.FriendshipImpl;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -68,6 +72,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(CommonsBukkit.class).toInstance(this);
         binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
         binder.bind(PunishmentHandler.class).to(IPunishmentHandler.class);
+        binder.bind(FriendshipHandler.class).to(FriendshipHandlerImpl.class);
         binder.expose(CommonsBukkit.class);
         binder.expose(WhisperManager.class);
     }

@@ -31,4 +31,6 @@ public interface IRedisClient {
 
     Set<String> getKeys(String pattern);
 
+    long getExpiringTime(String key);
+
 }

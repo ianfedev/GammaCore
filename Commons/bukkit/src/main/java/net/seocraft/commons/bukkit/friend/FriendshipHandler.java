@@ -32,6 +32,8 @@ public interface FriendshipHandler {
 
     @Nullable List<User> getRequestsSync(@NotNull String id);
 
+    boolean hasUnreadRequests(@NotNull String id);
+
     boolean requestIsSent(@NotNull String sender, @NotNull String receiver);
 
     void toggleFriendRequests(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError;

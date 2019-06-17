@@ -12,8 +12,9 @@ import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.session.GameSession;
 import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.model.User;
-import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.friend.FriendshipAction;
 import net.seocraft.commons.bukkit.friend.FriendshipHandler;
+import net.seocraft.commons.bukkit.friend.FriendshipUserActions;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.ChatGlyphs;
 import net.seocraft.commons.core.translations.TranslatableField;
@@ -27,8 +28,8 @@ public class FriendCommand implements CommandClass {
     @Inject private BukkitAPI bukkitAPI;
     @Inject private TranslatableField translatableField;
     @Inject private FriendshipHandler friendshipHandler;
+    @Inject private FriendshipUserActions friendshipUserActions;
     @Inject private UserChat userChatHandler;
-    @Inject private CommonsBukkit instance;
     @Inject private UserStoreHandler userStoreHandler;
     @Inject private SessionHandler sessionHandler;
 
@@ -96,21 +97,40 @@ public class FriendCommand implements CommandClass {
                                                 this.userChatHandler.getUserFormat(
                                                         targetRecord,
                                                         this.bukkitAPI.getConfig().getString("realm")
-                                                )
-                                        )
+                                                ) + ChatColor.RED
+                                        ) + "."
                                 );
                                 return;
                             }
 
+                            if (this.friendshipHandler.requestIsSent(user.id(), targetRecord.id())) {
+                                ChatAlertLibrary.errorChatAlert(player,
+                                        this.translatableField.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_friends_already_requested"
+                                        ).replace(
+                                                "%%player%%",
+                                                this.userChatHandler.getUserFormat(
+                                                        targetRecord,
+                                                        this.bukkitAPI.getConfig().getString("realm")
+                                                ) + ChatColor.RED
+                                        ) + "."
+                                );
+                                return;
+                            }
 
+                            this.friendshipHandler.createFriendRequest(
+                                    user.id(),
+                                    targetRecord.id()
+                            );
 
-
-
+                            this.friendshipUserActions.senderAction(player, user, targetRecord, FriendshipAction.CREATE);
+                            this.friendshipUserActions.receiverAction(user, targetRecord, FriendshipAction.CREATE);
                         } else {
                             if (targetAsyncResponse.getThrowedException().getClass().equals(NotFound.class)) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found"));
+                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
                             } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error"));
+                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
                             }
                         }
                     });

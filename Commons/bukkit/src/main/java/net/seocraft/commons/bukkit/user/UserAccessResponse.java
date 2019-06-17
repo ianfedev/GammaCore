@@ -2,7 +2,12 @@ package net.seocraft.commons.bukkit.user;
 
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.user.UserChat;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
@@ -16,7 +21,10 @@ import net.seocraft.api.shared.user.model.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLoginListener;
+import net.seocraft.commons.bukkit.friend.Friendship;
+import net.seocraft.commons.bukkit.friend.FriendshipHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentActions;
+import net.seocraft.commons.bukkit.util.ChatGlyphs;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,6 +35,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -38,6 +47,8 @@ public class UserAccessResponse implements Listener {
     @Inject private JsonUtils parser;
     @Inject private UserStoreHandler userStorage;
     @Inject private SessionHandler sessionHandler;
+    @Inject private FriendshipHandler friendshipHandler;
+    @Inject private UserChat userChatHandler;
     @Inject private UserAccessRequest request;
     @Inject private OnlinePlayersApi onlinePlayersApi;
     @Inject private ServerTokenQuery tokenHandler;
@@ -95,6 +106,33 @@ public class UserAccessResponse implements Listener {
                     }
                     event.setJoinMessage("");
                 }
+
+                // Check if player has unread friendship requests  // TODO: Execute only in lobby
+                if (this.friendshipHandler.hasUnreadRequests(playerIdentifier)) {
+                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+
+                    // Base alert component
+                    TextComponent baseComponent = new TextComponent(
+                            this.translator.getUnspacedField(user.getLanguage(), "commons_friends_pending_requests") + ". "
+                    );
+                    baseComponent.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+                    TextComponent clickComponent = new TextComponent(
+                            this.translator.getUnspacedField(user.getLanguage(), "commons_friends_pending_click")
+                    );
+                    clickComponent.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+                    clickComponent.setHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            new ComponentBuilder( ChatColor.YELLOW +
+                                    this.translator.getUnspacedField(user.getLanguage(), "commons_friends_pending_click")
+                            ).create()
+                    ));
+                    clickComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends requests"));
+                    baseComponent.addExtra(clickComponent);
+                    player.sendMessage(baseComponent);
+
+                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                }
+
                 this.onlinePlayersApi.setPlayerOnlineStatus(user.id(), true); //TODO: Set at commons bungee
                 playerField.set(player, new UserPermissions(player, user, userStorage, sessionHandler, translator));
             }

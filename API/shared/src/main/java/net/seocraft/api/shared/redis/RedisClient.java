@@ -86,6 +86,12 @@ public class RedisClient implements IRedisClient {
         }
     }
 
+    public void setExpiration(String key, long seconds) {
+        try (Jedis client = getPool().getResource()) {
+            client.expire(key, (int) seconds);
+        }
+    }
+
     public Boolean existsKey(String key) {
         try (Jedis client = getPool().getResource()) {
             return client.exists(key);
@@ -95,6 +101,12 @@ public class RedisClient implements IRedisClient {
     public Set<String> getKeys(String pattern) {
         try (Jedis client = getPool().getResource()) {
             return client.keys(pattern);
+        }
+    }
+
+    public long getExpiringTime(String key) {
+        try (Jedis client = getPool().getResource()) {
+            return client.ttl(key);
         }
     }
 

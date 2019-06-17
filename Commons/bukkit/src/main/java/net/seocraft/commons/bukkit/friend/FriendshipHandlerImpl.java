@@ -32,31 +32,32 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     private ListeningExecutorService executorService;
     private Gson gson;
     private Channel<Friendship> friendshipChannel;
-    private RedisClient client;
     @Inject private JsonUtils jsonParser;
+    @Inject private FriendshipUserActions friendshipUserActions;
     @Inject private FriendCreateRequest friendCreateRequest;
     @Inject private FriendCheckRequest friendCheckRequest;
     @Inject private FriendListRequest friendListRequest;
+    @Inject private RedisClient client;
     @Inject private FriendDeleteRequest friendDeleteRequest;
     @Inject private FriendClearRequest friendClearRequest;
     @Inject private UserStoreHandler userStoreHandler;
     @Inject private ServerTokenQuery serverTokenQuery;
 
-    @Inject FriendshipHandlerImpl(ListeningExecutorService executorService, Messager messager, RedisClient client, Gson gson) {
+    @Inject FriendshipHandlerImpl(ListeningExecutorService executorService, Messager messager, Gson gson) {
         this.executorService = executorService;
-        this.client = client;
         this.gson = gson;
         this.friendshipChannel = messager.getChannel("friendships", Friendship.class);
-        this.friendshipChannel.registerListener(new FriendshipListener());
+        this.friendshipChannel.registerListener(new FriendshipListener(this.userStoreHandler, this.friendshipUserActions));
     }
 
     @Override
     public void createFriendRequest(@NotNull String sender, @NotNull String receiver) {
         if (this.client.existsKey("friendship:" + receiver + ":" + sender)) return;
-        Friendship friendship = new FriendshipImpl(sender, receiver, FriendshipAction.CREATE);
+        Friendship friendship = new FriendshipImpl(sender, receiver, FriendshipAction.CREATE, false);
         this.client.setString("friendship:" + receiver + ":" + sender,
                 this.gson.toJson(friendship)
         );
+        this.client.setExpiration("friendship:" + receiver + ":" + sender, 600);
         this.friendshipChannel.sendMessage(friendship);
     }
 
@@ -64,7 +65,7 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     public void acceptFriendRequest(@NotNull String sender, @NotNull String receiver) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         if (!this.client.existsKey("friendship:" + receiver + ":" + sender)) return;
         this.client.deleteString("friendship:" + receiver + ":" + sender);
-        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.ACCEPT);
+        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.ACCEPT, false);
         this.friendCreateRequest.executeRequest(
                 this.gson.toJson(punishment),
                 this.serverTokenQuery.getToken()
@@ -86,7 +87,7 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     public void rejectFriendRequest(@NotNull String sender, @NotNull String receiver) {
         if (!this.client.existsKey("friendship:" + receiver + ":" + sender)) return;
         this.client.deleteString("friendship:" + receiver + ":" + sender);
-        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.REJECT);
+        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.REJECT, false);
         this.friendshipChannel.sendMessage(punishment);
     }
 
@@ -132,10 +133,15 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
 
     @Override
     public @Nullable List<User> getRequestsSync(@NotNull String id) {
-        Set<String> requestList = this.client.getKeys("friendship:" + id + ":*");
+        Set<String> requestList = this.client.getKeys("friendship:" + id +"*");
         List<User> userList = new ArrayList<>();
         requestList.forEach(key -> {
             Friendship friendshipRecord = this.gson.fromJson(key, FriendshipImpl.class);
+            long expirationTime = this.client.getExpiringTime(key);
+            friendshipRecord.setAlerted(true);
+            this.client.setString(key, this.gson.toJson(friendshipRecord));
+            this.client.setExpiration(key, expirationTime);
+            if (!friendshipRecord.isAlerted())
             try {
                 userList.add(
                         this.userStoreHandler.findUserByIdSync(friendshipRecord.getSender())
@@ -143,6 +149,18 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
             } catch (Unauthorized | BadRequest | NotFound | InternalServerError ignore) {}
         });
         return userList;
+    }
+
+    @Override
+    public boolean hasUnreadRequests(@NotNull String id) {
+        Set<String> requestList = this.client.getKeys("friendship:" + id +"*");
+        for (String friendship: requestList) {
+            Friendship friendshipRecord = this.gson.fromJson(
+                    this.client.getString(friendship),
+                    FriendshipImpl.class);
+            if (!friendshipRecord.isAlerted()) return true;
+        }
+        return false;
     }
 
     @Override
@@ -163,7 +181,7 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
 
     @Override
     public void forceFriend(@NotNull String firstId, @Nullable String secondId) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        Friendship punishment = new FriendshipImpl(firstId, secondId, FriendshipAction.FORCE);
+        Friendship punishment = new FriendshipImpl(firstId, secondId, FriendshipAction.FORCE, false);
         this.friendCreateRequest.executeRequest(
                 this.gson.toJson(punishment),
                 this.serverTokenQuery.getToken()

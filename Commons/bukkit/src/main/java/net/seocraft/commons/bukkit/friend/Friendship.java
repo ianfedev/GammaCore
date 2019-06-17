@@ -10,4 +10,8 @@ public interface Friendship {
 
     @NotNull FriendshipAction getAction();
 
+    boolean isAlerted();
+
+    void setAlerted(boolean alerted);
+
 }
