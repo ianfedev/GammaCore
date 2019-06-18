@@ -40,6 +40,6 @@ public interface FriendshipHandler {
 
     void removeAllFriends(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    void forceFriend(@NotNull String firstId, @Nullable String secondId) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    void forceFriend(@NotNull String firstId, @Nullable String secondId, @NotNull String issuer) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
 }

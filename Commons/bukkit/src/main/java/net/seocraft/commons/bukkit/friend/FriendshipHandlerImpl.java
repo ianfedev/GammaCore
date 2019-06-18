@@ -53,7 +53,7 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     @Override
     public void createFriendRequest(@NotNull String sender, @NotNull String receiver) {
         if (this.client.existsKey("friendship:" + receiver + ":" + sender)) return;
-        Friendship friendship = new FriendshipImpl(sender, receiver, FriendshipAction.CREATE, false);
+        Friendship friendship = new FriendshipImpl(sender, receiver, FriendshipAction.CREATE, false, null);
         this.client.setString("friendship:" + receiver + ":" + sender,
                 this.gson.toJson(friendship)
         );
@@ -63,9 +63,9 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
 
     @Override
     public void acceptFriendRequest(@NotNull String sender, @NotNull String receiver) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        if (!this.client.existsKey("friendship:" + receiver + ":" + sender)) return;
-        this.client.deleteString("friendship:" + receiver + ":" + sender);
-        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.ACCEPT, false);
+        if (!this.client.existsKey("friendship:" + sender + ":" + receiver)) return;
+        this.client.deleteString("friendship:" + sender + ":" + receiver);
+        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.ACCEPT, false, null);
         this.friendCreateRequest.executeRequest(
                 this.gson.toJson(punishment),
                 this.serverTokenQuery.getToken()
@@ -85,10 +85,8 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
 
     @Override
     public void rejectFriendRequest(@NotNull String sender, @NotNull String receiver) {
-        if (!this.client.existsKey("friendship:" + receiver + ":" + sender)) return;
-        this.client.deleteString("friendship:" + receiver + ":" + sender);
-        Friendship punishment = new FriendshipImpl(sender, receiver, FriendshipAction.REJECT, false);
-        this.friendshipChannel.sendMessage(punishment);
+        if (!this.client.existsKey("friendship:" + sender + ":" + receiver)) return;
+        this.client.deleteString("friendship:" + sender + ":" + receiver);
     }
 
     @Override
@@ -180,8 +178,8 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     }
 
     @Override
-    public void forceFriend(@NotNull String firstId, @Nullable String secondId) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        Friendship punishment = new FriendshipImpl(firstId, secondId, FriendshipAction.FORCE, false);
+    public void forceFriend(@NotNull String firstId, @Nullable String secondId, @NotNull String issuer) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        Friendship punishment = new FriendshipImpl(firstId, secondId, FriendshipAction.FORCE, false, issuer);
         this.friendCreateRequest.executeRequest(
                 this.gson.toJson(punishment),
                 this.serverTokenQuery.getToken()

@@ -21,11 +21,26 @@ public class FriendshipListener implements ChannelListener<Friendship> {
             if (senderRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                 CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(object.getReceiver()), receiverRecord -> {
                     if (receiverRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
-                        this.friendshipActions.receiverAction(
-                                senderRecord.getResponse(),
-                                receiverRecord.getResponse(),
-                                object.getAction()
-                        );
+                        if (object.getIssuer() != null) {
+                            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(object.getReceiver()), issuerRecord -> {
+                                if (issuerRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    this.friendshipActions.receiverAction(
+                                            senderRecord.getResponse(),
+                                            receiverRecord.getResponse(),
+                                            object.getAction(),
+                                            issuerRecord.getResponse()
+                                    );
+                                }
+                            });
+                        } else {
+                            this.friendshipActions.receiverAction(
+                                    senderRecord.getResponse(),
+                                    receiverRecord.getResponse(),
+                                    object.getAction(),
+                                    null
+                            );
+                        }
+
                     }
                 });
             }

@@ -13,6 +13,7 @@ import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 public class FriendshipUserActions {
 
@@ -21,9 +22,10 @@ public class FriendshipUserActions {
     @Inject private BukkitAPI bukkitAPI;
 
     public void senderAction(Player player, User user, User targetRecord, FriendshipAction action) {
+
+        player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
         switch (action) {
             case CREATE: {
-                player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                 player.sendMessage(
                         ChatColor.YELLOW +
                                 this.translatableField.getUnspacedField(
@@ -37,19 +39,21 @@ public class FriendshipUserActions {
                                         ) + ChatColor.YELLOW
                                 ) + "."
                 );
-                player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                 break;
+            }
+            case ACCEPT: {
+                showNewFriendshipMessage(player, user, targetRecord);
             }
             default: break;
         }
+        player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
     }
 
-    public void receiverAction(User sender, User target, FriendshipAction action) {
+    public void receiverAction(User sender, User target, FriendshipAction action, @Nullable User issuer) {
         Player player = Bukkit.getPlayer(target.getUsername());
         String l = target.getLanguage();
         String realm = this.bukkitAPI.getConfig().getString("realm");
         String senderPlaceholder = this.userChatHandler.getUserFormat(sender, realm);
-        String targetPlaceholder = this.userChatHandler.getUserFormat(target, realm);
         if (player != null) {
             player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
 
@@ -59,7 +63,7 @@ public class FriendshipUserActions {
                             this.translatableField.getUnspacedField(
                                     l,
                                     "commons_friends_received_request"
-                            ).replace("%%player%%", targetPlaceholder + ChatColor.YELLOW)
+                            ).replace("%%player%%", senderPlaceholder + ChatColor.YELLOW)
                     );
 
                     // [ACCEPT] Button
@@ -99,11 +103,54 @@ public class FriendshipUserActions {
                     player.sendMessage(finalComponent);
                     break;
                 }
+                case ACCEPT: {
+                    showNewFriendshipMessage(player, target, sender);
+                }
+                case FORCE: {
+                    if (issuer != null) {
+                        if (sender.id().equalsIgnoreCase(issuer.id())) {
+                            String replaceString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
+                            .replace("%%sender%%", this.userChatHandler.getUserFormat(issuer, realm))
+                            .replace("%%target%%", this.translatableField.getUnspacedField(l, "commons_gender_him_her").toLowerCase());
+                            player.sendMessage(ChatColor.LIGHT_PURPLE + replaceString);
+                            return;
+                        }
+
+                        Player firstUser = Bukkit.getPlayer(sender.getUsername());
+                        if (firstUser != null) {
+                            String replaceString = this.translatableField.getUnspacedField(sender.getLanguage(), "commons_friends_forced_friendship")
+                                    .replace("%%sender%%", this.userChatHandler.getUserFormat(issuer, realm))
+                                    .replace("%%target%%", this.userChatHandler.getUserFormat(target, realm));
+                            firstUser.sendMessage(ChatColor.LIGHT_PURPLE + replaceString);
+
+                            String replaceTargetString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
+                                    .replace("%%sender%%", this.userChatHandler.getUserFormat(issuer, realm))
+                                    .replace("%%target%%", this.userChatHandler.getUserFormat(target, realm));
+                            firstUser.sendMessage(ChatColor.LIGHT_PURPLE + replaceTargetString);
+                        }
+                    }
+                }
                 default: break;
             }
 
             player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
         }
 
+    }
+
+    private void showNewFriendshipMessage(Player player, User user, User friendshipShowable) {
+        player.sendMessage(
+                ChatColor.YELLOW +
+                        this.translatableField.getUnspacedField(
+                                user.getLanguage(),
+                                "commons_friends_request_accepted"
+                        ).replace(
+                                "%%player%%",
+                                this.userChatHandler.getUserFormat(
+                                        friendshipShowable,
+                                        this.bukkitAPI.getConfig().getString("realm")
+                                ) + ChatColor.YELLOW
+                        )
+        );
     }
 }

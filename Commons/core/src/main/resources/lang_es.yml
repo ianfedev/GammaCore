@@ -78,18 +78,30 @@ commons_friends_help_accept: Acepta la solicitud de amistad de otra persona
 commons_friends_help_deny: Rechaza la solicitud de amistad de un usuario
 commons_friends_help_list: Muestra una lista con tus amigos
 commons_friends_help_remove: Elimina a un usuario de tu lista de amigos
+commons_friends_help_status: Acepta o deja de aceptar solicitudes
 commons_friends_help_requests: Muestra una lista con tus solicitudes pendientes
 commons_friends_help_removeall: Elimina a todos los usuarios de tu lista de amigos
 commons_friends_help_force: Fuerza la amistad entre dos jugadores
 commons_friends_disabled_requests: El jugador tiene desactivadas las solicitudes de amistad
 commons_friends_already: "%%player%% y tú ya son amigos"
 commons_friends_already_requested: "Ya enviaste una solicitud a %%player%%"
+commons_friends_not_requested: "El jugador %%player%% no te ha enviado una solicitud de amistad o esta ya ha expirado"
+commons_friends_request_accepted: "¡%%player%% y tú ahora son amigos!"
+commons_friends_request_rejected: "¡Haz rechazado la solicitud de amistad de %%player%%!"
+commons_friends_removed: "¡Haz eliminado a %%player%% de tu lista de amigos!"
+commons_friends_not_friends: "%%player%% no es tu amigo"
 commons_friends_request_sent: "Enviaste una solicitud de amistad a %%player%%. Tiene cinco minutos para aceptar"
 commons_friends_received_request: "¡Haz recibido una solicitud de amistad de %%player%%!"
 commons_friends_accept_placeholder: "Aceptarás a %%player%% como tu amigo"
 commons_friends_reject_placeholder: "Rechazarás a %%player%% como tu amigo"
 commons_friends_pending_requests: "Tienes solicitudes de amistad nuevas"
 commons_friends_pending_click: "¡Click aquí para ver tus solicitudes!"
+commons_friends_not_add_yourself: "No te puedes añadir a ti mismo. Busca algunos amigos, por favor..."
+commons_friends_not_remove_yourself: "No te puedes eliminar a tí mismo"
+commons_friends_removed_all: "¡Haz eliminado a todos tus amigos!"
+commons_friends_force_offline: "No puedes forzar la amistad de alguien que se encuentra desconectado"
+commons_friends_force_lower_permissions: "Debes tener un rango igual o mayor que esa persona para poder forzar su amistad"
+commons_friends_forced_friendship: "%%sender%% te ha forzado a ser amigo de %%target%%. ¡Disfruta de tu nuevo \"amigo\"!"
 
 # Common words translations
 commons_main_lobby: Lobby Principal
@@ -99,3 +111,4 @@ commons_language_placeholder: Español
 commons_not_found: El jugador que buscas no se ha registrado en el servidor
 commons_accept: Aceptar
 commons_reject: Rechazar
+commons_gender_him_her: Él/ella
