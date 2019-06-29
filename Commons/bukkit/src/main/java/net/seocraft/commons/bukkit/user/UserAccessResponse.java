@@ -98,7 +98,7 @@ public class UserAccessResponse implements Listener {
                     if (this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
                         this.loginListener.authenticationLoginListener(
                                 player,
-                                parser.parseJson(rawResponse, "registered").getAsBoolean(),
+                                response.get("registered").getAsBoolean(),
                                 user.getLanguage()
                         );
                     } else {
