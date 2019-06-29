@@ -34,7 +34,6 @@ public class FriendCommand implements CommandClass {
     @Inject private TranslatableField translatableField;
     @Inject private FriendshipHandler friendshipHandler;
     @Inject private FriendshipUserActions friendshipUserActions;
-    @Inject private OnlinePlayersApi onlinePlayersApi;
     @Inject private UserChat userChatHandler;
     @Inject private UserStoreHandler userStoreHandler;
     @Inject private SessionHandler sessionHandler;
