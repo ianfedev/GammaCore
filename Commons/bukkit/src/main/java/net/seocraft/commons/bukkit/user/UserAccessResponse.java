@@ -135,7 +135,7 @@ public class UserAccessResponse implements Listener {
                 }
 
                 this.onlinePlayersApi.setPlayerOnlineStatus(user.id(), true); //TODO: Set at commons bungee
-                playerField.set(player, new UserPermissions(player, user, userStorage, sessionHandler, translator));
+                playerField.set(player, new UserPermissions(player, user, userStorage, sessionHandler, translator, instance.getLogger()));
 
                 if (Bukkit.getPluginManager().getPlugin("Lobby") != null) {
                     Bukkit.getPluginManager().callEvent(new LobbyConnectionEvent(user, player));
