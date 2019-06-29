@@ -17,6 +17,8 @@ public class RedisChannel<O> implements Channel<O> {
     private String name;
     private TypeToken<O> type;
 
+    private TypeToken<RedisWrapper<O>> wrappedType;
+
     private RedisClient redis;
     private JedisPubSub pubSub;
 
@@ -37,16 +39,17 @@ public class RedisChannel<O> implements Channel<O> {
         pubSub = new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
-                JsonParser parser = new JsonParser();
-                JsonObject wrappedObject = parser.parse(message).getAsJsonObject();
+                RedisWrapper<O> wrapper = gson.fromJson(message, new TypeToken<RedisWrapper<O>>() {
+                }.getType());
 
-                String id = wrappedObject.get("id").getAsString();
 
-                if(id.equals(serverChannelId)){
+                String id = wrapper.getId();
+
+                if (id.equals(serverChannelId)) {
                     return;
                 }
 
-                O object = gson.fromJson(wrappedObject.getAsJsonObject("object"), type.getType());
+                O object = wrapper.getObject();
 
                 channelListeners.forEach(listener -> {
                     listener.receiveMessage(object);
@@ -61,6 +64,9 @@ public class RedisChannel<O> implements Channel<O> {
         });
 
         channelListeners = new ConcurrentLinkedDeque<>();
+
+        wrappedType = new TypeToken<RedisWrapper<O>>() {
+        };
     }
 
     @Override
@@ -77,14 +83,12 @@ public class RedisChannel<O> implements Channel<O> {
     public void sendMessage(O object) {
         try (Jedis jedis = redis.getPool().getResource()) {
 
-            JsonElement jsonObject = gson.toJsonTree(object);
+            RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
 
-            JsonObject wrapper = new JsonObject();
+            String jsonRepresentation = gson.toJson(wrapper, wrappedType.getType());
 
-            wrapper.addProperty("id", serverChannelId);
-            wrapper.add("object", jsonObject);
+            jedis.publish(name, jsonRepresentation);
 
-            jedis.publish(name, wrapper.toString());
         }
     }
 
