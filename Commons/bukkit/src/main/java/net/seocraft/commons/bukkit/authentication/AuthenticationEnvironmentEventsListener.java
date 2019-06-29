@@ -10,6 +10,7 @@ import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translations.TranslatableField;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,7 +28,18 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
 
     @EventHandler
     public void authenticationMovementListener(PlayerMoveEvent event) {
-        if (this.instance.getConfig().getBoolean("authentication.enabled")) event.setTo(event.getFrom());
+        if (this.instance.getConfig().getBoolean("authentication.enabled")) {
+            Location from = event.getFrom();
+            Location to = event.getTo();
+
+            if(from.getBlockX() != to.getBlockX() || from.getBlockZ() != to.getBlockZ()){
+                to.setX(from.getBlockX() + .5);
+                to.setZ(from.getBlockZ() + .5);
+
+                event.setTo(to);
+            }
+
+        }
     }
 
     @EventHandler
