@@ -39,7 +39,7 @@ public class WhisperCommand implements CommandClass {
         CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(sender.getName()).getPlayerId()), asyncUserSender -> {
             if (asyncUserSender.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User userSender = asyncUserSender.getResponse();
-                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(sender.getName()).getPlayerId()), asyncTargetUser -> {
+                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(this.sessionHandler.getCachedSession(target.getName()).getPlayerId()), asyncTargetUser -> {
                     if (asyncTargetUser.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User targetUser = asyncTargetUser.getResponse();
                         CallbackWrapper.addCallback(whisperManager.sendMessage(userSender, targetUser, message), response -> {
