@@ -387,7 +387,7 @@ public class FriendCommand implements CommandClass {
                             User firstRecord = targetAsyncResponse.getResponse();
 
                             // Check if first player is online
-                            if (!this.onlinePlayersApi.isPlayerOnline(firstRecord.id())) {
+                            if (!sessionHandler.sessionExists(firstRecord.getUsername())) {
                                 ChatAlertLibrary.errorChatAlert(player,
                                         this.translatableField.getUnspacedField(
                                                 user.getLanguage(),
