@@ -4,9 +4,9 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import net.seocraft.api.shared.online.OnlinePlayersApi;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
+import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.model.User;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 public class WhisperManagerImpl implements WhisperManager {
 
-    @Inject private OnlinePlayersApi onlinePlayersApi;
+    @Inject private SessionHandler sessionHandler;
     @Inject private TranslatableField translator;
     private ListeningExecutorService executorService;
     private Channel<Whisper> whisperChannel;
@@ -29,12 +29,9 @@ public class WhisperManagerImpl implements WhisperManager {
 
     @Override
     public ListenableFuture<WhisperResponse> sendMessage(User from, User to, String content) {
-        final String fromUserId = from.id();
-        final String toUserId = to.id();
-
-        if (Bukkit.getPlayer(toUserId) != null) {
-            Player playerFrom = Bukkit.getPlayer(fromUserId);
-            Player playerTo = Bukkit.getPlayer(toUserId);
+        if (Bukkit.getPlayer(to.getUsername()) != null) {
+            Player playerFrom = Bukkit.getPlayer(from.getUsername());
+            Player playerTo = Bukkit.getPlayer(to.getUsername());
 
             playerFrom.sendMessage(
                     ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_from") +
@@ -51,7 +48,7 @@ public class WhisperManagerImpl implements WhisperManager {
         return executorService.submit(() -> {
             Whisper whisper = new WhisperImpl(from, to, content);
 
-            if (!onlinePlayersApi.isPlayerOnline(toUserId)) {
+            if (!sessionHandler.sessionExists(to.getUsername())) {
                 return new WhisperResponse(null, WhisperResponse.Response.PLAYER_OFFLINE, whisper);
             }
 
