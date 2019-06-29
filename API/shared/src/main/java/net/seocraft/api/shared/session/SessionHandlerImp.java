@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import net.seocraft.api.shared.redis.RedisClient;
 import net.seocraft.api.shared.user.model.User;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SessionHandlerImp implements SessionHandler {
 
@@ -21,7 +22,7 @@ public class SessionHandlerImp implements SessionHandler {
     }
 
     @Override
-    public @NotNull GameSession getCachedSession(@NotNull String username) {
+    public @Nullable GameSession getCachedSession(@NotNull String username) {
         return this.gson.fromJson(this.client.getString("session:" + username.toLowerCase()), GameSessionImp.class);
     }
 
