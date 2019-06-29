@@ -27,62 +27,66 @@ import java.util.logging.Level;
 
 public class AuthenticationCommandsListener implements Listener {
 
-    @Inject private CommonsBukkit instance;
-    @Inject private TranslatableField translator;
-    @Inject private SessionHandler sessionHandler;
-    @Inject private UserStoreHandler userStoreHandler;
+    @Inject
+    private CommonsBukkit instance;
+    @Inject
+    private TranslatableField translator;
+    @Inject
+    private SessionHandler sessionHandler;
+    @Inject
+    private UserStoreHandler userStoreHandler;
 
     @EventHandler
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)  {
-        Namespace namespace = new Namespace();
-        namespace.setObject(CommandSender.class, "sender", event.getPlayer());
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        if (this.instance.getConfig().getBoolean("authentication.enabled")) {
-            try {
-                String userLanguage = this.userStoreHandler.getCachedUserSync(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()).getLanguage();
-                if((event.getMessage().equals("/pl")) || (event.getMessage().equals("/plugins"))) {
-                    ChatAlertLibrary.infoAlert(
-                            player,
-                            this.translator.getField(userLanguage,"commons_plugin_developer") + ChatColor.YELLOW + "www.seocraft.net/staff"
-                    );
-                    event.setCancelled(true);
-                } else if(event.getMessage().contains("/register") || event.getMessage().contains("/login")) {
-                    try {
-                        if (this.instance.parametricCommandHandler.dispatchCommand(namespace, event.getMessage().substring(1))) {
-                            event.setCancelled(true);
-                        }
-                    } catch (CommandException ex) {
-                        event.getPlayer().sendMessage(ex.getMessage());
-                        Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
-                        event.setCancelled(true);
-                    } catch (NoPermissionsException ex) {
-                        event.getPlayer().sendMessage(ChatColor.RED + ex.getMessage());
-                        event.setCancelled(true);
-                    } catch (CommandUsageException | ArgumentsParseException ex) {
-                        String message = ChatColor.RED + ChatColor.translateAlternateColorCodes('&', ex.getMessage());
-                        String[] splittedMessage = message.split("\n");
-                        splittedMessage[0] = ChatColor.RED + "Usage: " + splittedMessage[0];
-                        for (String s : splittedMessage) {
-                            event.getPlayer().sendMessage(s);
-                        }
-                        event.setCancelled(true);
-                    }
-                } else {
-                    ChatAlertLibrary.errorChatAlert(
-                            player,
-                            this.translator.getUnspacedField(userLanguage,"commons_commands_disabled") + "."
-                    );
-                    event.setCancelled(true);
-                }
-            } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
+
+        try {
+            String userLanguage = this.userStoreHandler.getCachedUserSync(this.sessionHandler.getCachedSession(player.getName()).getPlayerId()).getLanguage();
+
+            if (!event.getMessage().contains("/register") && !event.getMessage().contains("/login")) {
                 ChatAlertLibrary.errorChatAlert(
                         player,
-                        null
+                        this.translator.getUnspacedField(userLanguage, "commons_commands_disabled") + "."
                 );
+
                 event.setCancelled(true);
+                return;
             }
+
+            Namespace namespace = new Namespace();
+            namespace.setObject(CommandSender.class, "sender", event.getPlayer());
+
+            try {
+                if (this.instance.parametricCommandHandler.dispatchCommand(namespace, event.getMessage().substring(1))) {
+                    event.setCancelled(true);
+                }
+
+                return;
+            } catch (CommandException ex) {
+                event.getPlayer().sendMessage(ex.getMessage());
+                Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
+
+            } catch (NoPermissionsException ex) {
+                event.getPlayer().sendMessage(ChatColor.RED + ex.getMessage());
+
+            } catch (CommandUsageException | ArgumentsParseException ex) {
+                String message = ChatColor.RED + ChatColor.translateAlternateColorCodes('&', ex.getMessage());
+                String[] splitMessage = message.split("\n");
+
+                splitMessage[0] = ChatColor.RED + "Usage: " + splitMessage[0];
+
+                for (String s : splitMessage) {
+                    event.getPlayer().sendMessage(s);
+                }
+            }
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
+            ChatAlertLibrary.errorChatAlert(
+                    player,
+                    null
+            );
         }
 
+        event.setCancelled(true);
     }
 
 }
