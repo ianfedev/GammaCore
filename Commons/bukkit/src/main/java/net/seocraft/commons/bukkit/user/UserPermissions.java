@@ -5,7 +5,6 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.model.Group;
 import net.seocraft.api.shared.session.GameSession;
 import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.model.User;
@@ -15,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 
@@ -25,15 +26,16 @@ public class UserPermissions extends PermissibleBase {
     private TranslatableField translatableField;
     private Player player;
     private User user;
+    private Logger logger;
 
-
-    UserPermissions(Player player, User user, UserStoreHandler userStoreHandler, SessionHandler sessionHandler, TranslatableField translatableField) {
+    UserPermissions(Player player, User user, UserStoreHandler userStoreHandler, SessionHandler sessionHandler, TranslatableField translatableField, Logger logger) {
         super(player);
         this.player = player;
         this.userStoreHandler = userStoreHandler;
         this.sessionHandler = sessionHandler;
         this.translatableField = translatableField;
         this.user = user;
+        this.logger = logger;
     }
 
     @Override
@@ -78,6 +80,8 @@ public class UserPermissions extends PermissibleBase {
                     player,
                     this.translatableField.getField(user.getLanguage(), "commons_permissions_error") + "."
             );
+
+            logger.log(Level.SEVERE, "An exception ocurred while getting player " + player.getName() + " permissions", unauthorized);
         }
         return false;
     }
