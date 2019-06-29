@@ -18,7 +18,7 @@ public class PlayerDeathListener implements Listener {
             Player player = (Player) event.getEntity();
             if (player.getHealth() < 1) {
                 event.setCancelled(true);
-                this.teleportHandler.spawnTeleport(player, false);
+                this.teleportHandler.spawnTeleport(player, null,false);
             }
         }
     }

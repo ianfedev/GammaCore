@@ -13,6 +13,8 @@ import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.model.Server;
+import net.seocraft.api.shared.online.OnlinePlayersApi;
+import net.seocraft.api.shared.online.OnlinePlayersImpl;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

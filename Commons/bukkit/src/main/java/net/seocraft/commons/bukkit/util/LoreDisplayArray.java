@@ -12,7 +12,7 @@ public class LoreDisplayArray<E> extends AbstractList<E> {
     private static final Object[] METADATA = {};
     private static final int DEFAULT_CAPACITY = 10;
 
-    LoreDisplayArray() {
+    public LoreDisplayArray() {
         elementData = METADATA;
     }
 

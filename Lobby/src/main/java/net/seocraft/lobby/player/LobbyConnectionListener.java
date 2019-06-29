@@ -25,7 +25,7 @@ public class LobbyConnectionListener implements Listener {
         Player player = event.getPlayer();
         User playerRecord = event.getPlayerRecord();
 
-        this.teleportHandler.spawnTeleport(player, true);
+        this.teleportHandler.spawnTeleport(player, null, true);
 
         this.hotbarItemCollection.setupPlayerHotbar(
                 player,

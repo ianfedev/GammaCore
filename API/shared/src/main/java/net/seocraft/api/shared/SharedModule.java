@@ -20,6 +20,7 @@ public class SharedModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(ExecutorService.class).to(ListeningExecutorService.class);
+        bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
         bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8)));
 
         bind(Gson.class).toProvider(() -> {
@@ -29,7 +30,7 @@ public class SharedModule extends AbstractModule {
                     .setPrettyPrinting()
                     .create();
         }).in(Scopes.SINGLETON);
-        bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
+
         bind(SessionHandler.class).to(SessionHandlerImp.class);
         bind(Messager.class).to(RedisMessager.class).in(Scopes.SINGLETON);
     }
