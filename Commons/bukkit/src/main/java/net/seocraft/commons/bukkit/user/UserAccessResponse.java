@@ -79,11 +79,14 @@ public class UserAccessResponse implements Listener {
         request.addProperty("username", player.getName());
         request.addProperty("ip", ip);
         try {
-            String response = this.request.executeRequest(request, tokenHandler.getToken());
-            String playerIdentifier = this.parser.parseJson(response, "user").getAsString();
+            String rawResponse = this.request.executeRequest(request, tokenHandler.getToken());
+            JsonObject response = parser.parseObject(rawResponse);
+
+            String playerIdentifier = response.get("user").getAsString();
+
             User user = this.userStorage.getCachedUserSync(playerIdentifier);
             this.sessionHandler.createGameSession(user,  ip, "1.8.9"); // TODO: Handle version get
-            if (this.parser.parseJson(response, "multi").getAsBoolean()) {
+            if (response.get("multi").getAsBoolean()) {
                 // TODO: Handle multi-account issue
             } else {
 
@@ -95,7 +98,7 @@ public class UserAccessResponse implements Listener {
                     if (this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
                         this.loginListener.authenticationLoginListener(
                                 player,
-                                parser.parseJson(response, "registered").getAsBoolean(),
+                                parser.parseJson(rawResponse, "registered").getAsBoolean(),
                                 user.getLanguage()
                         );
                     } else {
