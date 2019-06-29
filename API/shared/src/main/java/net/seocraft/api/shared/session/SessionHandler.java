@@ -10,5 +10,7 @@ public interface SessionHandler {
 
     @Nullable GameSession getCachedSession(@NotNull String username);
 
+    boolean sessionExists(@NotNull String username);
+
     void removeGameSession(@NotNull String username);
 }
