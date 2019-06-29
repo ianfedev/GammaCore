@@ -38,6 +38,8 @@ public class DisabledPluginsCommandListener implements Listener {
                         player,
                         this.translator.getField(userLanguage, "commons_plugin_developer") + ChatColor.YELLOW + "www.seocraft.net/staff"
                 );
+
+                event.setCancelled(true);
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
             ChatAlertLibrary.errorChatAlert(
@@ -46,6 +48,5 @@ public class DisabledPluginsCommandListener implements Listener {
             );
         }
 
-        event.setCancelled(true);
     }
 }
