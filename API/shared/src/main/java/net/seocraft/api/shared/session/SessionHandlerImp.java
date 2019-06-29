@@ -27,6 +27,11 @@ public class SessionHandlerImp implements SessionHandler {
     }
 
     @Override
+    public boolean sessionExists(@NotNull String username) {
+        return this.client.existsKey("session:" + username.toLowerCase());
+    }
+
+    @Override
     public void removeGameSession(@NotNull String username) {
         if (this.client.existsKey("session:" + username.toLowerCase())) {
             this.client.deleteString("session:" + username.toLowerCase());
