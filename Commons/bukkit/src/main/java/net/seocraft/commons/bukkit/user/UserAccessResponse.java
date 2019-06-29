@@ -135,6 +135,10 @@ public class UserAccessResponse implements Listener {
 
                 this.onlinePlayersApi.setPlayerOnlineStatus(user.id(), true); //TODO: Set at commons bungee
                 playerField.set(player, new UserPermissions(player, user, userStorage, sessionHandler, translator));
+
+                if (Bukkit.getPluginManager().getPlugin("Lobby") != null) {
+                    Bukkit.getPluginManager().callEvent(new LobbyConnectionEvent(user, player));
+                }
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());

@@ -1,7 +1,5 @@
 package net.seocraft.commons.bukkit;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.inject.Inject;
 import me.fixeddev.inject.ProtectedBinder;
 import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
@@ -9,10 +7,8 @@ import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
 import me.ggamer55.bcm.parametric.ParametricCommandHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.command.*;
-import net.seocraft.commons.bukkit.friend.Friendship;
 import net.seocraft.commons.bukkit.friend.FriendshipHandler;
 import net.seocraft.commons.bukkit.friend.FriendshipHandlerImpl;
-import net.seocraft.commons.bukkit.friend.FriendshipImpl;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;

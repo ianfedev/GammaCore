@@ -40,6 +40,7 @@ public class UserImp implements User {
     @SerializedName("accept_friends") private boolean acceptFriends;
     @SerializedName("accept_parties") private boolean acceptParties;
     @SerializedName("show_status") private boolean showStatus;
+    @SerializedName("hiding_players") private boolean hiding;
 
     public String id() {
         return this.id;
@@ -199,5 +200,15 @@ public class UserImp implements User {
     public boolean isShowingStatus() {
         return showStatus;
     }
-    
+
+    @Override
+    public boolean isHiding() {
+        return this.hiding;
+    }
+
+    @Override
+    public void setHiding(boolean hiding) {
+        this.hiding = hiding;
+    }
+
 }

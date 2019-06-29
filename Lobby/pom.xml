@@ -3,56 +3,32 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
+        <artifactId>GammaCore</artifactId>
         <groupId>net.seocraft</groupId>
-        <artifactId>api-parent</artifactId>
         <relativePath>../pom.xml</relativePath>
         <version>1.8.8-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api-shared</artifactId>
+    <artifactId>lobby</artifactId>
     <packaging>jar</packaging>
-    <name>API Shared</name>
-    <description>API shared functions for Seocraft Network</description>
 
     <dependencies>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>net.seocraft</groupId>
+            <artifactId>api-bukkit</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.ocpsoft.prettytime</groupId>
-            <artifactId>prettytime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
+            <groupId>net.seocraft</groupId>
+            <artifactId>commons-bukkit</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <scope>compile</scope>
+            <groupId>net.seocraft</groupId>
+            <artifactId>paperspigot</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -68,7 +44,7 @@
             <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.0</version>
+                <version>2.2.6</version>
                 <executions>
                     <execution>
                         <goals>
@@ -79,4 +55,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

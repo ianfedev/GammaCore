@@ -1,0 +1,10 @@
+# Spawn coords when logging to the lobby
+# Using wrong worlds or invalid coords (Ex: Strings in coords) will cause
+# Plugin exception
+spawn:
+  x: 0
+  y: 0
+  z: 0
+  yaw: 0
+  pitch: 0
+  world: world

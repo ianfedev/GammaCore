@@ -83,13 +83,7 @@ public class FriendCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Check if target isn't same player
-                    if (player.getName().equalsIgnoreCase(target.getName())) {
-                        ChatAlertLibrary.errorChatAlert(player,
-                                this.translatableField.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_friends_not_add_yourself"
-                                )
-                        );
+                    if (alertSamePlayer(player, user, target)) {
                         return;
                     }
 
@@ -105,19 +99,7 @@ public class FriendCommand implements CommandClass {
                             }
 
                             // Detect if users are already friends
-                            if (this.friendshipHandler.checkFriendshipStatus(user.id(), targetRecord.id())) {
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translatableField.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_friends_already"
-                                        ).replace(
-                                                "%%player%%",
-                                                this.userChatHandler.getUserFormat(
-                                                        targetRecord,
-                                                        this.bukkitAPI.getConfig().getString("realm")
-                                                ) + ChatColor.RED
-                                        ) + "."
-                                );
+                            if (alertFriendshipStatus(user, targetRecord, player)) {
                                 return;
                             }
 
@@ -142,14 +124,10 @@ public class FriendCommand implements CommandClass {
                                     targetRecord.id()
                             );
 
-                            this.friendshipUserActions.senderAction(player, user, targetRecord, FriendshipAction.CREATE);
+                            this.friendshipUserActions.senderAction(player, user, targetRecord, FriendshipAction.CREATE, null);
                             this.friendshipUserActions.receiverAction(user, targetRecord, FriendshipAction.CREATE, null);
                         } else {
-                            if (targetAsyncResponse.getThrowedException().getClass().equals(NotFound.class)) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
-                            }
+                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                         }
                     });
                 } else {
@@ -170,13 +148,7 @@ public class FriendCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Check if target isn't same player
-                    if (player.getName().equalsIgnoreCase(target.getName())) {
-                        ChatAlertLibrary.errorChatAlert(player,
-                                this.translatableField.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_friends_not_add_yourself"
-                                )
-                        );
+                    if (alertSamePlayer(player, user, target)) {
                         return;
                     }
 
@@ -186,38 +158,12 @@ public class FriendCommand implements CommandClass {
                             User targetRecord = targetAsyncResponse.getResponse();
 
                             // Detect if users are already friends
-                            if (this.friendshipHandler.checkFriendshipStatus(user.id(), targetRecord.id())) {
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translatableField.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_friends_already"
-                                        ).replace(
-                                                "%%player%%",
-                                                this.userChatHandler.getUserFormat(
-                                                        targetRecord,
-                                                        this.bukkitAPI.getConfig().getString("realm")
-                                                ) + ChatColor.RED
-                                        ) + "."
-                                );
+                            if (alertFriendshipStatus(user, targetRecord, player)) {
                                 return;
                             }
 
                             // Detect if target sent friendship request
-                            if (!this.friendshipHandler.requestIsSent(targetRecord.id(), user.id())) {
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translatableField.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_friends_not_requested"
-                                        ).replace(
-                                                "%%player%%",
-                                                this.userChatHandler.getUserFormat(
-                                                        targetRecord,
-                                                        this.bukkitAPI.getConfig().getString("realm")
-                                                ) + ChatColor.RED
-                                        ) + "."
-                                );
-                                return;
-                            }
+                            if (alertIfNotRequested(player, user, targetRecord)) return;
 
                             try {
                                 this.friendshipHandler.acceptFriendRequest(
@@ -229,14 +175,10 @@ public class FriendCommand implements CommandClass {
                                 return;
                             }
 
-                            this.friendshipUserActions.senderAction(player, user, targetRecord, FriendshipAction.ACCEPT);
+                            this.friendshipUserActions.senderAction(player, user, targetRecord, FriendshipAction.ACCEPT, null);
                             this.friendshipUserActions.receiverAction(user, targetRecord, FriendshipAction.ACCEPT, null);
                         } else {
-                            if (targetAsyncResponse.getThrowedException().getClass().equals(NotFound.class)) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
-                            }
+                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                         }
                     });
                 } else {
@@ -257,13 +199,7 @@ public class FriendCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Check if target isn't same player
-                    if (player.getName().equalsIgnoreCase(target.getName())) {
-                        ChatAlertLibrary.errorChatAlert(player,
-                                this.translatableField.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_friends_not_remove_yourself"
-                                ) + "."
-                        );
+                    if (alertSamePlayer(player, user, target)) {
                         return;
                     }
 
@@ -273,21 +209,7 @@ public class FriendCommand implements CommandClass {
                             User targetRecord = targetAsyncResponse.getResponse();
 
                             // Detect if target sent friendship request
-                            if (!this.friendshipHandler.requestIsSent(targetRecord.id(), user.id())) {
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translatableField.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_friends_not_requested"
-                                        ).replace(
-                                                "%%player%%",
-                                                this.userChatHandler.getUserFormat(
-                                                        targetRecord,
-                                                        this.bukkitAPI.getConfig().getString("realm")
-                                                ) + ChatColor.RED
-                                        ) + "."
-                                );
-                                return;
-                            }
+                            if (alertIfNotRequested(player, user, targetRecord)) return;
 
                             this.friendshipHandler.rejectFriendRequest(user.id(), targetRecord.id());
 
@@ -308,11 +230,7 @@ public class FriendCommand implements CommandClass {
                             player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
 
                         } else {
-                            if (targetAsyncResponse.getThrowedException().getClass().equals(NotFound.class)) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
-                            }
+                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                         }
                     });
                 } else {
@@ -321,6 +239,25 @@ public class FriendCommand implements CommandClass {
             });
         }
         return true;
+    }
+
+    private boolean alertIfNotRequested(Player player, User user, User targetRecord) {
+        if (!this.friendshipHandler.requestIsSent(targetRecord.id(), user.id())) {
+            ChatAlertLibrary.errorChatAlert(player,
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_friends_not_requested"
+                    ).replace(
+                            "%%player%%",
+                            this.userChatHandler.getUserFormat(
+                                    targetRecord,
+                                    this.bukkitAPI.getConfig().getString("realm")
+                            ) + ChatColor.RED
+                    ) + "."
+            );
+            return true;
+        }
+        return false;
     }
 
     @Command(names = {"friends remove"}, min = 1, usage = "/<command> <target>")
@@ -333,13 +270,7 @@ public class FriendCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Check if target isn't same player
-                    if (player.getName().equalsIgnoreCase(target.getName())) {
-                        ChatAlertLibrary.errorChatAlert(player,
-                                this.translatableField.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_friends_not_remove_yourself"
-                                ) + "."
-                        );
+                    if (alertSamePlayer(player, user, target)) {
                         return;
                     }
 
@@ -389,11 +320,7 @@ public class FriendCommand implements CommandClass {
                             player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
 
                         } else {
-                            if (targetAsyncResponse.getThrowedException().getClass().equals(NotFound.class)) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
-                            }
+                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                         }
                     });
                 } else {
@@ -450,13 +377,7 @@ public class FriendCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Check if target isn't same player
-                    if (player.getName().equalsIgnoreCase(target.getName())) {
-                        ChatAlertLibrary.errorChatAlert(player,
-                                this.translatableField.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_friends_not_remove_yourself"
-                                ) + "."
-                        );
+                    if (alertSamePlayer(player, user, target)) {
                         return;
                     }
 
@@ -477,20 +398,35 @@ public class FriendCommand implements CommandClass {
                             }
 
                             // Force between sender and first if not first argument
-                            if (context.getArgumentsLength() == 1) {
+                            if (context.getArgumentsLength() == 1 || target.getName().equalsIgnoreCase(player.getName())) {
                                 // Check if player has higher permissions
                                 if (hasLowerPermissions(user, firstRecord, player)) return;
 
-                                //TODO: Send message to sender
-                                this.friendshipUserActions.receiverAction(user, firstRecord, FriendshipAction.FORCE, user);
+                                forcedActions(player, user, user, firstRecord);
+                                return;
                             }
 
+                            CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), secondAsyncResponse  -> {
+                                if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    User secondRecord = secondAsyncResponse.getResponse();
+
+                                    if (
+                                            user.getPrimaryGroup().getPriority() < firstRecord.getPrimaryGroup().getPriority() ||
+                                            user.getPrimaryGroup().getPriority() < secondRecord.getPrimaryGroup().getPriority()
+                                    ) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_friends_force_lower_permissions")  + ".");
+                                        return;
+                                    }
+
+                                    forcedActions(player, user, firstRecord, secondRecord);
+                                } else {
+                                    sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
+                                }
+                            });
                         } else {
-                            if (targetAsyncResponse.getThrowedException().getClass().equals(NotFound.class)) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
-                            }
+                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                         }
                     });
                 } else {
@@ -501,6 +437,25 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
+    private void forcedActions(Player player, User user, User firstRecord, User secondRecord) {
+        sendRequest(player, user, firstRecord, secondRecord);
+
+        this.friendshipUserActions.senderAction(player, firstRecord, secondRecord, FriendshipAction.FORCE, user);
+        this.friendshipUserActions.receiverAction(firstRecord, secondRecord, FriendshipAction.FORCE, user);
+    }
+
+    private void sendRequest(Player player, User user, User firstRecord, User secondRecord) {
+        try {
+            this.friendshipHandler.forceFriend(
+                    firstRecord.id(),
+                    secondRecord.id(),
+                    user.id()
+            );
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
+            ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
+        }
+    }
+
     private boolean hasLowerPermissions(User user, User target, Player player) {
         if (user.getPrimaryGroup().getPriority() > target.getPrimaryGroup().getPriority()) {
             ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
@@ -509,6 +464,48 @@ public class FriendCommand implements CommandClass {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private boolean alertFriendshipStatus(User user, User targetRecord, Player player) {
+        if (this.friendshipHandler.checkFriendshipStatus(user.id(), targetRecord.id())) {
+            ChatAlertLibrary.errorChatAlert(player,
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_friends_already"
+                    ).replace(
+                            "%%player%%",
+                            this.userChatHandler.getUserFormat(
+                                    targetRecord,
+                                    this.bukkitAPI.getConfig().getString("realm")
+                            ) + ChatColor.RED
+                    ) + "."
+            );
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean alertSamePlayer(Player player, User user, OfflinePlayer target) {
+        if (player.getName().equalsIgnoreCase(target.getName())) {
+            ChatAlertLibrary.errorChatAlert(player,
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_friends_not_remove_yourself"
+                    ) + "."
+            );
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void sendNotFoundMessage(Class notFound, Player player, User user) {
+        if (notFound.equals(NotFound.class)) {
+            ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
+        } else {
+            ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
         }
     }
 }

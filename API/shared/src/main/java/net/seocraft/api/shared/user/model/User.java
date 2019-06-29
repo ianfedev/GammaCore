@@ -70,4 +70,8 @@ public interface User extends Model {
 
     boolean isShowingStatus();
 
+    boolean isHiding();
+
+    void setHiding(boolean hiding);
+
 }

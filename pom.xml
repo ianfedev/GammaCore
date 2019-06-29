@@ -40,6 +40,7 @@
     <modules>
         <module>API</module>
         <module>Commons</module>
+        <module>Lobby</module>
     </modules>
 
     <dependencyManagement>
@@ -94,6 +95,11 @@
                 <groupId>com.google.code.findbugs</groupId>
                 <artifactId>jsr305</artifactId>
                 <version>3.0.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains</groupId>
+                <artifactId>annotations</artifactId>
+                <version>16.0.1</version>
             </dependency>
             <!-- Bungee -->
             <dependency>

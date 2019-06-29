@@ -76,7 +76,7 @@ commons_friends_help: Muestra este menú
 commons_friends_help_add: Envía una solicitud a un usuario para ser amigos
 commons_friends_help_accept: Acepta la solicitud de amistad de otra persona
 commons_friends_help_deny: Rechaza la solicitud de amistad de un usuario
-commons_friends_help_list: Muestra una lista con tus amigos
+commons_friends_help_list: Muesttra una lista con tus amigos
 commons_friends_help_remove: Elimina a un usuario de tu lista de amigos
 commons_friends_help_status: Acepta o deja de aceptar solicitudes
 commons_friends_help_requests: Muestra una lista con tus solicitudes pendientes
@@ -102,6 +102,49 @@ commons_friends_removed_all: "¡Haz eliminado a todos tus amigos!"
 commons_friends_force_offline: "No puedes forzar la amistad de alguien que se encuentra desconectado"
 commons_friends_force_lower_permissions: "Debes tener un rango igual o mayor que esa persona para poder forzar su amistad"
 commons_friends_forced_friendship: "%%sender%% te ha forzado a ser amigo de %%target%%. ¡Disfruta de tu nuevo \"amigo\"!"
+commons_friends_forced_success: "¡Haz forzado la amistad entre %%firstUser%% y %%secondUser%%!"
+
+# Lobby translations
+commons_lobby_game_menu: Menú de juegos
+commons_lobby_game_description: "Al darle %%click%% encontrarás%n%nuestra nueva colección de juegos%n%en Seocraft Network"
+commons_lobby_hiding_gadget: Ocultar jugadores
+commons_lobby_hiding_gadget_show: Mostrar jugadores
+commons_lobby_hiding_description: "Al darle %%click%% cambiarás el estado%n%de visibilidad de tus jugadores"
+commons_lobby_hiding_note: Esto no oculta a tus amigos%n% o al staff
+commons_lobby_hiding_error: Ha ocurrido un error al ocultar a todos los jugadores
+commons_lobby_hiding_hidden: "¡Ahora todos los jugadores están ocultos!"
+commons_lobby_hiding_unhidden: "¡Ahora puedes ver a todos los jugadores!"
+commons_lobby_elemental_loot: Botín Elemental
+commons_lobby_elemental_description: "Muy pronto podrás obtener%n%un botín especial por cada %n% partida"
+commons_lobby_profile: Mi perfil
+commons_lobby_profile_description: "Muy pronto podrás ver tu%n%perfil en el juego"
+commons_lobby_selector: Seleccionar Lobby
+commons_lobby_selector_description: "Elige el lobby en el que quieres estar"
+commons_lobby_error_world: "No se ha encontrado el mundo especificado en la configuración"
+commons_lobby_spawn_teleport: "Se te ha teletransportado al punto de aparición"
+commons_lobby_spawn_teleport_other: "%%player%% te ha teletransportado al punto de aparición"
+commons_lobby_teleport_same: "No te puedes teletransportar a tí mismo"
+commons_lobby_teleport_error: "Ha ocurrido un error al realizar el teletransporte"
+commons_lobby_teleport_success: "¡Te has teletransportado hacia %%player%%!"
+commons_lobby_teleport_target: "¡%%player%% te ha teletransportado hacia él!"
+commons_lobby_teleport_own_success: "¡Has teletransportado a %%player%% hacia tí!"
+commons_lobby_teleport_own_target: "¡%%player%% te ha teletransportado hacia él!"
+commons_lobby_teleport_all_success: "¡Has teletransportado todos los jugadores hacia tí!"
+commons_lobby_teleport_all_target: "¡%%player%% ha teletransportado a todos los jugadores hacia él!"
+
+# Custom Gamemode translations
+# How to:
+# Every gamemode has an ID (_id from MongoDB Schema).
+# You should use this keys. Just replace ID with the gamemode ID
+# DisplayName (Title of item): game_ID_title
+# Description (Long description): game_ID_description
+# Scoreboard Title: game_ID_scoreboard
+# You can also get the sub-gamemode ID from the main gamemode record. Every gamemode must have an ID
+# SubGamemode Scoreboard title: game_ID_subscoreboard_ID
+# Remember: You can use colors and space from above to style the message
+
+game_test_title: lol
+game_test_description: lol2
 
 # Common words translations
 commons_main_lobby: Lobby Principal
@@ -109,6 +152,12 @@ commons_password: contraseña
 commons_error_type: Tipo de error
 commons_language_placeholder: Español
 commons_not_found: El jugador que buscas no se ha registrado en el servidor
+commons_offline_target: El jugador que buscas no se encuentra conectado
 commons_accept: Aceptar
 commons_reject: Rechazar
 commons_gender_him_her: Él/ella
+commons_you: Tu
+commons_right_click: Clic derecho
+commons_note: Nota
+commons_coming_soon: Muy pronto
+commons_cooldown_delay: "Debes esperar unos segundos antes de realizar esta acción"
