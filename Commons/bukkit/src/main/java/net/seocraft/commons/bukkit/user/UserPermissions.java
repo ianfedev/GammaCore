@@ -14,6 +14,9 @@ import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 public class UserPermissions extends PermissibleBase {
 
@@ -33,25 +36,43 @@ public class UserPermissions extends PermissibleBase {
         this.user = user;
     }
 
+    @Override
     public boolean hasPermission(String s) {
         GameSession session = this.sessionHandler.getCachedSession(player.getName());
         try {
-            if (session != null) {
-                User newUser = this.userStoreHandler.getCachedUserSync(session.getPlayerId());
-                for (Group group: newUser.getGroups()) {
-                    for (String permission: group.getPermissions()) {
-                        if (permission.equalsIgnoreCase(s)) return true;
-                        String[] requestedTree = s.split("\\.");
-                        int scanningLength = requestedTree.length;
-                        String[] permissionTree = permission.split("\\.");
-                        if (permissionTree.length < scanningLength) scanningLength = permissionTree.length;
-                        for (int i = 0; i < scanningLength; i++) {
-                            if (permissionTree[i].equalsIgnoreCase("*")) return true;
-                            if (!requestedTree[i].equalsIgnoreCase(permissionTree[i])) break;
-                        }
+            User newUser = this.userStoreHandler.getCachedUserSync(session.getPlayerId());
+
+            Set<String> userPermissions = getFlattenPermissions(newUser);
+
+            if (userPermissions.contains(s)) {
+                return true;
+            }
+
+            String[] requestedPermissionTree = s.split("\\.");
+
+            for (String permission : userPermissions) {
+                if (permission.equalsIgnoreCase(s)) {
+                    return true;
+                }
+
+                int scanningLength = requestedPermissionTree.length;
+                String[] permissionTree = permission.split("\\.");
+
+                if (permissionTree.length < scanningLength) {
+                    scanningLength = permissionTree.length;
+                }
+
+                for (int i = 0; i < scanningLength; i++) {
+                    if (permissionTree[i].equalsIgnoreCase("*")) {
+                        return true;
+                    }
+
+                    if (!requestedPermissionTree[i].equalsIgnoreCase(permissionTree[i])) {
+                        break;
                     }
                 }
             }
+
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
             ChatAlertLibrary.errorChatAlert(
                     player,
@@ -59,6 +80,10 @@ public class UserPermissions extends PermissibleBase {
             );
         }
         return false;
+    }
+
+    private Set<String> getFlattenPermissions(User user) {
+        return user.getGroups().stream().flatMap(group -> group.getPermissions().stream()).collect(Collectors.toSet());
     }
 
 }
