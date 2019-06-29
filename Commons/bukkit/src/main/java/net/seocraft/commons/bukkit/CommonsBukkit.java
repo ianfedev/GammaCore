@@ -10,6 +10,7 @@ import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.friend.FriendshipHandler;
 import net.seocraft.commons.bukkit.friend.FriendshipHandlerImpl;
 import net.seocraft.commons.bukkit.listeners.DisabledPluginsCommandListener;
+import net.seocraft.commons.bukkit.listeners.UserLogoutListener;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -34,6 +35,8 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject
     private DisabledPluginsCommandListener disabledPluginsCommandListener;
+    @Inject
+    private UserLogoutListener userLogoutListener;
 
     @Inject
     private UserChatListener userChatListener;
@@ -72,6 +75,8 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userAccessResponse, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
+        getServer().getPluginManager().registerEvents(userLogoutListener, this);
+
 
         if (getConfig().getBoolean("authentication.enabled", false)) {
             enableAuthentication();
