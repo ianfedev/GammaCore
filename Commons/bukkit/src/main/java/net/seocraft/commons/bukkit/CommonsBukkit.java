@@ -9,6 +9,7 @@ import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.friend.FriendshipHandler;
 import net.seocraft.commons.bukkit.friend.FriendshipHandlerImpl;
+import net.seocraft.commons.bukkit.listeners.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.punishment.IPunishmentHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentHandler;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -30,6 +31,9 @@ public class CommonsBukkit extends JavaPlugin {
     private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
     @Inject
     private AuthenticationCommandsListener authenticationCommandsListener;
+
+    @Inject
+    private DisabledPluginsCommandListener disabledPluginsCommandListener;
 
     @Inject
     private UserChatListener userChatListener;
@@ -57,16 +61,17 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        parametricCommandHandler = new ParametricCommandHandler(this.commandSenderAuthorizer, this.getLogger());
-        BukkitCommandHandler dispatcher = new BukkitCommandHandler(this.getLogger());
+        parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, getLogger());
+        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger());
         loadConfig();
 
-        dispatcher.registerCommandClass(this.whisperCommand);
-        dispatcher.registerCommandClass(this.punishmentCommand);
-        dispatcher.registerCommandClass(this.friendCommand);
+        dispatcher.registerCommandClass(whisperCommand);
+        dispatcher.registerCommandClass(punishmentCommand);
+        dispatcher.registerCommandClass(friendCommand);
 
-        getServer().getPluginManager().registerEvents(this.userChatListener, this);
-        getServer().getPluginManager().registerEvents(this.userAccessResponse, this);
+        getServer().getPluginManager().registerEvents(userChatListener, this);
+        getServer().getPluginManager().registerEvents(userAccessResponse, this);
+        getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
 
         if (getConfig().getBoolean("authentication.enabled", false)) {
             enableAuthentication();
@@ -90,13 +95,13 @@ public class CommonsBukkit extends JavaPlugin {
     }
 
     private void enableAuthentication() {
-        parametricCommandHandler.registerCommand(this.loginCommand);
-        parametricCommandHandler.registerCommand(this.registerCommand);
+        parametricCommandHandler.registerCommand(loginCommand);
+        parametricCommandHandler.registerCommand(registerCommand);
 
-        getServer().getPluginManager().registerEvents(this.authenticationCommandsListener, this);
-        getServer().getPluginManager().registerEvents(this.authenticationLanguageMenuListener, this);
-        getServer().getPluginManager().registerEvents(this.authenticationLanguageSelectListener, this);
-        getServer().getPluginManager().registerEvents(this.authenticationMovementListener, this);
+        getServer().getPluginManager().registerEvents(authenticationCommandsListener, this);
+        getServer().getPluginManager().registerEvents(authenticationLanguageMenuListener, this);
+        getServer().getPluginManager().registerEvents(authenticationLanguageSelectListener, this);
+        getServer().getPluginManager().registerEvents(authenticationMovementListener, this);
 
     }
 
