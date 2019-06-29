@@ -71,7 +71,8 @@ public class UserAccessResponse implements Listener {
         // Define needed player variables
         Player player = event.getPlayer();
         UUID playerId = player.getUniqueId();
-        String ip = player.getAddress().toString().split(":")[0].replace("/", "");
+
+        String ip = player.getAddress().getAddress().getHostAddress();
 
         // Create
         JsonObject request = new JsonObject();
