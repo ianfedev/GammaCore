@@ -40,7 +40,7 @@ public class ModelDeserializer<O extends Model> implements JsonDeserializer<O> {
         Map<String, Class<?>> typeElements = new HashMap<>();
 
         for (Method method : typeMethods) {
-            if (method.getParameterCount() > 0) {
+            if (method.getParameterCount() > 0 || method.getReturnType() == Void.TYPE || method.getReturnType() == Void.class || ModelSerializer.isAnObjectMethod(method)) {
                 continue;
             }
 

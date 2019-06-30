@@ -33,7 +33,7 @@ public class ModelSerializer<O extends Model> implements JsonSerializer<O> {
         Method[] typeMethods = rawType.getDeclaredMethods();
 
         for (Method method : typeMethods) {
-            if (method.getParameterCount() > 0) {
+            if (method.getParameterCount() > 0 || method.getReturnType() == Void.TYPE || method.getReturnType() == Void.class || isAnObjectMethod(method)) {
                 continue;
             }
 
@@ -96,4 +96,15 @@ public class ModelSerializer<O extends Model> implements JsonSerializer<O> {
 
         return method.getName().substring(methodPrefix.length());
     }
+
+    /**
+     * This method checks if a method is a method added by default
+     * by the object class
+     * @param method - The method to check
+     * @return - True if is a method of the Object class
+     */
+    public static boolean isAnObjectMethod(Method method){
+        return method.getDeclaringClass() == Object.class;
+    }
+
 }
