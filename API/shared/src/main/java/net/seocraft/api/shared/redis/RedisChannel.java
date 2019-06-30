@@ -77,13 +77,11 @@ public class RedisChannel<O> implements Channel<O> {
 
     @Override
     public void sendMessage(O object) {
-        Jedis jedis = jedisSupplier.get();
-
         RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
 
         String jsonRepresentation = gson.toJson(wrapper, wrappedType.getType());
 
-        jedis.publish(name, jsonRepresentation);
+        jedisSupplier.get().publish(name, jsonRepresentation);
     }
 
     @Override
