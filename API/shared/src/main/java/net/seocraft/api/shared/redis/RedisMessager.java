@@ -3,6 +3,7 @@ package net.seocraft.api.shared.redis;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,19 +18,22 @@ public class RedisMessager implements Messager {
     private Map<String, TypeToken> registeredTypes;
     private Map<String, Channel> registeredChannels;
 
-    private RedisClient client;
+    @Inject
+    private RedisClientConfiguration configuration;
+
+    private Jedis jedis;
+
     private Gson gson;
 
     private ExecutorService executorService;
 
     @Inject
-    RedisMessager(RedisClient client, Gson gson, ExecutorService executorService) {
+    RedisMessager(Gson gson, ExecutorService executorService) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
         registeredTypes = new HashMap<>();
 
-        this.client = client;
         this.gson = gson;
 
         this.executorService = executorService;
@@ -49,12 +53,26 @@ public class RedisMessager implements Messager {
                 return registeredChannels.get(name);
             }
 
-            Channel<O> channel = new RedisChannel<>(name, type, client, gson, executorService);
+            Channel<O> channel = new RedisChannel<>(name, type, this, gson, executorService);
 
             registeredChannels.put(name, channel);
             registeredTypes.put(name, type);
 
             return channel;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    Jedis getConnection() {
+        lock.lock();
+
+        try {
+            if(jedis == null){
+                jedis = new Jedis(configuration.getAddress(), configuration.getPort());
+            }
+
+            return jedis;
         } finally {
             lock.unlock();
         }

@@ -16,7 +16,7 @@ public class RedisChannel<O> implements Channel<O> {
 
     private TypeToken<RedisWrapper<O>> wrappedType;
 
-    private RedisClient redis;
+    private RedisMessager messager;
     private JedisPubSub pubSub;
 
     private Gson gson;
@@ -25,11 +25,11 @@ public class RedisChannel<O> implements Channel<O> {
 
     private String serverChannelId = UUID.randomUUID().toString();
 
-    RedisChannel(String name, TypeToken<O> type, RedisClient redis, Gson gson, ExecutorService executorService) {
+    RedisChannel(String name, TypeToken<O> type, RedisMessager redis, Gson gson, ExecutorService executorService) {
         this.name = name;
         this.type = type;
 
-        this.redis = redis;
+        this.messager = redis;
 
         this.gson = gson;
 
@@ -55,9 +55,7 @@ public class RedisChannel<O> implements Channel<O> {
         };
 
         executorService.submit(() -> {
-            try (Jedis jedis = redis.getPool().getResource()) {
-                jedis.subscribe(pubSub, name);
-            }
+            messager.getConnection().subscribe(pubSub, name);
         });
 
         channelListeners = new ConcurrentLinkedDeque<>();
@@ -78,15 +76,13 @@ public class RedisChannel<O> implements Channel<O> {
 
     @Override
     public void sendMessage(O object) {
-        try (Jedis jedis = redis.getPool().getResource()) {
+        Jedis jedis = messager.getConnection();
 
-            RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
+        RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
 
-            String jsonRepresentation = gson.toJson(wrapper, wrappedType.getType());
+        String jsonRepresentation = gson.toJson(wrapper, wrappedType.getType());
 
-            jedis.publish(name, jsonRepresentation);
-
-        }
+        jedis.publish(name, jsonRepresentation);
     }
 
     @Override
