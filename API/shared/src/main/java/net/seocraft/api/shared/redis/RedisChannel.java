@@ -9,6 +9,7 @@ import java.util.Deque;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Supplier;
 
 public class RedisChannel<O> implements Channel<O> {
     private String name;
@@ -16,7 +17,7 @@ public class RedisChannel<O> implements Channel<O> {
 
     private TypeToken<RedisWrapper<O>> wrappedType;
 
-    private RedisMessager messager;
+    private Supplier<Jedis> jedisSupplier;
     private JedisPubSub pubSub;
 
     private Gson gson;
@@ -25,11 +26,11 @@ public class RedisChannel<O> implements Channel<O> {
 
     private String serverChannelId = UUID.randomUUID().toString();
 
-    RedisChannel(String name, TypeToken<O> type, RedisMessager redis, Gson gson, ExecutorService executorService) {
+    RedisChannel(String name, TypeToken<O> type, Supplier<Jedis> redis, Gson gson, ExecutorService executorService) {
         this.name = name;
         this.type = type;
 
-        this.messager = redis;
+        jedisSupplier = redis;
 
         this.gson = gson;
 
@@ -55,7 +56,7 @@ public class RedisChannel<O> implements Channel<O> {
         };
 
         executorService.submit(() -> {
-            messager.getConnection().subscribe(pubSub, name);
+            jedisSupplier.get().subscribe(pubSub, name);
         });
 
         channelListeners = new ConcurrentLinkedDeque<>();
@@ -76,7 +77,7 @@ public class RedisChannel<O> implements Channel<O> {
 
     @Override
     public void sendMessage(O object) {
-        Jedis jedis = messager.getConnection();
+        Jedis jedis = jedisSupplier.get();
 
         RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
 

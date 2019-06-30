@@ -54,7 +54,7 @@ public class RedisMessager implements Messager {
                 return registeredChannels.get(name);
             }
 
-            Channel<O> channel = new RedisChannel<>(name, type, this, gson, executorService);
+            Channel<O> channel = new RedisChannel<>(name, type, this::getConnection, gson, executorService);
 
             registeredChannels.put(name, channel);
             registeredTypes.put(name, type);
