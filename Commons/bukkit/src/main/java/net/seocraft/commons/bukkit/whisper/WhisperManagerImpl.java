@@ -17,6 +17,7 @@ public class WhisperManagerImpl implements WhisperManager {
 
     @Inject private SessionHandler sessionHandler;
     @Inject private TranslatableField translator;
+    @Inject private WhisperListener whisperListener;
     private ListeningExecutorService executorService;
     private Channel<Whisper> whisperChannel;
 
@@ -24,7 +25,7 @@ public class WhisperManagerImpl implements WhisperManager {
     WhisperManagerImpl(ListeningExecutorService executorService, Messager messager) {
         this.executorService = executorService;
         whisperChannel = messager.getChannel("whisper", Whisper.class);
-        whisperChannel.registerListener(new WhisperListener());
+        whisperChannel.registerListener(whisperListener);
     }
 
     @Override
