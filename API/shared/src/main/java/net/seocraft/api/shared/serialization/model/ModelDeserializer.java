@@ -94,6 +94,8 @@ public class ModelDeserializer<O extends Model> implements JsonDeserializer<O> {
 
             constructorToUse = constructor;
             constructorProperties = properties;
+
+            break;
         }
 
         if (constructorToUse == null) {
