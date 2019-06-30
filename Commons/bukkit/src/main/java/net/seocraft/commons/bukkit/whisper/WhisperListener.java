@@ -7,8 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class WhisperListener implements ChannelListener<Whisper> {
 
     @Inject private TranslatableField translator;
@@ -22,6 +20,10 @@ public class WhisperListener implements ChannelListener<Whisper> {
         final String toUserId = object.to().getUsername();
 
         Player playerTo = Bukkit.getPlayer(toUserId);
+
+        if(playerTo == null){
+            return;
+        }
 
         playerTo.sendMessage(
                 ChatColor.AQUA + this.translator.getField(object.to().getLanguage(), "commons_message_to") +
