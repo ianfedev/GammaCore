@@ -1,8 +1,9 @@
 package net.seocraft.lobby;
 
 import com.google.inject.Inject;
+import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
+import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
-import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
 import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.lobby.hiding.HidingGadgetHandler;
@@ -32,7 +33,7 @@ public class Lobby extends JavaPlugin {
     @Override
     public void onEnable() {
         loadConfig();
-        BukkitCommandHandler dispatcher = new BukkitCommandHandler(this.getLogger());
+        BukkitCommandHandler dispatcher = new BukkitCommandHandler(this.getLogger(), new NoOpPermissionMessageProvider());
 
         dispatcher.registerCommandClass(this.hidingGadgetCommand);
         dispatcher.registerCommandClass(this.teleportCommand);

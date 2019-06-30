@@ -1,10 +1,11 @@
 package net.seocraft.commons.bukkit;
 
 import com.google.inject.Inject;
+import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
+import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
+import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
+import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
-import me.ggamer55.bcm.bukkit.BukkitCommandHandler;
-import me.ggamer55.bcm.bukkit.CommandSenderAuthorizer;
-import me.ggamer55.bcm.parametric.ParametricCommandHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.friend.FriendshipHandler;
@@ -24,39 +25,25 @@ import java.util.*;
 public class CommonsBukkit extends JavaPlugin {
 
     // --- Authentication mode related listeners //
-    @Inject
-    private AuthenticationEnvironmentEventsListener authenticationMovementListener;
-    @Inject
-    private AuthenticationLanguageMenuListener authenticationLanguageMenuListener;
-    @Inject
-    private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
-    @Inject
-    private AuthenticationCommandsListener authenticationCommandsListener;
+    @Inject private AuthenticationEnvironmentEventsListener authenticationMovementListener;
+    @Inject private AuthenticationLanguageMenuListener authenticationLanguageMenuListener;
+    @Inject private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
+    @Inject private AuthenticationCommandsListener authenticationCommandsListener;
 
-    @Inject
-    private DisabledPluginsCommandListener disabledPluginsCommandListener;
-    @Inject
-    private UserLogoutListener userLogoutListener;
+    @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
+    @Inject private UserLogoutListener userLogoutListener;
 
-    @Inject
-    private UserChatListener userChatListener;
-    @Inject
-    private UserAccessResponse userAccessResponse;
+    @Inject private UserChatListener userChatListener;
+    @Inject private UserAccessResponse userAccessResponse;
 
-    @Inject
-    private LoginCommand loginCommand;
-    @Inject
-    private RegisterCommand registerCommand;
+    @Inject private LoginCommand loginCommand;
+    @Inject private RegisterCommand registerCommand;
 
-    @Inject
-    private WhisperCommand whisperCommand;
-    @Inject
-    private PunishmentCommand punishmentCommand;
-    @Inject
-    private FriendCommand friendCommand;
+    @Inject private WhisperCommand whisperCommand;
+    @Inject private PunishmentCommand punishmentCommand;
+    @Inject private FriendCommand friendCommand;
 
-    @Inject
-    private CommandSenderAuthorizer commandSenderAuthorizer;
+    @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
@@ -64,8 +51,8 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, getLogger());
-        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger());
+        parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, new NoOpPermissionMessageProvider(), getLogger());
+        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), new NoOpPermissionMessageProvider());
         loadConfig();
 
         dispatcher.registerCommandClass(whisperCommand);
@@ -90,6 +77,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(WhisperManager.class).to(WhisperManagerImpl.class);
         binder.bind(PunishmentHandler.class).to(IPunishmentHandler.class);
         binder.bind(FriendshipHandler.class).to(FriendshipHandlerImpl.class);
+        binder.expose(FriendshipHandler.class);
         binder.expose(CommonsBukkit.class);
         binder.expose(WhisperManager.class);
     }

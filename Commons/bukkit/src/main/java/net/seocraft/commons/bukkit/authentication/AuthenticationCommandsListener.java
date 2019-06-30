@@ -1,11 +1,11 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
-import me.ggamer55.bcm.basic.Namespace;
-import me.ggamer55.bcm.basic.exceptions.ArgumentsParseException;
-import me.ggamer55.bcm.basic.exceptions.CommandException;
-import me.ggamer55.bcm.basic.exceptions.CommandUsageException;
-import me.ggamer55.bcm.basic.exceptions.NoPermissionsException;
+import me.fixeddev.bcm.basic.Namespace;
+import me.fixeddev.bcm.basic.exceptions.ArgumentsParseException;
+import me.fixeddev.bcm.basic.exceptions.CommandException;
+import me.fixeddev.bcm.basic.exceptions.CommandUsageException;
+import me.fixeddev.bcm.basic.exceptions.NoPermissionsException;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;

@@ -1,5 +1,5 @@
 name: Lobby
 main: net.seocraft.lobby.Lobby
 version: ${project.version}-${git.commit.id.abbrev}
-depend: [Commons, API]
+depend: [Commons, API-Bukkit]
 author: Seocraft Network
