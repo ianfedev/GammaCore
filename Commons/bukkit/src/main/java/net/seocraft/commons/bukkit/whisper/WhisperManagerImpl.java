@@ -54,9 +54,13 @@ public class WhisperManagerImpl implements WhisperManager {
 
             try {
                 Player playerFrom = Bukkit.getPlayer(from.getUsername());
+                Player playerTo = Bukkit.getPlayer(to.getUsername());
 
                 // Set some sort of format
-                playerFrom.sendMessage(content);
+                playerFrom.sendMessage(
+                        ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_to") +
+                                ChatColor.GRAY + playerTo.getName() + ": " + content
+                );
 
                 whisperChannel.sendMessage(whisper);
 

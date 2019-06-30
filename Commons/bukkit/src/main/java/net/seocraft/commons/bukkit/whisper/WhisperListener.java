@@ -26,7 +26,7 @@ public class WhisperListener implements ChannelListener<Whisper> {
         }
 
         playerTo.sendMessage(
-                ChatColor.AQUA + this.translator.getField(object.to().getLanguage(), "commons_message_to") +
+                ChatColor.AQUA + this.translator.getField(object.to().getLanguage(), "commons_message_from") +
                         ChatColor.GRAY + object.from().getUsername() + ": " + object.content()
         );
     }
