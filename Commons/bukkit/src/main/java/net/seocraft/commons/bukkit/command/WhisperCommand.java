@@ -1,9 +1,9 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.ggamer55.bcm.parametric.CommandClass;
-import me.ggamer55.bcm.parametric.annotation.Command;
-import me.ggamer55.bcm.parametric.annotation.JoinedString;
+import me.fixeddev.bcm.parametric.CommandClass;
+import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.bcm.parametric.annotation.JoinedString;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.session.GameSession;

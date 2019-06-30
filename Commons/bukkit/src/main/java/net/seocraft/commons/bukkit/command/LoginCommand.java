@@ -1,8 +1,8 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.ggamer55.bcm.AbstractAdvancedCommand;
-import me.ggamer55.bcm.CommandContext;
+import me.fixeddev.bcm.AbstractAdvancedCommand;
+import me.fixeddev.bcm.CommandContext;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;

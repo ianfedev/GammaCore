@@ -1,10 +1,10 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.common.collect.Lists;
-import me.ggamer55.bcm.AbstractAdvancedCommand;
-import me.ggamer55.bcm.CommandContext;
-import me.ggamer55.bcm.basic.ArgumentArray;
-import me.ggamer55.bcm.basic.Namespace;
+import me.fixeddev.bcm.AbstractAdvancedCommand;
+import me.fixeddev.bcm.CommandContext;
+import me.fixeddev.bcm.basic.ArgumentArray;
+import me.fixeddev.bcm.basic.Namespace;
 import net.seocraft.api.shared.redis.Messager;
 import org.bukkit.command.CommandSender;
 

@@ -1,10 +1,10 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.ggamer55.bcm.CommandContext;
-import me.ggamer55.bcm.parametric.CommandClass;
-import me.ggamer55.bcm.parametric.annotation.Command;
-import me.ggamer55.bcm.parametric.annotation.Parameter;
+import me.fixeddev.bcm.CommandContext;
+import me.fixeddev.bcm.parametric.CommandClass;
+import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
 import net.seocraft.api.shared.http.AsyncResponse;

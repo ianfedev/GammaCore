@@ -1,9 +1,9 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.ggamer55.bcm.CommandContext;
-import me.ggamer55.bcm.parametric.CommandClass;
-import me.ggamer55.bcm.parametric.annotation.Command;
+import me.fixeddev.bcm.CommandContext;
+import me.fixeddev.bcm.parametric.CommandClass;
+import me.fixeddev.bcm.parametric.annotation.Command;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserChat;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
@@ -13,7 +13,6 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.online.OnlinePlayersApi;
 import net.seocraft.api.shared.session.GameSession;
 import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.model.User;
