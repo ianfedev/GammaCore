@@ -18,7 +18,6 @@ public class RedisMessager implements Messager {
     private Map<String, TypeToken> registeredTypes;
     private Map<String, Channel> registeredChannels;
 
-    @Inject
     private RedisClientConfiguration configuration;
 
     private Jedis jedis;
@@ -28,11 +27,13 @@ public class RedisMessager implements Messager {
     private ExecutorService executorService;
 
     @Inject
-    RedisMessager(Gson gson, ExecutorService executorService) {
+    RedisMessager(RedisClientConfiguration configuration, Gson gson, ExecutorService executorService) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
         registeredTypes = new HashMap<>();
+
+        this.configuration = configuration;
 
         this.gson = gson;
 
