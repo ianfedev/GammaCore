@@ -17,12 +17,11 @@ public class WhisperManagerImpl implements WhisperManager {
 
     @Inject private SessionHandler sessionHandler;
     @Inject private TranslatableField translator;
-    @Inject private WhisperListener whisperListener;
     private ListeningExecutorService executorService;
     private Channel<Whisper> whisperChannel;
 
     @Inject
-    WhisperManagerImpl(ListeningExecutorService executorService, Messager messager) {
+    WhisperManagerImpl(ListeningExecutorService executorService, Messager messager,WhisperListener whisperListener) {
         this.executorService = executorService;
         whisperChannel = messager.getChannel("whisper", Whisper.class);
         whisperChannel.registerListener(whisperListener);
