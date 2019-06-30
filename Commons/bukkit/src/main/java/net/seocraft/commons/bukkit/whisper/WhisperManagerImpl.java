@@ -62,7 +62,7 @@ public class WhisperManagerImpl implements WhisperManager {
 
                 return new WhisperResponse(null, WhisperResponse.Response.SUCCESS, whisper);
             } catch (Exception ex) {
-                return new WhisperResponse(null, WhisperResponse.Response.ERROR, whisper);
+                return new WhisperResponse(ex, WhisperResponse.Response.ERROR, whisper);
             }
 
         });
