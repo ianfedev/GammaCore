@@ -25,9 +25,12 @@ public class ModelDeserializer<O extends Model> implements JsonDeserializer<O> {
     @NotNull
     private TypeToken<O> typeToken;
 
-    public ModelDeserializer() {
-        typeToken = new TypeToken<O>() {
-        };
+    public ModelDeserializer(@NotNull Class<O> clazz) {
+        typeToken = TypeToken.get(clazz);
+    }
+
+    public ModelDeserializer(@NotNull TypeToken<O> typeToken){
+        this.typeToken = typeToken;
     }
 
     @Override

@@ -20,10 +20,14 @@ public class ModelSerializer<O extends Model> implements JsonSerializer<O> {
     @NotNull
     private TypeToken<O> typeToken;
 
-    public ModelSerializer() {
-        typeToken = new TypeToken<O>() {
-        };
+    public ModelSerializer(@NotNull Class<O> clazz) {
+        typeToken = TypeToken.get(clazz);
     }
+
+    public ModelSerializer(@NotNull TypeToken<O> typeToken){
+        this.typeToken = typeToken;
+    }
+
 
     @Override
     public JsonElement serialize(O o, Type type, JsonSerializationContext jsonSerializationContext) {
