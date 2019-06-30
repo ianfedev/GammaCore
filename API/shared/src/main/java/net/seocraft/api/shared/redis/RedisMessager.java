@@ -3,6 +3,7 @@ package net.seocraft.api.shared.redis;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+@Singleton
 public class RedisMessager implements Messager {
 
     private Lock lock;
