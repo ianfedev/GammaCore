@@ -7,19 +7,22 @@ import org.bukkit.event.HandlerList;
 
 public class LobbyConnectionEvent extends Event {
 
-    private HandlerList handlerList;
+    private static HandlerList handlerList = new HandlerList();
     private User playerRecord;
     private Player player;
 
     public LobbyConnectionEvent(User playerRecord, Player player) {
         this.playerRecord = playerRecord;
         this.player = player;
-        this.handlerList = new HandlerList();
     }
 
     @Override
     public HandlerList getHandlers() {
-        return this.handlerList;
+        return handlerList;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
     public User getPlayerRecord() {

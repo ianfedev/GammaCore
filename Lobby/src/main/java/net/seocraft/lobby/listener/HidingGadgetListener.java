@@ -32,6 +32,7 @@ public class HidingGadgetListener implements Listener {
                 } else if (accessor.equalsIgnoreCase("hide_players")) {
                     this.hidingGadgetHandler.enableHiding(player);
                 }
+                event.setCancelled(true);
             }
         }
     }

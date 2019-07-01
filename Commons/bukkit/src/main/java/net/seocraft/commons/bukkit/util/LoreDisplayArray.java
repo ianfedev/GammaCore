@@ -39,8 +39,14 @@ public class LoreDisplayArray<E> extends AbstractList<E> {
     public void add(String e, ChatColor color) {
         String[] split = e.split("%n%");
         for (String s : split) {
-            s.replace("%n%", "");
-            add(color + s);
+            add(color + ChatAlertLibrary.transformChat(s));
+        }
+    }
+
+    public void add(String e, String color) {
+        String[] split = e.split("%n%");
+        for (String s : split) {
+            add(color + ChatAlertLibrary.transformChat(s));
         }
     }
 

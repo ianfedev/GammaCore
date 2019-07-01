@@ -10,7 +10,7 @@ import java.util.List;
 
 public class GamemodeImp implements Gamemode {
 
-    @NotNull private String id;
+    @SerializedName("_id") @NotNull private String id;
     @NotNull private String name;
     @SerializedName("lobby") @NotNull private String lobbyGroup;
     @SerializedName("navigator") @NotNull private String navigatorIcon;
@@ -43,14 +43,10 @@ public class GamemodeImp implements Gamemode {
 
     @Override
     public @NotNull ItemStack getNavigatorIcon() {
-        if (Material.getMaterial(this.navigatorIcon) != null) {
-            return new ItemStack(
-                    Material.getMaterial(this.navigatorIcon),
-                    1
-            );
-        } else {
-            return new ItemStack(Material.SAND, 1);
-        }
+        return new ItemStack(
+                Material.getMaterial(this.navigatorIcon.toUpperCase()),
+                1
+        );
     }
 
     @Override

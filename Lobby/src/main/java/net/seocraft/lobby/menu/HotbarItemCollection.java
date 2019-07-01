@@ -42,14 +42,7 @@ public class HotbarItemCollection {
                 this.translatableField.getUnspacedField(
                         l,
                         "commons_lobby_game_description"
-                ) + ".".replace(
-                        "%%click%%",
-                        ChatColor.AQUA +
-                                this.translatableField.getUnspacedField(
-                                        l,
-                                        "commons_right_click"
-                                ).toLowerCase()
-                ),
+                ) + ".",
                 ChatColor.GRAY
         );
         gameMenuMeta.setLore(loreDisplayArray);
@@ -77,7 +70,7 @@ public class HotbarItemCollection {
         ItemMeta hidingMenuMeta = hidingMenuBase.getItemMeta();
         if (isHiding) {
             hidingMenuMeta.setDisplayName(
-                    ChatColor.YELLOW +
+                    ChatColor.LIGHT_PURPLE +
                             this.translatableField.getField(
                                     l,
                                     "commons_lobby_hiding_gadget_show"
@@ -89,7 +82,7 @@ public class HotbarItemCollection {
             );
         } else {
             hidingMenuMeta.setDisplayName(
-                    ChatColor.LIGHT_PURPLE +
+                    ChatColor.YELLOW +
                             this.translatableField.getField(
                                     l,
                                     "commons_lobby_hiding_gadget"
@@ -104,19 +97,12 @@ public class HotbarItemCollection {
                 this.translatableField.getUnspacedField(
                         l,
                         "commons_lobby_hiding_description"
-                ) + ".".replace(
-                        "%%click%%",
-                        ChatColor.AQUA +
-                                this.translatableField.getUnspacedField(
-                                        l,
-                                        "commons_right_click"
-                                ).toLowerCase()
-                ),
+                ) + ".",
                 ChatColor.GRAY
         );
         loreDisplayArray.add("");
         loreDisplayArray.add(
-                ChatColor.YELLOW + "" + ChatColor.BOLD +
+                ChatColor.AQUA +
                         this.translatableField.getUnspacedField(
                                 l,
                                 "commons_note"
@@ -124,7 +110,8 @@ public class HotbarItemCollection {
                         this.translatableField.getUnspacedField(
                             l,
                                 "commons_lobby_hiding_note"
-                        )
+                        ),
+                ChatColor.AQUA
         );
         hidingMenuMeta.setLore(loreDisplayArray);
         hidingMenuBase.setItemMeta(hidingMenuMeta);
@@ -165,7 +152,7 @@ public class HotbarItemCollection {
 
     private ItemStack getProfileMenu(User user) {
         ItemStack profileBase = addString(
-                new ItemStack(Material.SKULL, 1),
+                new ItemStack(Material.SKULL_ITEM, 1, (byte) 3),
                 "profile_accessor",
                 user.id()
         );
@@ -176,7 +163,7 @@ public class HotbarItemCollection {
                 ChatColor.YELLOW +
                         this.translatableField.getField(
                                 user.getLanguage(),
-                                "commmons_lobby_profile"
+                                "commons_lobby_profile"
                         ) +
                         ChatColor.RED
                         + "(" +
@@ -197,7 +184,7 @@ public class HotbarItemCollection {
 
     private ItemStack getLobbySelector(String l) {
         ItemStack lobbySelectorBase = addString(
-                new ItemStack(Material.SPRUCE_DOOR, 1),
+                new ItemStack(Material.NETHER_STAR, 1),
                 "accessor",
                 "lobby_selector"
         );
@@ -228,6 +215,7 @@ public class HotbarItemCollection {
 
     public void setupPlayerHotbar(Player player, User user) {
         String l = user.getLanguage();
+        player.getInventory().clear();
         player.getInventory().setItem(0, getGameMenu(l));
         player.getInventory().setItem(1, getHidingGadget(l, user.isHiding()));
         player.getInventory().setItem(4, getElementalLoot(l));

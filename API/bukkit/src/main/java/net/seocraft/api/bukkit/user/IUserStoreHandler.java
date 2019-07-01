@@ -85,11 +85,9 @@ public class IUserStoreHandler implements UserStoreHandler {
 
     @Override
     public @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        User updatedUser = this.userDeserializer.deserializeModel(
-                this.userUpdateRequest.executeRequest(user, this.tokenHandler.getToken())
-        );
-        cacheStoreUser(updatedUser);
-        return updatedUser;
+        this.userUpdateRequest.executeRequest(user, this.tokenHandler.getToken());
+        cacheStoreUser(user);
+        return user;
     }
 
 }

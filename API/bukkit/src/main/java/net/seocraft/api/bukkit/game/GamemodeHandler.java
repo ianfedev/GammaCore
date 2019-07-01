@@ -1,5 +1,11 @@
 package net.seocraft.api.bukkit.game;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import net.seocraft.api.shared.http.AsyncResponse;
+import net.seocraft.api.shared.http.exceptions.BadRequest;
+import net.seocraft.api.shared.http.exceptions.InternalServerError;
+import net.seocraft.api.shared.http.exceptions.NotFound;
+import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -7,20 +13,28 @@ import java.util.List;
 
 public interface GamemodeHandler {
 
-    //TODO: Create Implementation
+    /**
+     * Get AsyncResponse wrapped gamemode.
+     * @param id Database ID.
+     * @return ListenableFuture with AsyncResponse wrapped Gamemode.
+     */
+
+    @NotNull ListenableFuture<AsyncResponse<Gamemode>> getGamemode(@NotNull String id);
 
     /**
-     * Always use with one @NotNull parameter.
-     *
+     * Obtain gamemode registered in database
      * @param id Database ID.
-     * @param name Database name.
      * @return Gamemode model.
      */
-    @Nullable Gamemode getGamemode(@Nullable String id, @Nullable String name);
+    @Nullable Gamemode getGamemodeSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
+    /**
+     * @return ListenableFuture with AsyncResponse wrapper gamemode list.
+     */
+    @NotNull ListenableFuture<AsyncResponse<List<Gamemode>>> listGamemodes();
 
     /**
      * @return Unordered list of gamemodes.
      */
-    @NotNull List<Gamemode> listGamemodes();
+    @Nullable List<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError;
 }

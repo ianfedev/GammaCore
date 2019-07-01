@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.game.GamemodeHandler;
+import net.seocraft.api.bukkit.game.GamemodeHandlerImp;
 import net.seocraft.api.bukkit.server.ServerLoadManager;
 import net.seocraft.api.bukkit.user.IUserStoreHandler;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
@@ -37,6 +39,8 @@ public class BukkitAPI extends JavaPlugin {
         binder.publicBinder().install(new SharedModule()); // This should be changed when bungee also has the same ProtectedModule
         binder.bind(BukkitAPI.class).toInstance(this);
         binder.bind(UserStoreHandler.class).to(IUserStoreHandler.class);
+        binder.bind(GamemodeHandler.class).to(GamemodeHandlerImp.class);
+        binder.expose(GamemodeHandler.class);
         binder.expose(UserStoreHandler.class);
         binder.expose(BukkitAPI.class);
     }

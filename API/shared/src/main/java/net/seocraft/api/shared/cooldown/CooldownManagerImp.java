@@ -1,4 +1,4 @@
-package net.seocraft.lobby.management;
+package net.seocraft.api.shared.cooldown;
 
 import com.google.inject.Inject;
 import net.seocraft.api.shared.redis.RedisClient;

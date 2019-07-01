@@ -21,7 +21,7 @@ public class HidingGadgetCommand implements CommandClass {
     @Inject private SessionHandler sessionHandler;
 
     @Command(names = {"hideplayers", "hidep", "hp"})
-    public void mainCommand(CommandSender commandSender) {
+    public boolean mainCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             GameSession playerSession = this.sessionHandler.getCachedSession(player.getName());
@@ -38,5 +38,6 @@ public class HidingGadgetCommand implements CommandClass {
                 }
             });
         }
+        return true;
     }
 }

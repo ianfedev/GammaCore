@@ -8,13 +8,9 @@ import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.lobby.hiding.HidingGadgetHandler;
 import net.seocraft.lobby.hiding.HidingGadgetHandlerImp;
-import net.seocraft.lobby.listener.HidingGadgetListener;
-import net.seocraft.lobby.listener.InventoryDropListener;
-import net.seocraft.lobby.listener.InventoryInteractionListener;
-import net.seocraft.lobby.listener.PlayerDeathListener;
-import net.seocraft.lobby.management.CooldownManager;
-import net.seocraft.lobby.management.CooldownManagerImp;
-import net.seocraft.lobby.player.LobbyConnectionListener;
+import net.seocraft.lobby.listener.*;
+import net.seocraft.api.shared.cooldown.CooldownManager;
+import net.seocraft.api.shared.cooldown.CooldownManagerImp;
 import net.seocraft.lobby.teleport.TeleportHandler;
 import net.seocraft.lobby.teleport.TeleportHandlerImp;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +21,8 @@ public class Lobby extends JavaPlugin {
     @Inject private TeleportCommand teleportCommand;
 
     @Inject private HidingGadgetListener hidingGadgetListener;
+    @Inject private PlayerBlockInteractionListener playerBlockInteractionListener;
+    @Inject private GameMenuListener gameMenuListener;
     @Inject private LobbyConnectionListener lobbyConnectionListener;
     @Inject private PlayerDeathListener playerDeathListener;
     @Inject private InventoryInteractionListener inventoryInteractionEvent;
@@ -40,12 +38,14 @@ public class Lobby extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(this.lobbyConnectionListener, this);
         getServer().getPluginManager().registerEvents(this.hidingGadgetListener, this);
+        getServer().getPluginManager().registerEvents(this.playerBlockInteractionListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryInteractionEvent, this);
+        getServer().getPluginManager().registerEvents(this.gameMenuListener, this);
         getServer().getPluginManager().registerEvents(this.playerDeathListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
     }
 
-    //@Override
+    @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(HidingGadgetHandler.class).to(HidingGadgetHandlerImp.class);
         binder.bind(CooldownManager.class).to(CooldownManagerImp.class);

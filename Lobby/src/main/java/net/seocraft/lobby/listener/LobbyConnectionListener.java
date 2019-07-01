@@ -1,4 +1,4 @@
-package net.seocraft.lobby.player;
+package net.seocraft.lobby.listener;
 
 import com.google.inject.Inject;
 import net.seocraft.api.shared.session.GameSession;
@@ -37,6 +37,7 @@ public class LobbyConnectionListener implements Listener {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
                 GameSession handler = this.sessionHandler.getCachedSession(onlinePlayer.getName());
                 if (
+                        handler != null &&
                         !this.friendshipHandler.checkFriendshipStatus(playerRecord.id(), handler.getPlayerId()) &&
                                 !onlinePlayer.hasPermission("commons.staff.vanish")
                 ) {

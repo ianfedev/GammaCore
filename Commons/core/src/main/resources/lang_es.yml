@@ -15,6 +15,12 @@
 #  %%light_purple%% = Light P.  #
 #  %%yellow%% = Yellow          #
 #  %%white%% = White            #
+#  %%obfuscated%% = Obfuscated  #
+#  %%bold%% = Bold              #
+#  %%strike%% = Striketrough    #
+#  %%underline%% = Underline    #
+#  %%italic%% = Italic          #
+#  %%reset%% = Reset            #
 # ----------------------------- #
 
 # Authentication related translations
@@ -106,20 +112,24 @@ commons_friends_forced_success: "¡Haz forzado la amistad entre %%firstUser%% y 
 
 # Lobby translations
 commons_lobby_game_menu: Menú de juegos
-commons_lobby_game_description: "Al darle %%click%% encontrarás%n%nuestra nueva colección de juegos%n%en Seocraft Network"
+commons_lobby_game_description: "Al darle clic derecho encontrarás%n%nuestra nueva colección de juegos%n%en Seocraft Network"
 commons_lobby_hiding_gadget: Ocultar jugadores
 commons_lobby_hiding_gadget_show: Mostrar jugadores
-commons_lobby_hiding_description: "Al darle %%click%% cambiarás el estado%n%de visibilidad de tus jugadores"
-commons_lobby_hiding_note: Esto no oculta a tus amigos%n% o al staff
+commons_lobby_hiding_description: "Al darle clic derecho cambiarás el estado%n%de visibilidad de tus jugadores"
+commons_lobby_hiding_note: Esto no oculta a tus amigos%n%o al staff
 commons_lobby_hiding_error: Ha ocurrido un error al ocultar a todos los jugadores
 commons_lobby_hiding_hidden: "¡Ahora todos los jugadores están ocultos!"
 commons_lobby_hiding_unhidden: "¡Ahora puedes ver a todos los jugadores!"
 commons_lobby_elemental_loot: Botín Elemental
-commons_lobby_elemental_description: "Muy pronto podrás obtener%n%un botín especial por cada %n% partida"
+commons_lobby_elemental_description: "Muy pronto podrás obtener%n%un botín especial por cada%n%partida"
 commons_lobby_profile: Mi perfil
 commons_lobby_profile_description: "Muy pronto podrás ver tu%n%perfil en el juego"
 commons_lobby_selector: Seleccionar Lobby
 commons_lobby_selector_description: "Elige el lobby en el que quieres estar"
+commons_lobby_selector_error: "Ha ocurrido un error al obtener la lista de juegos"
+commons_lobby_selector_empty: "Juegos no disponibles"
+commons_lobby_selector_empty_lore: "Actualmente no se encuentran juegos%n%registrados en el sistema. Lo más%n%probable es que se encuentren en%n%mantenimiento"
+commons_lobby_selector_empty_note: "Para saber más sigue nuestro Twitter"
 commons_lobby_error_world: "No se ha encontrado el mundo especificado en la configuración"
 commons_lobby_spawn_teleport: "Se te ha teletransportado al punto de aparición"
 commons_lobby_spawn_teleport_other: "%%player%% te ha teletransportado al punto de aparición"
@@ -143,8 +153,8 @@ commons_lobby_teleport_all_target: "¡%%player%% ha teletransportado a todos los
 # SubGamemode Scoreboard title: game_ID_subscoreboard_ID
 # Remember: You can use colors and space from above to style the message
 
-game_test_title: lol
-game_test_description: lol2
+game_5d194dbb87f32ca2bba1e6da_title: Juego de prueba
+game_5d194dbb87f32ca2bba1e6da_description: Este juego de prueba %%green%%FUÉ%n%hecho para probar %%bold%%ALGO%%reset%% %%gray%%pro
 
 # Common words translations
 commons_main_lobby: Lobby Principal

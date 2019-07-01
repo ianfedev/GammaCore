@@ -1,4 +1,4 @@
-package net.seocraft.lobby.management;
+package net.seocraft.api.shared.cooldown;
 
 import org.jetbrains.annotations.NotNull;
 
