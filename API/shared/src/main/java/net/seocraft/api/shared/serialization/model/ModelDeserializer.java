@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
-import net.seocraft.api.shared.model.Model;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ModelDeserializer<O extends Model> implements JsonDeserializer<O> {
+public class ModelDeserializer<O> implements JsonDeserializer<O> {
     @NotNull
     private TypeToken<O> typeToken;
 

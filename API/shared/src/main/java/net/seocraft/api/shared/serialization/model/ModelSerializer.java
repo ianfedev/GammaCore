@@ -15,7 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-public class ModelSerializer<O extends Model> implements JsonSerializer<O> {
+public class ModelSerializer<O> implements JsonSerializer<O> {
 
     @NotNull
     private TypeToken<O> typeToken;
