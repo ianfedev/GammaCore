@@ -24,7 +24,7 @@ public class ModelSerializer<O extends Model> implements JsonSerializer<O> {
         typeToken = TypeToken.get(clazz);
     }
 
-    public ModelSerializer(@NotNull TypeToken<O> typeToken){
+    public ModelSerializer(@NotNull TypeToken<O> typeToken) {
         this.typeToken = typeToken;
     }
 
@@ -98,16 +98,19 @@ public class ModelSerializer<O extends Model> implements JsonSerializer<O> {
             return name;
         }
 
-        return method.getName().substring(methodPrefix.length());
+        String name = method.getName().substring(methodPrefix.length());
+
+        return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
     /**
      * This method checks if a method is a method added by default
      * by the object class
+     *
      * @param method - The method to check
      * @return - True if is a method of the Object class
      */
-    public static boolean isAnObjectMethod(Method method){
+    public static boolean isAnObjectMethod(Method method) {
         return method.getDeclaringClass() == Object.class;
     }
 
