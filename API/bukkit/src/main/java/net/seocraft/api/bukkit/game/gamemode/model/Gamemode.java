@@ -1,5 +1,6 @@
-package net.seocraft.api.bukkit.game;
+package net.seocraft.api.bukkit.game.gamemode.model;
 
+import net.seocraft.api.bukkit.game.subgame.SubGamemode;
 import net.seocraft.api.shared.model.Model;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

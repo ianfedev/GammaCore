@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.game;
+package net.seocraft.api.bukkit.game.subgame;
 
 import org.jetbrains.annotations.NotNull;
 

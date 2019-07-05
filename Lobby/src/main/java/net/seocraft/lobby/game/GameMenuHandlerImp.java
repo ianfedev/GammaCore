@@ -1,8 +1,8 @@
 package net.seocraft.lobby.game;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.game.Gamemode;
-import net.seocraft.api.bukkit.game.GamemodeHandler;
+import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.GamemodeHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;

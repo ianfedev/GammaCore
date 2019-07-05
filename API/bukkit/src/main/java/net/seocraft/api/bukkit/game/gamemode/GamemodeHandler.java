@@ -1,6 +1,7 @@
-package net.seocraft.api.bukkit.game;
+package net.seocraft.api.bukkit.game.gamemode;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;

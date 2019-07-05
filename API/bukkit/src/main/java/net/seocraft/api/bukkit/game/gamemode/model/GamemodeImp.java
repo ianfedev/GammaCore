@@ -1,6 +1,8 @@
-package net.seocraft.api.bukkit.game;
+package net.seocraft.api.bukkit.game.gamemode.model;
 
 import com.google.gson.annotations.SerializedName;
+import net.seocraft.api.bukkit.game.subgame.SubGamemode;
+import net.seocraft.api.bukkit.game.subgame.SubGamemodeImp;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;

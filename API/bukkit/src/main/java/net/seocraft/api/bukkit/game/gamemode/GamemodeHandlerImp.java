@@ -1,10 +1,12 @@
-package net.seocraft.api.bukkit.game;
+package net.seocraft.api.bukkit.game.gamemode;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.model.GamemodeImp;
 import net.seocraft.api.bukkit.server.ServerTokenQuery;
 import net.seocraft.api.shared.gamemode.GamemodeGetRequest;
 import net.seocraft.api.shared.gamemode.GamemodeListRequest;

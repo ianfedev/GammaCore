@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.Setter;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.api.bukkit.game.GamemodeHandler;
-import net.seocraft.api.bukkit.game.GamemodeHandlerImp;
+import net.seocraft.api.bukkit.game.gamemode.GamemodeHandler;
+import net.seocraft.api.bukkit.game.gamemode.GamemodeHandlerImp;
 import net.seocraft.api.bukkit.server.ServerLoadManager;
 import net.seocraft.api.bukkit.user.IUserStoreHandler;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
@@ -14,9 +14,7 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.model.Server;
-import net.seocraft.api.shared.online.OnlinePlayersApi;
-import net.seocraft.api.shared.online.OnlinePlayersImpl;
+import net.seocraft.api.bukkit.server.model.ServerImp;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,7 +24,7 @@ public class BukkitAPI extends JavaPlugin {
 
     @Inject private ServerLoadManager loadManager;
     @Getter private String preSelectedMap;
-    @Getter @Setter private Server serverRecord;
+    @Getter @Setter private ServerImp serverRecord;
 
     @Override
     public void onEnable() {
