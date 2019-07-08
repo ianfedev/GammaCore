@@ -14,8 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Map;
-
 public interface ServerManager {
 
     @NotNull Server loadServer(
@@ -30,24 +28,23 @@ public interface ServerManager {
 
     @NotNull ListenableFuture<AsyncResponse<Server>> getServer(@NotNull String id);
 
-    @Nullable Server getServerSync(@NotNull String id);
+    @Nullable Server getServerSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    @NotNull Server updateServer(@NotNull Server server);
+    @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
     @NotNull ListenableFuture<AsyncResponse<List<Server>>> getServerByQuery(
             @Nullable String id,
             @Nullable String match,
-            @Nullable Map<String, String> gamemode
+            @Nullable String gamemode,
+            @Nullable String subgamemode
     );
 
     @NotNull List<Server> getServerByQuerySync(
             @Nullable String id,
             @Nullable String match,
-            @Nullable Map<String, String> gamemode
-    );
+            @Nullable String gamemode,
+            @Nullable String subgamemode
+    ) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
     void disconnectServer(@NotNull String id);
-
-
-
 }

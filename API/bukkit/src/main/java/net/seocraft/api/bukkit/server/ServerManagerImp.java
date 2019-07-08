@@ -1,7 +1,8 @@
 package net.seocraft.api.bukkit.server;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.gson.Gson;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.bukkit.game.subgame.SubGamemode;
@@ -13,8 +14,13 @@ import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
 import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
+import net.seocraft.api.shared.redis.RedisClient;
+import net.seocraft.api.shared.serialization.JsonUtils;
 import net.seocraft.api.shared.serialization.model.ModelSerializationHandler;
 import net.seocraft.api.shared.server.ServerConnectRequest;
+import net.seocraft.api.shared.server.ServerGetQueryRequest;
+import net.seocraft.api.shared.server.ServerGetRequest;
+import net.seocraft.api.shared.server.ServerUpdateRequest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +29,13 @@ import java.util.*;
 public class ServerManagerImp implements ServerManager {
 
     @Inject private ServerConnectRequest serverConnectRequest;
+    @Inject private ListeningExecutorService executorService;
+    @Inject private ServerTokenQuery serverTokenQuery;
+    @Inject private ServerGetRequest serverGetRequest;
+    @Inject private ServerUpdateRequest serverUpdateRequest;
+    @Inject private ServerGetQueryRequest serverGetQueryRequest;
+    @Inject private RedisClient redisClient;
+    @Inject private JsonUtils parser;
     @Inject private ModelSerializationHandler modelSerializationHandler;
 
     @Override
@@ -46,32 +59,87 @@ public class ServerManagerImp implements ServerManager {
             this.modelSerializationHandler.serializeModel(preServer, Server.class)
         );
 
-        return this.modelSerializationHandler.deserializeModel(rawResponse, Server.class);
+        Server responseServer = this.modelSerializationHandler.deserializeModel(
+                this.parser.parseJson(
+                        rawResponse,
+                        "server"
+                ).getAsString(),
+                Server.class
+        );
+
+        this.redisClient.setHash(
+                "authorization",
+                responseServer.id(),
+                this.parser.parseJson(
+                        rawResponse,
+                        "token"
+                ).getAsString()
+        );
+
+        return responseServer;
     }
 
     @Override
     public @NotNull ListenableFuture<AsyncResponse<Server>> getServer(@NotNull String id) {
-        return null;
+        return this.executorService.submit(() -> {
+            try {
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS,getServerSync(id));
+            } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
+                return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
+            }
+        });
     }
 
     @Override
-    public @Nullable Server getServerSync(@NotNull String id) {
-        return null;
+    public @Nullable Server getServerSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        String rawResponse = this.serverGetRequest.executeRequest(
+                id,
+                this.serverTokenQuery.getToken()
+        );
+
+        return this.modelSerializationHandler.deserializeModel(
+                rawResponse,
+                Server.class
+        );
     }
 
     @Override
-    public @NotNull Server updateServer(@NotNull Server server) {
-        return null;
+    public @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        String rawResponse = this.serverUpdateRequest.executeRequest(
+                server.id(),
+                this.modelSerializationHandler.serializeModel(server, Server.class),
+                this.serverTokenQuery.getToken()
+        );
+
+        return this.modelSerializationHandler.deserializeModel(rawResponse, Server.class);
     }
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<List<Server>>> getServerByQuery(@Nullable String id, @Nullable String match, @Nullable Map<String, String> gamemode) {
-        return null;
+    public @NotNull ListenableFuture<AsyncResponse<List<Server>>> getServerByQuery(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) {
+        return this.executorService.submit(() -> {
+            try {
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getServerByQuerySync(id, match, gamemode, subGamemode));
+            } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
+                return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
+            }
+        });
     }
 
     @Override
-    public @NotNull List<Server> getServerByQuerySync(@Nullable String id, @Nullable String match, @Nullable Map<String, String> gamemode) {
-        return null;
+    public @NotNull List<Server> getServerByQuerySync(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        JsonObject object = new JsonObject();
+        if (id != null) object.addProperty("_id", id);
+        if (match != null) object.addProperty("matches", match);
+        if (gamemode != null) {
+            object.addProperty("gamemode", gamemode);
+            object.addProperty("subgamemode", subGamemode);
+        }
+
+        this.serverGetQueryRequest.executeRequest(
+                object.toString(),
+                this.serverTokenQuery.getToken()
+        );
+
     }
 
     @Override

@@ -2,3 +2,8 @@ api:
   cluster: 0123456789abcdef01234567   # _id field from the cluster document (should be 24 hex digits)
   type: SPECIAL                       # ServerImp model type (Ex: SPECIAL - BUNGEE - LOBBY - GAME)
 realm: default                        # Select server type to change prefixes
+game:
+  gamemode: ID                        # Gamemode ID registered at the MongoDB Database
+  subgamemode: ID                     # Subgamemode registered at main gamemode model
+  maxRunning: 0                       # Max quantity of matches running at same time
+  maxTotal: 0                         # Max quantity of total matches before restart
