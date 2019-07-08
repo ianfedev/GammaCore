@@ -28,6 +28,9 @@ public class BukkitAPI extends JavaPlugin {
         loadConfig();
         try {
             setServerRecord(this.loadManager.setupServer());
+
+            Bukkit.getLogger().log(Level.INFO, "[API-Bukkit] ServerImp connected to the API. (ID: {0})",
+                    getServerRecord().id());
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
             Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Error starting server ({0}): {1}",
                     new Object[]{exception.getClass().getSimpleName(), exception.getMessage()});

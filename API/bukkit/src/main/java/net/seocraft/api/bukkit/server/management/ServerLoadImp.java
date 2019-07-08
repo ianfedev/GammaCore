@@ -29,7 +29,7 @@ public class ServerLoadImp implements ServerLoad {
         try {
             ServerType type = ServerType.valueOf(this.instance.getConfig().getString("api.type"));
 
-            Server server = this.serverManager.loadServer(
+            return this.serverManager.loadServer(
                     /* TODO: Get slug from */ "test-1",
                     type,
                     null,
@@ -38,11 +38,6 @@ public class ServerLoadImp implements ServerLoad {
                     maxTotal,
                     configuration.getString("api.cluster")
             );
-
-            Bukkit.getLogger().log(Level.INFO, "[API-Bukkit] ServerImp connected to the API. (ID: {0})",
-                    this.instance.getServerRecord().id());
-
-            return server;
 
         } catch (IllegalArgumentException ex) {
             Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Server type not found, shutting down this.instance.");
