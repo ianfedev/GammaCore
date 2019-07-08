@@ -50,7 +50,6 @@ public class ServerImp implements Server {
     }
 
     @Override
-    @FieldName("server_type")
     public @NotNull ServerType getServerType() {
         return this.serverType;
     }
@@ -61,25 +60,21 @@ public class ServerImp implements Server {
     }
 
     @Override
-    @FieldName("sub_gamemode")
     public @Nullable SubGamemode getSubGamemode() {
         return this.subGamemode;
     }
 
     @Override
-    @FieldName("max_running")
     public int getMaxRunning() {
         return this.maxRunning;
     }
 
     @Override
-    @FieldName("max_total")
     public int getMaxTotal() {
         return this.maxTotal;
     }
 
     @Override
-    @FieldName("started_at")
     public int getPlayedMatches() {
         return this.matches.size();
     }
@@ -90,7 +85,6 @@ public class ServerImp implements Server {
     }
 
     @Override
-    @FieldName("players")
     public @NotNull List<String> getOnlinePlayers() {
         return new ArrayList<>(this.onlinePlayers);
     }

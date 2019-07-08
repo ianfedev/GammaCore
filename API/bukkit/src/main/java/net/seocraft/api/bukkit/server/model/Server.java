@@ -15,20 +15,26 @@ public interface Server extends Model {
 
     @NotNull String getSlug();
 
+    @FieldName("type")
     @NotNull ServerType getServerType();
 
     @Nullable Gamemode getGamemode();
 
+    @FieldName("sub_gamemode")
     @Nullable SubGamemode getSubGamemode();
 
+    @FieldName("max_running")
     int getMaxRunning();
 
+    @FieldName("max_total")
     int getMaxTotal();
 
     int getPlayedMatches();
 
+    @FieldName("started_at")
     long getStartedAt();
 
+    @FieldName("players")
     @NotNull List<String> getOnlinePlayers();
 
     void addOnlinePlayer(String id);
