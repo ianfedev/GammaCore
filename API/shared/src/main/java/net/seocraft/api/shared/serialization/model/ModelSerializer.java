@@ -7,7 +7,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import net.seocraft.api.shared.model.Model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,11 +82,11 @@ public class ModelSerializer<O> implements JsonSerializer<O> {
         String methodPrefix = getMethodPrefix(method);
 
         if (methodPrefix == null) {
-            if (!method.isAnnotationPresent(SerializedName.class)) {
+            if (!method.isAnnotationPresent(FieldName.class)) {
                 throw new JsonParseException("The method with name " + method.getName() + " doesn't have a SerializedName annotation");
             }
 
-            SerializedName serializedNameAnnotation = method.getAnnotation(SerializedName.class);
+            FieldName serializedNameAnnotation = method.getAnnotation(FieldName.class);
 
             String name = serializedNameAnnotation.value();
 
