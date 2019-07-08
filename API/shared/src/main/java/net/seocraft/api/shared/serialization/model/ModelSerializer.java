@@ -80,12 +80,12 @@ public class ModelSerializer<O> implements JsonSerializer<O> {
      */
     public static String getElementName(Method method) throws JsonParseException {
         String methodPrefix = getMethodPrefix(method);
-
-        if (methodPrefix == null) {
-            if (!method.isAnnotationPresent(FieldName.class)) {
-                throw new JsonParseException("The method with name " + method.getName() + " doesn't have a SerializedName annotation");
-            }
-
+        
+        if(methodPrefix == null && !method.isAnnotationPresent(FieldName.class)) {
+            throw new JsonParseException("The method with name " + method.getName() + " doesn't has a FieldName or a valid name");
+        }
+        
+        if(method.isAnnotationPresent(FieldName.class)) {
             FieldName serializedNameAnnotation = method.getAnnotation(FieldName.class);
 
             String name = serializedNameAnnotation.value();
@@ -96,7 +96,7 @@ public class ModelSerializer<O> implements JsonSerializer<O> {
 
             return name;
         }
-
+        
         String name = method.getName().substring(methodPrefix.length());
 
         return name.substring(0, 1).toLowerCase() + name.substring(1);
