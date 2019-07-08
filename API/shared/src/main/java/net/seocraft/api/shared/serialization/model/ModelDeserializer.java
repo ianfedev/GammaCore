@@ -37,7 +37,7 @@ public class ModelDeserializer<O> implements JsonDeserializer<O> {
         JsonObject object = jsonElement.getAsJsonObject();
 
         Class<? super O> rawType = typeToken.getRawType();
-        Method[] typeMethods = rawType.getDeclaredMethods();
+        Method[] typeMethods = rawType.getMethods();
 
         Map<String, Class<?>> typeElements = new HashMap<>();
 
@@ -87,7 +87,7 @@ public class ModelDeserializer<O> implements JsonDeserializer<O> {
             ConstructorProperties propertiesAnnotation = constructor.getAnnotation(ConstructorProperties.class);
             List<String> properties = Arrays.asList(propertiesAnnotation.value());
 
-            if (properties.size() != deserializedObjects.keySet().size() || !properties.containsAll(deserializedObjects.keySet())) {
+            if (!deserializedObjects.keySet().containsAll(properties)) {
                 continue;
             }
 
@@ -101,7 +101,9 @@ public class ModelDeserializer<O> implements JsonDeserializer<O> {
             throw new JsonParseException("The class " + classToCreate.getName() + " doesn't has a constructor with ConstructorProperties annotation!");
         }
 
-        List<Object> constructorObjects = constructorProperties.stream().map(deserializedObjects::get).collect(Collectors.toList());
+        List<Object> constructorObjects = constructorProperties.stream()
+                .filter(deserializedObjects::containsKey)
+                .map(deserializedObjects::get).collect(Collectors.toList());
 
         try {
             return (O) constructorToUse.newInstance(constructorObjects.toArray());

@@ -33,7 +33,7 @@ public class ModelSerializer<O> implements JsonSerializer<O> {
         JsonObject jsonObject = new JsonObject();
 
         Class<? super O> rawType = typeToken.getRawType();
-        Method[] typeMethods = rawType.getDeclaredMethods();
+        Method[] typeMethods = rawType.getMethods();
 
         for (Method method : typeMethods) {
             if (method.getParameterCount() > 0 || method.getReturnType() == Void.TYPE || method.getReturnType() == Void.class || isAnObjectMethod(method)) {

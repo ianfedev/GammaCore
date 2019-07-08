@@ -1,10 +1,10 @@
 package net.seocraft.api.shared.model;
 
-import com.google.gson.annotations.SerializedName;
+import net.seocraft.api.shared.serialization.model.FieldName;
 
 public interface Model {
 
-    @SerializedName("_id")
+    @FieldName("_id")
     String id();
     
 }
