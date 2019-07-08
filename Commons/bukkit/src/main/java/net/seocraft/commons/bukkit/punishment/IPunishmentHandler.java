@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
@@ -17,7 +17,6 @@ import net.seocraft.api.shared.model.Match;
 import net.seocraft.api.shared.punishment.*;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
-import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

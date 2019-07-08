@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.friend.*;
 import net.seocraft.api.shared.http.AsyncResponse;

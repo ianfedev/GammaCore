@@ -3,6 +3,7 @@ package net.seocraft.api.bukkit.server.model;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.bukkit.game.subgame.SubGamemode;
 import net.seocraft.api.shared.model.Model;
+import net.seocraft.api.shared.serialization.model.FieldName;
 import net.seocraft.api.shared.serialization.model.ImplementedBy;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

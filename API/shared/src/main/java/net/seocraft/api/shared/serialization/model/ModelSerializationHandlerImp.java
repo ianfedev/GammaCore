@@ -3,9 +3,9 @@ package net.seocraft.api.shared.serialization.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.lang.reflect.Type;
+
 public class ModelSerializationHandlerImp implements ModelSerializationHandler {
-
-
 
     @Override
     @SuppressWarnings("unchecked")
@@ -40,4 +40,11 @@ public class ModelSerializationHandlerImp implements ModelSerializationHandler {
         }
         return (T) gson.fromJson(object, rawClass);
     }
+
+    @Override
+    public <T> T deserializeModel(String object, Type rawClass) {
+        Gson gson = new Gson();
+        return gson.fromJson(object, rawClass);
+    }
+
 }

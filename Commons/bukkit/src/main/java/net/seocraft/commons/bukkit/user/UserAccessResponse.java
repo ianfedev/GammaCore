@@ -6,7 +6,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserChat;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
@@ -21,7 +21,6 @@ import net.seocraft.api.shared.user.model.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLoginListener;
-import net.seocraft.commons.bukkit.friend.Friendship;
 import net.seocraft.commons.bukkit.friend.FriendshipHandler;
 import net.seocraft.commons.bukkit.punishment.PunishmentActions;
 import net.seocraft.commons.bukkit.util.ChatGlyphs;
@@ -35,7 +34,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 

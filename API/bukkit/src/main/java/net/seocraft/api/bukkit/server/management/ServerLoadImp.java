@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.server;
+package net.seocraft.api.bukkit.server.management;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
@@ -18,7 +18,7 @@ public class ServerLoadImp implements ServerLoad {
     @Inject private BukkitAPI instance;
     @Inject private ServerManager serverManager;
 
-    public void setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public Server setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
 
         FileConfiguration configuration = this.instance.getConfig();
         int maxRunning = configuration.getInt("game.maxRunning");
@@ -36,15 +36,22 @@ public class ServerLoadImp implements ServerLoad {
                     null,
                     maxRunning,
                     maxTotal,
-                    configuration.getString("game.cluster")
+                    configuration.getString("api.cluster")
             );
 
             Bukkit.getLogger().log(Level.INFO, "[API-Bukkit] ServerImp connected to the API. (ID: {0})",
                     this.instance.getServerRecord().id());
 
+            return server;
+
         } catch (IllegalArgumentException ex) {
             Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Server type not found, shutting down this.instance.");
             Bukkit.getServer().shutdown();
         }
+        return null;
+    }
+
+    public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.serverManager.disconnectServer();
     }
 }

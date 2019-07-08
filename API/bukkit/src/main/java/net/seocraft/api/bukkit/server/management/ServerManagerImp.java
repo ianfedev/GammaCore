@@ -1,8 +1,9 @@
-package net.seocraft.api.bukkit.server;
+package net.seocraft.api.bukkit.server.management;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.bukkit.game.subgame.SubGamemode;
@@ -17,14 +18,13 @@ import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.redis.RedisClient;
 import net.seocraft.api.shared.serialization.JsonUtils;
 import net.seocraft.api.shared.serialization.model.ModelSerializationHandler;
-import net.seocraft.api.shared.server.ServerConnectRequest;
-import net.seocraft.api.shared.server.ServerGetQueryRequest;
-import net.seocraft.api.shared.server.ServerGetRequest;
-import net.seocraft.api.shared.server.ServerUpdateRequest;
+import net.seocraft.api.shared.server.*;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class ServerManagerImp implements ServerManager {
 
@@ -32,6 +32,7 @@ public class ServerManagerImp implements ServerManager {
     @Inject private ListeningExecutorService executorService;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ServerGetRequest serverGetRequest;
+    @Inject private ServerDisconnectRequest serverDisconnectRequest;
     @Inject private ServerUpdateRequest serverUpdateRequest;
     @Inject private ServerGetQueryRequest serverGetQueryRequest;
     @Inject private RedisClient redisClient;
@@ -55,8 +56,11 @@ public class ServerManagerImp implements ServerManager {
                 new ArrayList<>()
         );
 
+        String debug = this.modelSerializationHandler.serializeModel(preServer, Server.class);
+        Bukkit.getLogger().log(Level.INFO, debug);
+
         String rawResponse = this.serverConnectRequest.executeRequest(
-            this.modelSerializationHandler.serializeModel(preServer, Server.class)
+            debug
         );
 
         Server responseServer = this.modelSerializationHandler.deserializeModel(
@@ -75,7 +79,6 @@ public class ServerManagerImp implements ServerManager {
                         "token"
                 ).getAsString()
         );
-
         return responseServer;
     }
 
@@ -135,15 +138,19 @@ public class ServerManagerImp implements ServerManager {
             object.addProperty("subgamemode", subGamemode);
         }
 
-        this.serverGetQueryRequest.executeRequest(
+        String rawResponse = this.serverGetQueryRequest.executeRequest(
                 object.toString(),
                 this.serverTokenQuery.getToken()
         );
 
+        return this.modelSerializationHandler.deserializeModel(
+                rawResponse,
+                new TypeToken<List<ServerImp>>(){}.getType()
+        );
     }
 
     @Override
-    public void disconnectServer(@NotNull String id) {
-
+    public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.serverDisconnectRequest.executeRequest(this.serverTokenQuery.getToken());
     }
 }

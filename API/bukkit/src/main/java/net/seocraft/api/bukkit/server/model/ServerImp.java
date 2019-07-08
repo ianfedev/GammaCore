@@ -1,9 +1,8 @@
 package net.seocraft.api.bukkit.server.model;
 
-
-import com.google.gson.annotations.SerializedName;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.bukkit.game.subgame.SubGamemode;
+import net.seocraft.api.shared.serialization.model.FieldName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,19 +12,19 @@ import java.util.List;
 
 public class ServerImp implements Server {
 
-    @SerializedName("_id") @NotNull private String id;
+    @NotNull private String id;
     @NotNull private String slug;
-    @SerializedName("type") @NotNull private ServerType serverType;
+    @NotNull private ServerType serverType;
     private @Nullable Gamemode gamemode;
-    @SerializedName("sub_gamemode") @Nullable private SubGamemode subGamemode;
-    @SerializedName("max_running") private int maxRunning;
-    @SerializedName("max_total") private int maxTotal;
-    @SerializedName("started_at") private long startedAt;
-    @SerializedName("players") @NotNull private List<String> onlinePlayers;
+    @Nullable private SubGamemode subGamemode;
+    private int maxRunning;
+    private int maxTotal;
+    private long startedAt;
+    @NotNull private List<String> onlinePlayers;
     @NotNull private String cluster;
     @NotNull private List<String> matches;
 
-    @ConstructorProperties({"_id", "slug", "server_type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "cluster", "matches"})
+    @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "cluster", "matches"})
     public ServerImp(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable Gamemode gamemode, @Nullable SubGamemode subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull List<String> onlinePlayers, @NotNull String cluster, @NotNull List<String> matches) {
         this.id = id;
         this.slug = slug;
@@ -51,6 +50,7 @@ public class ServerImp implements Server {
     }
 
     @Override
+    @FieldName("server_type")
     public @NotNull ServerType getServerType() {
         return this.serverType;
     }
@@ -61,21 +61,25 @@ public class ServerImp implements Server {
     }
 
     @Override
+    @FieldName("sub_gamemode")
     public @Nullable SubGamemode getSubGamemode() {
         return this.subGamemode;
     }
 
     @Override
+    @FieldName("max_running")
     public int getMaxRunning() {
         return this.maxRunning;
     }
 
     @Override
+    @FieldName("max_total")
     public int getMaxTotal() {
         return this.maxTotal;
     }
 
     @Override
+    @FieldName("started_at")
     public int getPlayedMatches() {
         return this.matches.size();
     }
@@ -86,6 +90,7 @@ public class ServerImp implements Server {
     }
 
     @Override
+    @FieldName("players")
     public @NotNull List<String> getOnlinePlayers() {
         return new ArrayList<>(this.onlinePlayers);
     }

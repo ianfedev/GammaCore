@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.server;
+package net.seocraft.api.bukkit.server.management;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

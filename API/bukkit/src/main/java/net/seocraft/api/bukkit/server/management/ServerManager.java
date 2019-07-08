@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.server;
+package net.seocraft.api.bukkit.server.management;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
@@ -46,5 +46,5 @@ public interface ServerManager {
             @Nullable String subgamemode
     ) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    void disconnectServer(@NotNull String id);
+    void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError;
 }

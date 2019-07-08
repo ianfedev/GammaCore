@@ -3,7 +3,7 @@ package net.seocraft.commons.bukkit.command;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
-import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.concurrent.CallbackWrapper;
 import net.seocraft.api.shared.http.AsyncResponse;

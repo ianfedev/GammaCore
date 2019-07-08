@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.model.GamemodeImp;
-import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
 import net.seocraft.api.shared.gamemode.GamemodeGetRequest;
 import net.seocraft.api.shared.gamemode.GamemodeListRequest;
 import net.seocraft.api.shared.http.AsyncResponse;

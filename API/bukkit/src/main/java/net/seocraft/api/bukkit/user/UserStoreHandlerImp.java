@@ -4,7 +4,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.server.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
 import net.seocraft.api.shared.http.AsyncResponse;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
 import net.seocraft.api.shared.http.exceptions.InternalServerError;
@@ -19,7 +19,7 @@ import net.seocraft.api.shared.user.model.UserImp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class IUserStoreHandler implements UserStoreHandler {
+public class UserStoreHandlerImp implements UserStoreHandler {
 
     @Inject private UserGetRequest userGetRequest;
     @Inject private UserUpdateRequest userUpdateRequest;

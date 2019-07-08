@@ -1,15 +1,12 @@
 package net.seocraft.api.bukkit;
 
 import com.google.inject.Inject;
-import lombok.Getter;
-import lombok.Setter;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.api.bukkit.game.gamemode.GamemodeHandler;
-import net.seocraft.api.bukkit.game.gamemode.GamemodeHandlerImp;
-import net.seocraft.api.bukkit.server.ServerLoad;
-import net.seocraft.api.bukkit.server.ServerLoadImp;
+import net.seocraft.api.bukkit.game.GameModule;
+import net.seocraft.api.bukkit.server.ServerModule;
+import net.seocraft.api.bukkit.server.management.ServerLoad;
 import net.seocraft.api.bukkit.server.model.Server;
-import net.seocraft.api.bukkit.user.IUserStoreHandler;
+import net.seocraft.api.bukkit.user.UserStoreHandlerImp;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.SharedModule;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
@@ -24,17 +21,27 @@ import java.util.logging.Level;
 public class BukkitAPI extends JavaPlugin {
 
     @Inject private ServerLoad loadManager;
-    @Getter @Setter private Server serverRecord;
+    private Server serverRecord;
 
     @Override
     public void onEnable() {
         loadConfig();
-
         try {
-            this.loadManager.setupServer();
-        } catch (Unauthorized | BadRequest | NotFound | InternalServerError error) {
+            setServerRecord(this.loadManager.setupServer());
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
             Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Error starting server ({0}): {1}",
-                    new Object[]{error.getClass().getSimpleName(), error.getMessage()});
+                    new Object[]{exception.getClass().getSimpleName(), exception.getMessage()});
+            Bukkit.getServer().shutdown();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        try {
+            this.loadManager.disconnectServer();
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
+            Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Error disconnecting server ({0}): {1}",
+                    new Object[]{exception.getClass().getSimpleName(), exception.getMessage()});
             Bukkit.getServer().shutdown();
         }
     }
@@ -42,13 +49,10 @@ public class BukkitAPI extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.publicBinder().install(new SharedModule()); // This should be changed when bungee also has the same ProtectedModule
-        binder.bind(BukkitAPI.class).toInstance(this);
-        binder.bind(UserStoreHandler.class).to(IUserStoreHandler.class);
-        binder.bind(ServerLoad.class).to(ServerLoadImp.class);
-        binder.bind(GamemodeHandler.class).to(GamemodeHandlerImp.class);
-        binder.expose(GamemodeHandler.class);
-        binder.expose(UserStoreHandler.class);
-        binder.expose(BukkitAPI.class);
+        binder.publicBinder().install(new ServerModule());
+        binder.publicBinder().install(new GameModule());
+        binder.publicBinder().bind(UserStoreHandler.class).to(UserStoreHandlerImp.class);
+        binder.publicBinder().bind(BukkitAPI.class).toInstance(this);
     }
 
     private void loadConfig(){
@@ -56,4 +60,11 @@ public class BukkitAPI extends JavaPlugin {
         saveConfig();
     }
 
+    public Server getServerRecord() {
+        return serverRecord;
+    }
+
+    private void setServerRecord(Server serverRecord) {
+        this.serverRecord = serverRecord;
+    }
 }
