@@ -67,7 +67,7 @@ public class ServerManagerImp implements ServerManager {
                 this.parser.parseJson(
                         rawResponse,
                         "server"
-                ).getAsString(),
+                ).toString(),
                 Server.class
         );
 
@@ -151,6 +151,7 @@ public class ServerManagerImp implements ServerManager {
 
     @Override
     public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.serverDisconnectRequest.executeRequest(this.serverTokenQuery.getToken());
+        String token = this.serverTokenQuery.getToken();
+        this.serverDisconnectRequest.executeRequest(token);
     }
 }
