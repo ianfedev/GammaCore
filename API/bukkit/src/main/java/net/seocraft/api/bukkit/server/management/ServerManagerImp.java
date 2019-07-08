@@ -56,11 +56,10 @@ public class ServerManagerImp implements ServerManager {
                 new ArrayList<>()
         );
 
-        String debug = this.modelSerializationHandler.serializeModel(preServer, Server.class);
-        Bukkit.getLogger().log(Level.INFO, debug);
+        String serializedServer = this.modelSerializationHandler.serializeModel(preServer, Server.class);
 
         String rawResponse = this.serverConnectRequest.executeRequest(
-            debug
+            serializedServer
         );
 
         Server responseServer = this.modelSerializationHandler.deserializeModel(
