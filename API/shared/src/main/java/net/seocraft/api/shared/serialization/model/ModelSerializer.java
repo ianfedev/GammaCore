@@ -35,7 +35,7 @@ public class ModelSerializer<O> implements JsonSerializer<O> {
         Method[] typeMethods = rawType.getMethods();
 
         for (Method method : typeMethods) {
-            if (method.getParameterCount() > 0 || method.getReturnType() == Void.TYPE || method.getReturnType() == Void.class || isAnObjectMethod(method)) {
+            if (shouldIgnoreMethod(method)) {
                 continue;
             }
 
@@ -112,4 +112,12 @@ public class ModelSerializer<O> implements JsonSerializer<O> {
         return method.getDeclaringClass() == Object.class;
     }
 
+
+    public static boolean shouldIgnoreMethod(Method method) {
+        if(method.isAnnotationPresent(IgnoreMethod.class)){
+            return true;
+        }
+
+        return method.getParameterCount() > 0 || method.getReturnType() == Void.TYPE || method.getReturnType() == Void.class || isAnObjectMethod(method);
+    }
 }
