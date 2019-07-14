@@ -4,6 +4,9 @@ import com.google.inject.Inject;
 import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.BukkitAPI;
+import net.seocraft.api.bukkit.server.model.ServerType;
+import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
 import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.lobby.hiding.HidingGadgetHandler;
@@ -13,9 +16,14 @@ import net.seocraft.api.shared.cooldown.CooldownManager;
 import net.seocraft.api.shared.cooldown.CooldownManagerImp;
 import net.seocraft.lobby.teleport.TeleportHandler;
 import net.seocraft.lobby.teleport.TeleportHandlerImp;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Level;
+
 public class Lobby extends JavaPlugin {
+
+    @Inject private BukkitAPI bukkitAPI;
 
     @Inject private HidingGadgetCommand hidingGadgetCommand;
     @Inject private TeleportCommand teleportCommand;
@@ -30,6 +38,12 @@ public class Lobby extends JavaPlugin {
 
     @Override
     public void onEnable() {
+
+        if (this.bukkitAPI.getServerRecord().getServerType() != ServerType.LOBBY) {
+            Bukkit.getLogger().log(Level.SEVERE, "[Lobby] Server type was not set to LOBBY.");
+            Bukkit.shutdown();
+        }
+
         loadConfig();
         BukkitCommandHandler dispatcher = new BukkitCommandHandler(this.getLogger(), new NoOpPermissionMessageProvider());
 

@@ -1,8 +1,5 @@
 package net.seocraft.api.bukkit.server.model;
 
-import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
-import net.seocraft.api.bukkit.game.subgame.SubGamemode;
-import net.seocraft.api.shared.serialization.model.FieldName;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,8 +12,8 @@ public class ServerImp implements Server {
     @NotNull private String id;
     @NotNull private String slug;
     @NotNull private ServerType serverType;
-    private @Nullable Gamemode gamemode;
-    @Nullable private SubGamemode subGamemode;
+    @Nullable private String gamemode;
+    @Nullable private String subGamemode;
     private int maxRunning;
     private int maxTotal;
     private long startedAt;
@@ -25,7 +22,7 @@ public class ServerImp implements Server {
     @NotNull private List<String> matches;
 
     @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "cluster", "matches"})
-    public ServerImp(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable Gamemode gamemode, @Nullable SubGamemode subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull List<String> onlinePlayers, @NotNull String cluster, @NotNull List<String> matches) {
+    public ServerImp(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull List<String> onlinePlayers, @NotNull String cluster, @NotNull List<String> matches) {
         this.id = id;
         this.slug = slug;
         this.serverType = serverType;
@@ -55,12 +52,12 @@ public class ServerImp implements Server {
     }
 
     @Override
-    public @Nullable Gamemode getGamemode() {
+    public @Nullable String getGamemode() {
         return this.gamemode;
     }
 
     @Override
-    public @Nullable SubGamemode getSubGamemode() {
+    public @Nullable String getSubGamemode() {
         return this.subGamemode;
     }
 

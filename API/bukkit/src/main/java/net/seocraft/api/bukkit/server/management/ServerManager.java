@@ -44,7 +44,7 @@ public interface ServerManager {
             @Nullable String match,
             @Nullable String gamemode,
             @Nullable String subgamemode
-    ) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    ) throws Unauthorized, IllegalStateException, BadRequest, NotFound, InternalServerError;
 
     void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError;
 }

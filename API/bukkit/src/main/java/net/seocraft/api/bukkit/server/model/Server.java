@@ -1,7 +1,5 @@
 package net.seocraft.api.bukkit.server.model;
 
-import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
-import net.seocraft.api.bukkit.game.subgame.SubGamemode;
 import net.seocraft.api.shared.model.Model;
 import net.seocraft.api.shared.serialization.model.FieldName;
 import net.seocraft.api.shared.serialization.model.ImplementedBy;
@@ -18,10 +16,10 @@ public interface Server extends Model {
     @FieldName("type")
     @NotNull ServerType getServerType();
 
-    @Nullable Gamemode getGamemode();
+    @Nullable String getGamemode();
 
     @FieldName("sub_gamemode")
-    @Nullable SubGamemode getSubGamemode();
+    @Nullable String getSubGamemode();
 
     @FieldName("max_running")
     int getMaxRunning();

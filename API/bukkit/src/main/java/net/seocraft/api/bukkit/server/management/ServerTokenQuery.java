@@ -12,6 +12,6 @@ public class ServerTokenQuery {
     @Inject private RedisClient redis;
 
     public String getToken() {
-        return this.redis.getHashFields("authorization").get(instance.getServerRecord().getSlug());
+        return this.redis.getHashFields("authorization").get(this.instance.getServerRecord().id());
     }
 }

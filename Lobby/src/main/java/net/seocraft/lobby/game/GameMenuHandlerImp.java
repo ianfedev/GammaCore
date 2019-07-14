@@ -36,7 +36,7 @@ public class GameMenuHandlerImp implements GameMenuHandler {
 
                 if (!gamemodeList.isEmpty()) {
                     gamemodeList.forEach(gamemode -> {
-                        ItemStack gamemodeBase = gamemode.getNavigatorIcon();
+                        ItemStack gamemodeBase = gamemode.obtainStackItem();
                         ItemMeta gamemodeMeta = gamemodeBase.getItemMeta();
 
                         gamemodeMeta.setDisplayName(

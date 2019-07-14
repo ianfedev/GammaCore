@@ -6,7 +6,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.server.management.ServerTokenQuery;
+import net.seocraft.api.bukkit.server.model.ServerType;
 import net.seocraft.api.bukkit.user.UserChat;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.exceptions.BadRequest;
@@ -44,6 +46,7 @@ public class UserAccessResponse implements Listener {
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private JsonUtils parser;
     @Inject private UserStoreHandler userStorage;
+    @Inject private BukkitAPI bukkitAPI;
     @Inject private SessionHandler sessionHandler;
     @Inject private FriendshipHandler friendshipHandler;
     @Inject private UserChat userChatHandler;
@@ -138,7 +141,8 @@ public class UserAccessResponse implements Listener {
                 this.onlinePlayersApi.setPlayerOnlineStatus(user.id(), true); //TODO: Set at commons bungee
                 playerField.set(player, new UserPermissions(player, user, userStorage, sessionHandler, translator, instance.getLogger()));
 
-                if (Bukkit.getPluginManager().getPlugin("Lobby") != null) {
+                if (this.bukkitAPI.getServerRecord().getServerType() == ServerType.LOBBY &&
+                Bukkit.getPluginManager().getPlugin("Lobby") != null) {
                     Bukkit.getPluginManager().callEvent(new LobbyConnectionEvent(user, player));
                 }
             }

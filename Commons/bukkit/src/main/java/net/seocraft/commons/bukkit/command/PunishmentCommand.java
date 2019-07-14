@@ -189,7 +189,7 @@ public class PunishmentCommand implements CommandClass {
                                         "commons_punish_error") + ".");
                             }
                         } else {
-                            if (targetAsyncResponse.getThrowedException().statusCode() == 404) {
+                            if (targetAsyncResponse.getStatusCode() == 404) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
                                         "commons_not_found") + ".");
@@ -266,7 +266,7 @@ public class PunishmentCommand implements CommandClass {
                                         "commons_punish_error") + ".");
                             }
                         } else {
-                            if (targetAsyncResponse.getThrowedException().statusCode() == 404) {
+                            if (targetAsyncResponse.getStatusCode() == 404) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
                                         "commons_not_found") + ".");
@@ -341,7 +341,7 @@ public class PunishmentCommand implements CommandClass {
                                         "commons_punish_error") + ".");
                             }
                         } else {
-                            if (targetAsyncResponse.getThrowedException().statusCode() == 404) {
+                            if (targetAsyncResponse.getStatusCode() == 404) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                         user.getLanguage(),
                                         "commons_not_found") + ".");

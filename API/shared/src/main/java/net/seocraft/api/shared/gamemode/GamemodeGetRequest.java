@@ -13,13 +13,7 @@ import java.util.Map;
 
 public class GamemodeGetRequest extends HttpRequest {
 
-    private HashMap<String, String> headers = new HashMap<>();
     private String id;
-
-    @Override
-    public Map<String, String> getHeaders() {
-        return this.headers;
-    }
 
     @Override
     public HttpType getType() {
@@ -31,9 +25,8 @@ public class GamemodeGetRequest extends HttpRequest {
         return "gamemode/get/" + this.id;
     }
 
-    public String executeRequest(@NotNull String id, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public String executeRequest(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.id = id;
-        this.headers.put("authorization", token);
         return getResponse();
     }
 

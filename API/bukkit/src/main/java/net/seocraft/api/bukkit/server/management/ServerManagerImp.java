@@ -2,9 +2,11 @@ package net.seocraft.api.bukkit.server.management;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
 import net.seocraft.api.bukkit.game.subgame.SubGamemode;
 import net.seocraft.api.bukkit.server.model.Server;
@@ -17,52 +19,67 @@ import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.redis.RedisClient;
 import net.seocraft.api.shared.serialization.JsonUtils;
-import net.seocraft.api.shared.serialization.model.ModelSerializationHandler;
 import net.seocraft.api.shared.server.*;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.logging.Level;
 
 public class ServerManagerImp implements ServerManager {
 
     @Inject private ServerConnectRequest serverConnectRequest;
+    @Inject private Gson gson;
     @Inject private ListeningExecutorService executorService;
     @Inject private ServerTokenQuery serverTokenQuery;
+    @Inject private BukkitAPI bukkitAPI;
     @Inject private ServerGetRequest serverGetRequest;
     @Inject private ServerDisconnectRequest serverDisconnectRequest;
     @Inject private ServerUpdateRequest serverUpdateRequest;
     @Inject private ServerGetQueryRequest serverGetQueryRequest;
     @Inject private RedisClient redisClient;
     @Inject private JsonUtils parser;
-    @Inject private ModelSerializationHandler modelSerializationHandler;
 
     @Override
     public @NotNull Server loadServer(@NotNull String slug, @NotNull ServerType serverType, @Nullable Gamemode gamemode, @Nullable SubGamemode subGamemode, int maxRunning, int maxTotal, @NotNull String cluster) throws Unauthorized, BadRequest, NotFound, InternalServerError {
 
-        Server preServer = new ServerImp(
-                UUID.randomUUID().toString(),
-                slug,
-                serverType,
-                gamemode,
-                subGamemode,
-                maxRunning,
-                maxTotal,
-                0,
-                new ArrayList<>(),
-                cluster,
-                new ArrayList<>()
-        );
+        Server preServer;
+        if (gamemode != null && subGamemode != null && serverType == ServerType.GAME) {
+            preServer = new ServerImp(
+                    UUID.randomUUID().toString(),
+                    slug,
+                    serverType,
+                    gamemode.id(),
+                    subGamemode.id(),
+                    maxRunning,
+                    maxTotal,
+                    0,
+                    new ArrayList<>(),
+                    cluster,
+                    new ArrayList<>()
+            );
+        } else {
+            preServer = new ServerImp(
+                    UUID.randomUUID().toString(),
+                    slug,
+                    serverType,
+                    null,
+                    null,
+                    maxRunning,
+                    maxTotal,
+                    0,
+                    new ArrayList<>(),
+                    cluster,
+                    new ArrayList<>()
+            );
+        }
 
-        String serializedServer = this.modelSerializationHandler.serializeModel(preServer, Server.class);
+        String serializedServer = this.gson.toJson(preServer, Server.class);
 
         String rawResponse = this.serverConnectRequest.executeRequest(
             serializedServer
         );
 
-        Server responseServer = this.modelSerializationHandler.deserializeModel(
+        Server responseServer = this.gson.fromJson(
                 this.parser.parseJson(
                         rawResponse,
                         "server"
@@ -99,7 +116,7 @@ public class ServerManagerImp implements ServerManager {
                 this.serverTokenQuery.getToken()
         );
 
-        return this.modelSerializationHandler.deserializeModel(
+        return this.gson.fromJson(
                 rawResponse,
                 Server.class
         );
@@ -109,11 +126,11 @@ public class ServerManagerImp implements ServerManager {
     public @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         String rawResponse = this.serverUpdateRequest.executeRequest(
                 server.id(),
-                this.modelSerializationHandler.serializeModel(server, Server.class),
+                this.gson.toJson(server, Server.class),
                 this.serverTokenQuery.getToken()
         );
 
-        return this.modelSerializationHandler.deserializeModel(rawResponse, Server.class);
+        return this.gson.fromJson(rawResponse, Server.class);
     }
 
     @Override
@@ -134,23 +151,26 @@ public class ServerManagerImp implements ServerManager {
         if (match != null) object.addProperty("matches", match);
         if (gamemode != null) {
             object.addProperty("gamemode", gamemode);
-            object.addProperty("subgamemode", subGamemode);
+            if (subGamemode == null) throw new IllegalArgumentException("You can not send a gamemode without sub-gamemode.");
+            object.addProperty("sub_gamemode", subGamemode);
         }
+        if (id == null && match == null && gamemode == null) throw new IllegalArgumentException("No query specified.");
 
         String rawResponse = this.serverGetQueryRequest.executeRequest(
                 object.toString(),
                 this.serverTokenQuery.getToken()
         );
 
-        return this.modelSerializationHandler.deserializeModel(
+        return this.gson.fromJson(
                 rawResponse,
-                new TypeToken<List<ServerImp>>(){}.getType()
+                new TypeToken<List<Server>>(){}.getType()
         );
     }
 
     @Override
     public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
         String token = this.serverTokenQuery.getToken();
+        this.redisClient.deleteHash("authorization", this.bukkitAPI.getServerRecord().id());
         this.serverDisconnectRequest.executeRequest(token);
     }
 }

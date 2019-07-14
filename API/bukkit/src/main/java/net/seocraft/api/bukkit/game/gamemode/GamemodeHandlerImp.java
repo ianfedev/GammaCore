@@ -25,7 +25,6 @@ public class GamemodeHandlerImp implements GamemodeHandler {
     @Inject private ListeningExecutorService executorService;
     @Inject private GamemodeGetRequest gamemodeGetRequest;
     @Inject private Gson gson;
-    @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private GamemodeListRequest gamemodeListRequest;
 
     @Override
@@ -42,8 +41,7 @@ public class GamemodeHandlerImp implements GamemodeHandler {
     @Override
     public @Nullable Gamemode getGamemodeSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         String gamemodeResponse = this.gamemodeGetRequest.executeRequest(
-                id,
-                this.serverTokenQuery.getToken()
+                id
         );
         return this.gson.fromJson(gamemodeResponse, Gamemode.class);
     }
@@ -61,9 +59,7 @@ public class GamemodeHandlerImp implements GamemodeHandler {
 
     @Override
     public @NotNull List<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        String gamemodeResponse = this.gamemodeListRequest.executeRequest(
-                this.serverTokenQuery.getToken()
-        );
+        String gamemodeResponse = this.gamemodeListRequest.executeRequest();
         return this.gson.fromJson(gamemodeResponse, new TypeToken<List<GamemodeImp>>(){}.getType());
     }
 

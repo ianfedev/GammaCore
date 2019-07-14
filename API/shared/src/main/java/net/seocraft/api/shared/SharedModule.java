@@ -24,15 +24,6 @@ public class SharedModule extends AbstractModule {
         bind(ExecutorService.class).to(ListeningExecutorService.class);
         bind(OnlinePlayersApi.class).to(OnlinePlayersImpl.class);
         bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8)));
-
-        bind(Gson.class).toProvider(() -> {
-            return new GsonBuilder()
-                    .serializeNulls()
-                    .enableComplexMapKeySerialization()
-                    .setPrettyPrinting()
-                    .create();
-        }).in(Scopes.SINGLETON);
-
         bind(ModelSerializationHandler.class).to(ModelSerializationHandlerImp.class);
         bind(SessionHandler.class).to(SessionHandlerImp.class);
         bind(Messager.class).to(RedisMessager.class).in(Scopes.SINGLETON);
