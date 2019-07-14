@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class ModelDeserializer<O> implements JsonDeserializer<O> {
         typeToken = TypeToken.get(clazz);
     }
 
-    public ModelDeserializer(@NotNull TypeToken<O> typeToken){
+    public ModelDeserializer(@NotNull TypeToken<O> typeToken) {
         this.typeToken = typeToken;
     }
 
@@ -39,7 +40,7 @@ public class ModelDeserializer<O> implements JsonDeserializer<O> {
         Class<? super O> rawType = typeToken.getRawType();
         Method[] typeMethods = rawType.getMethods();
 
-        Map<String, Class<?>> typeElements = new HashMap<>();
+        Map<String, TypeToken<?>> elementsType = new HashMap<>();
 
         for (Method method : typeMethods) {
             if (ModelSerializer.shouldIgnoreMethod(method)) {
@@ -47,21 +48,26 @@ public class ModelDeserializer<O> implements JsonDeserializer<O> {
             }
 
             String elementName = ModelSerializer.getElementName(method);
-            Class<?> elementType = method.getReturnType();
+            Type methodReturnType = method.getGenericReturnType();
 
-            typeElements.put(elementName, elementType);
+            TypeToken<?> returnType = TypeToken.get(methodReturnType);
+
+            if (methodReturnType instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) methodReturnType;
+
+                returnType = TypeToken.getParameterized(parameterizedType.getRawType(), parameterizedType.getActualTypeArguments());
+            }
+
+            elementsType.put(elementName, returnType);
         }
 
         Map<String, Object> deserializedObjects = new HashMap<>();
 
-        for (Map.Entry<String, Class<?>> entry : typeElements.entrySet()) {
-            String elementName = entry.getKey();
-            Class<?> elementType = entry.getValue();
-
+        elementsType.forEach((elementName, elementType) -> {
             JsonElement element = object.get(elementName);
 
-            deserializedObjects.put(elementName, jsonDeserializationContext.deserialize(element, elementType));
-        }
+            deserializedObjects.put(elementName, jsonDeserializationContext.deserialize(element, elementType.getType()));
+        });
 
 
         Class<?> classToCreate = rawType;
