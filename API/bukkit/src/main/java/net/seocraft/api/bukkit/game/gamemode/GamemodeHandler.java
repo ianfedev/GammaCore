@@ -16,6 +16,7 @@ public interface GamemodeHandler {
 
     /**
      * Get AsyncResponse wrapped gamemode.
+     * @see AsyncResponse
      * @param id Database ID.
      * @return ListenableFuture with AsyncResponse wrapped Gamemode.
      */
@@ -35,6 +36,7 @@ public interface GamemodeHandler {
     @NotNull ListenableFuture<AsyncResponse<List<Gamemode>>> listGamemodes();
 
     /**
+     * @see Gamemode
      * @return Unordered list of gamemodes.
      */
     @Nullable List<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError;

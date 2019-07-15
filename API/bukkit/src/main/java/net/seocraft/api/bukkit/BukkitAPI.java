@@ -1,19 +1,19 @@
 package net.seocraft.api.bukkit;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.game.GameModule;
 import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
-import net.seocraft.api.bukkit.game.map.model.Map;
+import net.seocraft.api.bukkit.game.map.model.GameMap;
+import net.seocraft.api.bukkit.game.map.model.contribution.Contribution;
+import net.seocraft.api.bukkit.game.map.model.rating.Rating;
 import net.seocraft.api.bukkit.game.match.model.Match;
 import net.seocraft.api.bukkit.game.party.model.Party;
 import net.seocraft.api.bukkit.game.subgame.SubGamemode;
 import net.seocraft.api.bukkit.server.ServerModule;
 import net.seocraft.api.bukkit.server.management.ServerLoad;
-import net.seocraft.api.bukkit.server.management.ServerManager;
 import net.seocraft.api.bukkit.server.model.Server;
 import net.seocraft.api.bukkit.user.UserStoreHandlerImp;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
@@ -68,7 +68,9 @@ public class BukkitAPI extends JavaPlugin {
         binder.publicBinder().bind(Gson.class).toProvider(() -> {
             ExtendedGsonBuilder builder = new ExtendedGsonBuilder();
             return builder.registerModelSerializer(Gamemode.class)
-                    .registerModelSerializer(Map.class)
+                    .registerModelSerializer(GameMap.class)
+                    .registerModelSerializer(Rating.class)
+                    .registerModelSerializer(Contribution.class)
                     .registerModelSerializer(Match.class)
                     .registerModelSerializer(Party.class)
                     .registerModelSerializer(SubGamemode.class)
