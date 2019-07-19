@@ -1,12 +1,12 @@
 package net.seocraft.api.shared.cooldown;
 
 import com.google.inject.Inject;
-import net.seocraft.api.shared.redis.RedisClient;
+import net.seocraft.api.shared.redis.RedisClientImpl;
 import org.jetbrains.annotations.NotNull;
 
 public class CooldownManagerImp implements CooldownManager {
 
-    @Inject private RedisClient client;
+    @Inject private RedisClientImpl client;
 
     private static final String PREFIX = "cooldown";
 
