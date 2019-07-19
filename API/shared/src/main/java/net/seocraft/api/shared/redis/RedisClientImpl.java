@@ -69,6 +69,16 @@ public class RedisClientImpl implements IRedisClient {
         return getPool().sync().sismember(key, field);
     }
 
+    @Override
+    public void addToSet(String key, String value) {
+        getPool().sync().sadd(key, value);
+    }
+
+    @Override
+    public void removeFromSet(String key, String value) {
+        getPool().sync().srem(key, value);
+    }
+
     public void setExpiration(String key, Integer seconds) {
         getPool().sync().expire(key, seconds);
     }

@@ -30,6 +30,10 @@ public interface IRedisClient {
 
     boolean existsInSet(String key, String field);
 
+    void addToSet(String key, String value);
+
+    void removeFromSet(String key, String value);
+
     Boolean existsKey(String key);
 
     Set<String> getKeys(String pattern);
