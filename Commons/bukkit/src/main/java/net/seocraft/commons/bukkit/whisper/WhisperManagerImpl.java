@@ -11,6 +11,7 @@ import net.seocraft.api.shared.user.model.User;
 import net.seocraft.commons.core.translations.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class WhisperManagerImpl implements WhisperManager {
@@ -54,12 +55,11 @@ public class WhisperManagerImpl implements WhisperManager {
 
             try {
                 Player playerFrom = Bukkit.getPlayer(from.getUsername());
-                Player playerTo = Bukkit.getPlayer(to.getUsername());
 
                 // Set some sort of format
                 playerFrom.sendMessage(
                         ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_to") +
-                                ChatColor.GRAY + playerTo.getName() + ": " + content
+                                ChatColor.GRAY + to.getUsername() + ": " + content
                 );
 
                 whisperChannel.sendMessage(whisper);
