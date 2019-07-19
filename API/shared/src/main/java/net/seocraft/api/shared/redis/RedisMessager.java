@@ -5,10 +5,8 @@ import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.pubsub.RedisPubSubAdapter;
-import io.lettuce.core.pubsub.RedisPubSubListener;
+
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
-import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
