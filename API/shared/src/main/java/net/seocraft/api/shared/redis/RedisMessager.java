@@ -24,7 +24,7 @@ public class RedisMessager implements Messager {
     private ExecutorService executorService;
 
     @Inject
-    RedisMessager(IRedisClient client, Gson gson, ExecutorService executorService) {
+    RedisMessager(IRedisClient client, ExecutorService executorService) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
