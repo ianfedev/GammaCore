@@ -23,7 +23,6 @@ import java.util.logging.Level;
 public class ServerLoadImp implements ServerLoad {
 
     @Inject private BukkitAPI instance;
-    @Inject private Gson gson;
     @Inject private GamemodeHandler gamemodeHandler;
     @Inject private ServerManager serverManager;
 

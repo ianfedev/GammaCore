@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
-import java.util.List;
+import java.util.Set;
 
 public class GamemodeImp implements Gamemode {
 
@@ -16,10 +16,10 @@ public class GamemodeImp implements Gamemode {
     @NotNull private String lobbyGroup;
     @NotNull private String navigatorIcon;
     private int navigatorSlot;
-    @NotNull private List<SubGamemode> subGamemodes;
+    @NotNull private Set<SubGamemode> subGamemodes;
 
     @ConstructorProperties({"_id", "name", "scoreboard", "lobby", "navigator", "slot", "sub_types"})
-    public GamemodeImp(@NotNull String id, @NotNull String name, @NotNull String scoreboard, @NotNull String lobbyGroup, @NotNull String navigatorIcon, int navigatorSlot, @NotNull List<SubGamemode> subGamemodes) {
+    public GamemodeImp(@NotNull String id, @NotNull String name, @NotNull String scoreboard, @NotNull String lobbyGroup, @NotNull String navigatorIcon, int navigatorSlot, @NotNull Set<SubGamemode> subGamemodes) {
         this.id = id;
         this.name = name;
         this.scoreboard = scoreboard;
@@ -60,7 +60,7 @@ public class GamemodeImp implements Gamemode {
     }
 
     @Override
-    public @NotNull List<SubGamemode> getSubGamemodes() {
+    public @NotNull Set<SubGamemode> getSubGamemodes() {
         return this.subGamemodes;
     }
 
