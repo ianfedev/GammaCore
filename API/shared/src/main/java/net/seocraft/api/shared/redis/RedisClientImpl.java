@@ -1,11 +1,12 @@
 package net.seocraft.api.shared.redis;
 
 import com.google.inject.Inject;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,101 +14,75 @@ import java.util.Set;
 public class RedisClientImpl implements IRedisClient {
 
     private final RedisClientConfiguration config;
-    private JedisPool pool;
+    private StatefulRedisConnection<String, String> pool;
 
     @Inject
     RedisClientImpl(RedisClientConfiguration config) {
         this.config = config;
     }
 
-    public JedisPool getPool() {
+    public StatefulRedisConnection<String, String> getPool() {
+        RedisClient client = RedisClient.create("redis://" + this.config.getAddress() + ":" + this.config.getPort());
         if (this.pool == null) {
-            this.pool = new JedisPool(this.config.getAddress(), this.config.getPort());
+            this.pool = client.connect();
             return pool;
         } else {
             return this.pool;
         }
+
     }
 
     public void setString(String key, String value) {
-        try (Jedis client = getPool().getResource()) {
-            //TODO: Fix password/database issue
-            /*client.auth(this.config.getPassword());
-            client.select(this.config.getDatabase());*/
-            client.set(key, value);
-        }
+        getPool().sync().set(key, value);
     }
 
     public void deleteString(String key) {
-        try (Jedis client = getPool().getResource()) {
-            client.del(key);
-        }
+        getPool().sync().del(key);
     }
 
     public String getLastStringElement(String key) {
-        try (Jedis client = getPool().getResource()) {
-            return client.lpop(key);
-        }
+        return getPool().sync().lpop(key);
     }
 
     public Map<String, String> getHashFields(String key) {
-        try (Jedis client = getPool().getResource()) {
-            return client.hgetAll(key);
-        }
+        return getPool().sync().hgetall(key);
     }
 
     public String getString(String key) {
-        try (Jedis client = getPool().getResource()) {
-            return client.get(key);
-        }
+        return getPool().sync().get(key);
     }
 
     public void setLastStringElement(String key) {
-        try (Jedis client = getPool().getResource()) {
-            client.lpush(key);
-        }
+        getPool().sync().lpush(key);
     }
 
     public void setHash(String key, String field, @Nullable String value) {
-        try (Jedis client = getPool().getResource()) {
-            client.hset(key, field, value);
-        }
+        getPool().sync().hset(key, field, value);
     }
 
     public void deleteHash(String key, String field) {
-        try (Jedis client = getPool().getResource()) {
-            client.hdel(key, field);
-        }
+        getPool().sync().hdel(key, field);
     }
 
     public void setExpiration(String key, Integer seconds) {
-        try (Jedis client = getPool().getResource()) {
-            client.expire(key, seconds);
-        }
+        getPool().sync().expire(key, seconds);
     }
 
     public void setExpiration(String key, long seconds) {
-        try (Jedis client = getPool().getResource()) {
-            client.expire(key, (int) seconds);
-        }
+        getPool().sync().expire(key, seconds);
+
     }
 
     public Boolean existsKey(String key) {
-        try (Jedis client = getPool().getResource()) {
-            return client.exists(key);
-        }
+        return getPool().sync().exists(key) > 0;
     }
 
     public Set<String> getKeys(String pattern) {
-        try (Jedis client = getPool().getResource()) {
-            return client.keys(pattern);
-        }
+        return new HashSet<>(getPool().sync().keys(pattern));
     }
 
     public long getExpiringTime(String key) {
-        try (Jedis client = getPool().getResource()) {
-            return client.ttl(key);
-        }
+        return getPool().sync().ttl(key);
     }
 
 }
