@@ -49,7 +49,7 @@ public class RedisMessager implements Messager {
             lock.lock();
 
             if (registeredChannels.containsKey(name)) {
-                if (registeredTypes.get(name) != type) {
+                if (!registeredTypes.get(name).equals(type)) {
                     throw new IllegalStateException("A channel with the name " + name + " is already registered with another type, type: " + registeredTypes.get(name).getType().getTypeName());
                 }
 
