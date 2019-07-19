@@ -64,6 +64,11 @@ public class RedisClientImpl implements IRedisClient {
         getPool().sync().hdel(key, field);
     }
 
+    @Override
+    public boolean existsInHash(String key, String field) {
+        return getPool().sync().sismember(key, field);
+    }
+
     public void setExpiration(String key, Integer seconds) {
         getPool().sync().expire(key, seconds);
     }

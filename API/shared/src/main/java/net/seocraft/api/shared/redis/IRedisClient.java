@@ -28,6 +28,8 @@ public interface IRedisClient {
 
     void deleteHash(String key, String field);
 
+    boolean existsInHash(String key, String field);
+
     Boolean existsKey(String key);
 
     Set<String> getKeys(String pattern);
