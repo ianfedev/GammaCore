@@ -1,36 +1,31 @@
 package net.seocraft.api.shared.online;
 
 import com.google.inject.Inject;
-import net.seocraft.api.shared.redis.RedisClient;
-import redis.clients.jedis.Jedis;
+import net.seocraft.api.shared.redis.RedisClientImpl;
 
 public class OnlinePlayersImpl implements OnlinePlayersApi {
 
-    @Inject private RedisClient client;
+    @Inject
+    private RedisClientImpl client;
 
     private static final String PREFIX = "users.online";
 
     @Override
     public boolean isPlayerOnline(String id) {
-        try (Jedis jedis = client.getPool().getResource()) {
-            return jedis.sismember(PREFIX, id);
-        }
+        return client.existsInSet(PREFIX, id);
     }
 
     @Override
     public void setPlayerOnlineStatus(String id, boolean onlineStatus) {
-        try (Jedis jedis = client.getPool().getResource()) {
-            boolean idIsMember = jedis.sismember(PREFIX, id);
+        boolean idIsMember = isPlayerOnline(id);
 
-            if (onlineStatus && !idIsMember) {
-                jedis.sadd(PREFIX, id);
-                return;
-            }
+        if (onlineStatus && !idIsMember) {
+            client.addToSet(PREFIX, id);
+            return;
+        }
 
-            if (!onlineStatus && idIsMember) {
-                jedis.srem(PREFIX, id);
-            }
-
+        if (!onlineStatus && idIsMember) {
+            client.removeFromSet(PREFIX, id);
         }
     }
 }
