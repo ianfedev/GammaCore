@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
-public class RedisClient implements IRedisClient {
+public class RedisClientImpl implements IRedisClient {
 
     private final RedisClientConfiguration config;
     private JedisPool pool;
 
     @Inject
-    RedisClient(RedisClientConfiguration config) {
+    RedisClientImpl(RedisClientConfiguration config) {
         this.config = config;
     }
 
