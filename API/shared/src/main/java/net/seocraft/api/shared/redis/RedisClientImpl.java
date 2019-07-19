@@ -65,7 +65,7 @@ public class RedisClientImpl implements IRedisClient {
     }
 
     @Override
-    public boolean existsInHash(String key, String field) {
+    public boolean existsInSet(String key, String field) {
         return getPool().sync().sismember(key, field);
     }
 

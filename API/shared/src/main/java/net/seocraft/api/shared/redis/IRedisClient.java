@@ -28,7 +28,7 @@ public interface IRedisClient {
 
     void deleteHash(String key, String field);
 
-    boolean existsInHash(String key, String field);
+    boolean existsInSet(String key, String field);
 
     Boolean existsKey(String key);
 
