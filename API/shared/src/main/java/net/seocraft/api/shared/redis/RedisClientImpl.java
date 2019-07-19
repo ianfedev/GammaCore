@@ -3,6 +3,7 @@ package net.seocraft.api.shared.redis;
 import com.google.inject.Inject;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
+import org.redisson.codec.JsonJacksonCodec;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
 
@@ -33,9 +34,10 @@ public class RedisClientImpl implements IRedisClient {
 
         Config redissonConfig = new Config();
 
+        redissonConfig.setCodec(JsonJacksonCodec.INSTANCE);
+
         SingleServerConfig serverConfig = redissonConfig.useSingleServer()
                 .setAddress("redis://" + config.getAddress() + ":" + config.getPort());
-
 
         if (!password.trim().isEmpty()) {
             serverConfig.setPassword(password);
