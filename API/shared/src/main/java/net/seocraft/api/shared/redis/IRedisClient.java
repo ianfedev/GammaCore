@@ -1,14 +1,13 @@
 package net.seocraft.api.shared.redis;
 
-import io.lettuce.core.api.StatefulRedisConnection;
+import org.redisson.api.RedissonClient;
 
 import java.util.Map;
 import java.util.Set;
 
 public interface IRedisClient {
 
-
-    StatefulRedisConnection<String, String> getPool();
+    RedissonClient getPool();
 
     String getString(String key);
 

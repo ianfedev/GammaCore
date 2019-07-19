@@ -4,9 +4,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import io.lettuce.core.RedisClient;
-
-import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,24 +19,18 @@ public class RedisMessager implements Messager {
     private Map<String, TypeToken> registeredTypes;
     private Map<String, Channel> registeredChannels;
 
-    private RedisClientConfiguration config;
-
-    private StatefulRedisPubSubConnection<String, String> redis;
-
-    private Gson gson;
+    private IRedisClient redisClient;
 
     private ExecutorService executorService;
 
     @Inject
-    RedisMessager(RedisClientConfiguration configuration, Gson gson, ExecutorService executorService) {
+    RedisMessager(IRedisClient client, Gson gson, ExecutorService executorService) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
         registeredTypes = new HashMap<>();
 
-        config = configuration;
-
-        this.gson = gson;
+        redisClient = client;
 
         this.executorService = executorService;
     }
@@ -58,7 +49,7 @@ public class RedisMessager implements Messager {
                 return registeredChannels.get(name);
             }
 
-            Channel<O> channel = new RedisChannel<>(name, type, this::getConnection, gson, executorService);
+            Channel<O> channel = new RedisChannel<>(name, type, redisClient::getPool, executorService);
 
             registeredChannels.put(name, channel);
             registeredTypes.put(name, type);
@@ -69,19 +60,4 @@ public class RedisMessager implements Messager {
         }
     }
 
-    StatefulRedisPubSubConnection<String, String> getConnection() {
-        lock.lock();
-
-        RedisClient client = RedisClient.create("redis://" + this.config.getAddress() + ":" + this.config.getPort());
-
-        try {
-            if (redis == null) {
-                redis = client.connectPubSub();
-            }
-
-            return redis;
-        } finally {
-            lock.unlock();
-        }
-    }
 }
