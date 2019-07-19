@@ -23,7 +23,6 @@ public class RedisChannel<O> implements Channel<O> {
 
     private ExecutorService service;
 
-
     private Deque<ChannelListener<O>> channelListeners;
 
     private String serverChannelId = UUID.randomUUID().toString();
