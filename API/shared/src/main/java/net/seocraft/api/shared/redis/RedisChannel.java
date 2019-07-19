@@ -2,13 +2,13 @@ package net.seocraft.api.shared.redis;
 
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import lombok.Getter;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.ExecutorService;
 
 public class RedisChannel<T> implements Channel<T> {
 
@@ -22,11 +22,11 @@ public class RedisChannel<T> implements Channel<T> {
     private Queue<RedissonChannelWrapper<T>> registeredListeners;
 
     private RedissonClient redisson;
-    private ListeningExecutorService executorService;
+    private ExecutorService executorService;
 
     private String uniqueId = UUID.randomUUID().toString();
 
-    RedisChannel(String channelName, TypeToken<T> type, RedissonClient pool, ListeningExecutorService executorService) {
+    RedisChannel(String channelName, TypeToken<T> type, RedissonClient pool, ExecutorService executorService) {
         this.name = channelName;
         this.type = type;
 
