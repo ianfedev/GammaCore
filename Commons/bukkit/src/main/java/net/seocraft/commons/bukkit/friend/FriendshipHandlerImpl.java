@@ -16,7 +16,7 @@ import net.seocraft.api.shared.http.exceptions.NotFound;
 import net.seocraft.api.shared.http.exceptions.Unauthorized;
 import net.seocraft.api.shared.redis.Channel;
 import net.seocraft.api.shared.redis.Messager;
-import net.seocraft.api.shared.redis.RedisClient;
+import net.seocraft.api.shared.redis.RedisClientImpl;
 import net.seocraft.api.shared.serialization.JsonUtils;
 import net.seocraft.api.shared.user.model.User;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     @Inject private FriendCreateRequest friendCreateRequest;
     @Inject private FriendCheckRequest friendCheckRequest;
     @Inject private FriendListRequest friendListRequest;
-    @Inject private RedisClient client;
+    @Inject private RedisClientImpl client;
     @Inject private FriendDeleteRequest friendDeleteRequest;
     @Inject private FriendClearRequest friendClearRequest;
     @Inject private UserStoreHandler userStoreHandler;

@@ -1,9 +1,13 @@
 package net.seocraft.api.shared.redis;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.pubsub.RedisPubSubAdapter;
+import io.lettuce.core.pubsub.RedisPubSubListener;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
@@ -20,9 +24,9 @@ public class RedisMessager implements Messager {
     private Map<String, TypeToken> registeredTypes;
     private Map<String, Channel> registeredChannels;
 
-    private RedisClientConfiguration configuration;
+    private RedisClientConfiguration config;
 
-    private Jedis jedis;
+    private StatefulRedisPubSubConnection<String, String> redis;
 
     private Gson gson;
 
@@ -35,7 +39,7 @@ public class RedisMessager implements Messager {
         registeredChannels = new HashMap<>();
         registeredTypes = new HashMap<>();
 
-        this.configuration = configuration;
+        config = configuration;
 
         this.gson = gson;
 
@@ -67,15 +71,17 @@ public class RedisMessager implements Messager {
         }
     }
 
-    Jedis getConnection() {
+    StatefulRedisPubSubConnection<String, String> getConnection() {
         lock.lock();
 
+        RedisClient client = RedisClient.create("redis://" + this.config.getAddress() + ":" + this.config.getPort());
+
         try {
-            if(jedis == null){
-                jedis = new Jedis(configuration.getAddress(), configuration.getPort());
+            if (redis == null) {
+                redis = client.connectPubSub();
             }
 
-            return jedis;
+            return redis;
         } finally {
             lock.unlock();
         }

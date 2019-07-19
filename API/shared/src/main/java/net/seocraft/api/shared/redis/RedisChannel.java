@@ -1,9 +1,12 @@
 package net.seocraft.api.shared.redis;
 
+import com.google.common.reflect.TypeParameter;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPubSub;
+import io.lettuce.core.pubsub.RedisPubSubAdapter;
+import io.lettuce.core.pubsub.RedisPubSubListener;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
+
 
 import java.util.Deque;
 import java.util.UUID;
@@ -17,8 +20,10 @@ public class RedisChannel<O> implements Channel<O> {
 
     private TypeToken<RedisWrapper<O>> wrappedType;
 
-    private Supplier<Jedis> jedisSupplier;
-    private JedisPubSub pubSub;
+    private Supplier<StatefulRedisPubSubConnection<String, String>> jedisSupplier;
+    private RedisPubSubListener<String, String> pubSub;
+
+    private ExecutorService service;
 
     private Gson gson;
 
@@ -26,20 +31,31 @@ public class RedisChannel<O> implements Channel<O> {
 
     private String serverChannelId = UUID.randomUUID().toString();
 
-    RedisChannel(String name, TypeToken<O> type, Supplier<Jedis> redis, Gson gson, ExecutorService executorService) {
+    RedisChannel(String name, TypeToken<O> type, Supplier<StatefulRedisPubSubConnection<String, String>> redis, Gson gson, ExecutorService executorService) {
         this.name = name;
         this.type = type;
 
         jedisSupplier = redis;
 
+        service = executorService;
+
         this.gson = gson;
 
-        pubSub = new JedisPubSub() {
-            @Override
-            public void onMessage(String channel, String message) {
-                RedisWrapper<O> wrapper = gson.fromJson(message, new TypeToken<RedisWrapper<O>>() {
-                }.getType());
+        wrappedType = new TypeToken<RedisWrapper<O>>() {
+        };
 
+        wrappedType = (TypeToken<RedisWrapper<O>>) TypeToken.of(wrappedType.getType()).where(new TypeParameter<O>() {
+        }, type);
+
+
+        pubSub = new RedisPubSubAdapter<String, String>() {
+            @Override
+            public void message(String channel, String message) {
+                if (!channel.equals(name)) {
+                    return;
+                }
+
+                RedisWrapper<O> wrapper = gson.fromJson(message, wrappedType.getType());
 
                 String id = wrapper.getId();
 
@@ -56,13 +72,12 @@ public class RedisChannel<O> implements Channel<O> {
         };
 
         executorService.submit(() -> {
-            jedisSupplier.get().subscribe(pubSub, name);
+            jedisSupplier.get().sync().subscribe(name);
         });
 
         channelListeners = new ConcurrentLinkedDeque<>();
 
-        wrappedType = new TypeToken<RedisWrapper<O>>() {
-        };
+
     }
 
     @Override
@@ -77,11 +92,13 @@ public class RedisChannel<O> implements Channel<O> {
 
     @Override
     public void sendMessage(O object) {
-        RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
+        service.submit(() -> {
+            RedisWrapper<O> wrapper = new RedisWrapper<>(serverChannelId, object);
 
-        String jsonRepresentation = gson.toJson(wrapper, wrappedType.getType());
+            String jsonRepresentation = gson.toJson(wrapper, wrappedType.getType());
 
-        jedisSupplier.get().publish(name, jsonRepresentation);
+            jedisSupplier.get().sync().publish(name, jsonRepresentation);
+        });
     }
 
     @Override

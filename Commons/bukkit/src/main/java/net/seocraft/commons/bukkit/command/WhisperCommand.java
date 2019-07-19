@@ -6,6 +6,9 @@ import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.JoinedString;
 import net.seocraft.api.bukkit.user.UserStoreHandler;
 import net.seocraft.api.shared.http.AsyncResponse;
+import net.seocraft.api.shared.redis.Channel;
+import net.seocraft.api.shared.redis.ChannelListener;
+import net.seocraft.api.shared.redis.Messager;
 import net.seocraft.api.shared.session.GameSession;
 import net.seocraft.api.shared.session.SessionHandler;
 import net.seocraft.api.shared.user.model.User;
@@ -31,6 +34,20 @@ public class WhisperCommand implements CommandClass {
     private SessionHandler sessionHandler;
     @Inject
     private TranslatableField translator;
+
+    private Channel<String> messager;
+
+    @Inject
+    public WhisperCommand(Messager messager) {
+       this.messager = messager.getChannel("test", String.class);
+
+       this.messager.registerListener(new ChannelListener<String>() {
+           @Override
+           public void receiveMessage(String object) {
+               Bukkit.broadcastMessage("Received message " + object);
+           }
+       });
+    }
 
     @Command(names = {"msg", "whisper", "tell", "w", "m", "t"}, min = 2, usage = "/<command> <target> <message...>")
     public boolean whisperCommand(CommandSender commandSender, OfflinePlayer target, @JoinedString String message) {
@@ -96,6 +113,14 @@ public class WhisperCommand implements CommandClass {
                 });
             });
         });
+        return true;
+    }
+
+    @Command(names = {"testMessager"}, max = 0, usage = "/<command>")
+    public boolean testMessager() {
+        messager.sendMessage("test");
+
+        Bukkit.broadcastMessage("Send message test");
         return true;
     }
 }

@@ -2,14 +2,14 @@ package net.seocraft.api.shared.session;
 
 import com.google.gson.Gson;
 import com.google.inject.Inject;
-import net.seocraft.api.shared.redis.RedisClient;
+import net.seocraft.api.shared.redis.RedisClientImpl;
 import net.seocraft.api.shared.user.model.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SessionHandlerImp implements SessionHandler {
 
-    @Inject private RedisClient client;
+    @Inject private RedisClientImpl client;
     @Inject private Gson gson;
 
     @Override
