@@ -1,7 +1,6 @@
 package net.seocraft.api.shared.redis;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -49,7 +48,7 @@ public class RedisMessager implements Messager {
                 return registeredChannels.get(name);
             }
 
-            Channel<O> channel = new RedisChannel<>(name, type, redisClient::getPool, executorService);
+            Channel<O> channel = new RedisChannel<>(name, type, redisClient.getPool(), executorService);
 
             registeredChannels.put(name, channel);
             registeredTypes.put(name, type);

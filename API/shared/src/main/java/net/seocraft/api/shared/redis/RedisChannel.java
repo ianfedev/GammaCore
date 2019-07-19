@@ -2,70 +2,65 @@ package net.seocraft.api.shared.redis;
 
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import lombok.Getter;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 
-
-import java.util.Deque;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ExecutorService;
-import java.util.function.Supplier;
 
-public class RedisChannel<O> implements Channel<O> {
+public class RedisChannel<T> implements Channel<T> {
 
+    @Getter
     private String name;
-    private TypeToken<O> type;
+    @Getter
+    private TypeToken<T> type;
 
-    private TypeToken<RedisWrapper<O>> wrappedType;
+    private TypeToken<ObjectWrapper<T>> wrappedType;
 
-    private Supplier<RedissonClient> redisSupplier;
+    private Queue<RedissonChannelWrapper<T>> registeredListeners;
 
-    private ExecutorService service;
+    private RedissonClient redisson;
+    private ListeningExecutorService executorService;
 
-    private Deque<ChannelListener<O>> channelListeners;
+    private String uniqueId = UUID.randomUUID().toString();
 
-    private String serverChannelId = UUID.randomUUID().toString();
-
-    RedisChannel(String name, TypeToken<O> type, Supplier<RedissonClient> redis, ExecutorService executorService) {
-        this.name = name;
+    RedisChannel(String channelName, TypeToken<T> type, RedissonClient pool, ListeningExecutorService executorService) {
+        this.name = channelName;
         this.type = type;
 
-        redisSupplier = redis;
+        this.redisson = pool;
+        this.executorService = executorService;
 
-        service = executorService;
+        this.registeredListeners = new ConcurrentLinkedDeque<>();
 
-        wrappedType = new TypeToken<RedisWrapper<O>>() {
-        };
+        wrappedType = new TypeToken<ObjectWrapper<T>>(){}
+        .where(new TypeParameter<T>() {}, type);
+    }
 
-        wrappedType = (TypeToken<RedisWrapper<O>>) TypeToken.of(wrappedType.getType()).where(new TypeParameter<O>() {
-        }, type);
 
-        channelListeners = new ConcurrentLinkedDeque<>();
+    @Override
+    public void registerListener(ChannelListener<T> listener) {
+        Objects.requireNonNull(listener, "ChannelListener must be not null");
+
+        RedissonChannelWrapper<T> wrapper = new RedissonChannelWrapper<>(name, uniqueId, listener);
+
+        RTopic rTopic = redisson.getTopic(name);
+        rTopic.addListener(wrappedType.getRawType(), wrapper);
+
+        registeredListeners.offer(wrapper);
     }
 
     @Override
-    public String getName() {
-        return name;
+    public void sendMessage(T data) {
+        executorService.submit(() -> {
+            RTopic rTopic = redisson.getTopic(name);
+
+            rTopic.publish(new ObjectWrapper<>(data, uniqueId));
+        });
+
     }
 
-    @Override
-    public TypeToken<O> getType() {
-        return type;
-    }
 
-    @Override
-    public void sendMessage(O object) {
-        service.submit(() ->
-            redisSupplier.get().getTopic(name).publish(new RedisWrapper<>(serverChannelId, object))
-        );
-    }
-
-    @Override
-    public void registerListener(ChannelListener<O> listener) {
-        RTopic topic = redisSupplier.get().getTopic(name);
-
-        topic.addListener(wrappedType.getRawType(), new RedissonWrapper<>(listener, serverChannelId));
-        channelListeners.add(listener);
-    }
 }

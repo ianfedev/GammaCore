@@ -1,6 +1,5 @@
 package net.seocraft.api.shared.redis;
 
-
 import com.google.common.reflect.TypeToken;
 
 public interface Channel<O> {
