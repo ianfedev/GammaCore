@@ -32,9 +32,8 @@ public class RedisClientImpl implements IRedisClient {
 
         String password = config.getPassword();
 
-        Config redissonConfig = new Config();
-
-        redissonConfig.setCodec(JsonJacksonCodec.INSTANCE);
+        Config redissonConfig = new Config()
+                .setCodec(RedissonJacksonCodec.INSTANCE);
 
         SingleServerConfig serverConfig = redissonConfig.useSingleServer()
                 .setAddress("redis://" + config.getAddress() + ":" + config.getPort());
