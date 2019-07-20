@@ -1,11 +1,11 @@
 package net.seocraft.lobby.listener;
 
 import com.google.inject.Inject;
-import net.seocraft.api.shared.session.GameSession;
-import net.seocraft.api.shared.session.SessionHandler;
-import net.seocraft.api.shared.user.model.User;
-import net.seocraft.commons.bukkit.friend.FriendshipHandler;
-import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
+import net.seocraft.api.core.session.GameSession;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.User;
+import net.seocraft.commons.bukkit.old.friend.FriendshipHandler;
+import net.seocraft.commons.bukkit.old.user.LobbyConnectionEvent;
 import net.seocraft.lobby.menu.HotbarItemCollection;
 import net.seocraft.lobby.teleport.TeleportHandler;
 import org.bukkit.Bukkit;
@@ -17,7 +17,7 @@ public class LobbyConnectionListener implements Listener {
 
     @Inject private HotbarItemCollection hotbarItemCollection;
     @Inject private TeleportHandler teleportHandler;
-    @Inject private SessionHandler sessionHandler;
+    @Inject private GameSessionManager gameSessionManager;
     @Inject private FriendshipHandler friendshipHandler;
 
     @EventHandler
@@ -35,7 +35,7 @@ public class LobbyConnectionListener implements Listener {
         // Detect when player has hiding gadget enabled
         if (playerRecord.isHiding()) {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
-                GameSession handler = this.sessionHandler.getCachedSession(onlinePlayer.getName());
+                GameSession handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
                 if (
                         handler != null &&
                         !this.friendshipHandler.checkFriendshipStatus(playerRecord.id(), handler.getPlayerId()) &&

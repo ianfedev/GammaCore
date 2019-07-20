@@ -1,14 +1,14 @@
 package net.seocraft.lobby.listener;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import net.seocraft.api.bukkit.user.UserStoreHandler;
-import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.session.GameSession;
-import net.seocraft.api.shared.session.SessionHandler;
-import net.seocraft.api.shared.user.model.User;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
+import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.session.GameSession;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.User;
+import net.seocraft.commons.bukkit.old.util.ChatAlertLibrary;
 import net.seocraft.lobby.game.GameMenuHandlerImp;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,8 +19,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class GameMenuListener implements Listener {
 
-    @Inject private SessionHandler sessionHandler;
-    @Inject private UserStoreHandler userStoreHandler;
+    @Inject private GameSessionManager gameSessionManager;
+    @Inject private UserStorageProvider userStorageProvider;
     @Inject private GameMenuHandlerImp gameMenuHandlerImp;
 
     @EventHandler
@@ -34,9 +34,9 @@ public class GameMenuListener implements Listener {
                             NBTTagHandler.getString(clickedItem, "accessor").equalsIgnoreCase("game_menu")
                     )
             ) {
-                GameSession session = this.sessionHandler.getCachedSession(player.getName());
+                GameSession session = this.gameSessionManager.getCachedSession(player.getName());
                 if (session != null) {
-                    CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(session.getPlayerId()), userAsyncResponse -> {
+                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(session.getPlayerId()), userAsyncResponse -> {
                         if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User user = userAsyncResponse.getResponse();
                             this.gameMenuHandlerImp.loadGameMenu(player, user.getLanguage());

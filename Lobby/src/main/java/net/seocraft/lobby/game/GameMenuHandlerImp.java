@@ -1,14 +1,14 @@
 package net.seocraft.lobby.game;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.game.gamemode.model.Gamemode;
-import net.seocraft.api.bukkit.game.gamemode.GamemodeHandler;
-import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.commons.bukkit.util.InventoryUtils;
-import net.seocraft.commons.bukkit.util.LoreDisplayArray;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.commons.bukkit.old.util.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.old.util.InventoryUtils;
+import net.seocraft.commons.bukkit.old.util.LoreDisplayArray;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class GameMenuHandlerImp implements GameMenuHandler {
 
-    @Inject private GamemodeHandler gamemodeHandler;
+    @Inject private GamemodeProvider gamemodeHandler;
     @Inject private TranslatableField translatableField;
 
     @Override

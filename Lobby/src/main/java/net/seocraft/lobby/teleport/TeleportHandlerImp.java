@@ -2,19 +2,19 @@ package net.seocraft.lobby.teleport;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
-import net.seocraft.api.bukkit.user.UserChat;
-import net.seocraft.api.bukkit.user.UserStoreHandler;
-import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.http.exceptions.BadRequest;
-import net.seocraft.api.shared.http.exceptions.InternalServerError;
-import net.seocraft.api.shared.http.exceptions.NotFound;
-import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.session.GameSession;
-import net.seocraft.api.shared.session.SessionHandler;
-import net.seocraft.api.shared.user.model.User;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.session.GameSession;
+import net.seocraft.api.core.user.User;
+import net.seocraft.commons.bukkit.old.util.ChatAlertLibrary;
+import net.seocraft.commons.core.translation.TranslatableField;
 import net.seocraft.lobby.Lobby;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,18 +26,18 @@ public class TeleportHandlerImp implements TeleportHandler {
 
 
     @Inject private TranslatableField translatableField;
-    @Inject private UserStoreHandler userStoreHandler;
-    @Inject private UserChat userChatHandler;
-    @Inject private SessionHandler sessionHandler;
+    @Inject private UserStorageProvider userStorageProvider;
+    @Inject private UserFormatter userFormatter;
+    @Inject private GameSessionManager gameSessionManager;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private Lobby instance;
 
     @Override
     public void spawnTeleport(@NotNull Player player, @Nullable OfflinePlayer offlineTarget, boolean silent) {
 
-        GameSession playerSession = this.sessionHandler.getCachedSession(player.getName());
+        GameSession playerSession = this.gameSessionManager.getCachedSession(player.getName());
 
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -90,7 +90,7 @@ public class TeleportHandlerImp implements TeleportHandler {
 
                 Player target = Bukkit.getPlayer(offlineTarget.getName());
 
-                CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), targetAsyncResponse -> {
+                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                     if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User targetRecord = targetAsyncResponse.getResponse();
                         target.teleport(spawnLocation);
@@ -101,7 +101,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                                         "commons_lobby_spawn_teleport_other"
                                 ) + ".".replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 targetRecord,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         ) + ChatColor.AQUA
@@ -125,9 +125,9 @@ public class TeleportHandlerImp implements TeleportHandler {
 
     @Override
     public void playerTeleport(@NotNull Player sender, @Nullable Player target, boolean silent) {
-        GameSession playerSession = this.sessionHandler.getCachedSession(sender.getName());
+        GameSession playerSession = this.gameSessionManager.getCachedSession(sender.getName());
 
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -137,7 +137,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                     return;
                 }
 
-                CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), targetAsyncResponse -> {
+                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                     if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User targetRecord = targetAsyncResponse.getResponse();
 
@@ -149,7 +149,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                                         "commons_lobby_teleport_success"
                                 ).replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 targetRecord,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         ) + ChatColor.AQUA
@@ -163,7 +163,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                                         "commons_lobby_teleport_target"
                                 ).replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 user,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         ) + ChatColor.AQUA
@@ -188,9 +188,9 @@ public class TeleportHandlerImp implements TeleportHandler {
 
     @Override
     public void playerTeleportOwn(@NotNull Player sender, @Nullable Player target, boolean silent) {
-        GameSession playerSession = this.sessionHandler.getCachedSession(sender.getName());
+        GameSession playerSession = this.gameSessionManager.getCachedSession(sender.getName());
 
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -200,7 +200,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                     return;
                 }
 
-                CallbackWrapper.addCallback(this.userStoreHandler.findUserByName(target.getName()), targetAsyncResponse -> {
+                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                     if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User targetRecord = targetAsyncResponse.getResponse();
 
@@ -212,7 +212,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                                         "commons_lobby_teleport_own_success"
                                 ).replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 targetRecord,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         ) + ChatColor.AQUA
@@ -226,7 +226,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                                         "commons_lobby_teleport_own_target"
                                 ).replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 user,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         ) + ChatColor.AQUA
@@ -251,9 +251,9 @@ public class TeleportHandlerImp implements TeleportHandler {
 
     @Override
     public void playerTeleportAll(@NotNull Player player, boolean silent) {
-        GameSession playerSession = this.sessionHandler.getCachedSession(player.getName());
+        GameSession playerSession = this.gameSessionManager.getCachedSession(player.getName());
 
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -266,9 +266,9 @@ public class TeleportHandlerImp implements TeleportHandler {
                 );
 
                 Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                    GameSession session = this.sessionHandler.getCachedSession(player.getName());
+                    GameSession session = this.gameSessionManager.getCachedSession(player.getName());
                     try {
-                        User playerRecord = this.userStoreHandler.getCachedUserSync(session.getPlayerId());
+                        User playerRecord = this.userStorageProvider.getCachedUserSync(session.getPlayerId());
                         onlinePlayer.teleport(player);
 
                         if (!silent) ChatAlertLibrary.infoAlert(
@@ -278,7 +278,7 @@ public class TeleportHandlerImp implements TeleportHandler {
                                         "commons_lobby_teleport_all_target"
                                 ).replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 user,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         )

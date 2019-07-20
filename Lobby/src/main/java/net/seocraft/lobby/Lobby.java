@@ -5,15 +5,14 @@ import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.BukkitAPI;
-import net.seocraft.api.bukkit.server.model.ServerType;
-import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
+import net.seocraft.api.core.server.ServerType;
 import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.lobby.hiding.HidingGadgetHandler;
 import net.seocraft.lobby.hiding.HidingGadgetHandlerImp;
 import net.seocraft.lobby.listener.*;
-import net.seocraft.api.shared.cooldown.CooldownManager;
-import net.seocraft.api.shared.cooldown.CooldownManagerImp;
+import net.seocraft.api.core.cooldown.CooldownManager;
+import net.seocraft.commons.core.cooldown.CoreCooldownManager;
 import net.seocraft.lobby.teleport.TeleportHandler;
 import net.seocraft.lobby.teleport.TeleportHandlerImp;
 import org.bukkit.Bukkit;
@@ -62,7 +61,7 @@ public class Lobby extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(HidingGadgetHandler.class).to(HidingGadgetHandlerImp.class);
-        binder.bind(CooldownManager.class).to(CooldownManagerImp.class);
+        binder.bind(CooldownManager.class).to(CoreCooldownManager.class);
         binder.bind(TeleportHandler.class).to(TeleportHandlerImp.class);
         binder.bind(Lobby.class).toInstance(this);
     }

@@ -15,8 +15,9 @@
     <name>API Parent</name>
 
     <modules>
-        <module>shared</module>
+        <module>core</module>
         <module>bukkit</module>
         <module>bungee</module>
     </modules>
+
 </project>
