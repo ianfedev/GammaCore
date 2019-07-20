@@ -2,8 +2,6 @@ package net.seocraft.api.shared;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import net.seocraft.api.shared.online.OnlinePlayersApi;
