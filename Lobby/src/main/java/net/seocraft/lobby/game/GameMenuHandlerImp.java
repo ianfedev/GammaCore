@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.commons.bukkit.old.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.old.util.InventoryUtils;
 import net.seocraft.commons.bukkit.old.util.LoreDisplayArray;

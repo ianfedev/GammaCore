@@ -7,9 +7,9 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.game.match.Match;
-import net.seocraft.commons.bukkit.server.ServerTokenQuery;
+import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -36,7 +36,7 @@ public class IPunishmentHandler implements PunishmentHandler {
     @Inject private PunishmentGetLastRequest punishmentGetLastRequest;
     @Inject private PunishmentListRequest punishmentListRequest;
     @Inject private PunishmentUpdateRequest punishmentUpdateRequest;
-    @Inject private ServerTokenQuery serverTokenQuery;
+    @Inject private BukkitTokenQuery serverTokenQuery;
 
     @Inject IPunishmentHandler(ListeningExecutorService executorService, Messager messager, Gson gson) {
         this.executorService = executorService;

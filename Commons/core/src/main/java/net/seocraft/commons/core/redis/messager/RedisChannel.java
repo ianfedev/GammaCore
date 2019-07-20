@@ -2,10 +2,9 @@ package net.seocraft.commons.core.redis.messager;
 
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
-import lombok.Getter;
-import net.seocraft.api.core.redis.RedissonChannelWrapper;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.ChannelListener;
+import net.seocraft.commons.core.redis.RedissonChannelWrapper;
 import org.redisson.api.RTopic;
 import org.redisson.api.RedissonClient;
 
@@ -15,15 +14,10 @@ import java.util.concurrent.ExecutorService;
 
 public class RedisChannel<T> implements Channel<T> {
 
-    @Getter
     private String name;
-    @Getter
     private TypeToken<T> type;
-
     private TypeToken<ObjectWrapper<T>> wrappedType;
-
     private Queue<RedissonChannelWrapper<T>> registeredListeners;
-
     private RedissonClient redisson;
     private ExecutorService executorService;
 
@@ -42,6 +36,13 @@ public class RedisChannel<T> implements Channel<T> {
         .where(new TypeParameter<T>() {}, type);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public TypeToken<T> getType() {
+        return type;
+    }
 
     @Override
     public void registerListener(ChannelListener<T> listener) {

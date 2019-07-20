@@ -1,28 +1,29 @@
 package net.seocraft.commons.core.redis.messager;
 
 import com.google.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 @Singleton
-class RedisClientConfiguration {
+public class RedisClientConfiguration {
 
-    private static final String ADDRESS = "51.38.191.118";
-    private static final Integer PORT = 6379;
-    private static final Integer DATABASE = 0;
-    private static final String PASSWORD = "";
+    @NotNull private static final String ADDRESS = "51.38.191.118";
+    private static final int PORT = 6379;
+    private static final int DATABASE = 0;
+    @NotNull private static final String PASSWORD = "";
 
-    String getAddress() {
+    public @NotNull String getAddress() {
         return ADDRESS;
     }
 
-    Integer getPort() {
+    public int getPort() {
         return PORT;
     }
 
-    Integer getDatabase() {
+    public int getDatabase() {
         return DATABASE;
     }
 
-    String getPassword() {
+    public @NotNull String getPassword() {
         return PASSWORD;
     }
 }

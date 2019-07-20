@@ -9,7 +9,7 @@ import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.commons.core.backend.gamemode.GamemodeGetRequest;
 import net.seocraft.commons.core.backend.gamemode.GamemodeListRequest;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;

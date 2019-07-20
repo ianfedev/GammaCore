@@ -6,11 +6,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.seocraft.commons.bukkit.server.ServerTokenQuery;
+import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.core.backend.friend.*;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -40,7 +40,7 @@ public class FriendshipHandlerImpl implements FriendshipHandler {
     @Inject private FriendDeleteRequest friendDeleteRequest;
     @Inject private FriendClearRequest friendClearRequest;
     @Inject private UserStorageProvider userStorageProvider;
-    @Inject private ServerTokenQuery serverTokenQuery;
+    @Inject private BukkitTokenQuery serverTokenQuery;
 
     @Inject FriendshipHandlerImpl(ListeningExecutorService executorService, Messager messager, Gson gson) {
         this.executorService = executorService;

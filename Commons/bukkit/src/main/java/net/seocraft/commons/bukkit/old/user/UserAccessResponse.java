@@ -8,7 +8,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserFormatter;
-import net.seocraft.commons.bukkit.server.ServerTokenQuery;
+import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -51,7 +51,7 @@ public class UserAccessResponse implements Listener {
     @Inject private UserFormatter userFormatter;
     @Inject private UserAccessRequest request;
     @Inject private OnlineStatusManager onlineStatusManager;
-    @Inject private ServerTokenQuery tokenHandler;
+    @Inject private BukkitTokenQuery tokenHandler;
     @Inject private PunishmentActions punishmentActions;
     @Inject private TranslatableField translator;
     private static Field playerField;

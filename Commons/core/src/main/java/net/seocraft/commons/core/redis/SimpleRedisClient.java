@@ -2,7 +2,7 @@ package net.seocraft.commons.core.redis;
 
 import com.google.inject.Inject;
 import net.seocraft.api.core.redis.RedisClient;
-import net.seocraft.api.core.redis.messager.RedisClientConfiguration;
+import net.seocraft.commons.core.redis.messager.RedisClientConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -17,7 +17,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class SimpleRedisClient implements IRedisClient, RedisClient {
+public class SimpleRedisClient implements RedisClient {
 
     private final RedisClientConfiguration config;
     private RedissonClient pool;

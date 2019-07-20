@@ -2,7 +2,7 @@ package net.seocraft.commons.bukkit.old.friend;
 
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.redis.messager.ChannelListener;
 
 public class FriendshipListener implements ChannelListener<Friendship> {

@@ -3,11 +3,11 @@ package net.seocraft.commons.bukkit.old.command;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
-import net.seocraft.commons.bukkit.server.ServerTokenQuery;
+import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -28,7 +28,7 @@ import java.util.logging.Level;
 public class RegisterCommand extends AbstractAdvancedCommand {
 
     @Inject private CommonsBukkit instance;
-    @Inject private ServerTokenQuery tokenQuery;
+    @Inject private BukkitTokenQuery tokenQuery;
     @Inject private TranslatableField translator;
     @Inject private UserRegisterRequest userRegisterRequest;
     @Inject private GameSessionManager gameSessionManager;

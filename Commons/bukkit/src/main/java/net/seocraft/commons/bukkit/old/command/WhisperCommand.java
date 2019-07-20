@@ -5,7 +5,7 @@ import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.JoinedString;
 import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.commons.core.backend.http.AsyncResponse;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.ChannelListener;
 import net.seocraft.api.core.redis.messager.Messager;

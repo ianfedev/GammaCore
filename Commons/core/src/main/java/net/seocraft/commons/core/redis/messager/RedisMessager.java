@@ -3,6 +3,7 @@ package net.seocraft.commons.core.redis.messager;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
 
@@ -20,12 +21,12 @@ public class RedisMessager implements Messager {
     private Map<String, TypeToken> registeredTypes;
     private Map<String, Channel> registeredChannels;
 
-    private IRedisClient redisClient;
+    private RedisClient redisClient;
 
     private ExecutorService executorService;
 
     @Inject
-    RedisMessager(IRedisClient client, ExecutorService executorService) {
+    RedisMessager(RedisClient client, ExecutorService executorService) {
         this.lock = new ReentrantLock();
 
         registeredChannels = new HashMap<>();
