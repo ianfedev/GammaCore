@@ -47,7 +47,7 @@ public class RedissonJacksonCodec extends BaseCodec {
             ByteBuf out = ByteBufAllocator.DEFAULT.buffer();
             try {
                 ByteBufOutputStream os = new ByteBufOutputStream(out);
-                mapObjectMapper.writeValue(os, in);
+                mapObjectMapper.writeValue((OutputStream) os, in);
                 return os.buffer();
             } catch (IOException e) {
                 out.release();
@@ -57,7 +57,7 @@ public class RedissonJacksonCodec extends BaseCodec {
                 throw new IOException(e);
             }
         };
-        this.decoder = (buf, state) -> mapObjectMapper.readValue(new ByteBufInputStream(buf), Object.class);
+        this.decoder = (buf, state) -> mapObjectMapper.readValue((InputStream) new ByteBufInputStream(buf), Object.class);
         this.mapObjectMapper = mapObjectMapper.copy();
         this.init(this.mapObjectMapper, setMapperVisibility);
         this.initTypeInclusion(this.mapObjectMapper);
