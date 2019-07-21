@@ -11,9 +11,9 @@ import javax.annotation.Nullable;
  */
 public class AsyncResponse<T> {
 
-    @Nullable private Exception throwedException;
+    private Exception throwedException;
     @NotNull private Status status;
-    @Nullable private T response;
+    private T response;
 
     /**
      * Constructor of async resposne
@@ -21,7 +21,7 @@ public class AsyncResponse<T> {
      * @param status should be SUCCESS when throwedException is null or ERROR when response is null
      * @param response shouldn't be null when an exception was never whrown during the async block
      */
-    public AsyncResponse(@Nullable Exception throwedException, @NotNull Status status, @Nullable T response) {
+    public AsyncResponse(Exception throwedException, @NotNull Status status, T response) {
         this.throwedException = throwedException;
         this.status = status;
         this.response = response;
@@ -30,7 +30,7 @@ public class AsyncResponse<T> {
     /**
      * @return thrown exception when the async block fails
      */
-    @Nullable public Exception getThrowedException() {
+    public Exception getThrowedException() {
         return throwedException;
     }
 

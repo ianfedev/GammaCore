@@ -8,8 +8,8 @@ import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.session.GameSession;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
-import net.seocraft.commons.bukkit.old.util.ChatAlertLibrary;
-import net.seocraft.lobby.game.GameMenuHandlerImp;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.lobby.game.GameMenuManagerImp;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +21,7 @@ public class GameMenuListener implements Listener {
 
     @Inject private GameSessionManager gameSessionManager;
     @Inject private UserStorageProvider userStorageProvider;
-    @Inject private GameMenuHandlerImp gameMenuHandlerImp;
+    @Inject private GameMenuManagerImp gameMenuHandlerImp;
 
     @EventHandler
     public void gameMenuListener(PlayerInteractEvent event) {

@@ -26,7 +26,6 @@ import java.util.Map;
 public abstract class HttpRequest implements IHttpRequest {
 
     @Inject private QueryBuilder builder;
-    @Inject private JsonUtils json;
     private CloseableHttpClient client = HttpClients.createDefault();
 
     public Map<String, String> getHeaders() {
@@ -83,10 +82,10 @@ public abstract class HttpRequest implements IHttpRequest {
         }
         switch (http_response.getStatusLine().getStatusCode()) {
             default: break;
-            case 400: throw new BadRequest(json.errorContext(response));
-            case 403: throw new Unauthorized(json.errorContext(response));
-            case 404: throw new NotFound(json.errorContext(response));
-            case 500: throw new InternalServerError(json.errorContext(response));
+            case 400: throw new BadRequest(response);
+            case 403: throw new Unauthorized(response);
+            case 404: throw new NotFound(response);
+            case 500: throw new InternalServerError(response);
         }
         return response;
     }

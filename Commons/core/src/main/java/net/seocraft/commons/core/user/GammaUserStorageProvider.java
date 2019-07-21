@@ -88,7 +88,7 @@ public class GammaUserStorageProvider implements UserStorageProvider {
 
     @Override
     public @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError, JsonProcessingException {
-        this.userUpdateRequest.executeRequest(user, this.tokenHandler.getToken());
+        this.userUpdateRequest.executeRequest(user.id(), this.objectMapper.writeValueAsString(user), this.tokenHandler.getToken());
         cacheStoreUser(user);
         return user;
     }
