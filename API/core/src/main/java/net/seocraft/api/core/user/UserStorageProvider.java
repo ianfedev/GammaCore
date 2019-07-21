@@ -1,5 +1,6 @@
 package net.seocraft.api.core.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.storage.Model;
@@ -10,13 +11,15 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+
 public interface UserStorageProvider {
 
     /**
      * Store user at cache provider
      * @param user object which will be stored
      */
-    void cacheStoreUser(@NotNull User user);
+    void cacheStoreUser(@NotNull User user) throws JsonProcessingException;
 
     /**
      * Retrieves cached user or create cache again if invalidated
@@ -34,7 +37,7 @@ public interface UserStorageProvider {
      * @throws NotFound Thrown when the user id was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
-    @NotNull User getCachedUserSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @NotNull User getCachedUserSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     /**
      * Retrieve user data from server.
@@ -52,7 +55,7 @@ public interface UserStorageProvider {
      * @throws NotFound Thrown when the user id was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
-    @Nullable User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @Nullable User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     /**
      * Retrieve user data from server.
@@ -63,7 +66,7 @@ public interface UserStorageProvider {
      * @throws NotFound Thrown when the user id was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
-    @NotNull User findUserByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @NotNull User findUserByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     /**
      * @see Model
@@ -75,6 +78,6 @@ public interface UserStorageProvider {
      * @throws NotFound Thrown when the user id was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
-    @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError, JsonProcessingException;
 
 }

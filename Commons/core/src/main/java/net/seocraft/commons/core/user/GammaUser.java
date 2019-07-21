@@ -1,8 +1,8 @@
 package net.seocraft.commons.core.user;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.Group;
-import net.seocraft.commons.core.group.PermissionGroup;
 import net.seocraft.commons.core.utils.TimeUtils;
 import net.seocraft.api.core.user.partial.IPRecord;
 import net.seocraft.api.core.user.partial.Disguise;
@@ -10,33 +10,74 @@ import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.beans.ConstructorProperties;
 import java.util.Date;
 import java.util.List;
 
+@JsonSerialize(as = User.class)
 public class GammaUser implements User {
 
-    @SerializedName("_id") private @NotNull String id;
-    private @NotNull String username;
-    private @Nullable String email;
+    @JsonProperty("_id")
+    @NotNull private String id;
+    @NotNull private String username;
+    @Nullable private String email;
     private List<Group> groups;
     private String skin;
-    @SerializedName("last_seen") private long lastSeen;
-    @SerializedName("last_game") private @NotNull String lastGame;
-    @SerializedName("member_since") private long memberSince;
+    @JsonProperty("last_seen") 
+    private long lastSeen;
+    @JsonProperty("last_game") 
+    private @NotNull String lastGame;
+    @JsonProperty("member_since") 
+    private long memberSince;
     private boolean verified;
     private int level;
     private long experience;
-    @SerializedName("used_ips") private List<IPRecord> ipRecord;
+    @JsonProperty("used_ips") 
+    private List<IPRecord> ipRecord;
     private boolean disguised;
-    @SerializedName("disguise_actual") @Nullable private String disguiseName;
-    @SerializedName("disguise_lowercase") @Nullable private String disguiseLowercase;
-    @SerializedName("disguise_group") @Nullable private Group disguiseGroup;
-    @SerializedName("disguise_history") @Nullable private List<Disguise> disguiseHistory;
-    private @NotNull String language;
-    @SerializedName("accept_friends") private boolean acceptFriends;
-    @SerializedName("accept_parties") private boolean acceptParties;
-    @SerializedName("show_status") private boolean showStatus;
-    @SerializedName("hiding_players") private boolean hiding;
+    @JsonProperty("disguise_actual") 
+    @Nullable private String disguiseName;
+    @JsonProperty("disguise_lowercase") 
+    @Nullable private String disguiseLowercase;
+    @JsonProperty("disguise_group") 
+    @Nullable private Group disguiseGroup;
+    @JsonProperty("disguise_history") 
+    @Nullable private List<Disguise> disguiseHistory;
+    @NotNull private String language;
+    @JsonProperty("accept_friends") 
+    private boolean acceptFriends;
+    @JsonProperty("accept_parties") 
+    private boolean acceptParties;
+    @JsonProperty("show_status") 
+    private boolean showStatus;
+    @JsonProperty("hiding_players") 
+    private boolean hiding;
+
+    @ConstructorProperties({ "_id", "username", "email", "groups", "skin", "last_seen", "last_game", "member_since", "used_ips", "disguise_actual", "disguise_lowercase", "disguise_group", "disguise_history", "accept_friends", "accept_parties", "show_status", "hiding_players"})
+    public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean disguised, @Nullable String disguiseName, @Nullable String disguiseLowercase, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.groups = groups;
+        this.skin = skin;
+        this.lastSeen = lastSeen;
+        this.lastGame = lastGame;
+        this.memberSince = memberSince;
+        this.verified = verified;
+        this.level = level;
+        this.experience = experience;
+        this.ipRecord = ipRecord;
+        this.disguised = disguised;
+        this.disguiseName = disguiseName;
+        this.disguiseLowercase = disguiseLowercase;
+        this.disguiseGroup = disguiseGroup;
+        this.disguiseHistory = disguiseHistory;
+        this.language = language;
+        this.acceptFriends = acceptFriends;
+        this.acceptParties = acceptParties;
+        this.showStatus = showStatus;
+        this.hiding = hiding;
+    }
 
     public String id() {
         return this.id;
@@ -64,11 +105,14 @@ public class GammaUser implements User {
 
     @Override
     public @NotNull Group getPrimaryGroup() {
-        Group primaryGroup = new PermissionGroup();
-        primaryGroup.setPriority(999999999); // Change priority if needed deeper groups
+        Group primaryGroup = null;
         for (Group group: getGroups()) {
-            if (group.getPriority() < primaryGroup.getPriority()) primaryGroup = group;
+            if (
+                    (primaryGroup != null && group.getPriority() < primaryGroup.getPriority()) ||
+                    (group.getPriority() < 99999999)
+            ) primaryGroup = group;
         }
+        if (primaryGroup == null) primaryGroup = getGroups().get(0);
         return primaryGroup;
     }
 

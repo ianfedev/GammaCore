@@ -1,6 +1,7 @@
 package net.seocraft.commons.core.session;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.session.GameSession;
@@ -9,23 +10,28 @@ import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+
 public class CraftSessionManager implements GameSessionManager {
 
     @Inject private RedisClient client;
-    @Inject private Gson gson;
+    @Inject private ObjectMapper mapper;
 
     @Override
-    public void createGameSession(@NotNull User user, String address, String version) {
+    public void createGameSession(@NotNull User user, String address, String version) throws JsonProcessingException {
         if (!this.client.existsKey("session:" + user.getUsername().toLowerCase())) {
             this.client.setString("session:" + user.getUsername().toLowerCase(),
-                    this.gson.toJson(new CraftSession(user.id(), address, version))
+                    this.mapper.writeValueAsString(new CraftSession(user.id(), address, version))
             );
         }
     }
 
     @Override
-    public @Nullable GameSession getCachedSession(@NotNull String username) {
-        return this.gson.fromJson(this.client.getString("session:" + username.toLowerCase()), CraftSession.class);
+    public @Nullable GameSession getCachedSession(@NotNull String username) throws IOException {
+        return this.mapper.readValue(
+                this.client.getString("session:" + username.toLowerCase()),
+                GameSession.class
+        );
     }
 
     @Override

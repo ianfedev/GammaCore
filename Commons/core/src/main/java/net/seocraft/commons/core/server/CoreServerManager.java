@@ -1,38 +1,42 @@
 package net.seocraft.commons.core.server;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject
 import com.google.inject.Inject;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.redis.RedisClient;
+import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerTokenQuery;
+import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.core.backend.server.*;
 import net.seocraft.api.core.server.ServerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 public class CoreServerManager implements ServerManager {
 
     @Inject private ServerConnectRequest serverConnectRequest;
-    @Inject private Gson gson;
+    @Inject private ObjectMapper mapper;
     @Inject private ListeningExecutorService executorService;
     @Inject private ServerTokenQuery serverTokenQuery;
-    @Inject private BukkitAPI bukkitAPI;
     @Inject private ServerGetRequest serverGetRequest;
-    @Inject private ServerDisconnectRequest serverDisconnectRequest;
     @Inject private ServerUpdateRequest serverUpdateRequest;
     @Inject private ServerGetQueryRequest serverGetQueryRequest;
     @Inject private RedisClient redisClient;
-    @Inject private JsonUtils parser;
 
     @Override
-    public @NotNull Server loadServer(@NotNull String slug, @NotNull ServerType serverType, @Nullable Gamemode gamemode, @Nullable SubGamemode subGamemode, int maxRunning, int maxTotal, @NotNull String cluster) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @NotNull Server loadServer(@NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, @NotNull String cluster) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
 
         Server preServer;
         if (gamemode != null && subGamemode != null && serverType == ServerType.GAME) {
@@ -40,8 +44,8 @@ public class CoreServerManager implements ServerManager {
                     UUID.randomUUID().toString(),
                     slug,
                     serverType,
-                    gamemode.id(),
-                    subGamemode.id(),
+                    gamemode,
+                    subGamemode,
                     maxRunning,
                     maxTotal,
                     0,
@@ -65,27 +69,21 @@ public class CoreServerManager implements ServerManager {
             );
         }
 
-        String serializedServer = this.gson.toJson(preServer, Server.class);
+        String serializedServer = this.mapper.writeValueAsString(preServer);
 
-        String rawResponse = this.serverConnectRequest.executeRequest(
-            serializedServer
-        );
+        JsonNode response = this.mapper.readTree(this.serverConnectRequest.executeRequest(
+                serializedServer
+        ));
 
-        Server responseServer = this.gson.fromJson(
-                this.parser.parseJson(
-                        rawResponse,
-                        "server"
-                ).toString(),
+        Server responseServer = this.mapper.readValue(
+                response.get("server").asText(),
                 Server.class
         );
 
         this.redisClient.setHash(
                 "authorization",
                 responseServer.id(),
-                this.parser.parseJson(
-                        rawResponse,
-                        "token"
-                ).getAsString()
+                response.get("token").asText()
         );
         return responseServer;
     }
@@ -102,31 +100,31 @@ public class CoreServerManager implements ServerManager {
     }
 
     @Override
-    public @Nullable Server getServerSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @Nullable Server getServerSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String rawResponse = this.serverGetRequest.executeRequest(
                 id,
                 this.serverTokenQuery.getToken()
         );
 
-        return this.gson.fromJson(
+        return this.mapper.readValue(
                 rawResponse,
                 Server.class
         );
     }
 
     @Override
-    public @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String rawResponse = this.serverUpdateRequest.executeRequest(
                 server.id(),
-                this.gson.toJson(server, Server.class),
+                this.mapper.writeValueAsString(server),
                 this.serverTokenQuery.getToken()
         );
 
-        return this.gson.fromJson(rawResponse, Server.class);
+        return this.mapper.readValue(rawResponse, Server.class);
     }
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<List<Server>>> getServerByQuery(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) {
+    public @NotNull ListenableFuture<AsyncResponse<Set<Server>>> getServerByQuery(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) {
         return this.executorService.submit(() -> {
             try {
                 return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getServerByQuerySync(id, match, gamemode, subGamemode));
@@ -137,32 +135,22 @@ public class CoreServerManager implements ServerManager {
     }
 
     @Override
-    public @NotNull List<Server> getServerByQuerySync(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        JsonObject object = new JsonObject();
-        if (id != null) object.addProperty("_id", id);
-        if (match != null) object.addProperty("matches", match);
+    public @NotNull Set<Server> getServerByQuerySync(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
+        ObjectNode node = mapper.createObjectNode();
+        if (id != null) node.put("_id",  id);
+        if (match != null) node.put("matches", match);
         if (gamemode != null) {
-            object.addProperty("gamemode", gamemode);
+            node.put("gamemode", gamemode);
             if (subGamemode == null) throw new IllegalArgumentException("You can not send a gamemode without sub-gamemode.");
-            object.addProperty("sub_gamemode", subGamemode);
+            node.put("sub_gamemode", subGamemode);
         }
         if (id == null && match == null && gamemode == null) throw new IllegalArgumentException("No query specified.");
 
         String rawResponse = this.serverGetQueryRequest.executeRequest(
-                object.toString(),
+                mapper.writeValueAsString(node),
                 this.serverTokenQuery.getToken()
         );
 
-        return this.gson.fromJson(
-                rawResponse,
-                new TypeToken<List<Server>>(){}.getType()
-        );
-    }
-
-    @Override
-    public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        String token = this.serverTokenQuery.getToken();
-        this.redisClient.deleteHash("authorization", this.bukkitAPI.getServerRecord().id());
-        this.serverDisconnectRequest.executeRequest(token);
+        return this.mapper.readValue(rawResponse, new TypeReference<Set<Server>>(){});
     }
 }

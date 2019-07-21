@@ -1,7 +1,5 @@
 package net.seocraft.commons.core.backend.user;
 
-import com.google.gson.JsonObject;
-import com.google.inject.Inject;
 import net.seocraft.commons.core.backend.http.HttpRequest;
 import net.seocraft.commons.core.backend.http.HttpType;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -15,7 +13,6 @@ import java.util.Map;
 public class UserAccessRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
-    @Inject private JsonUtils parser;
     private String body;
 
     @Override
@@ -36,8 +33,8 @@ public class UserAccessRequest extends HttpRequest {
         return body;
     }
 
-    public String executeRequest(JsonObject request, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.body = this.parser.encode(request);
+    public String executeRequest(String request, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.body = request;
         this.headers.put("authorization", token);
         return getResponse();
     }

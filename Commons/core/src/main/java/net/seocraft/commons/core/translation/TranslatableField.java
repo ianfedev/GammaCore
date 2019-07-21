@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class TranslatableField {
 
-    @Inject Yaml parser;
+    @Inject private Yaml parser;
 
     public String getUnspacedField(String language, String field) {
         InputStream inputStream = this.getClass()

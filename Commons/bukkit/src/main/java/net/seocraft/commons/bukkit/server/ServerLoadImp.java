@@ -81,6 +81,8 @@ public class ServerLoadImp implements ServerLoad {
     }
 
     public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.serverManager.disconnectServer();
+        String token = this.serverTokenQuery.getToken();
+        this.redisClient.deleteHash("authorization", this.bukkitAPI.getServerRecord().id());
+        this.serverDisconnectRequest.executeRequest(token);
     }
 }

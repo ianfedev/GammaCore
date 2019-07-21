@@ -3,16 +3,13 @@ package net.seocraft.api.bukkit.game.map;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
-import net.seocraft.api.bukkit.old.game.map.model.GameMapImp;
 import net.seocraft.api.bukkit.game.map.partial.Rating;
 import net.seocraft.api.core.storage.Model;
-import net.seocraft.api.core.old.serialization.model.ImplementedBy;
 import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
-@ImplementedBy(GameMapImp.class)
 public interface GameMap extends Model {
 
     /**

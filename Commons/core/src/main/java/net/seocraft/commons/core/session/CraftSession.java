@@ -1,10 +1,12 @@
 package net.seocraft.commons.core.session;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.session.GameSession;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
+@JsonSerialize(as = GameSession.class)
 public class CraftSession implements GameSession {
 
     @NotNull private String playerId;

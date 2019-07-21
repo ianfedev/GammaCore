@@ -1,6 +1,9 @@
 package net.seocraft.commons.core.server;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.server.Server;
+import net.seocraft.api.core.server.ServerType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,16 +11,24 @@ import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonSerialize(as = Server.class)
 public class CoreServer implements Server {
 
+    @JsonProperty("_id")
     @NotNull private String id;
     @NotNull private String slug;
+    @JsonProperty("type")
     @NotNull private ServerType serverType;
     @Nullable private String gamemode;
+    @JsonProperty("sub_gamemode")
     @Nullable private String subGamemode;
+    @JsonProperty("max_running")
     private int maxRunning;
+    @JsonProperty("max_total")
     private int maxTotal;
+    @JsonProperty("started_at")
     private long startedAt;
+    @JsonProperty("players")
     @NotNull private List<String> onlinePlayers;
     @NotNull private String cluster;
     @NotNull private List<String> matches;

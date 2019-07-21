@@ -1,5 +1,8 @@
 package net.seocraft.api.core.server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.util.concurrent.ListenableFuture;
+import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -7,7 +10,8 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Set;
 
 public interface ServerManager {
 
@@ -19,27 +23,25 @@ public interface ServerManager {
             int maxRunning,
             int maxTotal,
             @NotNull String cluster
-    ) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    ) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     @NotNull ListenableFuture<AsyncResponse<Server>> getServer(@NotNull String id);
 
-    @Nullable Server getServerSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @Nullable Server getServerSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
-    @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
-    @NotNull ListenableFuture<AsyncResponse<List<Server>>> getServerByQuery(
+    @NotNull ListenableFuture<AsyncResponse<Set<Server>>> getServerByQuery(
             @Nullable String id,
             @Nullable String match,
             @Nullable String gamemode,
             @Nullable String subgamemode
     );
 
-    @NotNull List<Server> getServerByQuerySync(
+    @NotNull Set<Server> getServerByQuerySync(
             @Nullable String id,
             @Nullable String match,
             @Nullable String gamemode,
             @Nullable String subgamemode
-    ) throws Unauthorized, IllegalStateException, BadRequest, NotFound, InternalServerError;
-
-    void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    ) throws Unauthorized, IllegalStateException, BadRequest, NotFound, InternalServerError, IOException;
 }

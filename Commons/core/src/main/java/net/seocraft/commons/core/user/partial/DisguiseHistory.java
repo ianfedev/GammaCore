@@ -1,15 +1,22 @@
 package net.seocraft.commons.core.user.partial;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.user.partial.Disguise;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
+
+@JsonSerialize(as = Disguise.class)
 public class DisguiseHistory implements Disguise {
 
     @NotNull private String nickname;
     @NotNull private Group group;
+    @JsonProperty("created_at")
     @NotNull private String createdAt;
 
+    @ConstructorProperties({"nickname", "group", "created_at"})
     public DisguiseHistory(@NotNull String nickname, @NotNull Group group, @NotNull String createdAt) {
         this.nickname = nickname;
         this.group = group;

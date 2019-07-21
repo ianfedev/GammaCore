@@ -14,7 +14,13 @@
     <dependencies>
         <dependency>
             <groupId>net.seocraft</groupId>
-            <artifactId>api-shared</artifactId>
+            <artifactId>api-bukkit</artifactId>
+            <version>1.8.8-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.seocraft</groupId>
+            <artifactId>api-bungee</artifactId>
             <version>1.8.8-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>

@@ -1,24 +1,28 @@
 package net.seocraft.commons.core.group;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.group.partial.Flair;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
 import java.util.Set;
 
+@JsonSerialize(as = Group.class)
 public class PermissionGroup implements Group {
 
-    @SerializedName("_id")
+    @JsonProperty("_id")
     @NotNull private String id;
     @NotNull private String name;
     private int priority;
-    @SerializedName("minecraft_flair")
+    @JsonProperty("minecraft_flair")
     @NotNull private Set<Flair> flairs;
-    @SerializedName("minecraft_permissions")
+    @JsonProperty("minecraft_permissions")
     @NotNull private Set<String> permissions;
     private boolean staff;
 
+    @ConstructorProperties({"_id", "name", "priority", "minecraft_flair", "minecraft_permissions", "staff"})
     public PermissionGroup(@NotNull String id, @NotNull String name, int priority, @NotNull Set<Flair> flairs, @NotNull Set<String> permissions, boolean staff) {
         this.id = id;
         this.name = name;
