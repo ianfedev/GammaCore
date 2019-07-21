@@ -2,6 +2,7 @@ package net.seocraft.commons.core.redis;
 
 import com.google.inject.Inject;
 import net.seocraft.api.core.redis.RedisClient;
+import net.seocraft.api.core.redis.RedissonJacksonCodec;
 import net.seocraft.commons.core.redis.messager.RedisClientConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.redisson.Redisson;
