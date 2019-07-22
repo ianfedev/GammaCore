@@ -1,10 +1,10 @@
 package net.seocraft.commons.core.user;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
+import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.core.user.UserStorageProvider;
 
-public class UserModule extends AbstractModule {
+public class UserModule extends ProtectedModule {
 
     @Override
     protected void configure() {

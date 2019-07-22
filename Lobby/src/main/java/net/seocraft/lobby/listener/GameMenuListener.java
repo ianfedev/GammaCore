@@ -17,6 +17,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 public class GameMenuListener implements Listener {
 
     @Inject private GameSessionManager gameSessionManager;
@@ -34,20 +36,26 @@ public class GameMenuListener implements Listener {
                             NBTTagHandler.getString(clickedItem, "accessor").equalsIgnoreCase("game_menu")
                     )
             ) {
-                GameSession session = this.gameSessionManager.getCachedSession(player.getName());
-                if (session != null) {
-                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(session.getPlayerId()), userAsyncResponse -> {
-                        if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                            User user = userAsyncResponse.getResponse();
-                            this.gameMenuHandlerImp.loadGameMenu(player, user.getLanguage());
-                            event.setCancelled(true);
-                        } else {
-                            ChatAlertLibrary.errorChatAlert(player, null);
-                        }
-                    });
-                } else {
-                    ChatAlertLibrary.errorChatAlert(player, null);
+                GameSession session = null;
+                try {
+                    session = this.gameSessionManager.getCachedSession(player.getName());
+                    if (session != null) {
+                        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(session.getPlayerId()), userAsyncResponse -> {
+                            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                User user = userAsyncResponse.getResponse();
+                                this.gameMenuHandlerImp.loadGameMenu(player, user.getLanguage());
+                                event.setCancelled(true);
+                            } else {
+                                ChatAlertLibrary.errorChatAlert(player, null);
+                            }
+                        });
+                    } else {
+                        ChatAlertLibrary.errorChatAlert(player);
+                    }
+                } catch (IOException e) {
+                    ChatAlertLibrary.errorChatAlert(player);
                 }
+
             }
         }
     }

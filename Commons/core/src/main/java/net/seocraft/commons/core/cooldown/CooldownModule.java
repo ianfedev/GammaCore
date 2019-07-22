@@ -1,9 +1,9 @@
 package net.seocraft.commons.core.cooldown;
 
-import com.google.inject.AbstractModule;
+import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.core.cooldown.CooldownManager;
 
-public class CooldownModule extends AbstractModule {
+public class CooldownModule extends ProtectedModule {
 
     @Override
     protected void configure() {

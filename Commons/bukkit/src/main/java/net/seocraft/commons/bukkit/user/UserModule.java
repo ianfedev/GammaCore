@@ -1,12 +1,13 @@
 package net.seocraft.commons.bukkit.user;
 
-import com.google.inject.AbstractModule;
+import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.bukkit.user.UserFormatter;
 
-public class UserModule extends AbstractModule {
+public class UserModule extends ProtectedModule {
 
     @Override
     protected void configure() {
+        install(new net.seocraft.commons.core.user.UserModule());
         bind(UserFormatter.class).to(GammaUserFormatter.class);
     }
 

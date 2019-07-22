@@ -6,6 +6,7 @@ import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -24,6 +25,7 @@ import net.seocraft.commons.bukkit.punishment.PunishmentModule;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
 import net.seocraft.commons.bukkit.user.UserModule;
+import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
 import net.seocraft.commons.core.server.ServerModule;
 import org.bukkit.Bukkit;
@@ -92,6 +94,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
+        binder.bind(WhisperManager.class).to(CraftWhisperManager.class);
         binder.install(new CoreModule());
         binder.install(new GameModule());
         binder.install(new PunishmentModule());

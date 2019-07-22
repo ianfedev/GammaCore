@@ -1,6 +1,6 @@
 package net.seocraft.commons.core;
 
-import com.google.inject.AbstractModule;
+import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.commons.core.cooldown.CooldownModule;
 import net.seocraft.commons.core.online.OnlineStatusModule;
 import net.seocraft.commons.core.redis.RedisModule;
@@ -8,7 +8,7 @@ import net.seocraft.commons.core.server.ServerModule;
 import net.seocraft.commons.core.session.SessionModule;
 import net.seocraft.commons.core.user.UserModule;
 
-public class CoreModule extends AbstractModule {
+public class CoreModule extends ProtectedModule {
 
     @Override
     protected void configure() {
