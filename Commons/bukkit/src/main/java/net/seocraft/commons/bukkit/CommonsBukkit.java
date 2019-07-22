@@ -92,8 +92,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
-        binder.publicBinder().install(new CoreModule());
+        binder.install(new CoreModule());
         binder.install(new GameModule());
         binder.install(new PunishmentModule());
         binder.install(new ServerModule());
