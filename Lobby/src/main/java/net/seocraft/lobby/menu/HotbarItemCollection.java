@@ -1,10 +1,10 @@
 package net.seocraft.lobby.menu;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import net.seocraft.api.shared.user.model.User;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
+import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.util.LoreDisplayArray;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import static net.seocraft.api.bukkit.minecraft.NBTTagHandler.addString;
+import static net.seocraft.commons.bukkit.minecraft.NBTTagHandler.addString;
 
 public class HotbarItemCollection {
 

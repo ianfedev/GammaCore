@@ -1,6 +1,6 @@
 package net.seocraft.commons.bukkit.authentication;
 
-import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.HeadLibrary;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;

@@ -1,27 +1,27 @@
 package net.seocraft.commons.bukkit.punishment;
 
-import net.seocraft.api.bukkit.user.UserStoreHandler;
-import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.redis.ChannelListener;
-import net.seocraft.api.shared.user.model.User;
-import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.api.bukkit.punishment.Punishment;
+import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.api.core.concurrent.AsyncResponse;
+import net.seocraft.api.core.redis.messager.ChannelListener;
+import net.seocraft.api.core.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PunishmentListener implements ChannelListener<Punishment> {
 
-    private UserStoreHandler userStoreHandler;
+    private UserStorageProvider userStorageProvider;
     private PunishmentActions punishmentActions;
 
-    PunishmentListener( UserStoreHandler userStoreHandler, PunishmentActions punishmentActions) {
-        this.userStoreHandler = userStoreHandler;
+    PunishmentListener(UserStorageProvider userStorageProvider, PunishmentActions punishmentActions) {
+        this.userStorageProvider = userStorageProvider;
         this.punishmentActions = punishmentActions;
     }
 
     @Override
     public void receiveMessage(Punishment punishment) {
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(punishment.getPunishedId()), targetAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunishedId()), targetAsyncResponse -> {
             User targetData = targetAsyncResponse.getResponse();
             Player target = Bukkit.getPlayer(targetData.getUsername());
 

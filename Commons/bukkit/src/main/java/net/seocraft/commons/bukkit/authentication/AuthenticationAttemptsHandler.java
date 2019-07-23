@@ -2,8 +2,8 @@ package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import net.seocraft.api.shared.redis.RedisClientImpl;
-import net.seocraft.api.shared.serialization.TimeUtils;
+import net.seocraft.api.core.redis.RedisClient;
+import net.seocraft.commons.core.utils.TimeUtils;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
 
@@ -13,7 +13,7 @@ import java.util.Date;
 public class AuthenticationAttemptsHandler {
 
     @Inject private CommonsBukkit instance;
-    @Inject private RedisClientImpl client;
+    @Inject private RedisClient client;
 
     public void setAttemptLock(String uuid, String date) {
         client.setHash("authentication_locks", uuid, date);

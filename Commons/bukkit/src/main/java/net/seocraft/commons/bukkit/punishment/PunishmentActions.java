@@ -1,27 +1,31 @@
 package net.seocraft.commons.bukkit.punishment;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.minecraft.PlayerTitleHandler;
-import net.seocraft.api.shared.http.exceptions.BadRequest;
-import net.seocraft.api.shared.http.exceptions.InternalServerError;
-import net.seocraft.api.shared.http.exceptions.NotFound;
-import net.seocraft.api.shared.http.exceptions.Unauthorized;
-import net.seocraft.api.shared.serialization.TimeUtils;
-import net.seocraft.api.shared.user.model.User;
+import net.seocraft.api.bukkit.punishment.Punishment;
+import net.seocraft.api.bukkit.punishment.PunishmentProvider;
+import net.seocraft.api.bukkit.punishment.PunishmentType;
+import net.seocraft.commons.bukkit.minecraft.PlayerTitleHandler;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.commons.core.utils.TimeUtils;
+import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.Date;
 
 public class PunishmentActions {
 
     @Inject private TranslatableField translator;
     @Inject private CommonsBukkit instance;
-    @Inject private PunishmentHandler punishmentHandler;
+    @Inject private PunishmentProvider punishmentProvider;
 
     public void banPlayer(Player target, User targetData, Punishment punishment) {
         if (target == null) return;
@@ -110,7 +114,7 @@ public class PunishmentActions {
 
     public void checkBan(Player target, User targetData) throws InternalServerError {
         try {
-            Punishment lastPunishment = this.punishmentHandler.getLastPunishmentSync(PunishmentType.BAN, targetData.id());
+            Punishment lastPunishment = this.punishmentProvider.getLastPunishmentSync(PunishmentType.BAN, targetData.id());
 
             if (lastPunishment == null || lastPunishment.id() == null || !lastPunishment.isActive()) {
                 return;
@@ -120,13 +124,13 @@ public class PunishmentActions {
                 Date expireDate = TimeUtils.parseUnixStamp((int) lastPunishment.getExpiration());
                 if (expireDate.before(new Date())) {
                     lastPunishment.setActive(false);
-                    this.punishmentHandler.updatePunishmentSync(lastPunishment);
+                    this.punishmentProvider.updatePunishmentSync(lastPunishment);
                     return;
                 }
             }
 
             banPlayer(target, targetData, lastPunishment);
-        } catch (Unauthorized | BadRequest | InternalServerError | NotFound error) {
+        } catch (Unauthorized | BadRequest | InternalServerError | NotFound | IOException error) {
             throw new InternalServerError(error.getMessage());
         }
     }

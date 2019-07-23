@@ -17,6 +17,11 @@ public class ChatAlertLibrary {
         player.sendMessage(ChatColor.RED + message);
     }
 
+    public static void errorChatAlert(@NotNull Player player) {
+        player.playSound(player.getLocation(), Sound.NOTE_BASS, 1f, 1f);
+        player.sendMessage(ChatColor.RED + "Error executing the last action, please contact an administrator.");
+    }
+
     public static void infoAlert(@NotNull Player player, @NotNull String message) {
         player.playSound(player.getLocation(), Sound.NOTE_SNARE_DRUM, 1f, 1f);
         player.sendMessage(ChatColor.AQUA + message);

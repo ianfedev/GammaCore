@@ -1,17 +1,12 @@
 package net.seocraft.lobby.command;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
-import net.seocraft.api.shared.serialization.model.ModelDeserializer;
-import net.seocraft.api.shared.serialization.model.ModelSerializer;
-import net.seocraft.api.shared.session.GameSession;
-import net.seocraft.api.shared.session.SessionHandler;
-import net.seocraft.lobby.teleport.TeleportHandler;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.bukkit.lobby.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -19,15 +14,15 @@ import org.bukkit.entity.Player;
 
 public class TeleportCommand implements CommandClass {
 
-    @Inject private TeleportHandler teleportHandler;
-    @Inject private SessionHandler sessionHandler;
+    @Inject private TeleportManager teleportManager;
+    @Inject private GameSessionManager gameSessionManager;
 
     @Command(names = {"tp", "teleport", "tele"}, usage = "/<command> <target> [-s]", permission = "commons.staff.lobby.tp")
     public boolean teleportCommand(CommandSender commandSender, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             Player targetPlayer = Bukkit.getPlayer(target.getName());
-            this.teleportHandler.playerTeleport(player, targetPlayer, silent);
+            this.teleportManager.playerTeleport(player, targetPlayer, silent);
         }
         return true;
     }
@@ -37,7 +32,7 @@ public class TeleportCommand implements CommandClass {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             Player targetPlayer = Bukkit.getPlayer(target.getName());
-            this.teleportHandler.playerTeleportOwn(player, targetPlayer, silent);
+            this.teleportManager.playerTeleportOwn(player, targetPlayer, silent);
         }
         return true;
     }
@@ -46,7 +41,7 @@ public class TeleportCommand implements CommandClass {
     public boolean teleportAllCommand(CommandSender commandSender, @Parameter(value = "s", isFlag =  true) boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            this.teleportHandler.playerTeleportAll(player, silent);
+            this.teleportManager.playerTeleportAll(player, silent);
         }
         return true;
     }
@@ -56,16 +51,16 @@ public class TeleportCommand implements CommandClass {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             if (context.getArgumentsLength() == 1) {
-                this.teleportHandler.spawnTeleport(player, target, silent);
+                this.teleportManager.spawnTeleport(player, target, silent);
             } else {
-                this.teleportHandler.spawnTeleport(player, null, silent);
+                this.teleportManager.spawnTeleport(player, null, silent);
             }
         }
         return true;
     }
 
     /*public boolean testCommand() {
-        GameSession gameSession = this.sessionHandler.getCachedSession("MomlessTomato");
+        GameSession gameSession = this.gameSessionManager.getCachedSession("MomlessTomato");
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(GameSession.class, new ModelSerializer<>(GameSession.class))
                 .registerTypeAdapter(GameSession.class, new ModelDeserializer<>(GameSession.class))

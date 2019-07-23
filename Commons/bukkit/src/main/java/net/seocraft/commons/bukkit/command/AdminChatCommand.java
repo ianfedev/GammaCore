@@ -5,7 +5,7 @@ import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.basic.ArgumentArray;
 import me.fixeddev.bcm.basic.Namespace;
-import net.seocraft.api.shared.redis.Messager;
+import net.seocraft.api.core.redis.messager.Messager;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;

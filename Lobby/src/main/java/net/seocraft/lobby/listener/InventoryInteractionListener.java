@@ -1,14 +1,10 @@
 package net.seocraft.lobby.listener;
 
-import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import org.bukkit.Material;
-import org.bukkit.entity.EnderSignal;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class InventoryInteractionListener implements Listener {

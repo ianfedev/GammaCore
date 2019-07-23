@@ -1,6 +1,6 @@
 package net.seocraft.commons.bukkit.user;
 
-import net.seocraft.api.shared.user.model.User;
+import net.seocraft.api.core.user.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

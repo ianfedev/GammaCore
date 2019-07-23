@@ -5,17 +5,17 @@ import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.BukkitAPI;
-import net.seocraft.api.bukkit.server.model.ServerType;
-import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
+import net.seocraft.api.core.server.ServerType;
+import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
-import net.seocraft.lobby.hiding.HidingGadgetHandler;
-import net.seocraft.lobby.hiding.HidingGadgetHandlerImp;
+import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
+import net.seocraft.lobby.hiding.LobbyHidingGadget;
 import net.seocraft.lobby.listener.*;
-import net.seocraft.api.shared.cooldown.CooldownManager;
-import net.seocraft.api.shared.cooldown.CooldownManagerImp;
-import net.seocraft.lobby.teleport.TeleportHandler;
-import net.seocraft.lobby.teleport.TeleportHandlerImp;
+import net.seocraft.api.core.cooldown.CooldownManager;
+import net.seocraft.commons.core.cooldown.CoreCooldownManager;
+import net.seocraft.api.bukkit.lobby.TeleportManager;
+import net.seocraft.lobby.teleport.LobbyTeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,7 +23,7 @@ import java.util.logging.Level;
 
 public class Lobby extends JavaPlugin {
 
-    @Inject private BukkitAPI bukkitAPI;
+    @Inject private CommonsBukkit instance;
 
     @Inject private HidingGadgetCommand hidingGadgetCommand;
     @Inject private TeleportCommand teleportCommand;
@@ -39,7 +39,7 @@ public class Lobby extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        if (this.bukkitAPI.getServerRecord().getServerType() != ServerType.LOBBY) {
+        if (this.instance.getServerRecord().getServerType() != ServerType.LOBBY) {
             Bukkit.getLogger().log(Level.SEVERE, "[Lobby] Server type was not set to LOBBY.");
             Bukkit.shutdown();
         }
@@ -61,9 +61,8 @@ public class Lobby extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.bind(HidingGadgetHandler.class).to(HidingGadgetHandlerImp.class);
-        binder.bind(CooldownManager.class).to(CooldownManagerImp.class);
-        binder.bind(TeleportHandler.class).to(TeleportHandlerImp.class);
+        binder.bind(HidingGadgetManager.class).to(LobbyHidingGadget.class);
+        binder.bind(TeleportManager.class).to(LobbyTeleportManager.class);
         binder.bind(Lobby.class).toInstance(this);
     }
 

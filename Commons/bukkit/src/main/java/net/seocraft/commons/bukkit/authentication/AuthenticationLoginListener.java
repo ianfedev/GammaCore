@@ -1,12 +1,10 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import net.seocraft.api.bukkit.minecraft.PlayerTitleHandler;
+import net.seocraft.commons.bukkit.minecraft.PlayerTitleHandler;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.*;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class AuthenticationLoginListener {

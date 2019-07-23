@@ -1,8 +1,9 @@
 package net.seocraft.commons.bukkit.whisper;
 
 import com.google.inject.Inject;
-import net.seocraft.api.shared.redis.ChannelListener;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.api.bukkit.whisper.Whisper;
+import net.seocraft.api.core.redis.messager.ChannelListener;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

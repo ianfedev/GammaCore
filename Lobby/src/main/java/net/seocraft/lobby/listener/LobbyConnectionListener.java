@@ -1,31 +1,34 @@
 package net.seocraft.lobby.listener;
 
 import com.google.inject.Inject;
-import net.seocraft.api.shared.session.GameSession;
-import net.seocraft.api.shared.session.SessionHandler;
-import net.seocraft.api.shared.user.model.User;
-import net.seocraft.commons.bukkit.friend.FriendshipHandler;
+import net.seocraft.api.core.session.GameSession;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.User;
+import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.lobby.menu.HotbarItemCollection;
-import net.seocraft.lobby.teleport.TeleportHandler;
+import net.seocraft.api.bukkit.lobby.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.io.IOException;
+
 public class LobbyConnectionListener implements Listener {
 
     @Inject private HotbarItemCollection hotbarItemCollection;
-    @Inject private TeleportHandler teleportHandler;
-    @Inject private SessionHandler sessionHandler;
-    @Inject private FriendshipHandler friendshipHandler;
+    @Inject private TeleportManager teleportManager;
+    @Inject private GameSessionManager gameSessionManager;
+    @Inject private FriendshipProvider friendshipProvider;
 
     @EventHandler
     public void lobbyConnectionListener(LobbyConnectionEvent event) {
         Player player = event.getPlayer();
         User playerRecord = event.getPlayerRecord();
 
-        this.teleportHandler.spawnTeleport(player, null, true);
+        this.teleportManager.spawnTeleport(player, null, true);
 
         this.hotbarItemCollection.setupPlayerHotbar(
                 player,
@@ -35,14 +38,20 @@ public class LobbyConnectionListener implements Listener {
         // Detect when player has hiding gadget enabled
         if (playerRecord.isHiding()) {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
-                GameSession handler = this.sessionHandler.getCachedSession(onlinePlayer.getName());
-                if (
-                        handler != null &&
-                        !this.friendshipHandler.checkFriendshipStatus(playerRecord.id(), handler.getPlayerId()) &&
-                                !onlinePlayer.hasPermission("commons.staff.vanish")
-                ) {
-                    player.hidePlayer(onlinePlayer);
+                GameSession handler = null;
+                try {
+                    handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
+                    if (
+                            handler != null &&
+                                    !this.friendshipProvider.checkFriendshipStatus(playerRecord.id(), handler.getPlayerId()) &&
+                                    !onlinePlayer.hasPermission("commons.staff.vanish")
+                    ) {
+                        player.hidePlayer(onlinePlayer);
+                    }
+                } catch (IOException e) {
+                    ChatAlertLibrary.errorChatAlert(player);
                 }
+
             });
         }
 

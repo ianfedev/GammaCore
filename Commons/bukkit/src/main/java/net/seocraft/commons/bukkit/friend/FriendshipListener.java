@@ -1,28 +1,29 @@
 package net.seocraft.commons.bukkit.friend;
 
-import net.seocraft.api.bukkit.user.UserStoreHandler;
-import net.seocraft.api.shared.concurrent.CallbackWrapper;
-import net.seocraft.api.shared.http.AsyncResponse;
-import net.seocraft.api.shared.redis.ChannelListener;
+import net.seocraft.api.core.friend.Friendship;
+import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.api.core.concurrent.AsyncResponse;
+import net.seocraft.api.core.redis.messager.ChannelListener;
 
 public class FriendshipListener implements ChannelListener<Friendship> {
 
     private FriendshipUserActions friendshipActions;
-    private UserStoreHandler userStoreHandler;
+    private UserStorageProvider userStorageProvider;
 
-    FriendshipListener (UserStoreHandler userStoreHandler, FriendshipUserActions friendshipActions) {
-        this.userStoreHandler = userStoreHandler;
+    FriendshipListener (UserStorageProvider userStorageProvider, FriendshipUserActions friendshipActions) {
+        this.userStorageProvider = userStorageProvider;
         this.friendshipActions = friendshipActions;
     }
 
     @Override
     public void receiveMessage(Friendship object) {
-        CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(object.getReceiver()), senderRecord -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), senderRecord -> {
             if (senderRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
-                CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(object.getReceiver()), receiverRecord -> {
+                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), receiverRecord -> {
                     if (receiverRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                         if (object.getIssuer() != null) {
-                            CallbackWrapper.addCallback(this.userStoreHandler.getCachedUser(object.getReceiver()), issuerRecord -> {
+                            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), issuerRecord -> {
                                 if (issuerRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                                     this.friendshipActions.receiverAction(
                                             senderRecord.getResponse(),

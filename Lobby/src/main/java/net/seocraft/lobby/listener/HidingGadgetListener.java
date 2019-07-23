@@ -1,8 +1,8 @@
 package net.seocraft.lobby.listener;
 
 import com.google.inject.Inject;
-import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import net.seocraft.lobby.hiding.HidingGadgetHandler;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
+import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class HidingGadgetListener implements Listener {
 
-    @Inject private HidingGadgetHandler hidingGadgetHandler;
+    @Inject private HidingGadgetManager hidingGadgetManager;
 
     @EventHandler
     public void hideGadgetClick(PlayerInteractEvent event) {
@@ -28,9 +28,9 @@ public class HidingGadgetListener implements Listener {
             ) {
                 String accessor = NBTTagHandler.getString(clickedItem, "accessor");
                 if (accessor.equalsIgnoreCase("show_players")) {
-                    this.hidingGadgetHandler.disableHiding(player);
+                    this.hidingGadgetManager.disableHiding(player);
                 } else if (accessor.equalsIgnoreCase("hide_players")) {
-                    this.hidingGadgetHandler.enableHiding(player);
+                    this.hidingGadgetManager.enableHiding(player);
                 }
                 event.setCancelled(true);
             }

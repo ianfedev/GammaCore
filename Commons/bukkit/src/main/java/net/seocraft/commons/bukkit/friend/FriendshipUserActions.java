@@ -6,10 +6,11 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.BukkitAPI;
-import net.seocraft.api.bukkit.user.UserChat;
-import net.seocraft.api.shared.user.model.User;
+import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.friend.FriendshipAction;
+import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.util.ChatGlyphs;
-import net.seocraft.commons.core.translations.TranslatableField;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 public class FriendshipUserActions {
 
     @Inject private TranslatableField translatableField;
-    @Inject private UserChat userChatHandler;
+    @Inject private UserFormatter userFormatter;
     @Inject private BukkitAPI bukkitAPI;
 
     public void senderAction(Player player, User user, User targetRecord, FriendshipAction action, User issuer) {
@@ -34,7 +35,7 @@ public class FriendshipUserActions {
                                         "commons_friends_request_sent"
                                 ).replace(
                                         "%%player%%",
-                                        this.userChatHandler.getUserFormat(
+                                        this.userFormatter.getUserFormat(
                                                 targetRecord,
                                                 this.bukkitAPI.getConfig().getString("realm")
                                         ) + ChatColor.YELLOW
@@ -51,7 +52,7 @@ public class FriendshipUserActions {
                     replacableString
                             .replace(
                                     "%%firstUser%%",
-                                    this.userChatHandler.getUserFormat(targetRecord, realm)
+                                    this.userFormatter.getUserFormat(targetRecord, realm)
                             )
                             .replace(
                                     "%%senderUser%%",
@@ -62,11 +63,11 @@ public class FriendshipUserActions {
                     replacableString
                             .replace(
                                     "%%firstUser%%",
-                                    this.userChatHandler.getUserFormat(user, realm)
+                                    this.userFormatter.getUserFormat(user, realm)
                             )
                             .replace(
                                     "%%secondUser%%",
-                                    this.userChatHandler.getUserFormat(targetRecord, realm)
+                                    this.userFormatter.getUserFormat(targetRecord, realm)
                             );
                 }
 
@@ -84,14 +85,14 @@ public class FriendshipUserActions {
         Player player = Bukkit.getPlayer(target.getUsername());
         String l = target.getLanguage();
         String realm = this.bukkitAPI.getConfig().getString("realm");
-        String senderPlaceholder = this.userChatHandler.getUserFormat(sender, realm);
+        String senderPlaceholder = this.userFormatter.getUserFormat(sender, realm);
 
         // Get FORCED action to "first user"
         Player firstUser = Bukkit.getPlayer(sender.getUsername());
         if (action == FriendshipAction.FORCE && firstUser != null && issuer != null) {
             String replaceString = this.translatableField.getUnspacedField(sender.getLanguage(), "commons_friends_forced_friendship")
-                    .replace("%%sender%%", this.userChatHandler.getUserFormat(issuer, realm))
-                    .replace("%%target%%", this.userChatHandler.getUserFormat(target, realm));
+                    .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm))
+                    .replace("%%target%%", this.userFormatter.getUserFormat(target, realm));
             firstUser.sendMessage(ChatColor.LIGHT_PURPLE + replaceString);
         }
 
@@ -151,14 +152,14 @@ public class FriendshipUserActions {
                     if (issuer != null) {
                         if (sender.id().equalsIgnoreCase(issuer.id())) {
                             String replaceString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
-                            .replace("%%sender%%", this.userChatHandler.getUserFormat(issuer, realm))
+                            .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm))
                             .replace("%%target%%", this.translatableField.getUnspacedField(l, "commons_gender_him_her").toLowerCase());
                             player.sendMessage(ChatColor.LIGHT_PURPLE + replaceString);
 
                         } else {
                             String replaceTargetString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
-                                    .replace("%%sender%%", this.userChatHandler.getUserFormat(issuer, realm))
-                                    .replace("%%target%%", this.userChatHandler.getUserFormat(sender, realm));
+                                    .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm))
+                                    .replace("%%target%%", this.userFormatter.getUserFormat(sender, realm));
                             player.sendMessage(ChatColor.LIGHT_PURPLE + replaceTargetString);
                         }
                     }
@@ -179,7 +180,7 @@ public class FriendshipUserActions {
                                 "commons_friends_request_accepted"
                         ).replace(
                                 "%%player%%",
-                                this.userChatHandler.getUserFormat(
+                                this.userFormatter.getUserFormat(
                                         friendshipShowable,
                                         this.bukkitAPI.getConfig().getString("realm")
                                 ) + ChatColor.YELLOW
