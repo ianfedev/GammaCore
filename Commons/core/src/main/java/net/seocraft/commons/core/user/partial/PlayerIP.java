@@ -1,12 +1,10 @@
 package net.seocraft.commons.core.user.partial;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.user.partial.IPRecord;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
-@JsonSerialize(as = IPRecord.class)
 public class PlayerIP implements IPRecord {
 
     @NotNull private String number;

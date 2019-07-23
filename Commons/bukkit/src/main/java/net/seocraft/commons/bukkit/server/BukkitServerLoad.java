@@ -24,6 +24,7 @@ import java.util.logging.Level;
 public class BukkitServerLoad implements ServerLoad {
 
     @Inject private CommonsBukkit instance;
+    @Inject private BukkitAPI api;
     @Inject private GamemodeProvider gamemodeHandler;
     @Inject private ServerManager serverManager;
     @Inject private ServerTokenQuery serverTokenQuery;
@@ -32,39 +33,48 @@ public class BukkitServerLoad implements ServerLoad {
 
     public Server setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
 
-        FileConfiguration configuration = this.instance.getConfig();
+        FileConfiguration configuration = this.api.getConfig();
         int maxRunning = configuration.getInt("game.maxRunning");
         int maxTotal = configuration.getInt("game.maxTotal");
 
+        ServerType type = null;
         try {
-            ServerType type = ServerType.valueOf(this.instance.getConfig().getString("api.type"));
+            type = ServerType.valueOf(configuration.getString("api.type"));
+        } catch (IllegalArgumentException ex) {
+            ex.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Server type not found, shutting down instance.");
+            Bukkit.getServer().shutdown();
+            return null;
+        }
+
+        try {
 
             Gamemode gamemode;
             if (type == ServerType.GAME) {
-                 gamemode = this.gamemodeHandler.getGamemodeSync(
+                gamemode = this.gamemodeHandler.getGamemodeSync(
                         configuration.getString("game.gamemode")
-                 );
-                 if (gamemode == null) return null;
-                 Set<SubGamemode> subGamemodes = gamemode.getSubGamemodes();
+                );
+                if (gamemode == null) return null;
+                Set<SubGamemode> subGamemodes = gamemode.getSubGamemodes();
 
-                 Optional<SubGamemode> subGamemode = subGamemodes
-                         .stream()
-                         .filter(
-                                 s -> s.id().equalsIgnoreCase(configuration.getString("game.subgamemode"))
-                         )
-                         .findFirst();
+                Optional<SubGamemode> subGamemode = subGamemodes
+                        .stream()
+                        .filter(
+                                s -> s.id().equalsIgnoreCase(configuration.getString("game.subgamemode"))
+                        )
+                        .findFirst();
 
-                 if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
+                if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
 
-                 return this.serverManager.loadServer(
-                         /* TODO: Get slug from */ "test-1",
-                         type,
-                         gamemode.id(),
-                         subGamemode.get().id(),
-                         maxRunning,
-                         maxTotal,
-                         configuration.getString("api.cluster")
-                 );
+                return this.serverManager.loadServer(
+                        /* TODO: Get slug from */ "test-1",
+                        type,
+                        gamemode.id(),
+                        subGamemode.get().id(),
+                        maxRunning,
+                        maxTotal,
+                        configuration.getString("api.cluster")
+                );
             }
 
             return this.serverManager.loadServer(
@@ -77,8 +87,9 @@ public class BukkitServerLoad implements ServerLoad {
                     configuration.getString("api.cluster")
             );
 
-        } catch (IllegalArgumentException | IOException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Server type not found, shutting down this.instance.");
+        } catch (IOException ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "[API-Bukkit] Error while creating server.");
+            ex.printStackTrace();
             Bukkit.getServer().shutdown();
         }
         return null;

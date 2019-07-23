@@ -4,7 +4,7 @@ import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.core.server.ServerManager;
 
-public class ServerModule extends ProtectedModule {
+public class CoreServerModule extends ProtectedModule {
 
     @Override
     protected void configure() {

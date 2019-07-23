@@ -71,9 +71,11 @@ public class CoreServerManager implements ServerManager {
 
         String serializedServer = this.mapper.writeValueAsString(preServer);
 
-        JsonNode response = this.mapper.readTree(this.serverConnectRequest.executeRequest(
+        String rawResponse = this.serverConnectRequest.executeRequest(
                 serializedServer
-        ));
+        );
+
+        JsonNode response = this.mapper.readTree(serializedServer);
 
         Server responseServer = this.mapper.readValue(
                 response.get("server").asText(),

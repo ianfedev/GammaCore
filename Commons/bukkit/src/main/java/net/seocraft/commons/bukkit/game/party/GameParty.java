@@ -1,4 +1,6 @@
 package net.seocraft.commons.bukkit.game.party;
 
-public class GameParty {
+import net.seocraft.api.bukkit.game.party.Party;
+
+public class GameParty implements Party {
 }

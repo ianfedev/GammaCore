@@ -1,12 +1,15 @@
 package net.seocraft.commons.bukkit;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import com.google.inject.Scopes;
 import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
+import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -18,16 +21,18 @@ import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEvent
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
 import net.seocraft.commons.bukkit.command.*;
+import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listeners.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listeners.UserLogoutListener;
 import net.seocraft.commons.bukkit.punishment.PunishmentModule;
+import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
+import net.seocraft.commons.bukkit.server.ServerModule;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
 import net.seocraft.commons.bukkit.user.UserModule;
 import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
-import net.seocraft.commons.core.server.ServerModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -71,7 +76,8 @@ public class CommonsBukkit extends JavaPlugin {
 
         try {
             this.serverRecord = this.serverLoad.setupServer();
-        } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError ex) {
+            ex.printStackTrace();
             Bukkit.getLogger().log(Level.SEVERE, "[Bukkit-API] Error when authorizing server load.");
             Bukkit.shutdown();
         }
@@ -94,7 +100,10 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
+        binder.bind(CommonsBukkit.class).toInstance(this);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class);
+        binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
+        binder.bind(ObjectMapper.class).toProvider(() -> new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes())).in(Scopes.SINGLETON);
         binder.install(new CoreModule());
         binder.install(new GameModule());
         binder.install(new PunishmentModule());

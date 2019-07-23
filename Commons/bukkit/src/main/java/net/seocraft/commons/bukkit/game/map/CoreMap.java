@@ -1,8 +1,11 @@
 package net.seocraft.commons.bukkit.game.map;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.partial.Rating;
+import net.seocraft.commons.bukkit.game.map.partial.MapContribution;
+import net.seocraft.commons.core.user.partial.PlayerIP;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;

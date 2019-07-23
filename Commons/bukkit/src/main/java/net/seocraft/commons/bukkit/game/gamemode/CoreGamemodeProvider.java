@@ -1,12 +1,13 @@
 package net.seocraft.commons.bukkit.game.gamemode;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
+import net.seocraft.api.core.server.Server;
 import net.seocraft.commons.core.backend.gamemode.GamemodeGetRequest;
 import net.seocraft.commons.core.backend.gamemode.GamemodeListRequest;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -17,13 +18,14 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Set;
 
 public class CoreGamemodeProvider implements GamemodeProvider {
 
     @Inject private ListeningExecutorService executorService;
     @Inject private GamemodeGetRequest gamemodeGetRequest;
-    @Inject private Gson gson;
+    @Inject private ObjectMapper mapper;
     @Inject private GamemodeListRequest gamemodeListRequest;
 
     @Override
@@ -38,15 +40,15 @@ public class CoreGamemodeProvider implements GamemodeProvider {
     }
 
     @Override
-    public @Nullable Gamemode getGamemodeSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @Nullable Gamemode getGamemodeSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String gamemodeResponse = this.gamemodeGetRequest.executeRequest(
                 id
         );
-        return this.gson.fromJson(gamemodeResponse, Gamemode.class);
+        return this.mapper.readValue(gamemodeResponse, CoreGamemode.class);
     }
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<List<Gamemode>>> listGamemodes() {
+    public @NotNull ListenableFuture<AsyncResponse<Set<Gamemode>>> listGamemodes() {
         return this.executorService.submit(() -> {
             try {
                 return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, listGamemodesSync() );
@@ -57,9 +59,9 @@ public class CoreGamemodeProvider implements GamemodeProvider {
     }
 
     @Override
-    public @NotNull List<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @NotNull Set<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String gamemodeResponse = this.gamemodeListRequest.executeRequest();
-        return this.gson.fromJson(gamemodeResponse, new TypeToken<List<CoreGamemode>>(){}.getType());
+        return this.mapper.readValue(gamemodeResponse, new TypeReference<Set<Server>>(){});
     }
 
 }

@@ -1,10 +1,12 @@
 package net.seocraft.commons.bukkit.game.gamemode;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
+@JsonSerialize(as = SubGamemode.class)
 public class CoreSubGamemode implements SubGamemode {
 
     @NotNull private String id;

@@ -9,7 +9,8 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Set;
 
 public interface GamemodeProvider {
 
@@ -27,16 +28,16 @@ public interface GamemodeProvider {
      * @param id Database ID.
      * @return Gamemode model.
      */
-    @Nullable Gamemode getGamemodeSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @Nullable Gamemode getGamemodeSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     /**
      * @return ListenableFuture with AsyncResponse wrapper gamemode list.
      */
-    @NotNull ListenableFuture<AsyncResponse<List<Gamemode>>> listGamemodes();
+    @NotNull ListenableFuture<AsyncResponse<Set<Gamemode>>> listGamemodes();
 
     /**
      * @see Gamemode
      * @return Unordered list of gamemodes.
      */
-    @Nullable List<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError;
+    @Nullable Set<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 }

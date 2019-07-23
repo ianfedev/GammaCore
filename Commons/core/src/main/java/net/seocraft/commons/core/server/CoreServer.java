@@ -11,7 +11,6 @@ import java.beans.ConstructorProperties;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonSerialize(as = Server.class)
 public class CoreServer implements Server {
 
     @JsonProperty("_id")

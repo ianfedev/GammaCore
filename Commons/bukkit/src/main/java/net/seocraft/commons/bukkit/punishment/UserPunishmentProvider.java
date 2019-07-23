@@ -1,6 +1,5 @@
 package net.seocraft.commons.bukkit.punishment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -89,7 +88,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
     public @Nullable Punishment getPunishmentByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         return this.mapper.readValue(
                 this.punishmentGetRequest.executeRequest(id, this.serverTokenQuery.getToken()),
-                UserPunishment.class
+                Punishment.class
         );
     }
 
@@ -110,7 +109,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
         if (type != null) typeString = type.toString();
         return this.mapper.readValue(
                 this.punishmentGetLastRequest.executeRequest(typeString, playerId, this.serverTokenQuery.getToken()),
-                UserPunishment.class
+                Punishment.class
         );
     }
 
@@ -155,7 +154,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
                         punishment.id(),
                         this.serverTokenQuery.getToken()
                 ),
-                UserPunishment.class
+                Punishment.class
         );
     }
 }

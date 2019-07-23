@@ -1,12 +1,10 @@
 package net.seocraft.commons.core.group.partial;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.partial.Flair;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
-@JsonSerialize(as = Flair.class)
 public class MinecraftFlair implements Flair {
 
     @NotNull private String realm;

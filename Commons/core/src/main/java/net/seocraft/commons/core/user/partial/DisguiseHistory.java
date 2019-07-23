@@ -1,14 +1,12 @@
 package net.seocraft.commons.core.user.partial;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.user.partial.Disguise;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
-@JsonSerialize(as = Disguise.class)
 public class DisguiseHistory implements Disguise {
 
     @NotNull private String nickname;

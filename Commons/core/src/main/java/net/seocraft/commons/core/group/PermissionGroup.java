@@ -1,7 +1,6 @@
 package net.seocraft.commons.core.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.group.partial.Flair;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import java.beans.ConstructorProperties;
 import java.util.Set;
 
-@JsonSerialize(as = Group.class)
 public class PermissionGroup implements Group {
 
     @JsonProperty("_id")

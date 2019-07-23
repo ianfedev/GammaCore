@@ -4,7 +4,7 @@ import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.core.user.UserStorageProvider;
 
-public class UserModule extends ProtectedModule {
+public class CoreUserModule extends ProtectedModule {
 
     @Override
     protected void configure() {

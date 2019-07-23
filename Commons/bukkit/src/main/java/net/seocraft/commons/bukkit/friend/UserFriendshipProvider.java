@@ -137,7 +137,7 @@ public class UserFriendshipProvider implements FriendshipProvider {
         requestList.forEach(key -> {
             Friendship friendshipRecord = null;
             try {
-                friendshipRecord = this.mapper.readValue(key, UserFriendship.class);
+                friendshipRecord = this.mapper.readValue(key, Friendship.class);
             } catch (IOException ignore) {}
             long expirationTime = this.client.getExpiringTime(key);
             friendshipRecord.setAlerted(true);

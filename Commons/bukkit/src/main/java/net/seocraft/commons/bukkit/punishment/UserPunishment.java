@@ -1,7 +1,6 @@
 package net.seocraft.commons.bukkit.punishment;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
 
-@JsonSerialize(as = Punishment.class)
 public class UserPunishment implements Punishment {
 
     @JsonProperty("_id")

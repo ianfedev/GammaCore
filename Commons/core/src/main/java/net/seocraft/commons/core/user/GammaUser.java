@@ -1,7 +1,6 @@
 package net.seocraft.commons.core.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.commons.core.utils.TimeUtils;
 import net.seocraft.api.core.user.partial.IPRecord;
@@ -14,7 +13,6 @@ import java.beans.ConstructorProperties;
 import java.util.Date;
 import java.util.List;
 
-@JsonSerialize(as = User.class)
 public class GammaUser implements User {
 
     @JsonProperty("_id")
@@ -32,7 +30,7 @@ public class GammaUser implements User {
     private boolean verified;
     private int level;
     private long experience;
-    @JsonProperty("used_ips") 
+    @JsonProperty("used_ips")
     private List<IPRecord> ipRecord;
     private boolean disguised;
     @JsonProperty("disguise_actual") 
@@ -41,7 +39,7 @@ public class GammaUser implements User {
     @Nullable private String disguiseLowercase;
     @JsonProperty("disguise_group") 
     @Nullable private Group disguiseGroup;
-    @JsonProperty("disguise_history") 
+    @JsonProperty("disguise_history")
     @Nullable private List<Disguise> disguiseHistory;
     @NotNull private String language;
     @JsonProperty("accept_friends") 

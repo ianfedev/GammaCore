@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class GameMenuManagerImp implements GameMenuManager {
 
@@ -33,7 +34,7 @@ public class GameMenuManagerImp implements GameMenuManager {
 
         CallbackWrapper.addCallback(this.gamemodeHandler.listGamemodes(), gamemodes -> {
             if (gamemodes.getStatus() == AsyncResponse.Status.SUCCESS) {
-                List<Gamemode> gamemodeList = gamemodes.getResponse();
+                Set<Gamemode> gamemodeList = gamemodes.getResponse();
 
                 if (!gamemodeList.isEmpty()) {
                     gamemodeList.forEach(gamemode -> {
