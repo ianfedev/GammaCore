@@ -115,7 +115,7 @@ public class FriendCommand implements CommandClass {
                                     return;
                                 }
 
-                                if (this.friendshipProvider.requestIsSent(user.id(), targetRecord.id())) {
+                                if (this.friendshipProvider.requestIsSent(user.getId(), targetRecord.getId())) {
                                     ChatAlertLibrary.errorChatAlert(player,
                                             this.translatableField.getUnspacedField(
                                                     user.getLanguage(),
@@ -133,8 +133,8 @@ public class FriendCommand implements CommandClass {
 
                                 try {
                                     this.friendshipProvider.createFriendRequest(
-                                            user.id(),
-                                            targetRecord.id()
+                                            user.getId(),
+                                            targetRecord.getId()
                                     );
                                 } catch (JsonProcessingException e) {
                                     ChatAlertLibrary.errorChatAlert(player, null);
@@ -189,8 +189,8 @@ public class FriendCommand implements CommandClass {
 
                                 try {
                                     this.friendshipProvider.acceptFriendRequest(
-                                            user.id(),
-                                            targetRecord.id()
+                                            user.getId(),
+                                            targetRecord.getId()
                                     );
                                 } catch (Unauthorized | BadRequest | InternalServerError | NotFound | JsonProcessingException unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
@@ -238,7 +238,7 @@ public class FriendCommand implements CommandClass {
                                 // Detect if target sent friendship request
                                 if (alertIfNotRequested(player, user, targetRecord)) return;
 
-                                this.friendshipProvider.rejectFriendRequest(user.id(), targetRecord.id());
+                                this.friendshipProvider.rejectFriendRequest(user.getId(), targetRecord.getId());
 
                                 player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                                 player.sendMessage(
@@ -272,7 +272,7 @@ public class FriendCommand implements CommandClass {
     }
 
     private boolean alertIfNotRequested(Player player, User user, User targetRecord) {
-        if (!this.friendshipProvider.requestIsSent(targetRecord.id(), user.id())) {
+        if (!this.friendshipProvider.requestIsSent(targetRecord.getId(), user.getId())) {
             ChatAlertLibrary.errorChatAlert(player,
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
@@ -312,7 +312,7 @@ public class FriendCommand implements CommandClass {
                                 User targetRecord = targetAsyncResponse.getResponse();
 
                                 // Detect if users are friends
-                                if (!this.friendshipProvider.checkFriendshipStatus(user.id(), targetRecord.id())) {
+                                if (!this.friendshipProvider.checkFriendshipStatus(user.getId(), targetRecord.getId())) {
                                     ChatAlertLibrary.errorChatAlert(player,
                                             this.translatableField.getUnspacedField(
                                                     user.getLanguage(),
@@ -329,7 +329,7 @@ public class FriendCommand implements CommandClass {
                                 }
 
                                 try {
-                                    this.friendshipProvider.removeFriend(user.id(), targetRecord.id());
+                                    this.friendshipProvider.removeFriend(user.getId(), targetRecord.getId());
                                 } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_not_found") + ".");
                                     return;
@@ -378,7 +378,7 @@ public class FriendCommand implements CommandClass {
                         User user = userAsyncResponse.getResponse();
 
                         try {
-                            this.friendshipProvider.removeAllFriends(user.id());
+                            this.friendshipProvider.removeAllFriends(user.getId());
                         } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                             ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
                             return;
@@ -491,9 +491,9 @@ public class FriendCommand implements CommandClass {
     private void sendRequest(Player player, User user, User firstRecord, User secondRecord) {
         try {
             this.friendshipProvider.forceFriend(
-                    firstRecord.id(),
-                    secondRecord.id(),
-                    user.id()
+                    firstRecord.getId(),
+                    secondRecord.getId(),
+                    user.getId()
             );
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException unauthorized) {
             ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
@@ -512,7 +512,7 @@ public class FriendCommand implements CommandClass {
     }
 
     private boolean alertFriendshipStatus(User user, User targetRecord, Player player) {
-        if (this.friendshipProvider.checkFriendshipStatus(user.id(), targetRecord.id())) {
+        if (this.friendshipProvider.checkFriendshipStatus(user.getId(), targetRecord.getId())) {
             ChatAlertLibrary.errorChatAlert(player,
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),

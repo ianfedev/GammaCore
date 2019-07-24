@@ -154,7 +154,7 @@ public class HotbarItemCollection {
         ItemStack profileBase = addString(
                 new ItemStack(Material.SKULL_ITEM, 1, (byte) 3),
                 "profile_accessor",
-                user.id()
+                user.getId()
         );
         SkullMeta profileMeta = (SkullMeta) profileBase.getItemMeta();
         profileMeta.setOwner(user.getSkin());

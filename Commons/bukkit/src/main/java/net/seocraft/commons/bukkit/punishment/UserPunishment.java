@@ -51,7 +51,7 @@ public class UserPunishment implements Punishment {
     }
 
     @Override
-    public String id() {
+    public String getId() {
         return id;
     }
 

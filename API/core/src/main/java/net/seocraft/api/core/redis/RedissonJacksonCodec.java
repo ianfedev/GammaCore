@@ -144,7 +144,7 @@ public class RedissonJacksonCodec extends BaseCodec {
 
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.IntSequenceGenerator.class,
-            property = "@id"
+            property = "@getId"
     )
     @JsonAutoDetect(
             fieldVisibility = JsonAutoDetect.Visibility.ANY,

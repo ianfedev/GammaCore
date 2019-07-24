@@ -31,7 +31,7 @@ public class CoreSubGamemode implements SubGamemode {
     }
 
     @Override
-    public String id() {
+    public String getId() {
         return this.id;
     }
 

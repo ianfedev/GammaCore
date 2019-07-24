@@ -10,6 +10,6 @@ public interface CooldownManager {
 
     //TODO: Create cooldown seconds left
 
-    // int getRemainingTime(@NotNull String id, @NotNull String cooldownType);
+    // int getRemainingTime(@NotNull String getId, @NotNull String cooldownType);
 
 }

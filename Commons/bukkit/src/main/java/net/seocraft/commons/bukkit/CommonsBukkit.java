@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
@@ -103,7 +104,11 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(CommonsBukkit.class).toInstance(this);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class);
         binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
-        binder.bind(ObjectMapper.class).toProvider(() -> new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes())).in(Scopes.SINGLETON);
+        binder.bind(ObjectMapper.class).toProvider(() -> {
+            ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return mapper;
+        }).in(Scopes.SINGLETON);
         binder.install(new CoreModule());
         binder.install(new GameModule());
         binder.install(new PunishmentModule());

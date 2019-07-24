@@ -43,7 +43,7 @@ public class CoreMap implements GameMap {
     }
 
     @Override
-    public String id() {
+    public String getId() {
         return this.id;
     }
 

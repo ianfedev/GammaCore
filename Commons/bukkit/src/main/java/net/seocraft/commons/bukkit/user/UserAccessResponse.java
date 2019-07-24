@@ -141,7 +141,7 @@ public class UserAccessResponse implements Listener {
                     player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                 }
 
-                this.onlineStatusManager.setPlayerOnlineStatus(user.id(), true); //TODO: Set at commons bungee
+                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true); //TODO: Set at commons bungee
                 playerField.set(player, new UserPermissions(player, user, userStorage, gameSessionManager, translator));
 
                 if (this.instance.getServerRecord().getServerType() == ServerType.LOBBY &&

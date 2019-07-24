@@ -16,18 +16,12 @@ public class CoreServer implements Server {
     @JsonProperty("_id")
     @NotNull private String id;
     @NotNull private String slug;
-    @JsonProperty("type")
     @NotNull private ServerType serverType;
     @Nullable private String gamemode;
-    @JsonProperty("sub_gamemode")
     @Nullable private String subGamemode;
-    @JsonProperty("max_running")
     private int maxRunning;
-    @JsonProperty("max_total")
     private int maxTotal;
-    @JsonProperty("started_at")
     private long startedAt;
-    @JsonProperty("players")
     @NotNull private List<String> onlinePlayers;
     @NotNull private String cluster;
     @NotNull private List<String> matches;
@@ -48,7 +42,7 @@ public class CoreServer implements Server {
     }
 
     @Override
-    public String id() {
+    public String getId() {
         return this.id;
     }
 

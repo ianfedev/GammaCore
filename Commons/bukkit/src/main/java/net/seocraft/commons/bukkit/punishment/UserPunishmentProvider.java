@@ -151,7 +151,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
         return this.mapper.readValue(
                 this.punishmentUpdateRequest.executeRequest(
                         this.mapper.writeValueAsString(punishment),
-                        punishment.id(),
+                        punishment.getId(),
                         this.serverTokenQuery.getToken()
                 ),
                 Punishment.class

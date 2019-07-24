@@ -77,7 +77,7 @@ public class GammaUser implements User {
         this.hiding = hiding;
     }
 
-    public String id() {
+    public String getId() {
         return this.id;
     }
 

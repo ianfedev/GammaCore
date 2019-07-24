@@ -37,7 +37,7 @@ public class BukkitServerLoad implements ServerLoad {
         int maxRunning = configuration.getInt("game.maxRunning");
         int maxTotal = configuration.getInt("game.maxTotal");
 
-        ServerType type = null;
+        ServerType type;
         try {
             type = ServerType.valueOf(configuration.getString("api.type"));
         } catch (IllegalArgumentException ex) {
@@ -60,7 +60,7 @@ public class BukkitServerLoad implements ServerLoad {
                 Optional<SubGamemode> subGamemode = subGamemodes
                         .stream()
                         .filter(
-                                s -> s.id().equalsIgnoreCase(configuration.getString("game.subgamemode"))
+                                s -> s.getId().equalsIgnoreCase(configuration.getString("game.subgamemode"))
                         )
                         .findFirst();
 
@@ -69,8 +69,8 @@ public class BukkitServerLoad implements ServerLoad {
                 return this.serverManager.loadServer(
                         /* TODO: Get slug from */ "test-1",
                         type,
-                        gamemode.id(),
-                        subGamemode.get().id(),
+                        gamemode.getId(),
+                        subGamemode.get().getId(),
                         maxRunning,
                         maxTotal,
                         configuration.getString("api.cluster")
@@ -97,7 +97,7 @@ public class BukkitServerLoad implements ServerLoad {
 
     public void disconnectServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
         String token = this.serverTokenQuery.getToken();
-        this.redisClient.deleteHash("authorization", this.instance.getServerRecord().id());
+        this.redisClient.deleteHash("authorization", this.instance.getServerRecord().getId());
         this.serverDisconnectRequest.executeRequest(token);
     }
 }

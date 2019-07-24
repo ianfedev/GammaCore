@@ -43,7 +43,7 @@ public class LobbyConnectionListener implements Listener {
                     handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
                     if (
                             handler != null &&
-                                    !this.friendshipProvider.checkFriendshipStatus(playerRecord.id(), handler.getPlayerId()) &&
+                                    !this.friendshipProvider.checkFriendshipStatus(playerRecord.getId(), handler.getPlayerId()) &&
                                     !onlinePlayer.hasPermission("commons.staff.vanish")
                     ) {
                         player.hidePlayer(onlinePlayer);

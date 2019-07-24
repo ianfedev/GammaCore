@@ -67,7 +67,7 @@ public class PunishmentCommand implements CommandClass {
                                 String serverName = "test"; //TODO: Get server from Cloud API
 
                                 // Detecting if player is online
-                                if (isTargetOffline(player, targetRecord.id(), user.getLanguage())) return;
+                                if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
 
                                 // Get player session
                                 GameSession targetSession = null;
@@ -98,8 +98,8 @@ public class PunishmentCommand implements CommandClass {
                                     try {
                                         Punishment punishment = this.punishmentProvider.createPunishment(
                                                 PunishmentType.BAN,
-                                                user.id(),
-                                                targetRecord.id(),
+                                                user.getId(),
+                                                targetRecord.getId(),
                                                 "unknown",
                                                 null,
                                                 targetSession.getAddress(),
@@ -148,8 +148,8 @@ public class PunishmentCommand implements CommandClass {
                                     try {
                                         Punishment punishment = this.punishmentProvider.createPunishment(
                                                 PunishmentType.BAN,
-                                                user.id(),
-                                                targetRecord.id(),
+                                                user.getId(),
+                                                targetRecord.getId(),
                                                 serverName,
                                                 null,
                                                 targetSession.getAddress(),
@@ -183,8 +183,8 @@ public class PunishmentCommand implements CommandClass {
                                 try {
                                     Punishment punishment = this.punishmentProvider.createPunishment(
                                             PunishmentType.BAN,
-                                            user.id(),
-                                            targetRecord.id(),
+                                            user.getId(),
+                                            targetRecord.getId(),
                                             serverName,
                                             null,
                                             targetSession.getAddress(),
@@ -254,7 +254,7 @@ public class PunishmentCommand implements CommandClass {
                             String serverName = "test"; //TODO: Get server from Cloud API
 
                             // Detecting if player is online
-                            if (isTargetOffline(player, targetRecord.id(), user.getLanguage())) return;
+                            if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
 
                             // Get player session
                             GameSession targetSession = null;
@@ -275,8 +275,8 @@ public class PunishmentCommand implements CommandClass {
                             try {
                                 Punishment punishment = this.punishmentProvider.createPunishment(
                                         PunishmentType.KICK,
-                                        user.id(),
-                                        targetRecord.id(),
+                                        user.getId(),
+                                        targetRecord.getId(),
                                         serverName,
                                         null,
                                         targetSession.getAddress(),
@@ -336,7 +336,7 @@ public class PunishmentCommand implements CommandClass {
                                 String serverName = "test"; //TODO: Get server from Cloud API
 
                                 // Detecting if player is online
-                                if (isTargetOffline(player, targetRecord.id(), user.getLanguage())) return;
+                                if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
 
                                 // Get player session
                                 GameSession targetSession = null;
@@ -357,8 +357,8 @@ public class PunishmentCommand implements CommandClass {
                                 try {
                                     Punishment punishment = this.punishmentProvider.createPunishment(
                                             PunishmentType.WARN,
-                                            user.id(),
-                                            targetRecord.id(),
+                                            user.getId(),
+                                            targetRecord.getId(),
                                             serverName,
                                             null,
                                             targetSession.getAddress(),

@@ -34,7 +34,7 @@ public interface UserStorageProvider {
      * @return user model of cached user
      * @throws Unauthorized Thrown when no authentication Token.
      * @throws BadRequest Thrown when the request was not sent correctly.
-     * @throws NotFound Thrown when the user id was not found.
+     * @throws NotFound Thrown when the user getId was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
     @NotNull User getCachedUserSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
@@ -52,7 +52,7 @@ public interface UserStorageProvider {
      * @return user model of queried username
      * @throws Unauthorized Thrown when no authentication Token.
      * @throws BadRequest Thrown when the request was not sent correctly.
-     * @throws NotFound Thrown when the user id was not found.
+     * @throws NotFound Thrown when the user getId was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
     @Nullable User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
@@ -63,7 +63,7 @@ public interface UserStorageProvider {
      * @return user model of queried username
      * @throws Unauthorized Thrown when no authentication Token.
      * @throws BadRequest Thrown when the request was not sent correctly.
-     * @throws NotFound Thrown when the user id was not found.
+     * @throws NotFound Thrown when the user getId was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
     @NotNull User findUserByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
@@ -75,7 +75,7 @@ public interface UserStorageProvider {
      * @return updated user.
      * @throws Unauthorized Thrown when no authentication Token.
      * @throws BadRequest Thrown when the request was not sent correctly.
-     * @throws NotFound Thrown when the user id was not found.
+     * @throws NotFound Thrown when the user getId was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
     @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError, JsonProcessingException;

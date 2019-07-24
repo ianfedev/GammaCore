@@ -36,7 +36,7 @@ public class PunishmentGetLastRequest extends HttpRequest {
     }
 
     public String executeRequest(@Nullable String type, @NotNull String punishmentId, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.params.put("id", punishmentId);
+        this.params.put("getId", punishmentId);
         this.params.put("type", type);
         this.headers.put("authorization", token);
         return getResponse();

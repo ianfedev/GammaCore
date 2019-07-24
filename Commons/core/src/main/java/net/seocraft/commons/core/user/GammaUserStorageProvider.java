@@ -32,7 +32,7 @@ public class GammaUserStorageProvider implements UserStorageProvider {
 
     @Override
     public void cacheStoreUser(@NotNull User user) throws JsonProcessingException {
-        String idString = user.id();
+        String idString = user.getId();
         this.client.setString("user:" + idString, objectMapper.writeValueAsString(user));
         this.client.setExpiration("user:" + idString, 120);
     }
@@ -88,7 +88,7 @@ public class GammaUserStorageProvider implements UserStorageProvider {
 
     @Override
     public @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError, JsonProcessingException {
-        this.userUpdateRequest.executeRequest(user.id(), this.objectMapper.writeValueAsString(user), this.tokenHandler.getToken());
+        this.userUpdateRequest.executeRequest(user.getId(), this.objectMapper.writeValueAsString(user), this.tokenHandler.getToken());
         cacheStoreUser(user);
         return user;
     }

@@ -18,7 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +44,7 @@ public class GameMenuManagerImp implements GameMenuManager {
                                 ChatColor.GREEN +
                                 this.translatableField.getUnspacedField(
                                         l,
-                                        "game_" + gamemode.id() + "_title"
+                                        "game_" + gamemode.getId() + "_title"
                                 )
                         );
 
@@ -54,7 +53,7 @@ public class GameMenuManagerImp implements GameMenuManager {
                         loreDisplayArray.add(
                                 this.translatableField.getUnspacedField(
                                         l,
-                                        "game_" + gamemode.id() + "_description"
+                                        "game_" + gamemode.getId() + "_description"
                                 ) + ".",
                                 ChatColor.GRAY
                         );

@@ -70,21 +70,20 @@ public class CoreServerManager implements ServerManager {
         }
 
         String serializedServer = this.mapper.writeValueAsString(preServer);
-
-        String rawResponse = this.serverConnectRequest.executeRequest(
+        JsonNode response = this.mapper.readTree(this.serverConnectRequest.executeRequest(
                 serializedServer
-        );
-
-        JsonNode response = this.mapper.readTree(serializedServer);
+        ));
 
         Server responseServer = this.mapper.readValue(
-                response.get("server").asText(),
+                this.mapper.writeValueAsString(
+                        response.get("server")
+                ),
                 Server.class
         );
 
         this.redisClient.setHash(
                 "authorization",
-                responseServer.id(),
+                responseServer.getId(),
                 response.get("token").asText()
         );
         return responseServer;
@@ -117,7 +116,7 @@ public class CoreServerManager implements ServerManager {
     @Override
     public @NotNull Server updateServer(@NotNull Server server) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String rawResponse = this.serverUpdateRequest.executeRequest(
-                server.id(),
+                server.getId(),
                 this.mapper.writeValueAsString(server),
                 this.serverTokenQuery.getToken()
         );

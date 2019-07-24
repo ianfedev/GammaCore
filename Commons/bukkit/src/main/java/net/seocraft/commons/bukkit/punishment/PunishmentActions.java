@@ -114,9 +114,9 @@ public class PunishmentActions {
 
     public void checkBan(Player target, User targetData) throws InternalServerError {
         try {
-            Punishment lastPunishment = this.punishmentProvider.getLastPunishmentSync(PunishmentType.BAN, targetData.id());
+            Punishment lastPunishment = this.punishmentProvider.getLastPunishmentSync(PunishmentType.BAN, targetData.getId());
 
-            if (lastPunishment == null || lastPunishment.id() == null || !lastPunishment.isActive()) {
+            if (lastPunishment == null || lastPunishment.getId() == null || !lastPunishment.isActive()) {
                 return;
             }
 

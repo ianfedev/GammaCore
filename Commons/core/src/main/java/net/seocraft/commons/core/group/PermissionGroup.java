@@ -31,7 +31,7 @@ public class PermissionGroup implements Group {
     }
 
     @Override
-    public @NotNull String id() {
+    public @NotNull String getId() {
         return id;
     }
 

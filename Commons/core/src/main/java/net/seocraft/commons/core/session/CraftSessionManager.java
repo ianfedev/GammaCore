@@ -21,7 +21,7 @@ public class CraftSessionManager implements GameSessionManager {
     public void createGameSession(@NotNull User user, String address, String version) throws JsonProcessingException {
         if (!this.client.existsKey("session:" + user.getUsername().toLowerCase())) {
             this.client.setString("session:" + user.getUsername().toLowerCase(),
-                    this.mapper.writeValueAsString(new CraftSession(user.id(), address, version))
+                    this.mapper.writeValueAsString(new CraftSession(user.getId(), address, version))
             );
         }
     }

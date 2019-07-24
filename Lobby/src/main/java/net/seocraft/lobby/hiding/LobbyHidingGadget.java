@@ -42,7 +42,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
                     if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User user = userAsyncResponse.getResponse();
-                        if (checkCooldownStatus(user.getLanguage(), user.id(), player)) return;
+                        if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
                         user.setHiding(true);
                         try {
                             this.userStorageProvider.updateUser(user);
@@ -52,7 +52,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                                     handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
                                     if (
                                             handler != null &&
-                                                    !this.friendshipProvider.checkFriendshipStatus(user.id(), handler.getPlayerId()) &&
+                                                    !this.friendshipProvider.checkFriendshipStatus(user.getId(), handler.getPlayerId()) &&
                                                     !onlinePlayer.hasPermission("commons.staff.vanish") &&
                                                     player != onlinePlayer
                                     ) {
@@ -70,7 +70,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                                     )
                             );
                             this.cooldownManager.createCooldown(
-                                    user.id(),
+                                    user.getId(),
                                     "hidingGadget",
                                     3
                             );
@@ -105,7 +105,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(session.getPlayerId()), userAsyncResponse -> {
                     if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User user = userAsyncResponse.getResponse();
-                        if (checkCooldownStatus(user.getLanguage(), user.id(), player)) return;
+                        if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
                         user.setHiding(false);
                         try {
                             this.userStorageProvider.updateUser(user);
@@ -118,7 +118,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                                     )
                             );
                             this.cooldownManager.createCooldown(
-                                    user.id(),
+                                    user.getId(),
                                     "hidingGadget",
                                     3
                             );

@@ -48,7 +48,7 @@ public class FriendshipUserActions {
             }
             case FORCE: {
                 String replacableString = this.translatableField.getUnspacedField(issuer.getLanguage(), "commons_friends_forced_success");
-                if (user.id().equalsIgnoreCase(issuer.id())) {
+                if (user.getId().equalsIgnoreCase(issuer.getId())) {
                     replacableString
                             .replace(
                                     "%%firstUser%%",
@@ -150,7 +150,7 @@ public class FriendshipUserActions {
                 }
                 case FORCE: {
                     if (issuer != null) {
-                        if (sender.id().equalsIgnoreCase(issuer.id())) {
+                        if (sender.getId().equalsIgnoreCase(issuer.getId())) {
                             String replaceString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
                             .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm))
                             .replace("%%target%%", this.translatableField.getUnspacedField(l, "commons_gender_him_her").toLowerCase());
