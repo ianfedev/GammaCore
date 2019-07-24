@@ -15,44 +15,30 @@ import java.util.List;
 
 public class GammaUser implements User {
 
-    @JsonProperty("_id")
     @NotNull private String id;
     @NotNull private String username;
     @Nullable private String email;
     private List<Group> groups;
     private String skin;
-    @JsonProperty("last_seen") 
     private long lastSeen;
-    @JsonProperty("last_game") 
     private @NotNull String lastGame;
-    @JsonProperty("member_since") 
     private long memberSince;
     private boolean verified;
     private int level;
     private long experience;
-    @JsonProperty("used_ips")
     private List<IPRecord> ipRecord;
     private boolean disguised;
-    @JsonProperty("disguise_actual") 
     @Nullable private String disguiseName;
-    @JsonProperty("disguise_lowercase") 
-    @Nullable private String disguiseLowercase;
-    @JsonProperty("disguise_group") 
     @Nullable private Group disguiseGroup;
-    @JsonProperty("disguise_history")
     @Nullable private List<Disguise> disguiseHistory;
     @NotNull private String language;
-    @JsonProperty("accept_friends") 
     private boolean acceptFriends;
-    @JsonProperty("accept_parties") 
     private boolean acceptParties;
-    @JsonProperty("show_status") 
     private boolean showStatus;
-    @JsonProperty("hiding_players") 
     private boolean hiding;
 
-    @ConstructorProperties({ "_id", "username", "email", "groups", "skin", "last_seen", "last_game", "member_since", "used_ips", "disguise_actual", "disguise_lowercase", "disguise_group", "disguise_history", "accept_friends", "accept_parties", "show_status", "hiding_players"})
-    public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean disguised, @Nullable String disguiseName, @Nullable String disguiseLowercase, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
+    @ConstructorProperties({ "_id", "username", "email", "groups", "skin", "last_seen", "last_game", "member_since", "used_ips", "disguise_actual", "disguise_group", "disguise_history", "accept_friends", "accept_parties", "show_status", "hiding_players"})
+    public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean disguised, @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -67,7 +53,6 @@ public class GammaUser implements User {
         this.ipRecord = ipRecord;
         this.disguised = disguised;
         this.disguiseName = disguiseName;
-        this.disguiseLowercase = disguiseLowercase;
         this.disguiseGroup = disguiseGroup;
         this.disguiseHistory = disguiseHistory;
         this.language = language;
