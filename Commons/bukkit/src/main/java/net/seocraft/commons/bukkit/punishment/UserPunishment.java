@@ -11,30 +11,23 @@ import java.beans.ConstructorProperties;
 
 public class UserPunishment implements Punishment {
 
-    @JsonProperty("_id")
     @NotNull private String id;
-    @JsonProperty("type")
     @NotNull private PunishmentType punishmentType;
-    @JsonProperty("punisher")
     @NotNull private String punisherId;
-    @JsonProperty("punished")
     @NotNull private String punishedId;
     @NotNull private String server;
     @Nullable private Match match;
-    @JsonProperty("last_ip")
     @Nullable private String lastIp;
     @NotNull private String reason;
-    @JsonProperty("expires")
     private long expiration;
-    @JsonProperty("created_at")
     private long createdAt;
     private boolean automatic;
     private boolean appealed;
     private boolean silent;
     private boolean active;
 
-    @ConstructorProperties({"_id", "type", "punisher", "punished", "server", "match", "last_ip", "expires", "created_at", "automatic", "appealed", "silent", "active"})
-    UserPunishment(@NotNull String id, @NotNull PunishmentType punishmentType, @NotNull String punisherId, @NotNull String punishedId, @NotNull String server, @Nullable Match match, @Nullable String lastIp, @NotNull String reason, long expiration, long createdAt, boolean automatic, boolean appealed, boolean silent) {
+    @ConstructorProperties({"_id", "type", "punisher", "punished", "server", "match", "last_ip", "reason", "expires", "created_at", "automatic", "appealed", "silent", "active"})
+    UserPunishment(@NotNull String id, @NotNull PunishmentType punishmentType, @NotNull String punisherId, @NotNull String punishedId, @NotNull String server, @Nullable Match match, @Nullable String lastIp, @NotNull String reason, long expiration, long createdAt, boolean automatic, boolean appealed, boolean silent, boolean active) {
         this.id = id;
         this.punishmentType = punishmentType;
         this.punisherId = punisherId;
@@ -48,6 +41,7 @@ public class UserPunishment implements Punishment {
         this.automatic = automatic;
         this.appealed = appealed;
         this.silent = silent;
+        this.active = active;
     }
 
     @Override

@@ -9,9 +9,9 @@
         <version>1.8.8-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api-shared</artifactId>
+    <artifactId>api-core</artifactId>
     <packaging>jar</packaging>
-    <name>API Shared</name>
+    <name>API Core</name>
     <description>API shared functions for Seocraft Network</description>
 
     <dependencies>

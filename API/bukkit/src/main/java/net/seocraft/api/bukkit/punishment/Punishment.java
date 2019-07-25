@@ -1,5 +1,6 @@
 package net.seocraft.api.bukkit.punishment;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.core.storage.Model;
 import org.jetbrains.annotations.NotNull;
@@ -7,22 +8,28 @@ import org.jetbrains.annotations.Nullable;
 
 public interface Punishment extends Model {
 
+    @JsonProperty("type")
     @NotNull PunishmentType getPunishmentType();
 
+    @JsonProperty("punisher")
     @NotNull String getPunisherId();
 
+    @JsonProperty("punished")
     @NotNull String getPunishedId();
 
+    @JsonProperty("last_ip")
     @Nullable String getServer();
-
-    @Nullable String getLastIp();
 
     @Nullable Match getMatch();
 
+    @Nullable String getLastIp();
+
     @NotNull String getReason();
 
+    @JsonProperty("expires")
     long getExpiration();
 
+    @JsonProperty("created_at")
     long getCreatedAt();
 
     boolean isAutomatic();

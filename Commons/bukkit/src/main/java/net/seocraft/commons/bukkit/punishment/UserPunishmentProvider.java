@@ -62,7 +62,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
             }
         }
 
-        Punishment punishment = new UserPunishment(UUID.randomUUID().toString(), punishmentType, punisher, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent);
+        Punishment punishment = new UserPunishment(UUID.randomUUID().toString(), punishmentType, punisher, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent, true);
         this.punishmentCreateRequest.executeRequest(
                 this.mapper.writeValueAsString(
                         punishment

@@ -1,6 +1,5 @@
 package net.seocraft.commons.core.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.commons.core.utils.TimeUtils;
 import net.seocraft.api.core.user.partial.IPRecord;
@@ -37,7 +36,7 @@ public class GammaUser implements User {
     private boolean showStatus;
     private boolean hiding;
 
-    @ConstructorProperties({ "_id", "username", "email", "groups", "skin", "last_seen", "last_game", "member_since", "used_ips", "disguise_actual", "disguise_group", "disguise_history", "accept_friends", "accept_parties", "show_status", "hiding_players"})
+    @ConstructorProperties({"_id", "username", "email", "groups", "skin", "last_seen", "last_game", "member_since", "verified", "level", "experience", "used_ips", "disguised", "disguise_actual", "disguise_group", "disguise_history", "language", "accept_friends", "accept_parties", "show_status", "hiding_players"})
     public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean disguised, @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
         this.id = id;
         this.username = username;
@@ -216,7 +215,7 @@ public class GammaUser implements User {
 
     @Override
     public boolean isAcceptingParties() {
-        return acceptFriends;
+        return acceptParties;
     }
 
     @Override

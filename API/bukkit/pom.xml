@@ -27,7 +27,7 @@
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
-            <artifactId>api-shared</artifactId>
+            <artifactId>api-core</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>

@@ -1,5 +1,6 @@
 package net.seocraft.api.core.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.storage.Model;
@@ -21,6 +22,7 @@ public interface User extends Model {
 
     void setGroups(List<Group> groups);
 
+    @JsonIgnore
     @NotNull Group getPrimaryGroup();
 
     @NotNull String getSkin();
@@ -44,8 +46,10 @@ public interface User extends Model {
 
     long getExperience();
 
+    @JsonIgnore
     void addExperience(long experience);
 
+    @JsonIgnore
     void removeExperience(long experience);
 
     @JsonProperty("used_ips")
@@ -63,6 +67,7 @@ public interface User extends Model {
     @JsonProperty("disguise_group")
     @Nullable Group getDisguiseGroup();
 
+    @JsonProperty("disguise_group")
     void setDisguiseGroup(@NotNull Group group);
 
     @JsonProperty("disguise_history")
@@ -75,6 +80,7 @@ public interface User extends Model {
     @JsonProperty("accept_friends")
     boolean isAcceptingFriends();
 
+    @JsonProperty("accept_friends")
     void setAcceptingFriends(boolean accept);
 
     @JsonProperty("accept_parties")
@@ -86,6 +92,7 @@ public interface User extends Model {
     @JsonProperty("hiding_players")
     boolean isHiding();
 
+    @JsonProperty("hiding_players")
     void setHiding(boolean hiding);
 
 }
