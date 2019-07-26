@@ -1,6 +1,5 @@
 package net.seocraft.commons.core.group;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.group.partial.Flair;
 import org.jetbrains.annotations.NotNull;
@@ -10,13 +9,10 @@ import java.util.Set;
 
 public class PermissionGroup implements Group {
 
-    @JsonProperty("_id")
     @NotNull private String id;
     @NotNull private String name;
     private int priority;
-    @JsonProperty("minecraft_flair")
     @NotNull private Set<Flair> flairs;
-    @JsonProperty("minecraft_permissions")
     @NotNull private Set<String> permissions;
     private boolean staff;
 

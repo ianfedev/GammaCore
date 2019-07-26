@@ -18,6 +18,7 @@ public interface User extends Model {
 
     @Nullable String getEmail();
 
+    @JsonProperty("group")
     @NotNull List<Group> getGroups();
 
     void setGroups(List<Group> groups);

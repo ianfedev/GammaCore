@@ -105,10 +105,13 @@ public class UserPunishmentProvider implements PunishmentProvider {
 
     @Override
     public @Nullable Punishment getLastPunishmentSync(@Nullable PunishmentType type, @NotNull String playerId) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
-        String typeString = null;
+        String typeString = "warn";
         if (type != null) typeString = type.toString();
+
+        String response = this.punishmentGetLastRequest.executeRequest(typeString, playerId, this.serverTokenQuery.getToken());
+        if (response.equals("")) return null;
         return this.mapper.readValue(
-                this.punishmentGetLastRequest.executeRequest(typeString, playerId, this.serverTokenQuery.getToken()),
+                response,
                 Punishment.class
         );
     }

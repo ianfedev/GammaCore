@@ -11,7 +11,6 @@ public class DisguiseHistory implements Disguise {
 
     @NotNull private String nickname;
     @NotNull private Group group;
-    @JsonProperty("created_at")
     @NotNull private String createdAt;
 
     @ConstructorProperties({"nickname", "group", "created_at"})

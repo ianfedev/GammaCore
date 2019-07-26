@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Date;
@@ -114,7 +115,7 @@ public class PunishmentActions {
 
     public void checkBan(Player target, User targetData) throws InternalServerError {
         try {
-            Punishment lastPunishment = this.punishmentProvider.getLastPunishmentSync(PunishmentType.BAN, targetData.getId());
+            @Nullable Punishment lastPunishment = this.punishmentProvider.getLastPunishmentSync(PunishmentType.BAN, targetData.getId());
 
             if (lastPunishment == null || lastPunishment.getId() == null || !lastPunishment.isActive()) {
                 return;

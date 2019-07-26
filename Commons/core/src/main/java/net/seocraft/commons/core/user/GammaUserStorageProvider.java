@@ -77,13 +77,19 @@ public class GammaUserStorageProvider implements UserStorageProvider {
     }
 
     @Override
-    public @NotNull User findUserByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
-        User deserializeUser = this.objectMapper.readValue(
-                this.userGetRequest.executeRequest(id, this.tokenHandler.getToken()),
-                User.class
-        );
-        cacheStoreUser(deserializeUser);
-        return deserializeUser;
+    public @NotNull User findUserByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        try {
+            String response = this.userGetRequest.executeRequest(id, this.tokenHandler.getToken());
+            User deserializeUser = this.objectMapper.readValue(
+                    response,
+                    User.class
+            );
+            cacheStoreUser(deserializeUser);
+            return deserializeUser;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
