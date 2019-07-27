@@ -7,4 +7,5 @@ public interface Model {
 
     @JsonProperty("_id")
     String getId();
+
 }
