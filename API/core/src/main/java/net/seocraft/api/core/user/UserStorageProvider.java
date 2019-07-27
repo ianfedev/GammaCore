@@ -44,7 +44,7 @@ public interface UserStorageProvider {
      * @param username registered at the database
      * @return Async callback of user
      */
-    @Nullable ListenableFuture<AsyncResponse<User>> findUserByName(@NotNull String username);
+    @NotNull ListenableFuture<AsyncResponse<User>> findUserByName(@NotNull String username);
 
     /**
      * Retrieve user data from server.
@@ -55,7 +55,7 @@ public interface UserStorageProvider {
      * @throws NotFound Thrown when the user getId was not found.
      * @throws InternalServerError Thrown when the server had an internal error.
      */
-    @Nullable User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
+    @NotNull User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     /**
      * Retrieve user data from server.

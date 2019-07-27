@@ -1,6 +1,5 @@
 package net.seocraft.commons.bukkit.punishment;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentType;

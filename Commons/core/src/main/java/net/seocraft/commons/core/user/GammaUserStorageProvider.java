@@ -58,7 +58,7 @@ public class GammaUserStorageProvider implements UserStorageProvider {
     }
 
     @Override
-    public @Nullable ListenableFuture<AsyncResponse<User>> findUserByName(@NotNull String username) {
+    public @NotNull ListenableFuture<AsyncResponse<User>> findUserByName(@NotNull String username) {
         return this.executorService.submit(() -> {
             try {
                 return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, this.findUserByNameSync(username));
@@ -69,7 +69,7 @@ public class GammaUserStorageProvider implements UserStorageProvider {
     }
 
     @Override
-    public @Nullable User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
+    public @NotNull User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         return this.objectMapper.readValue(
                 this.userGetRequest.executeRequest(username, this.tokenHandler.getToken()),
                 User.class

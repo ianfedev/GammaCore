@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public interface Contribution {
 
     /**
-     * @return ID of who made the contribution.
+     * @return ID / Username of who made the contribution.
      */
     @NotNull String getContributor();
 
