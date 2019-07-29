@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.partial.Rating;
@@ -17,6 +18,7 @@ import net.seocraft.commons.bukkit.friend.UserFriendship;
 import net.seocraft.commons.bukkit.game.gamemode.CoreGamemode;
 import net.seocraft.commons.bukkit.game.gamemode.CoreSubGamemode;
 import net.seocraft.commons.bukkit.game.map.CoreMap;
+import net.seocraft.commons.bukkit.game.map.CraftMapConfiguration;
 import net.seocraft.commons.bukkit.game.map.partial.MapContribution;
 import net.seocraft.commons.bukkit.game.map.partial.MapRating;
 import net.seocraft.commons.bukkit.game.match.GameMatch;
@@ -35,6 +37,7 @@ public class InterfaceDeserializer {
                 .addMapping(Contribution.class, MapContribution.class)
                 .addMapping(Rating.class, MapRating.class)
                 .addMapping(GameMap.class, CoreMap.class)
+                .addMapping(BaseMapConfiguration.class, CraftMapConfiguration.class)
                 .addMapping(Match.class, GameMatch.class)
                 .addMapping(Party.class, GameParty.class)
                 .addMapping(Punishment.class, UserPunishment.class);

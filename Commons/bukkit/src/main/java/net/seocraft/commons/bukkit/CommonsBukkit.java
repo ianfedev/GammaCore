@@ -26,6 +26,7 @@ import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listeners.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listeners.UserLogoutListener;
+import net.seocraft.commons.bukkit.map.CraftMapFileManager;
 import net.seocraft.commons.bukkit.punishment.PunishmentModule;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -63,6 +64,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
+    @Inject private CraftMapFileManager craftMapFileManager;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
@@ -96,6 +98,8 @@ public class CommonsBukkit extends JavaPlugin {
         if (getConfig().getBoolean("authentication.enabled", false)) {
             enableAuthentication();
         }
+
+        this.craftMapFileManager.configureMapFolder();
     }
 
 
