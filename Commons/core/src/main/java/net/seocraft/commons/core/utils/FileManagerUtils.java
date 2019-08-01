@@ -3,53 +3,63 @@ package net.seocraft.commons.core.utils;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Objects;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class FileManagerUtils {
 
-    public static void zipFolder(File srcFolder, File destZipFile) throws Exception {
-        try (FileOutputStream fileWriter = new FileOutputStream(destZipFile);
-             ZipOutputStream zip = new ZipOutputStream(fileWriter)) {
+    public static void compressFile(File inputDirectory, File outputZip) throws IOException {
+        outputZip.getParentFile().mkdirs();
+        List<File> listFiles = new ArrayList<>();
+        listFiles(listFiles, inputDirectory);
 
-            addFolderToZip(srcFolder, srcFolder, zip);
-        }
+        ZipOutputStream zipOutputStream = new ZipOutputStream(
+                new FileOutputStream(outputZip));
+
+        createZipFile(listFiles, inputDirectory, zipOutputStream);
     }
 
-    private static void addFileToZip(File rootPath, File srcFile, ZipOutputStream zip) throws Exception {
+    private static void createZipFile(List<File> listFiles, File inputDirectory, ZipOutputStream zipOutputStream) throws IOException {
 
-        if (srcFile.isDirectory()) {
-            addFolderToZip(rootPath, srcFile, zip);
-        } else {
-            byte[] buf = new byte[1024];
-            int len;
-            try (FileInputStream in = new FileInputStream(srcFile)) {
-                String name = srcFile.getPath();
-                name = name.replace(rootPath.getPath(), "");
-                zip.putNextEntry(new ZipEntry(name));
-                while ((len = in.read(buf)) > 0) {
-                    zip.write(buf, 0, len);
+        for (File file : listFiles) {
+            if (!file.getName().equalsIgnoreCase("map.zip")) {
+                String filePath = file.getCanonicalPath();
+                int lengthDirectoryPath = inputDirectory.getCanonicalPath().length();
+                int lengthFilePath = file.getCanonicalPath().length();
+                String zipFilePath = filePath.substring(lengthDirectoryPath + 1, lengthFilePath);
+                ZipEntry zipEntry = new ZipEntry(zipFilePath);
+                zipOutputStream.putNextEntry(zipEntry);
+                FileInputStream inputStream = new FileInputStream(file);
+                byte[] bytes = new byte[1024];
+                int length;
+                while ((length = inputStream.read(bytes)) >= 0) {
+                    zipOutputStream.write(bytes, 0, length);
                 }
+
+                zipOutputStream.closeEntry();
             }
         }
+        zipOutputStream.close();
     }
 
-    private static void addFolderToZip(File rootPath, File srcFolder, ZipOutputStream zip) throws Exception {
-        for (File fileName : Objects.requireNonNull(srcFolder.listFiles())) {
-            addFileToZip(rootPath, fileName, zip);
+    private static List<File> listFiles(List<File> listFiles, File inputDirectory) throws IOException {
+        File[] allFiles = inputDirectory.listFiles();
+        for (File file : Objects.requireNonNull(allFiles)) {
+            if (file.isDirectory()) {
+                listFiles(listFiles, file);
+            } else {
+                listFiles.add(file);
+            }
         }
+        return listFiles;
     }
 
     public static String fileToBase64StringConversion(File file) throws IOException {
-
         byte[] fileContent = FileUtils.readFileToByteArray(file);
         String encodedString = Base64
                 .getEncoder()
                 .encodeToString(fileContent);
-
         return Arrays.toString(Base64
                 .getDecoder()
                 .decode(encodedString));

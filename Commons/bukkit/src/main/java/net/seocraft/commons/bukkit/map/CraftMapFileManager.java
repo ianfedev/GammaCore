@@ -3,8 +3,11 @@ package net.seocraft.commons.bukkit.map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
+import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.MapProvider;
 import net.seocraft.api.bukkit.map.MapFileManager;
+import net.seocraft.api.core.concurrent.AsyncResponse;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.core.utils.FileManagerUtils;
 import org.bukkit.Bukkit;
@@ -16,6 +19,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+
+import static net.seocraft.commons.core.utils.FileManagerUtils.compressFile;
+import static net.seocraft.commons.core.utils.FileManagerUtils.fileToBase64StringConversion;
 
 public class CraftMapFileManager implements MapFileManager {
 
@@ -64,30 +70,41 @@ public class CraftMapFileManager implements MapFileManager {
                 if (level && region && image && configuration != null) {
 
                     try {
-                        String path = "./maps/" + folder.getName() + "/";
-                        FileManagerUtils.zipFolder(folder, new File(path + "map.zip"));
-                        System.out.println(FileManagerUtils.fileToBase64StringConversion(
-                                new File(path + "/map.zip")
-                        ));
+                        File mapFile = new File(folder, "map.zip");
+                        compressFile(folder, mapFile);
+                        BaseMapConfiguration finalConfiguration = configuration;
+                        CallbackWrapper.addCallback(this.mapProvider.loadMap(
+                                configuration.getName(),
+                                fileToBase64StringConversion(
+                                        new File(folder, "map.zip")
+                                ),
+                                fileToBase64StringConversion(
+                                        new File(folder, "config.json")
+                                ),
+                                fileToBase64StringConversion(
+                                        new File(folder, "image.png")
+                                ),
+                                configuration.getAuthor(),
+                                configuration.getVersion(),
+                                configuration.getContributors(),
+                                configuration.getGamemode(),
+                                configuration.getSubGamemode(),
+                                configuration.getDescription()
+                        ), mapAsyncResponse -> {
+                            if (mapFile.exists()) mapFile.delete();
+                            if (mapAsyncResponse.getStatus().equals(AsyncResponse.Status.SUCCESS)) {
+                                System.out.println(mapAsyncResponse.getResponse().getName());
+                            } else {
+                                Bukkit.getLogger().log(
+                                        Level.SEVERE,
+                                        "[GameAPI] Unable to get configuration from folder {0} ({1}).",
+                                        new Object[]{finalConfiguration.getName(), mapAsyncResponse.getThrowedException().getMessage()}
+                                );
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
-
-                    /*CallbackWrapper.addCallback(this.mapProvider.loadMap(
-                            configuration.getName(),
-                            "",
-                            "",
-                            "",
-                            configuration.getAuthor(),
-                            configuration.getVersion(),
-                            configuration.getContributors(),
-                            configuration.getGamemode(),
-                            configuration.getSubGamemode(),
-                            configuration.getDescription()
-                    ), mapAsyncResponse -> {
-
-                    });*/
                 } else {
                     Bukkit.getLogger().log(
                             Level.SEVERE,
