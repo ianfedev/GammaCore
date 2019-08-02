@@ -1,8 +1,7 @@
 package net.seocraft.commons.core.utils;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -38,6 +37,8 @@ public class FileManagerUtils {
                 }
 
                 zipOutputStream.closeEntry();
+            } else {
+                file.delete();
             }
         }
         zipOutputStream.close();
@@ -56,12 +57,9 @@ public class FileManagerUtils {
     }
 
     public static String fileToBase64StringConversion(File file) throws IOException {
-        byte[] fileContent = FileUtils.readFileToByteArray(file);
-        String encodedString = Base64
-                .getEncoder()
-                .encodeToString(fileContent);
-        return Arrays.toString(Base64
-                .getDecoder()
-                .decode(encodedString));
+        byte[] encodeFile = Base64.getEncoder().encode(
+                Files.readAllBytes(file.toPath())
+        );
+        return new String(encodeFile);
     }
 }

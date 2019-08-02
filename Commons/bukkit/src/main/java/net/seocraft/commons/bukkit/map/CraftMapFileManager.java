@@ -2,19 +2,26 @@ package net.seocraft.commons.bukkit.map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.MapProvider;
 import net.seocraft.api.bukkit.map.MapFileManager;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.core.utils.FileManagerUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
@@ -23,8 +30,10 @@ import java.util.stream.Collectors;
 import static net.seocraft.commons.core.utils.FileManagerUtils.compressFile;
 import static net.seocraft.commons.core.utils.FileManagerUtils.fileToBase64StringConversion;
 
+@Singleton
 public class CraftMapFileManager implements MapFileManager {
 
+    @NotNull private Set<GameMap> playableMaps =  new HashSet<>();
     @Inject private CommonsBukkit instance;
     @Inject private MapProvider mapProvider;
     @Inject private ObjectMapper mapper;
@@ -65,15 +74,11 @@ public class CraftMapFileManager implements MapFileManager {
                     }
                 }
 
-                //TODO: Transform files to base64, execute provider action
-
                 if (level && region && image && configuration != null) {
-
                     try {
                         File mapFile = new File(folder, "map.zip");
                         compressFile(folder, mapFile);
-                        BaseMapConfiguration finalConfiguration = configuration;
-                        CallbackWrapper.addCallback(this.mapProvider.loadMap(
+                        GameMap map = this.mapProvider.loadMapSync(
                                 configuration.getName(),
                                 fileToBase64StringConversion(
                                         new File(folder, "map.zip")
@@ -90,33 +95,49 @@ public class CraftMapFileManager implements MapFileManager {
                                 configuration.getGamemode(),
                                 configuration.getSubGamemode(),
                                 configuration.getDescription()
-                        ), mapAsyncResponse -> {
-                            if (mapFile.exists()) mapFile.delete();
-                            if (mapAsyncResponse.getStatus().equals(AsyncResponse.Status.SUCCESS)) {
-                                System.out.println(mapAsyncResponse.getResponse().getName());
-                            } else {
-                                Bukkit.getLogger().log(
-                                        Level.SEVERE,
-                                        "[GameAPI] Unable to get configuration from folder {0} ({1}).",
-                                        new Object[]{finalConfiguration.getName(), mapAsyncResponse.getThrowedException().getMessage()}
-                                );
-                            }
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        );
+                        if (mapFile.exists()) mapFile.delete();
+                        this.playableMaps.add(map);
+                        Bukkit.getLogger().log(
+                                Level.INFO,
+                                "[GameAPI] Loaded successfully map {0}.",
+                                map.getName()
+                        );
+                    } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest e) {
+                        Bukkit.getLogger().log(
+                                Level.SEVERE,
+                                "[GameAPI] Error loading map {0}. ({1})",
+                                new Object[]{folder.getName(), e.getMessage()}
+                        );
                     }
                 } else {
                     Bukkit.getLogger().log(
                             Level.SEVERE,
                             "[GameAPI] Current map has not the correctly configuration.",
-                            new Object[]{folder.getName()}
+                            folder.getName()
                     );
                 }
             });
+
+            if (this.playableMaps.isEmpty()) {
+                Bukkit.getLogger().log(Level.SEVERE, "[GameAPI] There was not maps available for load ad 'maps' folder.");
+                Bukkit.shutdown();
+            } else {
+                Bukkit.getLogger().log(
+                        Level.INFO,
+                        "[GameAPI] Loaded successfully {0} maps.",
+                        this.playableMaps.size()
+                );
+            }
         } else {
-            Bukkit.getLogger().log(Level.SEVERE, "[GameAPI] There is not a folder called 'maps' inside your server director.");
+            Bukkit.getLogger().log(Level.SEVERE, "[GameAPI] There is not a folder called 'maps' inside your server directory.");
             Bukkit.shutdown();
         }
+    }
+
+    @Override
+    public @NotNull Set<GameMap> getPlayableMaps() {
+        return this.playableMaps;
     }
 
 }

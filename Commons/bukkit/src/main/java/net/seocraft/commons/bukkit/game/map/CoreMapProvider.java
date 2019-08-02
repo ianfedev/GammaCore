@@ -17,6 +17,7 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.game.map.partial.MapContribution;
@@ -39,6 +40,7 @@ public class CoreMapProvider implements MapProvider {
     @Inject private GamemodeProvider gamemodeProvider;
     @Inject private MapLoadRequest mapLoadRequest;
     @Inject private MapVoteRequest mapVoteRequest;
+    @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ObjectMapper mapper;
 
     @Override
@@ -118,7 +120,8 @@ public class CoreMapProvider implements MapProvider {
         );
 
         String response = this.mapLoadRequest.executeRequest(
-                this.mapper.writeValueAsString(rawMap)
+                this.mapper.writeValueAsString(rawMap),
+                this.serverTokenQuery.getToken()
         );
 
         return this.mapper.readValue(
@@ -145,7 +148,8 @@ public class CoreMapProvider implements MapProvider {
         request.put("user", userId);
         request.put("rating", GameRating.getNumber(rating));
         String response = this.mapVoteRequest.executeRequest(
-                this.mapper.writeValueAsString(request)
+                this.mapper.writeValueAsString(request),
+                this.serverTokenQuery.getToken()
         );
         return this.mapper.readValue(response, Boolean.class);
     }

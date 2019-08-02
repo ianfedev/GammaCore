@@ -8,9 +8,18 @@ import net.seocraft.commons.core.backend.http.HttpRequest;
 import net.seocraft.commons.core.backend.http.HttpType;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MapLoadRequest extends HttpRequest {
 
+    private HashMap<String, String> headers = new HashMap<>();
     private String map;
+
+    @Override
+    public Map<String, String> getHeaders() {
+        return this.headers;
+    }
 
     @Override
     public HttpType getType() {
@@ -27,8 +36,9 @@ public class MapLoadRequest extends HttpRequest {
         return "map/load";
     }
 
-    public String executeRequest(@NotNull String map) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public String executeRequest(@NotNull String map, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.map = map;
+        this.headers.put("authorization", token);
         return getResponse();
     }
 
