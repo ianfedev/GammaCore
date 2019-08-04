@@ -17,15 +17,17 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
+import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
 import net.seocraft.commons.bukkit.command.*;
+import net.seocraft.commons.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
-import net.seocraft.commons.bukkit.listeners.DisabledPluginsCommandListener;
-import net.seocraft.commons.bukkit.listeners.UserLogoutListener;
+import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
+import net.seocraft.commons.bukkit.listener.UserLogoutListener;
 import net.seocraft.commons.bukkit.map.CraftMapFileManager;
 import net.seocraft.commons.bukkit.punishment.PunishmentModule;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
@@ -37,6 +39,7 @@ import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -69,7 +72,7 @@ public class CommonsBukkit extends JavaPlugin {
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
-    public Server serverRecord;
+    @NotNull public Server serverRecord;
 
     @Override
     public void onEnable() {
@@ -79,6 +82,18 @@ public class CommonsBukkit extends JavaPlugin {
 
         try {
             this.serverRecord = this.serverLoad.setupServer();
+
+            if (this.serverRecord.getServerType() == ServerType.GAME) {
+                this.craftMapFileManager.configureMapFolder();
+                // The punishment event should be called in the main thread only
+                Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().callEvent(
+                        new GameProcessingReadyEvent(
+                                Objects.requireNonNull(this.serverRecord.getGamemode()),
+                                Objects.requireNonNull(this.serverRecord.getSubGamemode())
+                        )
+                ));
+            }
+
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError ex) {
             ex.printStackTrace();
             Bukkit.getLogger().log(Level.SEVERE, "[Bukkit-API] Error when authorizing server load.");
@@ -98,8 +113,6 @@ public class CommonsBukkit extends JavaPlugin {
         if (getConfig().getBoolean("authentication.enabled", false)) {
             enableAuthentication();
         }
-
-        this.craftMapFileManager.configureMapFolder();
     }
 
 

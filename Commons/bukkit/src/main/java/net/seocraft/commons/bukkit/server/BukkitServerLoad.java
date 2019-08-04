@@ -12,6 +12,7 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.map.CraftMapFileManager;
 import net.seocraft.commons.core.backend.server.ServerDisconnectRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,6 +30,7 @@ public class BukkitServerLoad implements ServerLoad {
     @Inject private ServerManager serverManager;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ServerDisconnectRequest serverDisconnectRequest;
+    @Inject private CraftMapFileManager craftMapFileManager;
     @Inject private RedisClient redisClient;
 
     public Server setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
@@ -65,6 +67,8 @@ public class BukkitServerLoad implements ServerLoad {
                         .findFirst();
 
                 if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
+
+                this.craftMapFileManager.configureMapFolder();
 
                 return this.serverManager.loadServer(
                         /* TODO: Get slug from */ "test-1",

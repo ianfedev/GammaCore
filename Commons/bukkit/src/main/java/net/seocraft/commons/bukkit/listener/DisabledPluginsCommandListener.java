@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.listeners;
+package net.seocraft.commons.bukkit.listener;
 
 import com.google.inject.Inject;
 import net.seocraft.api.core.session.GameSessionManager;
