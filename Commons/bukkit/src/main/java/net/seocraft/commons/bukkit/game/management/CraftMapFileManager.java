@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.map;
+package net.seocraft.commons.bukkit.game.management;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
@@ -6,16 +6,13 @@ import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.MapProvider;
-import net.seocraft.api.bukkit.map.MapFileManager;
-import net.seocraft.api.core.concurrent.AsyncResponse;
-import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.api.bukkit.game.management.MapFileManager;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

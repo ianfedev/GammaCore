@@ -12,7 +12,7 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.map.CraftMapFileManager;
+import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
 import net.seocraft.commons.core.backend.server.ServerDisconnectRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

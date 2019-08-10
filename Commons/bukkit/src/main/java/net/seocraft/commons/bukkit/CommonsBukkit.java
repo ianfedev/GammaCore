@@ -23,12 +23,13 @@ import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEvent
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
 import net.seocraft.commons.bukkit.command.*;
-import net.seocraft.commons.bukkit.event.GameProcessingReadyEvent;
+import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
+import net.seocraft.commons.bukkit.listener.GamePairingListener;
 import net.seocraft.commons.bukkit.listener.UserLogoutListener;
-import net.seocraft.commons.bukkit.map.CraftMapFileManager;
+import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
 import net.seocraft.commons.bukkit.punishment.PunishmentModule;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -52,6 +53,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
     @Inject private AuthenticationCommandsListener authenticationCommandsListener;
 
+    @Inject private GamePairingListener gamePairingListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
     @Inject private UserLogoutListener userLogoutListener;
 
@@ -72,6 +74,7 @@ public class CommonsBukkit extends JavaPlugin {
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
+    public int pairingRunnable;
     @NotNull public Server serverRecord;
 
     @Override
@@ -92,6 +95,17 @@ public class CommonsBukkit extends JavaPlugin {
                                 Objects.requireNonNull(this.serverRecord.getSubGamemode())
                         )
                 ));
+                pairingRunnable = Bukkit.getScheduler().scheduleSyncDelayedTask(
+                        this,
+                        ()  -> {
+                            Bukkit.getLogger().log(
+                                Level.SEVERE,
+                                "[GameAPI] No game was paired during last 2 minutes, shutting down server."
+                            );
+                            Bukkit.shutdown();
+                        },
+                        600L
+                );
             }
 
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError ex) {
@@ -104,6 +118,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(punishmentCommand);
         dispatcher.registerCommandClass(friendCommand);
 
+        getServer().getPluginManager().registerEvents(gamePairingListener, this);
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userAccessResponse, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);

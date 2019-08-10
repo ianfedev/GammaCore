@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.event;
+package net.seocraft.api.bukkit.event;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

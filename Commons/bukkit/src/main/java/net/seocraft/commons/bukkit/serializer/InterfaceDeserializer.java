@@ -6,22 +6,28 @@ import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.partial.Rating;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.partial.Team;
+import net.seocraft.api.bukkit.game.match.partial.TeamMember;
 import net.seocraft.api.bukkit.game.party.Party;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.core.friend.Friendship;
 import net.seocraft.commons.bukkit.friend.UserFriendship;
 import net.seocraft.commons.bukkit.game.gamemode.CoreGamemode;
 import net.seocraft.commons.bukkit.game.gamemode.CoreSubGamemode;
+import net.seocraft.commons.bukkit.game.management.GameResult;
 import net.seocraft.commons.bukkit.game.map.CoreMap;
 import net.seocraft.commons.bukkit.game.map.CraftMapConfiguration;
 import net.seocraft.commons.bukkit.game.map.partial.MapContribution;
 import net.seocraft.commons.bukkit.game.map.partial.MapRating;
 import net.seocraft.commons.bukkit.game.match.GameMatch;
+import net.seocraft.commons.bukkit.game.match.partial.GameTeam;
+import net.seocraft.commons.bukkit.game.match.partial.GameTeamMember;
 import net.seocraft.commons.bukkit.game.party.GameParty;
 import net.seocraft.commons.bukkit.punishment.UserPunishment;
 import net.seocraft.commons.core.serializer.CoreResolver;
@@ -38,6 +44,9 @@ public class InterfaceDeserializer {
                 .addMapping(Rating.class, MapRating.class)
                 .addMapping(GameMap.class, CoreMap.class)
                 .addMapping(BaseMapConfiguration.class, CraftMapConfiguration.class)
+                .addMapping(Team.class, GameTeam.class)
+                .addMapping(TeamMember.class, GameTeamMember.class)
+                .addMapping(FinderResult.class, GameResult.class)
                 .addMapping(Match.class, GameMatch.class)
                 .addMapping(Party.class, GameParty.class)
                 .addMapping(Punishment.class, UserPunishment.class);

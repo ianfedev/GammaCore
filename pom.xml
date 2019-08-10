@@ -6,19 +6,23 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <global.version>1.8-SNAPSHOT</global.version>
+        <global.version>1.0</global.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <groupId>net.seocraft</groupId>
     <artifactId>GammaCore</artifactId>
-    <version>1.8.8-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <repositories>
         <repository>
             <id>gamma-snapshots</id>
             <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
+        </repository>
+        <repository>
+            <id>cloudnet-repo</id>
+            <url>https://cloudnetservice.eu/repositories/</url>
         </repository>
         <repository>
             <id>gamma-releases</id>
@@ -28,11 +32,11 @@
 
     <distributionManagement>
         <repository>
-            <id>gamma-snapshots</id>
+            <id>gamma-releases</id>
             <url>https://repo.seocraft.net/repository/gamma-releases</url>
         </repository>
         <snapshotRepository>
-            <id>gamma-releases</id>
+            <id>gamma-snapshots</id>
             <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
         </snapshotRepository>
     </distributionManagement>

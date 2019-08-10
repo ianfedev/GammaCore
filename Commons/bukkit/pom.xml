@@ -7,7 +7,7 @@
         <groupId>net.seocraft</groupId>
         <artifactId>commons</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>1.8.8-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>commons-bukkit</artifactId>
@@ -18,6 +18,12 @@
             <groupId>me.fixeddev</groupId>
             <artifactId>BCM-Bukkit</artifactId>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>

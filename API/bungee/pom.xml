@@ -6,7 +6,7 @@
         <artifactId>api-parent</artifactId>
         <groupId>net.seocraft</groupId>
         <relativePath>../pom.xml</relativePath>
-        <version>1.8.8-SNAPSHOT</version>
+        <version>1.0</version>
     </parent>
 
     <artifactId>api-bungee</artifactId>
@@ -22,7 +22,7 @@
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
-            <artifactId>api-shared</artifactId>
+            <artifactId>api-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

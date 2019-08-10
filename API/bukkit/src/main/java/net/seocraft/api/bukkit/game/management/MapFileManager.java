@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.map;
+package net.seocraft.api.bukkit.game.management;
 
 import net.seocraft.api.bukkit.game.map.GameMap;
 import org.jetbrains.annotations.NotNull;
