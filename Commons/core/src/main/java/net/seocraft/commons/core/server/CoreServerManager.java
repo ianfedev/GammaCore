@@ -125,10 +125,10 @@ public class CoreServerManager implements ServerManager {
     }
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<Set<Server>>> getServerByQuery(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) {
+    public @NotNull ListenableFuture<AsyncResponse<Set<Server>>> getServerByQuery(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode, @Nullable String slug) {
         return this.executorService.submit(() -> {
             try {
-                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getServerByQuerySync(id, match, gamemode, subGamemode));
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getServerByQuerySync(id, match, gamemode, subGamemode, slug));
             } catch (Unauthorized | BadRequest | NotFound | InternalServerError exception) {
                 return new AsyncResponse<>(exception, AsyncResponse.Status.ERROR, null);
             }
@@ -136,16 +136,17 @@ public class CoreServerManager implements ServerManager {
     }
 
     @Override
-    public @NotNull Set<Server> getServerByQuerySync(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
+    public @NotNull Set<Server> getServerByQuerySync(@Nullable String id, @Nullable String match, @Nullable String gamemode, @Nullable String subGamemode, @Nullable String slug) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         ObjectNode node = mapper.createObjectNode();
         if (id != null) node.put("_id",  id);
         if (match != null) node.put("matches", match);
+        if (slug != null) node.put("slug", slug);
         if (gamemode != null) {
             node.put("gamemode", gamemode);
             if (subGamemode == null) throw new IllegalArgumentException("You can not send a gamemode without sub-gamemode.");
             node.put("sub_gamemode", subGamemode);
         }
-        if (id == null && match == null && gamemode == null) throw new IllegalArgumentException("No query specified.");
+        if (id == null && match == null && gamemode == null && slug == null) throw new IllegalArgumentException("No query specified.");
 
         String rawResponse = this.serverGetQueryRequest.executeRequest(
                 mapper.writeValueAsString(node),

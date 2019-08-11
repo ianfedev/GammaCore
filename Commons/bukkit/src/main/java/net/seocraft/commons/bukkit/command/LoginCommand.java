@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit.command;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
@@ -70,7 +71,7 @@ public class LoginCommand extends AbstractAdvancedCommand {
                             node.put("username", player.getName());
                             node.put("password", commandContext.getArgument(0));
                             this.userLoginRequest.executeRequest(
-                                    node.asText(),
+                                    this.mapper.writeValueAsString(node),
                                     this.tokenQuery.getToken()
                             );
                             this.instance.loginAttempts.put(
@@ -114,11 +115,11 @@ public class LoginCommand extends AbstractAdvancedCommand {
                                                 ChatColor.GRAY + "[" + newAttempts + "/3]"
                                 );
                             }
-                        } catch (InternalServerError | NotFound | BadRequest error) {
+                        } catch (InternalServerError | NotFound | BadRequest | JsonProcessingException error) {
                             Bukkit.getLogger().log(Level.WARNING,
                                     "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
                                     new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
-                            player.kickPlayer(ChatColor.RED + this.translator.getUnspacedField(user.getLanguage(), "authentication_login_error") + ". \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
+                            Bukkit.getScheduler().runTask(this.instance, () -> player.kickPlayer(ChatColor.RED + this.translator.getUnspacedField(user.getLanguage(), "authentication_login_error") + ". \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName()));
                         }
                     } else {
                         ChatAlertLibrary.errorChatAlert(player,
@@ -129,17 +130,11 @@ public class LoginCommand extends AbstractAdvancedCommand {
                         );
                     }
                 } else {
-                    ChatAlertLibrary.errorChatAlert(
-                            player,
-                            null
-                    );
+                    ChatAlertLibrary.errorChatAlert(player);
                 }
             });
         } catch (IOException e) {
-            ChatAlertLibrary.errorChatAlert(
-                    player,
-                    null
-            );
+            ChatAlertLibrary.errorChatAlert(player);
         }
         return true;
     }

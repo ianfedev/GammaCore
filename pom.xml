@@ -21,10 +21,6 @@
             <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
         </repository>
         <repository>
-            <id>cloudnet-repo</id>
-            <url>https://cloudnetservice.eu/repositories/</url>
-        </repository>
-        <repository>
             <id>gamma-releases</id>
             <url>https://repo.seocraft.net/repository/gamma-releases</url>
         </repository>

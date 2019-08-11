@@ -35,7 +35,8 @@ public interface ServerManager {
             @Nullable String id,
             @Nullable String match,
             @Nullable String gamemode,
-            @Nullable String subgamemode
+            @Nullable String subgamemode,
+            @Nullable String slug
     );
 
     @NotNull Set<Server> getServerByQuerySync(

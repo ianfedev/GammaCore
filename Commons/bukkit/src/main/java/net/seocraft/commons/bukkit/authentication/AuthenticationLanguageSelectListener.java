@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.authentication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
+import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
@@ -31,48 +32,56 @@ import java.util.logging.Level;
 public class AuthenticationLanguageSelectListener implements Listener {
 
     @Inject private TranslatableField translator;
+    @Inject private CommonsBukkit instance;
     @Inject private GameSessionManager gameSessionManager;
     @Inject private UserStorageProvider userStorageProvider;
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void authenticationLanguageSelectListener(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
         HumanEntity entity = event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         if ((entity instanceof Player)) {
             Player player = (Player) entity;
+
+            if (NBTTagHandler.hasString(clickedItem, "accessor")) {
+                event.setCancelled(true);
+                return;
+            }
+
+            if (event.getClick().equals(ClickType.RIGHT) && NBTTagHandler.hasString(clickedItem, "language_accessor")) {
+                event.setCancelled(true);
+                return;
+            }
+
             if (event.getClick().equals(ClickType.LEFT) && NBTTagHandler.hasString(clickedItem, "language_accessor")) {
                 try {
-                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), asyncResponse -> {
-                        if (asyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                            User user = asyncResponse.getResponse();
-                            if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {
-                                user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
-                                try {
-                                    this.userStorageProvider.updateUser(user);
-                                    ChatAlertLibrary.infoAlert(player,
-                                            this.translator.getUnspacedField(
-                                                    user.getLanguage(),
-                                                    "authentication_language_update_success"
-                                            ).replace("%%language%%", this.translator.getUnspacedField(user.getLanguage(), "commons_language_placeholder"))
-                                    );
-                                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException error) {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(user.getLanguage(), "authentication_language_update_error"));
-                                    Bukkit.getLogger().log(Level.SEVERE, "[Commons] Something went wrong updating player {0} ({1}): {2}",
-                                            new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
-                                }
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translator.getUnspacedField(user.getLanguage(), "authentication_language_update_same") + "."
-                                );
-                                player.closeInventory();
-                            }
-                        } else {
-                            ChatAlertLibrary.errorChatAlert(player);
+                    User user = this.userStorageProvider.getCachedUserSync(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId());
+                    if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {
+                        user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
+                        try {
+                            this.userStorageProvider.updateUser(user);
+                            ChatAlertLibrary.infoAlert(player,
+                                    this.translator.getUnspacedField(
+                                            user.getLanguage(),
+                                            "authentication_language_update_success"
+                                    ).replace("%%language%%", this.translator.getUnspacedField(user.getLanguage(), "commons_language_placeholder"))
+                            );
+                        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException error) {
+                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(user.getLanguage(), "authentication_language_update_error"));
+                            Bukkit.getLogger().log(Level.SEVERE, "[Commons] Something went wrong updating player {0} ({1}): {2}",
+                                    new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
                         }
-                    });
-                } catch (IOException e) {
+                        player.closeInventory();
+                    } else {
+                        ChatAlertLibrary.errorChatAlert(player,
+                                this.translator.getUnspacedField(user.getLanguage(), "authentication_language_update_same") + "."
+                        );
+                    }
+                } catch (InternalServerError | IOException | NotFound | Unauthorized | BadRequest internalServerError) {
                     ChatAlertLibrary.errorChatAlert(player);
                 }
+                event.setCancelled(true);
             }
         }
     }
