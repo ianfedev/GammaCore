@@ -96,7 +96,7 @@ public class LoginCommand extends AbstractAdvancedCommand {
                                 );
                             }
                         } catch (Unauthorized unauthorized) {
-                            Integer newAttempts = this.instance.loginAttempts.get(player.getUniqueId());
+                            Integer newAttempts = this.instance.loginAttempts.get(player.getUniqueId()) + 1;
                             if (newAttempts >= 3) {
                                 Date remainingDate = TimeUtils.addMinutes(new Date(), 3);
                                 this.authenticationAttemptsHandler.setAttemptLock(
@@ -110,6 +110,10 @@ public class LoginCommand extends AbstractAdvancedCommand {
                                 ));
                                 this.instance.loginAttempts.remove(player.getUniqueId());
                             } else {
+                                this.instance.loginAttempts.put(
+                                        player.getUniqueId(),
+                                        newAttempts
+                                );
                                 ChatAlertLibrary.errorChatAlert(player,
                                         this.translator.getField(user.getLanguage(), "authentication_incorrect_password") +
                                                 ChatColor.GRAY + "[" + newAttempts + "/3]"

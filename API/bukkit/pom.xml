@@ -16,10 +16,6 @@
     <description>Seocraft Network API that extends default minecraft stack</description>
 
     <dependencies>
-<!--        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency> -->
         <dependency>
             <groupId>net.seocraft</groupId>
             <artifactId>paperspigot</artifactId>

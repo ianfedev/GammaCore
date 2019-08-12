@@ -1,8 +1,11 @@
 package net.seocraft.commons.bukkit.command;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import de.dytanic.cloudnet.CloudNet;
+import de.dytanic.cloudnet.ext.bridge.BridgePlayerManager;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
@@ -70,10 +73,10 @@ public class RegisterCommand extends AbstractAdvancedCommand {
                                 node.put("password", password);
 
                                 this.userRegisterRequest.executeRequest(
-                                        node.asText(),
+                                        this.mapper.writeValueAsString(node),
                                         this.tokenQuery.getToken()
                                 );
-                            } catch (InternalServerError | Unauthorized | NotFound | BadRequest error) {
+                            } catch (InternalServerError | Unauthorized | NotFound | BadRequest | JsonProcessingException error) {
                                 Bukkit.getLogger().log(Level.WARNING,
                                         "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
                                         new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
@@ -87,7 +90,10 @@ public class RegisterCommand extends AbstractAdvancedCommand {
                                             this.translator.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
                                                     .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
                             );
-                            //TODO: Give welcome message, handle request, send to server group
+                            BridgePlayerManager.getInstance().proxySendPlayer(
+                                    BridgePlayerManager.getInstance().getOnlinePlayer(player.getName()).get(0),
+                                    this.instance.getConfig().getString("authentication.redirect")
+                            );
                         } else {
                             ChatAlertLibrary.errorChatAlert(player,
                                     this.translator.getUnspacedField(user.getLanguage(),"authentication_password_weak")
