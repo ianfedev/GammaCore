@@ -21,6 +21,7 @@ public class GammaUser implements User {
     private String skin;
     private long lastSeen;
     private @NotNull String lastGame;
+    private @NotNull String lastLobby;
     private long memberSince;
     private boolean verified;
     private int level;
@@ -31,13 +32,14 @@ public class GammaUser implements User {
     @Nullable private Group disguiseGroup;
     @Nullable private List<Disguise> disguiseHistory;
     @NotNull private String language;
+    private boolean adminChatActive;
     private boolean acceptFriends;
     private boolean acceptParties;
     private boolean showStatus;
     private boolean hiding;
 
-    @ConstructorProperties({"_id", "username", "email", "group", "skin", "last_seen", "last_game", "member_since", "verified", "level", "experience", "used_ips", "disguised", "disguise_actual", "disguise_group", "disguise_history", "language", "accept_friends", "accept_parties", "show_status", "hiding_players"})
-    public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean disguised, @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
+    @ConstructorProperties({"_id", "username", "email", "group", "skin", "last_seen", "last_game", "last_lobby", "member_since", "verified", "level", "experience", "used_ips", "disguised", "disguise_actual", "disguise_group", "disguise_history", "language", "ac_active", "accept_friends", "accept_parties", "show_status", "hiding_players"})
+    public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, @NotNull String lastLobby, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean disguised, @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean adminChatActive, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -45,6 +47,7 @@ public class GammaUser implements User {
         this.skin = skin;
         this.lastSeen = lastSeen;
         this.lastGame = lastGame;
+        this.lastLobby = lastLobby;
         this.memberSince = memberSince;
         this.verified = verified;
         this.level = level;
@@ -55,6 +58,7 @@ public class GammaUser implements User {
         this.disguiseGroup = disguiseGroup;
         this.disguiseHistory = disguiseHistory;
         this.language = language;
+        this.adminChatActive = adminChatActive;
         this.acceptFriends = acceptFriends;
         this.acceptParties = acceptParties;
         this.showStatus = showStatus;
@@ -116,6 +120,11 @@ public class GammaUser implements User {
     @Override
     public @NotNull String getLastGame() {
         return this.lastGame;
+    }
+
+    @Override
+    public @NotNull String getLastLobby() {
+        return this.lastLobby;
     }
 
     @Override
@@ -201,6 +210,16 @@ public class GammaUser implements User {
     @Override
     public void setLanguage(@NotNull String language) {
         this.language = language;
+    }
+
+    @Override
+    public boolean hasAdminChatActive() {
+        return this.adminChatActive;
+    }
+
+    @Override
+    public void setActiveChatActive(boolean accept) {
+        this.adminChatActive = accept;
     }
 
     @Override

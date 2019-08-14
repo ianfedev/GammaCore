@@ -2,4 +2,5 @@ name: Commons
 main: net.seocraft.commons.bukkit.CommonsBukkit
 version: ${project.version}-${git.commit.getId.abbrev}
 depend: [API-Bukkit]
+loadbefore: [Lobby]
 author: Seocraft Network

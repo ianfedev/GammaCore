@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
+import net.seocraft.api.bukkit.cloud.CloudLobbySwitcher;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -35,6 +36,7 @@ import java.util.logging.Level;
 public class LoginCommand extends AbstractAdvancedCommand {
 
     @Inject private CommonsBukkit instance;
+    @Inject private CloudLobbySwitcher lobbySwitcher;
     @Inject private BukkitTokenQuery tokenQuery;
     @Inject private ObjectMapper mapper;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
@@ -86,14 +88,16 @@ public class LoginCommand extends AbstractAdvancedCommand {
                                                 this.translator.getUnspacedField(user.getLanguage(), "commons_main_lobby")
                                                 + ChatColor.AQUA)
                                 );
+                                this.lobbySwitcher.sendPlayerToGroup(player, "main_lobby");
                             } else {
                                 ChatAlertLibrary.infoAlert(player,
                                         this.translator.getUnspacedField(
                                                 user.getLanguage(), "authentication_logged_secondary"
                                         ).replace("%%game%%", ChatColor.YELLOW +
-                                                user.getLastGame()
+                                                user.getLastLobby()
                                                 + ChatColor.AQUA)
                                 );
+                                this.lobbySwitcher.sendPlayerToGroup(player, user.getLastLobby());
                             }
                         } catch (Unauthorized unauthorized) {
                             Integer newAttempts = this.instance.loginAttempts.get(player.getUniqueId()) + 1;

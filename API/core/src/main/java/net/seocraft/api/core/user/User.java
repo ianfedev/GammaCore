@@ -36,6 +36,9 @@ public interface User extends Model {
     @JsonProperty("last_game")
     @NotNull String getLastGame();
 
+    @JsonProperty("last_lobby")
+    @NotNull String getLastLobby();
+
     @JsonProperty("member_since")
     @NotNull Date getMemberSince();
 
@@ -77,6 +80,12 @@ public interface User extends Model {
     @NotNull String getLanguage();
 
     void setLanguage(@NotNull String language);
+
+    @JsonProperty("ac_active")
+    boolean hasAdminChatActive();
+
+    @JsonProperty("ac_active")
+    void setActiveChatActive(boolean accept);
 
     @JsonProperty("accept_friends")
     boolean isAcceptingFriends();

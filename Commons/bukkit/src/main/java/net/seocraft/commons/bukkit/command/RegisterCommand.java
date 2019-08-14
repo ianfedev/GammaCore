@@ -4,10 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import de.dytanic.cloudnet.CloudNet;
-import de.dytanic.cloudnet.ext.bridge.BridgePlayerManager;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
+import net.seocraft.api.bukkit.cloud.CloudLobbySwitcher;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -39,6 +38,7 @@ public class RegisterCommand extends AbstractAdvancedCommand {
     @Inject private UserRegisterRequest userRegisterRequest;
     @Inject private ObjectMapper mapper;
     @Inject private GameSessionManager gameSessionManager;
+    @Inject private CloudLobbySwitcher cloudLobbySwitcher;
     @Inject private UserStorageProvider userStorageProvider;
 
     public RegisterCommand() {
@@ -76,6 +76,14 @@ public class RegisterCommand extends AbstractAdvancedCommand {
                                         this.mapper.writeValueAsString(node),
                                         this.tokenQuery.getToken()
                                 );
+
+                                this.cloudLobbySwitcher.sendPlayerToGroup(player, "main_lobby");
+                                ChatAlertLibrary.infoAlert(player,
+                                        ChatColor.AQUA +
+                                                this.translator.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
+                                                        .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
+                                );
+
                             } catch (InternalServerError | Unauthorized | NotFound | BadRequest | JsonProcessingException error) {
                                 Bukkit.getLogger().log(Level.WARNING,
                                         "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
@@ -85,15 +93,6 @@ public class RegisterCommand extends AbstractAdvancedCommand {
                                         ". \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName()
                                 ));
                             }
-                            ChatAlertLibrary.infoAlert(player,
-                                    ChatColor.AQUA +
-                                            this.translator.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
-                                                    .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
-                            );
-                            BridgePlayerManager.getInstance().proxySendPlayer(
-                                    BridgePlayerManager.getInstance().getOnlinePlayer(player.getName()).get(0),
-                                    this.instance.getConfig().getString("authentication.redirect")
-                            );
                         } else {
                             ChatAlertLibrary.errorChatAlert(player,
                                     this.translator.getUnspacedField(user.getLanguage(),"authentication_password_weak")

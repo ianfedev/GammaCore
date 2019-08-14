@@ -22,6 +22,7 @@ import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener
 import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
+import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
@@ -133,7 +134,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.bind(CommonsBukkit.class).toInstance(this);
+        binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class);
         binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
         binder.bind(ObjectMapper.class).toProvider(() -> {
@@ -146,6 +147,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.install(new PunishmentModule());
         binder.install(new ServerModule());
         binder.install(new UserModule());
+        binder.install(new CloudModule());
     }
 
     private void loadConfig() {

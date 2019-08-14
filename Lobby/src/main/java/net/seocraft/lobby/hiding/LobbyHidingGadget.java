@@ -133,6 +133,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                             );
                         }
                     } else {
+                        System.out.println("Nulled");
                         ChatAlertLibrary.errorChatAlert(player, null);
                     }
                 });
