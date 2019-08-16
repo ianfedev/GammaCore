@@ -54,13 +54,13 @@ public class HotbarItemCollection {
         ItemStack hidingMenuBase;
         if (isHiding) {
             hidingMenuBase = NBTTagHandler.addString(
-                    new ItemStack(Material.ENDER_PEARL, 1),
+                    new ItemStack(Material.REDSTONE_TORCH_ON, 1),
                     "accessor",
                     "show_players"
             );
         } else {
             hidingMenuBase = NBTTagHandler.addString(
-                    new ItemStack(Material.EYE_OF_ENDER, 1),
+                    new ItemStack(Material.REDSTONE_TORCH_OFF, 1),
                     "accessor",
                     "hide_players"
             );

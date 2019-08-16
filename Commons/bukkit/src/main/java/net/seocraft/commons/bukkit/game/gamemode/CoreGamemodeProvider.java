@@ -7,7 +7,6 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
-import net.seocraft.api.core.server.Server;
 import net.seocraft.commons.core.backend.gamemode.GamemodeGetRequest;
 import net.seocraft.commons.core.backend.gamemode.GamemodeListRequest;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -61,7 +60,7 @@ public class CoreGamemodeProvider implements GamemodeProvider {
     @Override
     public @NotNull Set<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String gamemodeResponse = this.gamemodeListRequest.executeRequest();
-        return this.mapper.readValue(gamemodeResponse, new TypeReference<Set<Server>>(){});
+        return this.mapper.readValue(gamemodeResponse, new TypeReference<Set<Gamemode>>(){});
     }
 
 }
