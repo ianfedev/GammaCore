@@ -11,6 +11,7 @@ import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.cloud.GammaLobbySwitcher;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
@@ -67,6 +68,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.gameMenuListener, this);
         getServer().getPluginManager().registerEvents(this.playerDeathListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
+
     }
 
     @Override

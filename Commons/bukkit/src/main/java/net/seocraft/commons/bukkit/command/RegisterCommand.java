@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
-import net.seocraft.api.bukkit.cloud.CloudLobbySwitcher;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -38,7 +38,7 @@ public class RegisterCommand extends AbstractAdvancedCommand {
     @Inject private UserRegisterRequest userRegisterRequest;
     @Inject private ObjectMapper mapper;
     @Inject private GameSessionManager gameSessionManager;
-    @Inject private CloudLobbySwitcher cloudLobbySwitcher;
+    @Inject private CloudManager cloudManager;
     @Inject private UserStorageProvider userStorageProvider;
 
     public RegisterCommand() {
@@ -77,7 +77,7 @@ public class RegisterCommand extends AbstractAdvancedCommand {
                                         this.tokenQuery.getToken()
                                 );
 
-                                this.cloudLobbySwitcher.sendPlayerToGroup(player, "main_lobby");
+                                this.cloudManager.sendPlayerToGroup(player, "main_lobby");
                                 ChatAlertLibrary.infoAlert(player,
                                         ChatColor.AQUA +
                                                 this.translator.getUnspacedField(user.getLanguage(), "authentication_welcome_new")

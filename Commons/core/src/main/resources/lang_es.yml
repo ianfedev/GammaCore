@@ -141,6 +141,8 @@ commons_lobby_teleport_own_success: "¡Has teletransportado a %%player%% hacia t
 commons_lobby_teleport_own_target: "¡%%player%% te ha teletransportado hacia él!"
 commons_lobby_teleport_all_success: "¡Has teletransportado todos los jugadores hacia tí!"
 commons_lobby_teleport_all_target: "¡%%player%% ha teletransportado a todos los jugadores hacia él!"
+commons_lobby_selector_title: "Lobby de %%game%%"
+commons_lobby_selector_connect: "¡Haz click para conectarte!"
 
 # Custom Gamemode translations
 # How to:
@@ -171,3 +173,4 @@ commons_right_click: Clic derecho
 commons_note: Nota
 commons_coming_soon: Muy pronto
 commons_cooldown_delay: "Debes esperar unos segundos antes de realizar esta acción"
+commons_players: Jugadores
