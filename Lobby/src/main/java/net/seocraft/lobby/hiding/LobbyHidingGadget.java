@@ -17,7 +17,7 @@ import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import net.seocraft.api.core.cooldown.CooldownManager;
-import net.seocraft.lobby.menu.HotbarItemCollection;
+import net.seocraft.lobby.hotbar.HotbarItemCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

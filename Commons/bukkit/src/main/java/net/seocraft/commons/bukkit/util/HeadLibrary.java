@@ -20,4 +20,12 @@ public class HeadLibrary {
     public static ItemStack frenchHead() {
         return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/9b3495e9dbd5a426e1446e6627bf8dd55d9612ce3b55a8596e112b28db9ea3a");
     }
+
+    public static ItemStack leftArrowBlack() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/37aee9a75bf0df7897183015cca0b2a7d755c63388ff01752d5f4419fc645");
+    }
+
+    public static ItemStack rightArrowBlack() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/682ad1b9cb4dd21259c0d75aa315ff389c3cef752be3949338164bac84a96e");
+    }
 }

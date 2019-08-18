@@ -1,4 +1,4 @@
-package net.seocraft.lobby.listener;
+package net.seocraft.lobby.hiding;
 
 import com.google.inject.Inject;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;

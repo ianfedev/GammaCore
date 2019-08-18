@@ -6,7 +6,7 @@ import net.seocraft.api.core.storage.Model;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Set;
 
 public interface Server extends Model {
 
@@ -33,7 +33,9 @@ public interface Server extends Model {
     long getStartedAt();
 
     @JsonProperty("players")
-    @NotNull List<String> getOnlinePlayers();
+    @NotNull Set<String> getOnlinePlayers();
+
+    int getMaxPlayers();
 
     void addOnlinePlayer(String id);
 
@@ -41,7 +43,7 @@ public interface Server extends Model {
 
     @NotNull String getCluster();
 
-    @NotNull List<String> getMatches();
+    @NotNull Set<String> getMatches();
 
     void addMatch(String id);
 

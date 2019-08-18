@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.server;
 
 import com.google.inject.Inject;
+import de.dytanic.cloudnet.driver.CloudNetDriver;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
@@ -52,42 +53,56 @@ public class BukkitServerLoad implements ServerLoad {
         try {
 
             Gamemode gamemode;
-            if (type == ServerType.GAME) {
+            if (type == ServerType.GAME || type == ServerType.LOBBY) {
                 gamemode = this.gamemodeHandler.getGamemodeSync(
                         configuration.getString("game.gamemode")
                 );
                 if (gamemode == null) return null;
                 Set<SubGamemode> subGamemodes = gamemode.getSubGamemodes();
 
-                Optional<SubGamemode> subGamemode = subGamemodes
-                        .stream()
-                        .filter(
-                                s -> s.getId().equalsIgnoreCase(configuration.getString("game.subgamemode"))
-                        )
-                        .findFirst();
+                if (type == ServerType.GAME) {
+                    Optional<SubGamemode> subGamemode = subGamemodes
+                            .stream()
+                            .filter(
+                                    s -> s.getId().equalsIgnoreCase(configuration.getString("game.subgamemode"))
+                            )
+                            .findFirst();
+                    if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
+                    this.craftMapFileManager.configureMapFolder();
 
-                if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
+                    return this.serverManager.loadServer(
+                            Bukkit.getServerName(),
+                            type,
+                            gamemode.getId(),
+                            subGamemode.get().getId(),
+                            maxRunning,
+                            maxTotal,
+                            Bukkit.getMaxPlayers(),
+                            configuration.getString("api.cluster")
+                    );
 
-                this.craftMapFileManager.configureMapFolder();
+                }
 
                 return this.serverManager.loadServer(
-                        /* TODO: Get slug from */ "test-1",
+                        Bukkit.getServerName(),
                         type,
                         gamemode.getId(),
-                        subGamemode.get().getId(),
+                        null,
                         maxRunning,
                         maxTotal,
+                        Bukkit.getMaxPlayers(),
                         configuration.getString("api.cluster")
                 );
             }
 
             return this.serverManager.loadServer(
-                    /* TODO: Get slug from */ "test-1",
+                    Bukkit.getServerName(),
                     type,
                     null,
                     null,
                     maxRunning,
                     maxTotal,
+                    Bukkit.getMaxPlayers(),
                     configuration.getString("api.cluster")
             );
 

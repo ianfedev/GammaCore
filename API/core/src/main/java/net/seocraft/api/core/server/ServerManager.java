@@ -1,6 +1,5 @@
 package net.seocraft.api.core.server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -22,6 +21,7 @@ public interface ServerManager {
             @Nullable String subGamemode,
             int maxRunning,
             int maxTotal,
+            int maxPlayers,
             @NotNull String cluster
     ) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 

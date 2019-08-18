@@ -13,4 +13,5 @@ public interface CloudManager {
     void sendPlayerToGroup(@NotNull Player player, @NotNull String group);
 
     Set<LobbyIcon> getGroupLobbies(@NotNull String group);
+
 }

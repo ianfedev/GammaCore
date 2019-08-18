@@ -36,7 +36,7 @@ public class CoreServerManager implements ServerManager {
     @Inject private RedisClient redisClient;
 
     @Override
-    public @NotNull Server loadServer(@NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, @NotNull String cluster) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
+    public @NotNull Server loadServer(@NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, int maxPlayers, @NotNull String cluster) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
 
         Server preServer;
         if (gamemode != null && subGamemode != null && serverType == ServerType.GAME) {
@@ -49,9 +49,25 @@ public class CoreServerManager implements ServerManager {
                     maxRunning,
                     maxTotal,
                     0,
-                    new ArrayList<>(),
+                    new HashSet<>(),
+                    maxPlayers,
                     cluster,
-                    new ArrayList<>()
+                    new HashSet<>()
+            );
+        } else if (serverType == ServerType.LOBBY) {
+            preServer = new CoreServer(
+                    UUID.randomUUID().toString(),
+                    slug,
+                    serverType,
+                    gamemode,
+                    null,
+                    maxRunning,
+                    maxTotal,
+                    0,
+                    new HashSet<>(),
+                    maxPlayers,
+                    cluster,
+                    new HashSet<>()
             );
         } else {
             preServer = new CoreServer(
@@ -63,9 +79,10 @@ public class CoreServerManager implements ServerManager {
                     maxRunning,
                     maxTotal,
                     0,
-                    new ArrayList<>(),
+                    new HashSet<>(),
+                    maxPlayers,
                     cluster,
-                    new ArrayList<>()
+                    new HashSet<>()
             );
         }
 

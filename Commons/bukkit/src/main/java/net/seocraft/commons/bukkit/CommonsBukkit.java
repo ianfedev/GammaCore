@@ -29,13 +29,13 @@ import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listener.GamePairingListener;
-import net.seocraft.commons.bukkit.listener.UserLogoutListener;
 import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
 import net.seocraft.commons.bukkit.punishment.PunishmentModule;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
 import net.seocraft.commons.bukkit.user.UserChatListener;
+import net.seocraft.commons.bukkit.user.UserDisconnectListener;
 import net.seocraft.commons.bukkit.user.UserModule;
 import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
@@ -56,7 +56,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private GamePairingListener gamePairingListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
-    @Inject private UserLogoutListener userLogoutListener;
+    @Inject private UserDisconnectListener userDisconnectListener;
 
     @Inject private UserChatListener userChatListener;
     @Inject private UserAccessResponse userAccessResponse;
@@ -123,7 +123,7 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userAccessResponse, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
-        getServer().getPluginManager().registerEvents(userLogoutListener, this);
+        getServer().getPluginManager().registerEvents(userDisconnectListener, this);
 
 
         if (getConfig().getBoolean("authentication.enabled", false)) {
@@ -168,6 +168,10 @@ public class CommonsBukkit extends JavaPlugin {
 
     public Server getServerRecord() {
         return this.serverRecord;
+    }
+
+    public void setServerRecord(Server server) {
+        this.serverRecord = server;
     }
 
 }
