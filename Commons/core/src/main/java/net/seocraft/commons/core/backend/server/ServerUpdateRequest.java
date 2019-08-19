@@ -22,7 +22,7 @@ public class ServerUpdateRequest extends HttpRequest {
     }
 
     public HttpType getType() {
-        return HttpType.POST;
+        return HttpType.PUT;
     }
 
     public String getURL() {

@@ -9,6 +9,8 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.server.Server;
+import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -51,6 +53,7 @@ public class UserAccessResponse implements Listener {
     @Inject private GameSessionManager gameSessionManager;
     @Inject private FriendshipProvider friendshipProvider;
     @Inject private UserFormatter userFormatter;
+    @Inject private ServerManager serverManager;
     @Inject private UserAccessRequest request;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private BukkitTokenQuery tokenHandler;
@@ -93,7 +96,6 @@ public class UserAccessResponse implements Listener {
             if (response.get("multi").asBoolean()) {
                 // TODO: Handle multi-account issue
             } else {
-
                 // Detect if player has a punishment
                 this.punishmentActions.checkBan(player, user);
 
@@ -115,32 +117,6 @@ public class UserAccessResponse implements Listener {
                     event.setJoinMessage("");
                 }
 
-                // Check if player has unread friendship requests  // TODO: Execute only in lobby
-                if (this.friendshipProvider.hasUnreadRequests(playerIdentifier)) {
-                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
-
-                    // Base alert component
-                    TextComponent baseComponent = new TextComponent(
-                            this.translator.getUnspacedField(user.getLanguage(), "commons_friends_pending_requests") + ". "
-                    );
-                    baseComponent.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-                    TextComponent clickComponent = new TextComponent(
-                            this.translator.getUnspacedField(user.getLanguage(), "commons_friends_pending_click")
-                    );
-                    clickComponent.setColor(net.md_5.bungee.api.ChatColor.GREEN);
-                    clickComponent.setHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            new ComponentBuilder( ChatColor.YELLOW +
-                                    this.translator.getUnspacedField(user.getLanguage(), "commons_friends_pending_click")
-                            ).create()
-                    ));
-                    clickComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends requests"));
-                    baseComponent.addExtra(clickComponent);
-                    player.sendMessage(baseComponent);
-
-                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
-                }
-
                 this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true); //TODO: Set at commons bungee
                 playerField.set(player, new UserPermissions(player, user, userStorage, gameSessionManager, translator));
 
@@ -148,6 +124,14 @@ public class UserAccessResponse implements Listener {
                 Bukkit.getPluginManager().getPlugin("Lobby") != null) {
                     Bukkit.getPluginManager().callEvent(new LobbyConnectionEvent(user, player));
                 }
+
+                Server updatableServer = this.instance.getServerRecord();
+                updatableServer.getOnlinePlayers().add(playerIdentifier);
+                this.serverManager.updateServer(
+                        updatableServer
+                );
+                this.instance.setServerRecord(updatableServer);
+
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException | IOException error) {
             error.printStackTrace();

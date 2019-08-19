@@ -7,10 +7,11 @@ import com.google.inject.Scopes;
 import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.api.bukkit.BukkitAPI;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.cloud.GammaLobbySwitcher;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
@@ -20,11 +21,13 @@ import net.seocraft.commons.core.CoreModule;
 import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
+import net.seocraft.lobby.hiding.HidingGadgetListener;
 import net.seocraft.lobby.hiding.LobbyHidingGadget;
+import net.seocraft.lobby.hotbar.HotbarListener;
+import net.seocraft.lobby.listener.InventoryInteractionListener;
 import net.seocraft.lobby.listener.*;
-import net.seocraft.api.core.cooldown.CooldownManager;
-import net.seocraft.commons.core.cooldown.CoreCooldownManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
+import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.teleport.LobbyTeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,8 +43,9 @@ public class Lobby extends JavaPlugin {
 
     @Inject private HidingGadgetListener hidingGadgetListener;
     @Inject private PlayerBlockInteractionListener playerBlockInteractionListener;
-    @Inject private GameMenuListener gameMenuListener;
+    @Inject private HotbarListener hotbarListener;
     @Inject private LobbyConnectionListener lobbyConnectionListener;
+    @Inject private LobbySelectorListener lobbySelectorListener;
     @Inject private PlayerDeathListener playerDeathListener;
     @Inject private InventoryInteractionListener inventoryInteractionEvent;
     @Inject private InventoryDropListener inventoryDropEvent;
@@ -62,11 +66,13 @@ public class Lobby extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(this.lobbyConnectionListener, this);
         getServer().getPluginManager().registerEvents(this.hidingGadgetListener, this);
+        getServer().getPluginManager().registerEvents(this.lobbySelectorListener, this);
         getServer().getPluginManager().registerEvents(this.playerBlockInteractionListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryInteractionEvent, this);
-        getServer().getPluginManager().registerEvents(this.gameMenuListener, this);
+        getServer().getPluginManager().registerEvents(this.hotbarListener, this);
         getServer().getPluginManager().registerEvents(this.playerDeathListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
+
     }
 
     @Override
@@ -75,6 +81,7 @@ public class Lobby extends JavaPlugin {
         binder.install(new UserModule());
         binder.install(new ServerModule());
         binder.install(new GameModule());
+        binder.bind(CloudManager.class).to(GammaLobbySwitcher.class);
         binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
         binder.bind(HidingGadgetManager.class).to(LobbyHidingGadget.class);
         binder.bind(ObjectMapper.class).toProvider(() -> {

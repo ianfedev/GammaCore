@@ -1,4 +1,4 @@
-package net.seocraft.lobby.menu;
+package net.seocraft.lobby.hotbar;
 
 import com.google.inject.Inject;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
@@ -54,13 +54,13 @@ public class HotbarItemCollection {
         ItemStack hidingMenuBase;
         if (isHiding) {
             hidingMenuBase = NBTTagHandler.addString(
-                    new ItemStack(Material.ENDER_PEARL, 1),
+                    new ItemStack(Material.GLOWSTONE_DUST, 1),
                     "accessor",
                     "show_players"
             );
         } else {
             hidingMenuBase = NBTTagHandler.addString(
-                    new ItemStack(Material.EYE_OF_ENDER, 1),
+                    new ItemStack(Material.REDSTONE, 1),
                     "accessor",
                     "hide_players"
             );

@@ -51,7 +51,13 @@ public class GameMatchFinder implements MatchFinder {
             if (server.isPresent()) {
                 Server foundServer = server.get();
                 if (!foundServer.getMatches().isEmpty()) {
-                    Match selectedMatch = this.matchProvider.findMatchByIdSync(server.get().getMatches().get(0));
+                    String match = null;
+                    for (String matches : server.get().getMatches()) {
+                        match = matches;
+                        break;
+                    }
+                    assert match != null;
+                    Match selectedMatch = this.matchProvider.findMatchByIdSync(match);
                     return new GameResult(foundServer, selectedMatch);
                 } else {
                     throw new InternalServerError("Error obtaining match server");

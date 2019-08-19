@@ -14,6 +14,7 @@ public class RedissonChannelWrapper<T> implements MessageListener<ObjectWrapper<
         this.channelName = channelName;
         this.id = id;
         this.messageListener = messageListener;
+        System.out.println(messageListener);
     }
 
     @Override

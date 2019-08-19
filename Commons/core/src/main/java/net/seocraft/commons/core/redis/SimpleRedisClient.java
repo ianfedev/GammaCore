@@ -1,5 +1,6 @@
 package net.seocraft.commons.core.redis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.redis.RedissonJacksonCodec;
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -21,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class SimpleRedisClient implements RedisClient {
 
     private final RedisClientConfiguration config;
+    @Inject private ObjectMapper mapper;
     private RedissonClient pool;
 
     @Inject
@@ -37,7 +40,7 @@ public class SimpleRedisClient implements RedisClient {
         String password = config.getPassword();
 
         Config redissonConfig = new Config()
-                .setCodec(RedissonJacksonCodec.INSTANCE);
+                .setCodec(new RedissonJacksonCodec(this.mapper));
 
         SingleServerConfig serverConfig = redissonConfig.useSingleServer()
                 .setAddress("redis://" + config.getAddress() + ":" + config.getPort());
@@ -63,7 +66,7 @@ public class SimpleRedisClient implements RedisClient {
 
     @Override
     public @NotNull String getLastStringElement(String key) {
-        return getPool().<String>getQueue(key).poll();
+        return Objects.requireNonNull(getPool().<String>getQueue(key).poll());
     }
 
     @Override

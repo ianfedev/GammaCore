@@ -141,6 +141,11 @@ commons_lobby_teleport_own_success: "¡Has teletransportado a %%player%% hacia t
 commons_lobby_teleport_own_target: "¡%%player%% te ha teletransportado hacia él!"
 commons_lobby_teleport_all_success: "¡Has teletransportado todos los jugadores hacia tí!"
 commons_lobby_teleport_all_target: "¡%%player%% ha teletransportado a todos los jugadores hacia él!"
+commons_lobby_selector_title: "Lobby - #%%number%%"
+commons_lobby_selector_connect: "¡Haz click para conectarte!"
+commons_lobby_selector_already: "¡Ya te encuentras conectado!"
+commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
+commons_Lobby_selector_error: "Ha ocurrido un error al abrir el selector de lobbies"
 
 # Custom Gamemode translations
 # How to:
@@ -153,12 +158,13 @@ commons_lobby_teleport_all_target: "¡%%player%% ha teletransportado a todos los
 # SubGamemode Scoreboard title: game_ID_subscoreboard_ID
 # Remember: You can use colors and space from above to style the message
 
-game_5d194dbb87f32ca2bba1e6da_title: Juego de prueba
-game_5d194dbb87f32ca2bba1e6da_description: Este juego de prueba %%green%%FUÉ%n%hecho para probar %%bold%%ALGO%%reset%% %%gray%%pro
+game_5d586f5634a44a74e4826045_title: Lobby principal
+game_5d586f5634a44a74e4826045_description: "Vuelve al menú principal"
 
 # Common words translations
 commons_main_lobby: Lobby Principal
 commons_password: contraseña
+commons_wait: "Por favor espera un momento..."
 commons_error_type: Tipo de error
 commons_language_placeholder: Español
 commons_not_found: El jugador que buscas no se ha registrado en el servidor
@@ -171,3 +177,7 @@ commons_right_click: Clic derecho
 commons_note: Nota
 commons_coming_soon: Muy pronto
 commons_cooldown_delay: "Debes esperar unos segundos antes de realizar esta acción"
+commons_players: Jugadores
+commons_pagination_previous: "Página anterior (%%page%%)"
+commons_pagination_next: "Página siguiente (%%page%%)"
+commons_close: "Cerrar"

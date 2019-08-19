@@ -18,18 +18,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.*;
 
 public class RedissonJacksonCodec extends BaseCodec {
-    
-    public static final RedissonJacksonCodec INSTANCE = new RedissonJacksonCodec();
-    protected final ObjectMapper mapObjectMapper;
+
+    private ObjectMapper mapObjectMapper;
     private final Encoder encoder;
     private final Decoder<Object> decoder;
 
-    public RedissonJacksonCodec() {
-        this(new ObjectMapper(), true);
+    public RedissonJacksonCodec(ObjectMapper mapper) {
+        this(mapper, true);
     }
 
-    public RedissonJacksonCodec(ClassLoader classLoader) {
-        this(createObjectMapper(classLoader, new ObjectMapper()), true);
+    public RedissonJacksonCodec(ClassLoader classLoader, ObjectMapper mapper) {
+        this(createObjectMapper(classLoader, mapper), true);
     }
 
     public RedissonJacksonCodec(ClassLoader classLoader, RedissonJacksonCodec codec) {

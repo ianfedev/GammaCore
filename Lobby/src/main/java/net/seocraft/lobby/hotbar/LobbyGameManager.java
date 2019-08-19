@@ -1,4 +1,4 @@
-package net.seocraft.lobby.game;
+package net.seocraft.lobby.hotbar;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class GameMenuManagerImp implements GameMenuManager {
+public class LobbyGameManager implements GameMenuManager {
 
     @Inject private GamemodeProvider gamemodeHandler;
     @Inject private TranslatableField translatableField;

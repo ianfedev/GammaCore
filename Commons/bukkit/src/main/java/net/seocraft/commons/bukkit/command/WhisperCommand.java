@@ -35,13 +35,13 @@ public class WhisperCommand implements CommandClass {
     private GameSessionManager gameSessionManager;
     @Inject
     private TranslatableField translator;
+    @Inject private Messager redisMessager;
 
     private Channel<String> messager;
 
     @Inject
     public WhisperCommand(Messager messager) {
        this.messager = messager.getChannel("test", String.class);
-
        this.messager.registerListener(object -> Bukkit.broadcastMessage("Received message " + object));
     }
 
@@ -127,7 +127,7 @@ public class WhisperCommand implements CommandClass {
     @Command(names = {"testMessager"}, max = 0)
     public boolean testMessager() {
         messager.sendMessage("test");
-
+        this.redisMessager.printTest();
         Bukkit.broadcastMessage("Send message test");
         return true;
     }

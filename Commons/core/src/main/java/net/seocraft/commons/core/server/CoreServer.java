@@ -1,15 +1,14 @@
 package net.seocraft.commons.core.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CoreServer implements Server {
 
@@ -22,12 +21,13 @@ public class CoreServer implements Server {
     private int maxRunning;
     private int maxTotal;
     private long startedAt;
-    @NotNull private List<String> onlinePlayers;
+    @NotNull private Set<String> onlinePlayers;
+    int maxPlayers;
     @NotNull private String cluster;
-    @NotNull private List<String> matches;
+    @NotNull private Set<String> matches;
 
-    @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "cluster", "matches"})
-    public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull List<String> onlinePlayers, @NotNull String cluster, @NotNull List<String> matches) {
+    @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "maxPlayers", "cluster", "matches"})
+    public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull Set<String> onlinePlayers, int maxPlayers, @NotNull String cluster, @NotNull Set<String> matches) {
         this.id = id;
         this.slug = slug;
         this.serverType = serverType;
@@ -37,12 +37,13 @@ public class CoreServer implements Server {
         this.maxTotal = maxTotal;
         this.startedAt = startedAt;
         this.onlinePlayers = onlinePlayers;
+        this.maxPlayers = maxPlayers;
         this.cluster = cluster;
         this.matches = matches;
     }
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
         return this.id;
     }
 
@@ -87,8 +88,13 @@ public class CoreServer implements Server {
     }
 
     @Override
-    public @NotNull List<String> getOnlinePlayers() {
-        return new ArrayList<>(this.onlinePlayers);
+    public @NotNull Set<String> getOnlinePlayers() {
+        return this.onlinePlayers;
+    }
+
+    @Override
+    public int getMaxPlayers() {
+        return this.maxPlayers;
     }
 
     @Override
@@ -107,7 +113,7 @@ public class CoreServer implements Server {
     }
 
     @Override
-    public @NotNull List<String> getMatches() {
+    public @NotNull Set<String> getMatches() {
         return this.matches;
     }
 

@@ -12,9 +12,6 @@ public class BukkitAPI extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        /*
-          This binding will grant access to another plugins which will obtain config data.
-         */
         binder.publicBinder().bind(BukkitAPI.class).toInstance(this);
     }
 
