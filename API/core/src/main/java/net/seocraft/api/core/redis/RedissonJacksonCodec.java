@@ -1,48 +1,55 @@
 package net.seocraft.api.core.redis;
 
-import com.fasterxml.jackson.annotation.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
+import org.redisson.client.codec.BaseCodec;
+import org.redisson.client.handler.State;
+import org.redisson.client.protocol.Decoder;
+import org.redisson.client.protocol.Encoder;
+
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
-import org.redisson.client.codec.BaseCodec;
-import org.redisson.client.protocol.Decoder;
-import org.redisson.client.protocol.Encoder;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.io.*;
 
 public class RedissonJacksonCodec extends BaseCodec {
 
-    private ObjectMapper mapObjectMapper;
-    private final Encoder encoder;
-    private final Decoder<Object> decoder;
+    public static final RedissonJacksonCodec INSTANCE = new RedissonJacksonCodec();
 
-    public RedissonJacksonCodec(ObjectMapper mapper) {
-        this(mapper, true);
+    @JsonIdentityInfo(generator=ObjectIdGenerators.IntSequenceGenerator.class, property="@id")
+    @JsonAutoDetect(fieldVisibility = Visibility.ANY,
+            getterVisibility = Visibility.PUBLIC_ONLY,
+            setterVisibility = Visibility.NONE,
+            isGetterVisibility = Visibility.NONE)
+    public static class ThrowableMixIn {
+
     }
 
-    public RedissonJacksonCodec(ClassLoader classLoader, ObjectMapper mapper) {
-        this(createObjectMapper(classLoader, mapper), true);
-    }
+    protected final ObjectMapper mapObjectMapper;
 
-    public RedissonJacksonCodec(ClassLoader classLoader, RedissonJacksonCodec codec) {
-        this(createObjectMapper(classLoader, codec.mapObjectMapper.copy()), true);
-    }
-
-    protected static ObjectMapper createObjectMapper(ClassLoader classLoader, ObjectMapper om) {
-        TypeFactory tf = TypeFactory.defaultInstance().withClassLoader(classLoader);
-        om.setTypeFactory(tf);
-        return om;
-    }
-
-    public RedissonJacksonCodec(ObjectMapper mapObjectMapper, boolean setMapperVisibility) {
-        this.encoder = in -> {
+    private final Encoder encoder = new Encoder() {
+        @Override
+        public ByteBuf encode(Object in) throws IOException {
             ByteBuf out = ByteBufAllocator.DEFAULT.buffer();
             try {
                 ByteBufOutputStream os = new ByteBufOutputStream(out);
@@ -55,104 +62,120 @@ public class RedissonJacksonCodec extends BaseCodec {
                 out.release();
                 throw new IOException(e);
             }
-        };
-        this.decoder = (buf, state) -> mapObjectMapper.readValue((InputStream) new ByteBufInputStream(buf), Object.class);
+        }
+    };
+
+    private final Decoder<Object> decoder = new Decoder<Object>() {
+        @Override
+        public Object decode(ByteBuf buf, State state) throws IOException {
+            return mapObjectMapper.readValue((InputStream) new ByteBufInputStream(buf), Object.class);
+        }
+    };
+
+    public RedissonJacksonCodec() {
+        this(new ObjectMapper(), true);
+    }
+
+    public RedissonJacksonCodec(ClassLoader classLoader) {
+        this(createObjectMapper(classLoader, new ObjectMapper()),true);
+    }
+
+    public RedissonJacksonCodec(ClassLoader classLoader, RedissonJacksonCodec codec) {
+        this(createObjectMapper(classLoader, codec.mapObjectMapper.copy()),true);
+    }
+
+    protected static ObjectMapper createObjectMapper(ClassLoader classLoader, ObjectMapper om) {
+        TypeFactory tf = TypeFactory.defaultInstance().withClassLoader(classLoader);
+        om.setTypeFactory(tf);
+        return om;
+    }
+
+    public RedissonJacksonCodec(ObjectMapper mapObjectMapper, boolean changeConfig) {
         this.mapObjectMapper = mapObjectMapper.copy();
-        this.init(this.mapObjectMapper, setMapperVisibility);
-        this.initTypeInclusion(this.mapObjectMapper);
+        if(changeConfig){
+            init(this.mapObjectMapper);
+        }
+
+        mapObjectMapper.addMixIn(Throwable.class, ThrowableMixIn.class);
+        initTypeInclusion(this.mapObjectMapper);
     }
 
     protected void initTypeInclusion(ObjectMapper mapObjectMapper) {
         TypeResolverBuilder<?> mapTyper = new ObjectMapper.DefaultTypeResolverBuilder(ObjectMapper.DefaultTyping.NON_FINAL) {
             public boolean useForType(JavaType t) {
-                switch(this._appliesFor) {
+                switch (_appliesFor) {
                     case NON_CONCRETE_AND_ARRAYS:
-                        while(t.isArrayType()) {
+                        while (t.isArrayType()) {
                             t = t.getContentType();
                         }
+                        // fall through
                     case OBJECT_AND_NON_CONCRETE:
                         return (t.getRawClass() == Object.class) || !t.isConcrete();
                     case NON_FINAL:
-                        while(t.isArrayType()) {
+                        while (t.isArrayType()) {
                             t = t.getContentType();
                         }
-
+                        // to fix problem with wrong long to int conversion
                         if (t.getRawClass() == Long.class) {
                             return true;
                         }
-
                         if (t.getRawClass() == XMLGregorianCalendar.class) {
                             return false;
                         }
-
-                        return !t.isFinal();
+                        return !t.isFinal(); // includes Object.class
                     default:
+                        // case JAVA_LANG_OBJECT:
                         return t.getRawClass() == Object.class;
                 }
             }
         };
-
-        mapTyper.init(JsonTypeInfo.Id.CLASS, (TypeIdResolver)null);
+        mapTyper.init(JsonTypeInfo.Id.CLASS, null);
         mapTyper.inclusion(JsonTypeInfo.As.PROPERTY);
         mapObjectMapper.setDefaultTyping(mapTyper);
 
+        // warm up codec
         try {
             byte[] s = mapObjectMapper.writeValueAsBytes(1);
             mapObjectMapper.readValue(s, Object.class);
-        } catch (IOException var4) {
-            throw new IllegalStateException(var4);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 
-    protected void init(ObjectMapper objectMapper, boolean setVisibilityConfigs) {
-
-        if (setVisibilityConfigs) {
-            objectMapper.setVisibility(objectMapper.getSerializationConfig()
-                    .getDefaultVisibilityChecker()
-                    .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                    .withGetterVisibility(JsonAutoDetect.Visibility.ANY)
-                    .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
-                    .withCreatorVisibility(JsonAutoDetect.Visibility.ANY));
-        }
-
+    protected void init(ObjectMapper objectMapper) {
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setVisibility(objectMapper.getSerializationConfig()
+                .getDefaultVisibilityChecker()
+                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE));
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         objectMapper.enable(JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN);
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         objectMapper.enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY);
-        objectMapper.addMixIn(Throwable.class, RedissonJacksonCodec.ThrowableMixIn.class);
     }
 
     @Override
     public Decoder<Object> getValueDecoder() {
-        return this.decoder;
+        return decoder;
     }
 
     @Override
     public Encoder getValueEncoder() {
-        return this.encoder;
+        return encoder;
     }
 
     @Override
     public ClassLoader getClassLoader() {
-        return this.mapObjectMapper.getTypeFactory().getClassLoader() != null ? this.mapObjectMapper.getTypeFactory().getClassLoader() : super.getClassLoader();
+        if (mapObjectMapper.getTypeFactory().getClassLoader() != null) {
+            return mapObjectMapper.getTypeFactory().getClassLoader();
+        }
+
+        return super.getClassLoader();
     }
 
     public ObjectMapper getObjectMapper() {
-        return this.mapObjectMapper;
-    }
-
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.IntSequenceGenerator.class,
-            property = "@getId"
-    )
-    @JsonAutoDetect(
-            fieldVisibility = JsonAutoDetect.Visibility.ANY,
-            getterVisibility = JsonAutoDetect.Visibility.PUBLIC_ONLY,
-            setterVisibility = JsonAutoDetect.Visibility.NONE,
-            isGetterVisibility = JsonAutoDetect.Visibility.NONE
-    )
-    public static class ThrowableMixIn {
-        public ThrowableMixIn() {
-        }
+        return mapObjectMapper;
     }
 }
