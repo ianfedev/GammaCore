@@ -27,6 +27,7 @@ import net.seocraft.lobby.hotbar.HotbarListener;
 import net.seocraft.lobby.listener.InventoryInteractionListener;
 import net.seocraft.lobby.listener.*;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
+import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.teleport.LobbyTeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,6 +45,7 @@ public class Lobby extends JavaPlugin {
     @Inject private PlayerBlockInteractionListener playerBlockInteractionListener;
     @Inject private HotbarListener hotbarListener;
     @Inject private LobbyConnectionListener lobbyConnectionListener;
+    @Inject private LobbySelectorListener lobbySelectorListener;
     @Inject private PlayerDeathListener playerDeathListener;
     @Inject private InventoryInteractionListener inventoryInteractionEvent;
     @Inject private InventoryDropListener inventoryDropEvent;
@@ -64,6 +66,7 @@ public class Lobby extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(this.lobbyConnectionListener, this);
         getServer().getPluginManager().registerEvents(this.hidingGadgetListener, this);
+        getServer().getPluginManager().registerEvents(this.lobbySelectorListener, this);
         getServer().getPluginManager().registerEvents(this.playerBlockInteractionListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryInteractionEvent, this);
         getServer().getPluginManager().registerEvents(this.hotbarListener, this);

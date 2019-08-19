@@ -60,7 +60,6 @@ public class RedisChannel<T> implements Channel<T> {
     public void sendMessage(T data) {
         executorService.submit(() -> {
             RTopic rTopic = redisson.getTopic(name);
-
             rTopic.publish(new ObjectWrapper<>(data, uniqueId));
         });
 

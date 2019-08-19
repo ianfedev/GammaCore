@@ -131,6 +131,14 @@ public class CommonsBukkit extends JavaPlugin {
         }
     }
 
+    @Override
+    public void onDisable() {
+        try {
+            this.serverLoad.disconnectServer();
+        } catch (Unauthorized | InternalServerError | NotFound | BadRequest unauthorized) {
+            Bukkit.getLogger().log(Level.SEVERE, "[Bukkit API] Error while shutting down server.");
+        }
+    }
 
     @Override
     public void configure(ProtectedBinder binder) {

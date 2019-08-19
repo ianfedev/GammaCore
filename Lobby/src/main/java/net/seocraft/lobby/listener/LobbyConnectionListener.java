@@ -46,7 +46,7 @@ public class LobbyConnectionListener implements Listener {
         // Detect when player has hiding gadget enabled
         if (playerRecord.isHiding()) {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
-                GameSession handler = null;
+                GameSession handler;
                 try {
                     handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
                     if (

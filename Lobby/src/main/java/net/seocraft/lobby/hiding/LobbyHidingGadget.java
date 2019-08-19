@@ -17,6 +17,7 @@ import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import net.seocraft.api.core.cooldown.CooldownManager;
+import net.seocraft.lobby.Lobby;
 import net.seocraft.lobby.hotbar.HotbarItemCollection;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
 
     @Inject private GameSessionManager gameSessionManager;
     @Inject private UserStorageProvider userStorageProvider;
+    @Inject private Lobby instance;
     @Inject private HotbarItemCollection hotbarItemCollection;
     @Inject private TranslatableField translatableField;
     @Inject private CooldownManager cooldownManager;
@@ -35,7 +37,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
 
     @Override
     public void enableHiding(@NotNull Player player) {
-        GameSession session = null;
+        GameSession session;
         try {
             session = this.gameSessionManager.getCachedSession(player.getName());
             if (session != null) {
@@ -47,7 +49,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                         try {
                             this.userStorageProvider.updateUser(user);
                             Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
-                                GameSession handler = null;
+                                GameSession handler;
                                 try {
                                     handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
                                     if (
@@ -56,7 +58,9 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                                                     !onlinePlayer.hasPermission("commons.staff.vanish") &&
                                                     player != onlinePlayer
                                     ) {
-                                        player.hidePlayer(onlinePlayer);
+                                        Bukkit.getScheduler().runTask(this.instance, () -> {
+                                            player.hidePlayer(onlinePlayer);
+                                        });
                                     }
                                 } catch (IOException e) {
                                     e.printStackTrace();
@@ -98,7 +102,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
 
     @Override
     public void disableHiding(@NotNull Player player) {
-        GameSession session = null;
+        GameSession session;
         try {
             session = this.gameSessionManager.getCachedSession(player.getName());
             if (session != null)  {
@@ -109,7 +113,11 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                         user.setHiding(false);
                         try {
                             this.userStorageProvider.updateUser(user);
-                            Bukkit.getOnlinePlayers().forEach(player::showPlayer);
+                            Bukkit.getOnlinePlayers().forEach(playerQuery -> {
+                                Bukkit.getScheduler().runTask(this.instance, () -> {
+                                    player.showPlayer(playerQuery);
+                                });
+                            });
                             ChatAlertLibrary.infoAlert(
                                     player,
                                     this.translatableField.getUnspacedField(

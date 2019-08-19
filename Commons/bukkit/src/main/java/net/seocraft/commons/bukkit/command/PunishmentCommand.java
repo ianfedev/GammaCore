@@ -374,7 +374,6 @@ public class PunishmentCommand implements CommandClass {
                                             "commons_punish_error") + ".");
                                 } catch (IOException e) {
                                     ChatAlertLibrary.errorChatAlert(player);
-                                    return;
                                 }
                             } else {
                                 if (targetAsyncResponse.getStatusCode() == 404) {

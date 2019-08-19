@@ -33,14 +33,14 @@ public class LobbySelectorMenu {
         return this.listeningExecutorService.submit(() -> new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, getLobbyMenuSync(l, lobbyIcons, actualServer, page)));
     }
 
-    private Inventory getLobbyMenuSync(String l, Set<LobbyIcon> lobbyIcons, String actualServer, int page) {
+    public Inventory getLobbyMenuSync(String l, Set<LobbyIcon> lobbyIcons, String actualServer, int page) {
         if (this.instance.getServerRecord().getGamemode() != null && this.instance.getServerRecord().getServerType() == ServerType.LOBBY) {
             Map<Integer, ItemStack> menuStack = new HashMap<>();
             List<ItemStack> iconList = lobbyIcons.stream().sorted(Comparator.comparingInt(LobbyIcon::getNumber)).map(s -> {
                 int n = s.getNumber(); if (n > 64) n = 64;
                 ItemStack baseStack;
                 if (s.getMaxPlayers() == s.getOnlinePlayers()) {
-                    baseStack = NBTTagHandler.addString(new ItemStack(Material.STAINED_CLAY, n, (short) 14), "lobby_selector", "FULL");
+                    baseStack = NBTTagHandler.addString(new ItemStack(Material.STAINED_CLAY, n, (short) 14), "lobby_selector_opt", "FULL");
                     ItemMeta baseMeta = baseStack.getItemMeta();
                     baseMeta.setDisplayName(
                             ChatColor.RED +
@@ -70,7 +70,7 @@ public class LobbySelectorMenu {
                     baseMeta.setLore(baseLore);
                     baseStack.setItemMeta(baseMeta);
                 } else if (s.getName().equalsIgnoreCase(actualServer)) {
-                    baseStack = NBTTagHandler.addString(new ItemStack(Material.STAINED_CLAY, n, (short) 13), "lobby_selector", "ACTUAL");
+                    baseStack = NBTTagHandler.addString(new ItemStack(Material.STAINED_CLAY, n, (short) 13), "lobby_selector_opt", "ACTUAL");
                     ItemMeta baseMeta = baseStack.getItemMeta();
                     baseMeta.setDisplayName(
                             ChatColor.GREEN + "" + ChatColor.BOLD +
@@ -100,7 +100,7 @@ public class LobbySelectorMenu {
                     baseMeta.setLore(baseLore);
                     baseStack.setItemMeta(baseMeta);
                 } else {
-                    baseStack = NBTTagHandler.addString(new ItemStack(Material.QUARTZ_BLOCK, n), "lobby_selector", s.getName());
+                    baseStack = NBTTagHandler.addString(new ItemStack(Material.QUARTZ_BLOCK, n), "lobby_selector_opt", s.getName());
                     ItemMeta baseMeta = baseStack.getItemMeta();
                     baseMeta.setDisplayName(
                             ChatColor.GREEN +
@@ -158,7 +158,7 @@ public class LobbySelectorMenu {
 
             ItemStack closeButton = NBTTagHandler.addString(
                     new ItemStack(Material.ARROW, 1),
-                    "lobby_selector",
+                    "lobby_selector_opt",
                     "CLOSE"
             );
             ItemMeta closeMeta = closeButton.getItemMeta();
