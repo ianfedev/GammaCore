@@ -40,7 +40,7 @@ public class SimpleRedisClient implements RedisClient {
         String password = config.getPassword();
 
         Config redissonConfig = new Config()
-                .setCodec(new RedissonJacksonCodec(this.mapper));
+                .setCodec(new RedissonJacksonCodec(this.mapper, false));
 
         SingleServerConfig serverConfig = redissonConfig.useSingleServer()
                 .setAddress("redis://" + config.getAddress() + ":" + config.getPort());
