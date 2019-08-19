@@ -1,6 +1,7 @@
 package net.seocraft.lobby.hotbar;
 
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.lobby.GameMenuManager;
@@ -24,6 +25,7 @@ import java.util.Set;
 public class LobbyGameManager implements GameMenuManager {
 
     @Inject private GamemodeProvider gamemodeHandler;
+    @Inject private CloudManager cloudManager;
     @Inject private TranslatableField translatableField;
 
     @Override
@@ -61,6 +63,7 @@ public class LobbyGameManager implements GameMenuManager {
                         gamemodeMeta.setLore(loreDisplayArray);
                         gamemodeBase.setItemMeta(gamemodeMeta);
                         inventoryItems.put(gamemode.getNavigatorSlot(), gamemodeBase);
+                        this.cloudManager.getOnlinePlayers(gamemode);
                     });
                 } else {
                     ItemStack emptyBase = new ItemStack(Material.BARRIER, 1);

@@ -17,11 +17,11 @@ public interface Punishment extends Model {
     @JsonProperty("punished")
     @NotNull String getPunishedId();
 
-    @JsonProperty("last_ip")
     @Nullable String getServer();
 
     @Nullable Match getMatch();
 
+    @JsonProperty("last_ip")
     @Nullable String getLastIp();
 
     @NotNull String getReason();

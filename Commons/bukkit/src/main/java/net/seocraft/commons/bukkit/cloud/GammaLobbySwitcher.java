@@ -5,8 +5,11 @@ import de.dytanic.cloudnet.common.concurrent.ITask;
 import de.dytanic.cloudnet.common.concurrent.ITaskListener;
 import de.dytanic.cloudnet.common.document.gson.JsonDocument;
 import de.dytanic.cloudnet.driver.CloudNetDriver;
+import de.dytanic.cloudnet.driver.permission.IPermissionUser;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.LobbyIcon;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
@@ -71,6 +74,16 @@ public class GammaLobbySwitcher implements CloudManager {
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
                     return null;
                 }).filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
+    @Override
+    public void getOnlinePlayers(@NotNull Gamemode gamemode) {
+        int counter;
+        for (SubGamemode sub : gamemode.getSubGamemodes()) {
+            for (IPermissionUser user : CloudNetDriver.getInstance().getUsers()) {
+
+            }
+        }
     }
 
 }

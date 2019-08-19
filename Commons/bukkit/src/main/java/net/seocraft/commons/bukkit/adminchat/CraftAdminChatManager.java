@@ -41,32 +41,12 @@ public class CraftAdminChatManager implements AdminChatManager {
 
             adminChatChannel.sendMessage(chatMessage);
 
-            CallbackWrapper.addCallback(getPlayersInAdminChat(), map -> {
-            });
+            /*CallbackWrapper.addCallback(getPlayersInAdminChat(), map -> {
+            });*/
 
             return chatMessage;
         });
     }
 
-    @Override
-    public @NotNull ListenableFuture<Map<UUID, Boolean>> getPlayersInAdminChat() {
-
-        return null;
-    }
-
-    @Override
-    public @NotNull ListenableFuture<Void> removePlayerFromAdminChat(UUID uniqueId) {
-        return null;
-    }
-
-    @Override
-    public @NotNull ListenableFuture<Void> addPlayerToAdminChat(UUID uniqueId, boolean active) {
-        return null;
-    }
-
-    @Override
-    public @NotNull ListenableFuture<Boolean> hasPlayerAdminChatActive(UUID uniqueId) {
-        return null;
-    }
 
 }

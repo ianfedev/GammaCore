@@ -127,7 +127,6 @@ public class WhisperCommand implements CommandClass {
     @Command(names = {"testMessager"}, max = 0)
     public boolean testMessager() {
         messager.sendMessage("test");
-        this.redisMessager.printTest();
         Bukkit.broadcastMessage("Send message test");
         return true;
     }
