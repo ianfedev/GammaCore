@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
@@ -147,6 +148,15 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
         binder.bind(ObjectMapper.class).toProvider(() -> {
             ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());
+
+            mapper.setVisibility(mapper.getSerializationConfig()
+                    .getDefaultVisibilityChecker()
+                    .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                    .withGetterVisibility(JsonAutoDetect.Visibility.ANY)
+                    .withIsGetterVisibility(JsonAutoDetect.Visibility.ANY)
+                    .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
+                    .withCreatorVisibility(JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC));
+
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper;
         }).in(Scopes.SINGLETON);
