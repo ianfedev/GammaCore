@@ -10,6 +10,7 @@ import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -31,7 +32,7 @@ import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listener.GamePairingListener;
 import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
-import net.seocraft.commons.bukkit.punishment.PunishmentModule;
+import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
 import net.seocraft.commons.bukkit.user.UserAccessResponse;
@@ -143,12 +144,12 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
+        binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class).in(Scopes.SINGLETON);
+        binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class);
-        binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
+        binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
         binder.bind(ObjectMapper.class).toProvider(() -> {
             ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());
-
             mapper.setVisibility(mapper.getSerializationConfig()
                     .getDefaultVisibilityChecker()
                     .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
@@ -156,16 +157,17 @@ public class CommonsBukkit extends JavaPlugin {
                     .withIsGetterVisibility(JsonAutoDetect.Visibility.ANY)
                     .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
                     .withCreatorVisibility(JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC));
-
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             return mapper;
         }).in(Scopes.SINGLETON);
         binder.install(new CoreModule());
         binder.install(new GameModule());
-        binder.install(new PunishmentModule());
         binder.install(new ServerModule());
         binder.install(new UserModule());
         binder.install(new CloudModule());
+        binder.expose(FriendshipProvider.class);
+        binder.expose(PunishmentProvider.class);
+        binder.expose(WhisperManager.class);
     }
 
     private void loadConfig() {

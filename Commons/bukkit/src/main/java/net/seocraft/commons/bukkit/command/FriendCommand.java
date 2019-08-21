@@ -162,7 +162,7 @@ public class FriendCommand implements CommandClass {
     public boolean acceptCommand(CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GameSession playerSession = null;
+            GameSession playerSession;
             try {
                 playerSession = this.gameSessionManager.getCachedSession(player.getName());
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {

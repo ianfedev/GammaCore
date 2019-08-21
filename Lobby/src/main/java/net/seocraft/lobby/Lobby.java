@@ -77,23 +77,12 @@ public class Lobby extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.install(new CoreModule());
-        binder.install(new UserModule());
-        binder.install(new ServerModule());
-        binder.install(new GameModule());
-        binder.bind(CloudManager.class).to(GammaLobbySwitcher.class);
-        binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class);
         binder.bind(HidingGadgetManager.class).to(LobbyHidingGadget.class);
-        binder.bind(ObjectMapper.class).toProvider(() -> {
-            ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            return mapper;
-        }).in(Scopes.SINGLETON);
         binder.bind(TeleportManager.class).to(LobbyTeleportManager.class);
         binder.bind(Lobby.class).toInstance(this);
     }
 
-    private void loadConfig(){
+    private void loadConfig() {
         getConfig().options().copyDefaults(true);
         saveConfig();
     }

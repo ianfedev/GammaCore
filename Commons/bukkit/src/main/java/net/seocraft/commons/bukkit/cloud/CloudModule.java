@@ -8,6 +8,7 @@ public class CloudModule extends ProtectedModule {
     @Override
     protected void configure() {
         bind(CloudManager.class).to(GammaLobbySwitcher.class);
+        expose(CloudManager.class);
     }
 
 }

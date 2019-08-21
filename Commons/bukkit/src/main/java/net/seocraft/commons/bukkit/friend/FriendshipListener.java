@@ -18,6 +18,7 @@ public class FriendshipListener implements ChannelListener<Friendship> {
 
     @Override
     public void receiveMessage(Friendship object) {
+        System.out.println(object.getReceiver() + " " + object.getAction());
         CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), senderRecord -> {
             if (senderRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), receiverRecord -> {

@@ -17,5 +17,9 @@ public class GameModule extends ProtectedModule {
         bind(MapProvider.class).to(CoreMapProvider.class);
         bind(MatchProvider.class).to(GameMatchProvider.class);
         bind(PartyProvider.class).to(GamePartyProvider.class);
+        expose(GamemodeProvider.class);
+        expose(MapProvider.class);
+        expose(MatchProvider.class);
+        expose(PartyProvider.class);
     }
 }

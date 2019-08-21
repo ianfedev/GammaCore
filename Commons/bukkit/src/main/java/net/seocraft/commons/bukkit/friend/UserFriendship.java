@@ -5,6 +5,8 @@ import net.seocraft.api.core.friend.FriendshipAction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.beans.ConstructorProperties;
+
 public class UserFriendship implements Friendship {
 
     private String sender;
@@ -13,6 +15,7 @@ public class UserFriendship implements Friendship {
     private FriendshipAction action;
     private boolean alerted;
 
+    @ConstructorProperties({"sender", "receiver", "action", "alerted", "issuer"})
     public UserFriendship(String sender, String receiver, FriendshipAction action, boolean alerted, @Nullable String issuer) {
         this.sender = sender;
         this.receiver = receiver;

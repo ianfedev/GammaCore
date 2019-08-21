@@ -21,6 +21,7 @@ public class PunishmentListener implements ChannelListener<Punishment> {
 
     @Override
     public void receiveMessage(Punishment punishment) {
+        System.out.println(punishment.getPunishedId());
         CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunishedId()), targetAsyncResponse -> {
             User targetData = targetAsyncResponse.getResponse();
             Player target = Bukkit.getPlayer(targetData.getUsername());

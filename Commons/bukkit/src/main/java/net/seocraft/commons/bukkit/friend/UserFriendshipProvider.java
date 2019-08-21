@@ -29,27 +29,25 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-@Singleton
 public class UserFriendshipProvider implements FriendshipProvider {
 
     private ListeningExecutorService executorService;
     private Channel<Friendship> friendshipChannel;
     @Inject private ObjectMapper mapper;
-    @Inject private FriendshipUserActions friendshipUserActions;
     @Inject private FriendCreateRequest friendCreateRequest;
+    private UserStorageProvider userStorageProvider;
     @Inject private FriendCheckRequest friendCheckRequest;
     @Inject private FriendListRequest friendListRequest;
     @Inject private RedisClient client;
     @Inject private FriendDeleteRequest friendDeleteRequest;
     @Inject private FriendClearRequest friendClearRequest;
-    @Inject private UserStorageProvider userStorageProvider;
     @Inject private BukkitTokenQuery serverTokenQuery;
 
-    @Inject
-    UserFriendshipProvider(ListeningExecutorService executorService, Messager messager) {
+    @Inject UserFriendshipProvider(UserStorageProvider userStorageProvider, FriendshipUserActions friendshipUserActions, ListeningExecutorService executorService, Messager messager) {
         this.executorService = executorService;
+        this.userStorageProvider = userStorageProvider;
         this.friendshipChannel = messager.getChannel("friendships", Friendship.class);
-        this.friendshipChannel.registerListener(new FriendshipListener(this.userStorageProvider, this.friendshipUserActions));
+        this.friendshipChannel.registerListener(new FriendshipListener(userStorageProvider, friendshipUserActions));
     }
 
     @Override

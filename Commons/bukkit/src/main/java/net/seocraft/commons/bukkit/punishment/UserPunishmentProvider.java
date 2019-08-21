@@ -34,20 +34,17 @@ public class UserPunishmentProvider implements PunishmentProvider {
     private ListeningExecutorService executorService;
     private Channel<Punishment> punishmentChannel;
     @Inject private ObjectMapper mapper;
-    @Inject private UserStorageProvider userStorageProvider;
     @Inject private PunishmentCreateRequest punishmentCreateRequest;
-    @Inject private PunishmentActions punishmentActions;
     @Inject private PunishmentGetRequest punishmentGetRequest;
     @Inject private PunishmentGetLastRequest punishmentGetLastRequest;
     @Inject private PunishmentListRequest punishmentListRequest;
     @Inject private PunishmentUpdateRequest punishmentUpdateRequest;
     @Inject private BukkitTokenQuery serverTokenQuery;
 
-    @Inject
-    UserPunishmentProvider(ListeningExecutorService executorService, Messager messager) {
+    @Inject UserPunishmentProvider(UserStorageProvider userStorageProvider, PunishmentActions punishmentActions, ListeningExecutorService executorService, Messager messager) {
         this.executorService = executorService;
         this.punishmentChannel = messager.getChannel("punishments", Punishment.class);
-        this.punishmentChannel.registerListener(new PunishmentListener(this.userStorageProvider, this.punishmentActions));
+        this.punishmentChannel.registerListener(new PunishmentListener(userStorageProvider, punishmentActions));
     }
 
     @Override

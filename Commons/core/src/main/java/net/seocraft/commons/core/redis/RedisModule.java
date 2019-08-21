@@ -11,7 +11,9 @@ public class RedisModule extends ProtectedModule {
     @Override
     protected void configure() {
         bind(RedisClient.class).to(SimpleRedisClient.class).in(Scopes.SINGLETON);
+        expose(RedisClient.class);
         bind(Messager.class).to(RedisMessager.class).in(Scopes.SINGLETON);
+        expose(Messager.class);
     }
 
 }

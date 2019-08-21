@@ -45,6 +45,7 @@ public class FriendshipUserActions {
             }
             case ACCEPT: {
                 showNewFriendshipMessage(player, user, targetRecord);
+                break;
             }
             case FORCE: {
                 String replacableString = this.translatableField.getUnspacedField(issuer.getLanguage(), "commons_friends_forced_success");
@@ -75,6 +76,7 @@ public class FriendshipUserActions {
                         ChatColor.LIGHT_PURPLE +
                                 replacableString
                 );
+                break;
             }
             default: break;
         }
@@ -82,6 +84,7 @@ public class FriendshipUserActions {
     }
 
     public void receiverAction(User sender, User target, FriendshipAction action, @Nullable User issuer) {
+
         Player player = Bukkit.getPlayer(target.getUsername());
         String l = target.getLanguage();
         String realm = this.bukkitAPI.getConfig().getString("realm");
@@ -147,6 +150,7 @@ public class FriendshipUserActions {
                 }
                 case ACCEPT: {
                     showNewFriendshipMessage(player, target, sender);
+                    break;
                 }
                 case FORCE: {
                     if (issuer != null) {
