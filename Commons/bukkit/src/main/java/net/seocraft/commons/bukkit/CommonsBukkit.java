@@ -145,8 +145,8 @@ public class CommonsBukkit extends JavaPlugin {
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class).in(Scopes.SINGLETON);
-        binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class);
-        binder.bind(WhisperManager.class).to(CraftWhisperManager.class);
+        binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class).in(Scopes.SINGLETON);
+        binder.bind(WhisperManager.class).to(CraftWhisperManager.class).in(Scopes.SINGLETON);
         binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
         binder.bind(ObjectMapper.class).toProvider(() -> {
             ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());
