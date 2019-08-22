@@ -50,7 +50,7 @@ public class FriendshipUserActions {
             case FORCE: {
                 String replacableString = this.translatableField.getUnspacedField(issuer.getLanguage(), "commons_friends_forced_success");
                 if (user.getId().equalsIgnoreCase(issuer.getId())) {
-                    replacableString
+                    replacableString = replacableString
                             .replace(
                                     "%%firstUser%%",
                                     this.userFormatter.getUserFormat(targetRecord, realm)
@@ -61,7 +61,7 @@ public class FriendshipUserActions {
                                             .toLowerCase()
                             );
                 } else {
-                    replacableString
+                    replacableString = replacableString
                             .replace(
                                     "%%firstUser%%",
                                     this.userFormatter.getUserFormat(user, realm)
@@ -153,17 +153,17 @@ public class FriendshipUserActions {
                     break;
                 }
                 case FORCE: {
-                    if (issuer != null) {
+                    if (issuer != null && !player.getName().equalsIgnoreCase(issuer.getUsername())) {
                         if (sender.getId().equalsIgnoreCase(issuer.getId())) {
                             String replaceString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
-                            .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm))
-                            .replace("%%target%%", this.translatableField.getUnspacedField(l, "commons_gender_him_her").toLowerCase());
+                            .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm) + ChatColor.LIGHT_PURPLE)
+                            .replace("%%target%%", this.translatableField.getUnspacedField(l, "commons_gender_him_her").toLowerCase()  + ChatColor.LIGHT_PURPLE);
                             player.sendMessage(ChatColor.LIGHT_PURPLE + replaceString);
 
                         } else {
                             String replaceTargetString = this.translatableField.getUnspacedField(l, "commons_friends_forced_friendship")
-                                    .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm))
-                                    .replace("%%target%%", this.userFormatter.getUserFormat(sender, realm));
+                                    .replace("%%sender%%", this.userFormatter.getUserFormat(issuer, realm) + ChatColor.LIGHT_PURPLE)
+                                    .replace("%%target%%", this.userFormatter.getUserFormat(sender, realm) + ChatColor.LIGHT_PURPLE);
                             player.sendMessage(ChatColor.LIGHT_PURPLE + replaceTargetString);
                         }
                     }
