@@ -104,14 +104,14 @@ public class FriendCommand implements CommandClass {
                             if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                                 User targetRecord = targetAsyncResponse.getResponse();
 
-                                // Detect adding status or permission bypassing
-                                if (!targetRecord.isAcceptingFriends() && !player.hasPermission("commons.staff.friends.bypass")) {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_disabled_requests") + ".");
+                                // Detect if users are already friends
+                                if (alertFriendshipStatus(user, targetRecord, player)) {
                                     return;
                                 }
 
-                                // Detect if users are already friends
-                                if (alertFriendshipStatus(user, targetRecord, player)) {
+                                // Detect adding status or permission bypassing
+                                if (!targetRecord.isAcceptingFriends() && !player.hasPermission("commons.staff.friends.bypass")) {
+                                    ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_disabled_requests") + ".");
                                     return;
                                 }
 
@@ -370,7 +370,7 @@ public class FriendCommand implements CommandClass {
     public boolean removeAllCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GameSession playerSession = null;
+            GameSession playerSession;
             try {
                 playerSession = this.gameSessionManager.getCachedSession(player.getName());
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
@@ -409,7 +409,7 @@ public class FriendCommand implements CommandClass {
     public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
-            GameSession playerSession = null;
+            GameSession playerSession;
             try {
                 playerSession = this.gameSessionManager.getCachedSession(player.getName());
                 // Get base user
@@ -443,6 +443,11 @@ public class FriendCommand implements CommandClass {
                                     // Check if player has higher permissions
                                     if (hasLowerPermissions(user, firstRecord, player)) return;
 
+                                    // Detect if players are already friends
+                                    if (alertFriendshipStatus(firstRecord, user, player, true)) {
+                                        return;
+                                    }
+
                                     forcedActions(player, user, user, firstRecord);
                                     return;
                                 }
@@ -458,6 +463,11 @@ public class FriendCommand implements CommandClass {
                                             ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
                                                     user.getLanguage(),
                                                     "commons_friends_force_lower_permissions")  + ".");
+                                            return;
+                                        }
+
+                                        // Detect if players are already friends
+                                        if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
                                             return;
                                         }
 
@@ -511,12 +521,14 @@ public class FriendCommand implements CommandClass {
         }
     }
 
-    private boolean alertFriendshipStatus(User user, User targetRecord, Player player) {
+    private boolean alertFriendshipStatus(User user, User targetRecord, Player player, boolean forced) {
+        String field = "commons_friends_already";
+        if (forced) field = "commons_friends_already_forced";
         if (this.friendshipProvider.checkFriendshipStatus(user.getId(), targetRecord.getId())) {
             ChatAlertLibrary.errorChatAlert(player,
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
-                            "commons_friends_already"
+                            field
                     ).replace(
                             "%%player%%",
                             this.userFormatter.getUserFormat(
@@ -529,6 +541,11 @@ public class FriendCommand implements CommandClass {
         } else {
             return false;
         }
+    }
+
+
+    private boolean alertFriendshipStatus(User user, User targetRecord, Player player) {
+        return this.alertFriendshipStatus(user, targetRecord, player, false);
     }
 
     private boolean alertSamePlayer(Player player, User user, OfflinePlayer target) {
