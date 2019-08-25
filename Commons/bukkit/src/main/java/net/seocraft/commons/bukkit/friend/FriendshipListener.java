@@ -18,12 +18,12 @@ public class FriendshipListener implements ChannelListener<Friendship> {
 
     @Override
     public void receiveMessage(Friendship object) {
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), senderRecord -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getSender()), senderRecord -> {
             if (senderRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), receiverRecord -> {
                     if (receiverRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                         if (object.getIssuer() != null) {
-                            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getReceiver()), issuerRecord -> {
+                            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(object.getIssuer()), issuerRecord -> {
                                 if (issuerRecord.getStatus() == AsyncResponse.Status.SUCCESS) {
                                     this.friendshipActions.receiverAction(
                                             senderRecord.getResponse(),

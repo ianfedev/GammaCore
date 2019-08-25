@@ -405,8 +405,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends force"}, min = 1, usage = "/<command> <target>", permission = "commons.staff.friends.force")
-    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target) {
+    @Command(names = {"friends force"}, min = 1, usage = "/<command> <target> [second]", permission = "commons.staff.friends.force")
+    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, OfflinePlayer second) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             GameSession playerSession;
@@ -439,7 +439,7 @@ public class FriendCommand implements CommandClass {
                                 }
 
                                 // Force between sender and first if not first argument
-                                if (context.getArgumentsLength() == 1 || target.getName().equalsIgnoreCase(player.getName())) {
+                                if (context.getArgumentsLength() == 1 || (second != null && second.getName().equalsIgnoreCase(player.getName()))) {
                                     // Check if player has higher permissions
                                     if (hasLowerPermissions(user, firstRecord, player)) return;
 
@@ -452,36 +452,40 @@ public class FriendCommand implements CommandClass {
                                     return;
                                 }
 
-                                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), secondAsyncResponse  -> {
-                                    if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                                        User secondRecord = secondAsyncResponse.getResponse();
+                                if (second != null) {
+                                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(second.getName()), secondAsyncResponse  -> {
+                                        if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                            User secondRecord = secondAsyncResponse.getResponse();
 
-                                        if (
-                                                user.getPrimaryGroup().getPriority() < firstRecord.getPrimaryGroup().getPriority() ||
-                                                        user.getPrimaryGroup().getPriority() < secondRecord.getPrimaryGroup().getPriority()
-                                        ) {
-                                            ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
-                                                    user.getLanguage(),
-                                                    "commons_friends_force_lower_permissions")  + ".");
-                                            return;
+                                            if (
+                                                    user.getPrimaryGroup().getPriority() > firstRecord.getPrimaryGroup().getPriority() ||
+                                                            user.getPrimaryGroup().getPriority() > secondRecord.getPrimaryGroup().getPriority()
+                                            ) {
+                                                ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
+                                                        user.getLanguage(),
+                                                        "commons_friends_force_lower_permissions")  + ".");
+                                                return;
+                                            }
+
+                                            // Detect if players are already friends
+                                            if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
+                                                return;
+                                            }
+
+                                            forcedActions(player, user, firstRecord, secondRecord);
+                                        } else {
+                                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                                         }
-
-                                        // Detect if players are already friends
-                                        if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
-                                            return;
-                                        }
-
-                                        forcedActions(player, user, firstRecord, secondRecord);
-                                    } else {
-                                        sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
-                                    }
-                                });
+                                    });
+                                } else {
+                                    ChatAlertLibrary.errorChatAlert(player);
+                                }
                             } else {
                                 sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                             }
                         });
                     } else {
-                        ChatAlertLibrary.errorChatAlert(player, null);
+                        ChatAlertLibrary.errorChatAlert(player);
                     }
                 });
             } catch (IOException e) {
@@ -492,6 +496,7 @@ public class FriendCommand implements CommandClass {
     }
 
     private void forcedActions(Player player, User user, User firstRecord, User secondRecord) {
+
         sendRequest(player, user, firstRecord, secondRecord);
 
         this.friendshipUserActions.senderAction(player, firstRecord, secondRecord, FriendshipAction.FORCE, user);
