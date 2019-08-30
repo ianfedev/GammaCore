@@ -137,8 +137,8 @@ public class LobbySelectorMenu {
             int externalCount = 0;
             for (int i = 10; i < iconList.size() + 10; i++) {
                 if (i != 17 && i != 18 && i != 26 && i != 27) {
-                    menuStack.put(i, iconList.get(externalCount));
-                    externalCount += 1;
+                    menuStack.put(i, pagination.getPage(page).get(externalCount));
+                    externalCount++;
                 }
             }
 

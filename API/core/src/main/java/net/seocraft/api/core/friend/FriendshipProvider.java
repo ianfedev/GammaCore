@@ -28,7 +28,7 @@ public interface FriendshipProvider {
 
     @NotNull ListenableFuture<AsyncResponse<Set<User>>> listFriends(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    @Nullable Set<User> listFriendsSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
+    @NotNull Set<User> listFriendsSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 
     @NotNull ListenableFuture<AsyncResponse<Set<User>>> getRequests(@NotNull String id);
 

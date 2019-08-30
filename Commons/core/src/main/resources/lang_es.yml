@@ -110,6 +110,10 @@ commons_friends_force_lower_permissions: "Debes tener un rango igual o mayor que
 commons_friends_forced_friendship: "%%sender%% te ha forzado a ser amigo de %%target%%. ¡Disfruta de tu nuevo \"amigo\"!"
 commons_friends_forced_success: "¡Haz forzado la amistad entre %%firstUser%% y %%secondUser%%!"
 commons_friends_already_forced: "¡Ya se ha forzado la amistad entre estos dos usuarios (O contigo)!"
+commons_friends_no_friends: "No tienes amigos. Ve a hacer unos :("
+commons_friends_error: "Ha ocurrido un error al buscar tu lista de amigos."
+commons_friends_in: "Está en"
+commons_friends_was: "Estuvo en"
 
 # Lobby translations
 commons_lobby_game_menu: Menú de juegos

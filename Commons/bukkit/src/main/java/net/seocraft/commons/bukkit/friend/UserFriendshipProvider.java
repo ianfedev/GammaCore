@@ -105,11 +105,12 @@ public class UserFriendshipProvider implements FriendshipProvider {
     }
 
     @Override
-    public @Nullable Set<User> listFriendsSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
+    public @NotNull Set<User> listFriendsSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         Set<User> userList = new HashSet<>();
+        String response = this.friendListRequest.executeRequest(id, this.serverTokenQuery.getToken());
         Set<Friendship> userFriendships = this.mapper.readValue(
-                this.friendListRequest.executeRequest(id, this.serverTokenQuery.getToken()),
-                new TypeReference<Set<User>>(){}
+                response,
+                new TypeReference<Set<Friendship>>(){}
         );
         userFriendships.forEach(friendship -> {
             try {

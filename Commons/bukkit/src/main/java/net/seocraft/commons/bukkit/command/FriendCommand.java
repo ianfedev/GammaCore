@@ -7,6 +7,9 @@ import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.group.Group;
+import net.seocraft.api.core.online.OnlineStatusManager;
+import net.seocraft.api.core.storage.Pagination;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -22,13 +25,17 @@ import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.commons.bukkit.friend.FriendshipUserActions;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.ChatGlyphs;
+import net.seocraft.commons.core.model.GammaPagination;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Set;
 
 public class FriendCommand implements CommandClass {
 
@@ -36,6 +43,7 @@ public class FriendCommand implements CommandClass {
     @Inject private TranslatableField translatableField;
     @Inject private FriendshipProvider friendshipProvider;
     @Inject private FriendshipUserActions friendshipUserActions;
+    @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private UserFormatter userFormatter;
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private GameSessionManager gameSessionManager;
@@ -378,7 +386,9 @@ public class FriendCommand implements CommandClass {
                         User user = userAsyncResponse.getResponse();
 
                         try {
+                            System.out.println("Erasing players");
                             this.friendshipProvider.removeAllFriends(user.getId());
+                            System.out.println("Erased players");
                         } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                             ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
                             return;
@@ -490,6 +500,67 @@ public class FriendCommand implements CommandClass {
                 });
             } catch (IOException e) {
                 ChatAlertLibrary.errorChatAlert(player, null);
+            }
+        }
+        return true;
+    }
+
+    @Command(names = {"friends list"}, usage = "/<command> [page]")
+    public boolean friendsList(CommandSender commandSender, CommandContext context) {
+        if (commandSender instanceof Player) {
+            Player player = (Player) commandSender;
+            GameSession playerSession;
+            try {
+                playerSession = this.gameSessionManager.getCachedSession(player.getName());
+
+                if (playerSession != null) {
+                    // Get base user
+                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+                        if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+
+                            int page = 1;
+                            if (context.getArgumentsLength() > 1) {
+                                page = Integer.parseInt(context.getArgument(0));
+                            }
+
+                            User user = userAsyncResponse.getResponse();
+                            try {
+                                Set<User> playerList = this.friendshipProvider.listFriendsSync(user.getId());
+                                if (playerList.size() > 0) {
+                                    Pagination<User> pagination = new GammaPagination<>(8, playerList);
+                                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                                    pagination.getPage(1).forEach(friend -> {
+                                        ChatColor color = ChatColor.RED;
+                                        String field = "commons_friends_was";
+                                        if (this.onlineStatusManager.isPlayerOnline(friend.getId())) {
+                                            field = "commons_friends_in";
+                                            color = ChatColor.YELLOW;
+                                        }
+                                        player.sendMessage(
+                                                this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
+                                                        this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getLastGame()
+                                        );
+                                    });
+                                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                                } else {
+                                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                                    player.sendMessage(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));
+                                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                                }
+                            } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
+                                ChatAlertLibrary.errorChatAlert(
+                                        player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_error")
+                                );
+                            }
+                        } else {
+                            ChatAlertLibrary.errorChatAlert(player);
+                        }
+                    });
+                } else {
+                    ChatAlertLibrary.errorChatAlert(player);
+                }
+            } catch (IOException e) {
+                ChatAlertLibrary.errorChatAlert(player);
             }
         }
         return true;
