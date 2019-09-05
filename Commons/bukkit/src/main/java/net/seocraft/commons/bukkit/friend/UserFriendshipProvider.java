@@ -130,13 +130,13 @@ public class UserFriendshipProvider implements FriendshipProvider {
     }
 
     @Override
-    public @Nullable Set<User> getRequestsSync(@NotNull String id) {
+    public @NotNull Set<User> getRequestsSync(@NotNull String id) {
         Set<String> requestList = this.client.getKeys("friendship:" + id +"*");
         Set<User> userList = new HashSet<>();
         requestList.forEach(key -> {
             Friendship friendshipRecord = null;
             try {
-                friendshipRecord = this.mapper.readValue(key, Friendship.class);
+                friendshipRecord = this.mapper.readValue(this.client.getString(key), Friendship.class);
             } catch (IOException ignore) {}
             long expirationTime = this.client.getExpiringTime(key);
             friendshipRecord.setAlerted(true);
@@ -144,7 +144,6 @@ public class UserFriendshipProvider implements FriendshipProvider {
                 this.client.setString(key, this.mapper.writeValueAsString(friendshipRecord));
             } catch (JsonProcessingException ignore) {}
             this.client.setExpiration(key, expirationTime);
-            if (!friendshipRecord.isAlerted())
             try {
                 userList.add(
                         this.userStorageProvider.findUserByIdSync(friendshipRecord.getSender())

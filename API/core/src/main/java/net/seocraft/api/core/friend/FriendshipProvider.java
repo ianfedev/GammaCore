@@ -32,7 +32,7 @@ public interface FriendshipProvider {
 
     @NotNull ListenableFuture<AsyncResponse<Set<User>>> getRequests(@NotNull String id);
 
-    @Nullable Set<User> getRequestsSync(@NotNull String id);
+    @NotNull Set<User> getRequestsSync(@NotNull String id);
 
     boolean hasUnreadRequests(@NotNull String id) throws IOException;
 
