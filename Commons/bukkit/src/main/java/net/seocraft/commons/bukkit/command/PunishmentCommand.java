@@ -23,6 +23,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.punishment.*;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -46,105 +47,142 @@ public class PunishmentCommand implements CommandClass {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            GameSession playerSession = null;
+            GameSession playerSession;
             try {
-                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
-                    if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                        User user = userAsyncResponse.getResponse();
+                playerSession = this.gameSessionManager.getCachedSession(player.getName());
+                if (playerSession != null) {
+                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+                        if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                            User user = userAsyncResponse.getResponse();
 
-                        //Detecting auto punishment
-                        if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
-                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                    user.getLanguage(), "commons_punish_yourself"
-                            ) + ".");
-                            return;
-                        }
+                            //Detecting auto punishment
+                            if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(), "commons_punish_yourself"
+                                ) + ".");
+                                return;
+                            }
 
-                        // Get online player data
-                        CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
-                            if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                                User targetRecord = targetAsyncResponse.getResponse();
-                                String serverName = "test"; //TODO: Get server from Cloud API
+                            // Get online player data
+                            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
+                                if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    User targetRecord = targetAsyncResponse.getResponse();
+                                    String serverName = Bukkit.getServerName();
 
-                                // Detecting if player is online
-                                if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
+                                    // Detecting if player is online
+                                    if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
 
-                                // Get player session
-                                GameSession targetSession = null;
-                                try {
-                                    targetSession = this.gameSessionManager.getCachedSession(target.getName());
-                                } catch (IOException e) {
-                                    ChatAlertLibrary.errorChatAlert(player);
-                                    return;
-                                }
+                                    // Get player session
+                                    GameSession targetSession = null;
+                                    try {
+                                        targetSession = this.gameSessionManager.getCachedSession(target.getName());
+                                    } catch (IOException e) {
+                                        ChatAlertLibrary.errorChatAlert(player);
+                                        return;
+                                    }
 
-                                // Check if user has lower priority
-                                if (hasLowerPermissions(user, targetRecord, player)) return;
+                                    // Check if user has lower priority
+                                    if (hasLowerPermissions(user, targetRecord, player)) return;
 
-                                // Create punishment if reason or duration is provided
-                                if (context.getArgumentsLength() == 1) {
+                                    // Create punishment if reason or duration is provided
+                                    if (context.getArgumentsLength() == 1) {
 
+                                        if (!player.hasPermission("commons.staff.punish.permaban")) {
+                                            ChatAlertLibrary.errorChatAlert(
+                                                    player,
+                                                    this.translator.getUnspacedField(
+                                                            user.getLanguage(),
+                                                            "commons_insufficient_permissions"
+                                                    )  + "."
+                                            );
+                                            return;
+                                        }
+
+                                        try {
+                                            Punishment punishment = this.punishmentProvider.createPunishment(
+                                                    PunishmentType.BAN,
+                                                    user.getId(),
+                                                    targetRecord.getId(),
+                                                    "unknown",
+                                                    null,
+                                                    targetSession.getAddress(),
+                                                    this.translator.getField(targetRecord.getLanguage(), "commons_punish_ban")
+                                                            + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase(),
+                                                    -1,
+                                                    false,
+                                                    silent
+                                            );
+                                            this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
+                                        } catch (Unauthorized | BadRequest | InternalServerError | NotFound | IOException unauthorized) {
+                                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                    user.getLanguage(),
+                                                    "commons_punish_error") + ".");
+                                        }
+                                        return;
+                                    }
+
+                                    //Parsing first argument as provided date
+                                    String stringDuration = context.getArgument(1);
+                                    long millisDuration;
+                                    try {
+                                        millisDuration = TimeUtils.parseDuration(stringDuration);
+                                    } catch (NumberFormatException ex) {
+                                        millisDuration = 0L;
+                                    }
+
+                                    if (millisDuration > 0) {
+                                        if (!player.hasPermission("commons.staff.punish.tempban")) {
+                                            ChatAlertLibrary.errorChatAlert(
+                                                    player,
+                                                    this.translator.getUnspacedField(
+                                                            user.getLanguage(),
+                                                            "commons_insufficient_permissions"
+                                                    ) + "."
+                                            );
+                                            return;
+                                        }
+
+                                        String banReason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_ban")
+                                                + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
+                                        if (context.getArgumentsLength() > 2) banReason = context.getJoinedArgs(2);
+                                        long expirationDate = TimeUtils.getUnixStamp(ZonedDateTime.now().plus(
+                                                Duration.ofMillis(millisDuration)
+                                        ));
+                                        try {
+                                            Punishment punishment = this.punishmentProvider.createPunishment(
+                                                    PunishmentType.BAN,
+                                                    user.getId(),
+                                                    targetRecord.getId(),
+                                                    serverName,
+                                                    null,
+                                                    targetSession.getAddress(),
+                                                    banReason,
+                                                    expirationDate,
+                                                    false,
+                                                    silent
+                                            );
+                                            this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
+                                        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
+                                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                    user.getLanguage(),
+                                                    "commons_punish_error") + ".");
+                                        }
+                                        return;
+                                    }
+
+                                    // Duration is added as part of reason if invalid
                                     if (!player.hasPermission("commons.staff.punish.permaban")) {
                                         ChatAlertLibrary.errorChatAlert(
                                                 player,
                                                 this.translator.getUnspacedField(
                                                         user.getLanguage(),
-                                                        "commons_insufficient_permissions"
-                                                )  + "."
+                                                        "commons_insufficient_permissions" + "."
+                                                )
                                         );
                                         return;
                                     }
 
-                                    try {
-                                        Punishment punishment = this.punishmentProvider.createPunishment(
-                                                PunishmentType.BAN,
-                                                user.getId(),
-                                                targetRecord.getId(),
-                                                "unknown",
-                                                null,
-                                                targetSession.getAddress(),
-                                                this.translator.getField(targetRecord.getLanguage(), "commons_punish_ban")
-                                                        + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase(),
-                                                -1,
-                                                false,
-                                                silent
-                                        );
-                                        this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
-                                    } catch (Unauthorized | BadRequest | InternalServerError | NotFound | IOException unauthorized) {
-                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_punish_error") + ".");
-                                    }
-                                    return;
-                                }
-
-                                //Parsing first argument as provided date
-                                String stringDuration = context.getArgument(1);
-                                long millisDuration;
-                                try {
-                                    millisDuration = TimeUtils.parseDuration(stringDuration);
-                                } catch (NumberFormatException ex) {
-                                    millisDuration = 0L;
-                                }
-
-                                if (millisDuration > 0) {
-                                    if (!player.hasPermission("commons.staff.punish.tempban")) {
-                                        ChatAlertLibrary.errorChatAlert(
-                                                player,
-                                                this.translator.getUnspacedField(
-                                                        user.getLanguage(),
-                                                        "commons_insufficient_permissions"
-                                                ) + "."
-                                        );
-                                        return;
-                                    }
-
-                                    String banReason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_ban")
-                                            + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
-                                    if (context.getArgumentsLength() > 2) banReason = context.getJoinedArgs(2);
-                                    long expirationDate = TimeUtils.getUnixStamp(ZonedDateTime.now().plus(
-                                            Duration.ofMillis(millisDuration)
-                                    ));
+                                    String banReason = context.getJoinedArgs(1);
                                     try {
                                         Punishment punishment = this.punishmentProvider.createPunishment(
                                                 PunishmentType.BAN,
@@ -154,7 +192,7 @@ public class PunishmentCommand implements CommandClass {
                                                 null,
                                                 targetSession.getAddress(),
                                                 banReason,
-                                                expirationDate,
+                                                -1,
                                                 false,
                                                 silent
                                         );
@@ -164,59 +202,26 @@ public class PunishmentCommand implements CommandClass {
                                                 user.getLanguage(),
                                                 "commons_punish_error") + ".");
                                     }
-                                    return;
-                                }
-
-                                // Duration is added as part of reason if invalid
-                                if (!player.hasPermission("commons.staff.punish.permaban")) {
-                                    ChatAlertLibrary.errorChatAlert(
-                                            player,
-                                            this.translator.getUnspacedField(
-                                                    user.getLanguage(),
-                                                    "commons_insufficient_permissions" + "."
-                                            )
-                                    );
-                                    return;
-                                }
-
-                                String banReason = context.getJoinedArgs(1);
-                                try {
-                                    Punishment punishment = this.punishmentProvider.createPunishment(
-                                            PunishmentType.BAN,
-                                            user.getId(),
-                                            targetRecord.getId(),
-                                            serverName,
-                                            null,
-                                            targetSession.getAddress(),
-                                            banReason,
-                                            -1,
-                                            false,
-                                            silent
-                                    );
-                                    this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
-                                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_punish_error") + ".");
-                                }
-                            } else {
-                                if (targetAsyncResponse.getStatusCode() == 404) {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_not_found") + ".");
                                 } else {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_punish_error") + ".");
+                                    if (targetAsyncResponse.getStatusCode() == 404) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_not_found") + ".");
+                                    } else {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_punish_error") + ".");
+                                    }
                                 }
-                            }
-                        });
+                            });
 
-                    } else {
-                        ChatAlertLibrary.errorChatAlert(player);
-                    }
-                });
-                playerSession = this.gameSessionManager.getCachedSession(player.getName());
+                        } else {
+                            ChatAlertLibrary.errorChatAlert(player);
+                        }
+                    });
+                } else {
+                    ChatAlertLibrary.errorChatAlert(player);
+                }
             } catch (IOException e) {
                 ChatAlertLibrary.errorChatAlert(player);
             }
@@ -229,84 +234,88 @@ public class PunishmentCommand implements CommandClass {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            GameSession playerSession = null;
+            GameSession playerSession;
             try {
                 playerSession = this.gameSessionManager.getCachedSession(player.getName());
-            } catch (IOException e) {
-                ChatAlertLibrary.errorChatAlert(player);
-            }
-            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                    User user = userAsyncResponse.getResponse();
+                if (playerSession != null) {
+                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+                        if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                            User user = userAsyncResponse.getResponse();
 
-                    //Detecting auto punishment
-                    if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
-                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                user.getLanguage(), "commons_punish_yourself"
-                        ) + ".");
-                        return;
-                    }
-
-                    // Get online player data
-                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
-                        if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                            User targetRecord = targetAsyncResponse.getResponse();
-                            String serverName = "test"; //TODO: Get server from Cloud API
-
-                            // Detecting if player is online
-                            if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
-
-                            // Get player session
-                            GameSession targetSession = null;
-                            try {
-                                targetSession = this.gameSessionManager.getCachedSession(target.getName());
-                            } catch (IOException e) {
-                                ChatAlertLibrary.errorChatAlert(player);
+                            //Detecting auto punishment
+                            if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(), "commons_punish_yourself"
+                                ) + ".");
                                 return;
                             }
 
-                            // Check if user has lower priority
-                            if (hasLowerPermissions(user, targetRecord, player)) return;
+                            // Get online player data
+                            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
+                                if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    User targetRecord = targetAsyncResponse.getResponse();
+                                    String serverName = Bukkit.getServerName();
 
-                            String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_kick")
-                                    + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
-                            if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
+                                    // Detecting if player is online
+                                    if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
 
-                            try {
-                                Punishment punishment = this.punishmentProvider.createPunishment(
-                                        PunishmentType.KICK,
-                                        user.getId(),
-                                        targetRecord.getId(),
-                                        serverName,
-                                        null,
-                                        targetSession.getAddress(),
-                                        reason,
-                                        -1,
-                                        false,
-                                        silent
-                                );
-                                this.punishmentActions.kickPlayer(target.getPlayer(), targetRecord, punishment);
-                            } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_punish_error") + ".");
-                            }
+                                    // Get player session
+                                    GameSession targetSession = null;
+                                    try {
+                                        targetSession = this.gameSessionManager.getCachedSession(target.getName());
+                                    } catch (IOException e) {
+                                        ChatAlertLibrary.errorChatAlert(player);
+                                        return;
+                                    }
+
+                                    // Check if user has lower priority
+                                    if (hasLowerPermissions(user, targetRecord, player)) return;
+
+                                    String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_kick")
+                                            + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
+                                    if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
+
+                                    try {
+                                        Punishment punishment = this.punishmentProvider.createPunishment(
+                                                PunishmentType.KICK,
+                                                user.getId(),
+                                                targetRecord.getId(),
+                                                serverName,
+                                                null,
+                                                targetSession.getAddress(),
+                                                reason,
+                                                -1,
+                                                false,
+                                                silent
+                                        );
+                                        this.punishmentActions.kickPlayer(target.getPlayer(), targetRecord, punishment);
+                                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_punish_error") + ".");
+                                    }
+                                } else {
+                                    if (targetAsyncResponse.getStatusCode() == 404) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_not_found") + ".");
+                                    } else {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_punish_error") + ".");
+                                    }
+                                }
+                            });
                         } else {
-                            if (targetAsyncResponse.getStatusCode() == 404) {
-                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_not_found") + ".");
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                        user.getLanguage(),
-                                        "commons_punish_error") + ".");
-                            }
+                            ChatAlertLibrary.errorChatAlert(player);
                         }
                     });
                 } else {
                     ChatAlertLibrary.errorChatAlert(player);
                 }
-            });
+            } catch (IOException e) {
+                ChatAlertLibrary.errorChatAlert(player);
+            }
         }
         return true;
     }
@@ -316,82 +325,88 @@ public class PunishmentCommand implements CommandClass {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
+            GameSession gameSession;
             try {
-                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
-                    if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                        User user = userAsyncResponse.getResponse();
+                gameSession = this.gameSessionManager.getCachedSession(player.getName());
+                if (gameSession != null) {
+                    CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(gameSession.getPlayerId()), userAsyncResponse -> {
+                        if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                            User user = userAsyncResponse.getResponse();
 
-                        //Detecting auto punishment
-                        if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
-                            ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                    user.getLanguage(), "commons_punish_yourself"
-                            ) + ".");
-                            return;
-                        }
-
-                        // Get online player data
-                        CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
-                            if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                                User targetRecord = targetAsyncResponse.getResponse();
-                                String serverName = "test"; //TODO: Get server from Cloud API
-
-                                // Detecting if player is online
-                                if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
-
-                                // Get player session
-                                GameSession targetSession = null;
-                                try {
-                                    targetSession = this.gameSessionManager.getCachedSession(target.getName());
-                                } catch (IOException e) {
-                                    ChatAlertLibrary.errorChatAlert(player);
-                                    return;
-                                }
-
-                                // Check if user has lower priority
-                                if (hasLowerPermissions(user, targetRecord, player)) return;
-
-                                String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_warn")
-                                        + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
-                                if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
-
-                                try {
-                                    Punishment punishment = this.punishmentProvider.createPunishment(
-                                            PunishmentType.WARN,
-                                            user.getId(),
-                                            targetRecord.getId(),
-                                            serverName,
-                                            null,
-                                            targetSession.getAddress(),
-                                            reason,
-                                            -1,
-                                            false,
-                                            silent
-                                    );
-                                    this.punishmentActions.warnPlayer(target.getPlayer(), targetRecord, punishment);
-                                } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_punish_error") + ".");
-                                } catch (IOException e) {
-                                    ChatAlertLibrary.errorChatAlert(player);
-                                }
-                            } else {
-                                if (targetAsyncResponse.getStatusCode() == 404) {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_not_found") + ".");
-                                } else {
-                                    ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_punish_error") + ".");
-                                }
+                            //Detecting auto punishment
+                            if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
+                                ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                        user.getLanguage(), "commons_punish_yourself"
+                                ) + ".");
+                                return;
                             }
-                        });
 
-                    } else {
-                        ChatAlertLibrary.errorChatAlert(player);
-                    }
-                });
+                            // Get online player data
+                            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
+                                if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    User targetRecord = targetAsyncResponse.getResponse();
+                                    String serverName = Bukkit.getServerName();
+
+                                    // Detecting if player is online
+                                    if (isTargetOffline(player, targetRecord.getId(), user.getLanguage())) return;
+
+                                    // Get player session
+                                    GameSession targetSession = null;
+                                    try {
+                                        targetSession = this.gameSessionManager.getCachedSession(target.getName());
+                                    } catch (IOException e) {
+                                        ChatAlertLibrary.errorChatAlert(player);
+                                        return;
+                                    }
+
+                                    // Check if user has lower priority
+                                    if (hasLowerPermissions(user, targetRecord, player)) return;
+
+                                    String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_warn")
+                                            + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
+                                    if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
+
+                                    try {
+                                        Punishment punishment = this.punishmentProvider.createPunishment(
+                                                PunishmentType.WARN,
+                                                user.getId(),
+                                                targetRecord.getId(),
+                                                serverName,
+                                                null,
+                                                targetSession.getAddress(),
+                                                reason,
+                                                -1,
+                                                false,
+                                                silent
+                                        );
+                                        this.punishmentActions.warnPlayer(target.getPlayer(), targetRecord, punishment);
+                                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_punish_error") + ".");
+                                    } catch (IOException e) {
+                                        ChatAlertLibrary.errorChatAlert(player);
+                                    }
+                                } else {
+                                    if (targetAsyncResponse.getStatusCode() == 404) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_not_found") + ".");
+                                    } else {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_punish_error") + ".");
+                                    }
+                                }
+                            });
+
+                        } else {
+                            ChatAlertLibrary.errorChatAlert(player);
+                        }
+                    });
+                } else {
+                    ChatAlertLibrary.errorChatAlert(player);
+                }
             } catch (IOException e) {
                 ChatAlertLibrary.errorChatAlert(player);
                 return false;

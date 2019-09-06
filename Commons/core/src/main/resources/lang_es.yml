@@ -92,6 +92,7 @@ commons_friends_help_force: Fuerza la amistad entre dos jugadores
 commons_friends_disabled_requests: El jugador tiene desactivadas las solicitudes de amistad
 commons_friends_already: "%%player%% y tú ya son amigos"
 commons_friends_already_requested: "Ya enviaste una solicitud a %%player%%"
+commons_friends_requests: Solicitudes
 commons_friends_not_requested: "El jugador %%player%% no te ha enviado una solicitud de amistad o esta ya ha expirado"
 commons_friends_request_accepted: "¡%%player%% y tú ahora son amigos!"
 commons_friends_request_rejected: "¡Haz rechazado la solicitud de amistad de %%player%%!"

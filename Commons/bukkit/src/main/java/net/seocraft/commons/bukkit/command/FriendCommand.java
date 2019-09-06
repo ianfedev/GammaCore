@@ -662,7 +662,7 @@ public class FriendCommand implements CommandClass {
                                 Pagination<User> pagination = new GammaPagination<>(8, playerList);
                                 player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
 
-                                // << Friends (Page X of X) >>
+                                // << Requests (Page X of X) >>
                                 TextComponent leftArrow = new TextComponent("<<");
                                 leftArrow.setColor(ChatColor.YELLOW);
                                 leftArrow.setBold(true);
@@ -687,7 +687,7 @@ public class FriendCommand implements CommandClass {
                                 TextComponent actualPages = new TextComponent(" " +
                                         this.translatableField.getField(
                                                 user.getLanguage(),
-                                                "commons_friends_word"
+                                                "commons_friends_requests"
                                         ) +
                                         this.translatableField.getUnspacedField(
                                                 user.getLanguage(),
