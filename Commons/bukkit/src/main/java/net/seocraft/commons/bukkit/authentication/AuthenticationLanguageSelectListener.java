@@ -5,8 +5,6 @@ import com.google.inject.Inject;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.api.core.concurrent.CallbackWrapper;
-import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;

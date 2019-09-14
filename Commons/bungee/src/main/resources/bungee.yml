@@ -1,5 +1,5 @@
 name: Commons
-main: net.seocraft.commons.bukkit.CommonsBukkit
+main: net.seocraft.commons.bungee.CommonsBungee
 version: ${project.version}-${git.commit.getId.abbrev}
-depend: [API-Bukkit]
+depends: [API-Bungee]
 author: Seocraft Network

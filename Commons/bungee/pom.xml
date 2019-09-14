@@ -24,18 +24,14 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.md5</groupId>
-            <artifactId>bungeecord-api</artifactId>
+            <groupId>io.github.waterfallmc</groupId>
+            <artifactId>waterfall-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
             <artifactId>api-bungee</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

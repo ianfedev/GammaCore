@@ -31,7 +31,7 @@ public interface User extends Model {
     void setSkin(@NotNull String skin);
 
     @JsonProperty("last_seen")
-    @NotNull Date getLastSeen();
+    long getLastSeen();
 
     @JsonProperty("last_game")
     @NotNull String getLastGame();
@@ -40,7 +40,7 @@ public interface User extends Model {
     @NotNull String getLastLobby();
 
     @JsonProperty("member_since")
-    @NotNull Date getMemberSince();
+    long getMemberSince();
 
     boolean isVerified();
 

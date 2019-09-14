@@ -117,9 +117,9 @@
             </dependency>
             <!-- Bungee -->
             <dependency>
-                <groupId>net.md5</groupId>
-                <artifactId>bungeecord-api</artifactId>
-                <version>1.8.8</version>
+                <groupId>io.github.waterfallmc</groupId>
+                <artifactId>waterfall-api</artifactId>
+                <version>1.14-20190914.191028-1</version>
             </dependency>
             <!-- Bukkit -->
             <dependency>

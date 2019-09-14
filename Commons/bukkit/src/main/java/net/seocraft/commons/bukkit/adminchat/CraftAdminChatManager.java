@@ -5,15 +5,11 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.adminchat.AdminChatManager;
 import net.seocraft.api.bukkit.adminchat.AdminChatMessage;
-import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Map;
-import java.util.UUID;
 
 public class CraftAdminChatManager implements AdminChatManager {
 

@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -111,7 +112,7 @@ public class CommonsBukkit extends JavaPlugin {
                 );
             }
 
-        } catch (Unauthorized | BadRequest | NotFound | InternalServerError ex) {
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
             ex.printStackTrace();
             Bukkit.getLogger().log(Level.SEVERE, "[Bukkit-API] Error when authorizing server load.");
             Bukkit.shutdown();

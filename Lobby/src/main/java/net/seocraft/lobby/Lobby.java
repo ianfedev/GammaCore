@@ -1,23 +1,11 @@
 package net.seocraft.lobby;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import com.google.inject.Scopes;
 import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.api.bukkit.cloud.CloudManager;
-import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.cloud.GammaLobbySwitcher;
-import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
-import net.seocraft.commons.bukkit.game.GameModule;
-import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
-import net.seocraft.commons.bukkit.server.ServerModule;
-import net.seocraft.commons.bukkit.user.UserModule;
-import net.seocraft.commons.core.CoreModule;
 import net.seocraft.lobby.command.HidingGadgetCommand;
 import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;

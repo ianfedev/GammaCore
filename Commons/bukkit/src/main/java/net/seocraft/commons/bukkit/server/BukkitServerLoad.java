@@ -1,7 +1,6 @@
 package net.seocraft.commons.bukkit.server;
 
 import com.google.inject.Inject;
-import de.dytanic.cloudnet.driver.CloudNetDriver;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;

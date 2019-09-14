@@ -12,7 +12,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserFormatter;
-import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.online.OnlineStatusManager;
 import net.seocraft.api.core.storage.Pagination;
 import net.seocraft.api.core.user.UserStorageProvider;

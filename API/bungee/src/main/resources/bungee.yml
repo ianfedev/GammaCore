@@ -1,0 +1,4 @@
+name: API-Bungee
+main: net.seocraft.api.bungee.BungeeAPI
+version: ${project.version}-${git.commit.getId.abbrev}
+author: Seocraft Network

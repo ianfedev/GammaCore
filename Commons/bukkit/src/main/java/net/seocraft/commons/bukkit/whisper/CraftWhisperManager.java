@@ -34,6 +34,7 @@ public class CraftWhisperManager implements WhisperManager {
     @Override
     public @NotNull ListenableFuture<WhisperResponse> sendMessage(User from, User to, String content) {
         if (Bukkit.getPlayer(to.getUsername()) != null) {
+
             Player playerFrom = Bukkit.getPlayer(from.getUsername());
             Player playerTo = Bukkit.getPlayer(to.getUsername());
 
@@ -50,6 +51,8 @@ public class CraftWhisperManager implements WhisperManager {
         }
 
         return executorService.submit(() -> {
+
+
             Whisper whisper = new WhisperMessage(from, to, content);
 
             if (!gameSessionManager.sessionExists(to.getUsername())) {
@@ -58,12 +61,10 @@ public class CraftWhisperManager implements WhisperManager {
 
             try {
                 Player playerFrom = Bukkit.getPlayer(from.getUsername());
-
                 playerFrom.sendMessage(
                         ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_to") +
                                 ChatColor.GRAY + to.getUsername() + ": " + content
                 );
-
                 whisperChannel.sendMessage(whisper);
 
                 return new WhisperResponse(null, WhisperResponse.Response.SUCCESS, whisper);

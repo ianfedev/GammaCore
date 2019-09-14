@@ -1,7 +1,6 @@
 package net.seocraft.commons.core.user;
 
 import net.seocraft.api.core.group.Group;
-import net.seocraft.commons.core.utils.TimeUtils;
 import net.seocraft.api.core.user.partial.IPRecord;
 import net.seocraft.api.core.user.partial.Disguise;
 import net.seocraft.api.core.user.User;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
-import java.util.Date;
 import java.util.List;
 
 public class GammaUser implements User {
@@ -113,8 +111,8 @@ public class GammaUser implements User {
     }
 
     @Override
-    public @NotNull Date getLastSeen() {
-        return TimeUtils.parseUnixStamp((int) this.lastSeen);
+    public long getLastSeen() {
+        return this.lastSeen;
     }
 
     @Override
@@ -128,8 +126,8 @@ public class GammaUser implements User {
     }
 
     @Override
-    public @NotNull Date getMemberSince() {
-        return TimeUtils.parseUnixStamp((int) this.memberSince);
+    public long getMemberSince() {
+        return this.memberSince;
     }
 
     @Override

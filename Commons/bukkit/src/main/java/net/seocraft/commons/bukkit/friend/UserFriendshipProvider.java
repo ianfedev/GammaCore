@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import net.seocraft.api.core.friend.Friendship;
 import net.seocraft.api.core.friend.FriendshipAction;
 import net.seocraft.api.core.friend.FriendshipProvider;
