@@ -1,5 +1,6 @@
 name: Commons
 main: net.seocraft.commons.bungee.CommonsBungee
 version: ${project.version}-${git.commit.getId.abbrev}
-depends: [API-Bungee]
+depend:
+  - API-Bungee
 author: Seocraft Network

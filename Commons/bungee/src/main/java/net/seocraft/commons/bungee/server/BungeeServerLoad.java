@@ -27,8 +27,6 @@ public class BungeeServerLoad implements ServerLoad {
     @Override
     public Server setupServer() throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError {
         Configuration configuration = this.bungeeAPI.getConfig();
-        int maxRunning = configuration.getInt("game.maxRunning");
-        int maxTotal = configuration.getInt("game.maxTotal");
 
         ServerType type;
         try {

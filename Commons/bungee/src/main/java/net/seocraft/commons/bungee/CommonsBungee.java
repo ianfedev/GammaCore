@@ -17,9 +17,10 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
-import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.commons.bungee.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bungee.server.ServerModule;
+import net.seocraft.commons.bungee.user.PlayerDisconnectListener;
+import net.seocraft.commons.bungee.user.PlayerJoinListener;
 import net.seocraft.commons.core.CoreModule;
 
 import java.io.*;
@@ -27,6 +28,9 @@ import java.util.logging.Level;
 
 
 public class CommonsBungee extends Plugin {
+
+    @Inject private PlayerJoinListener playerJoinListener;
+    @Inject private PlayerDisconnectListener playerDisconnectListener;
 
     @Inject private ServerLoad serverLoad;
     private Server serverRecord;
@@ -36,6 +40,9 @@ public class CommonsBungee extends Plugin {
         loadConfig();
         try {
             this.serverRecord = this.serverLoad.setupServer();
+
+            getProxy().getPluginManager().registerListener(this, playerJoinListener);
+            getProxy().getPluginManager().registerListener(this, playerDisconnectListener);
 
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
             this.getLogger().log(Level.SEVERE, "[Bungee-API] There was an error initializating server.");

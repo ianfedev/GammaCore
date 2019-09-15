@@ -39,7 +39,7 @@ public class BungeeAPI extends Plugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.bind(BungeeAPI.class).toInstance(this);
+        binder.publicBinder().bind(BungeeAPI.class).toInstance(this);
     }
 
 }

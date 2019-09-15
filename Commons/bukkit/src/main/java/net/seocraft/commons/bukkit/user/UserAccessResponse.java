@@ -87,7 +87,6 @@ public class UserAccessResponse implements Listener {
             String playerIdentifier = response.get("user").asText();
 
             User user = this.userStorage.getCachedUserSync(playerIdentifier);
-            this.gameSessionManager.createGameSession(user,  ip, "1.8.9"); // TODO: Handle version get
             if (response.get("multi").asBoolean()) {
                 // TODO: Handle multi-account issue
             } else {
