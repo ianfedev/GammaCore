@@ -1,11 +1,14 @@
 package net.seocraft.commons.bukkit.punishment;
 
 import net.seocraft.api.bukkit.punishment.Punishment;
+import net.seocraft.api.core.redis.messager.Channel;
+import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.redis.messager.ChannelListener;
 import net.seocraft.api.core.user.User;
+import net.seocraft.commons.core.user.PlayerExpulsion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -13,15 +16,16 @@ public class PunishmentListener implements ChannelListener<Punishment> {
 
     private UserStorageProvider userStorageProvider;
     private PunishmentActions punishmentActions;
+    private Channel<UserExpulsion> expulsionChannel;
 
-    PunishmentListener(UserStorageProvider userStorageProvider, PunishmentActions punishmentActions) {
+    PunishmentListener(UserStorageProvider userStorageProvider, PunishmentActions punishmentActions, Channel<UserExpulsion> expulsionChannel) {
         this.userStorageProvider = userStorageProvider;
         this.punishmentActions = punishmentActions;
+        this.expulsionChannel = expulsionChannel;
     }
 
     @Override
     public void receiveMessage(Punishment punishment) {
-        System.out.println(punishment.getPunishedId());
         CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunishedId()), targetAsyncResponse -> {
             User targetData = targetAsyncResponse.getResponse();
             Player target = Bukkit.getPlayer(targetData.getUsername());
@@ -29,7 +33,7 @@ public class PunishmentListener implements ChannelListener<Punishment> {
             if (target != null && targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 switch (punishment.getPunishmentType()) {
                     case BAN: {
-                        this.punishmentActions.banPlayer(target.getPlayer(), targetData, punishment);
+                        BridgedUserBan.banPlayer(expulsionChannel, punishment, targetData);
                         break;
                     }
                     case KICK: {

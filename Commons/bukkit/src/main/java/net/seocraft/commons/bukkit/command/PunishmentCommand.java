@@ -8,7 +8,9 @@ import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
+import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -39,6 +41,7 @@ public class PunishmentCommand implements CommandClass {
     @Inject private OnlineStatusManager onlinePlayers;
     @Inject private PunishmentProvider punishmentProvider;
     @Inject private GameSessionManager gameSessionManager;
+    @Inject private Messager messager;
     @Inject private PunishmentActions punishmentActions;
     @Inject private UserStorageProvider userStorageProvider;
 
@@ -112,7 +115,11 @@ public class PunishmentCommand implements CommandClass {
                                                     false,
                                                     silent
                                             );
-                                            this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
+                                            BridgedUserBan.banPlayer(
+                                                    this.messager.getChannel("proxyBan", UserExpulsion.class),
+                                                    punishment,
+                                                    targetRecord
+                                            );
                                         } catch (Unauthorized | BadRequest | InternalServerError | NotFound | IOException unauthorized) {
                                             ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                                     user.getLanguage(),
@@ -161,7 +168,11 @@ public class PunishmentCommand implements CommandClass {
                                                     false,
                                                     silent
                                             );
-                                            this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
+                                            BridgedUserBan.banPlayer(
+                                                    this.messager.getChannel("proxyBan", UserExpulsion.class),
+                                                    punishment,
+                                                    targetRecord
+                                            );
                                         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
                                             ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                                     user.getLanguage(),
@@ -196,7 +207,11 @@ public class PunishmentCommand implements CommandClass {
                                                 false,
                                                 silent
                                         );
-                                        this.punishmentActions.banPlayer(target.getPlayer(), targetRecord, punishment);
+                                        BridgedUserBan.banPlayer(
+                                                this.messager.getChannel("proxyBan", UserExpulsion.class),
+                                                punishment,
+                                                targetRecord
+                                        );
                                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
                                         ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                                 user.getLanguage(),

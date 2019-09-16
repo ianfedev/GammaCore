@@ -91,7 +91,7 @@ public class UserAccessResponse implements Listener {
                 // TODO: Handle multi-account issue
             } else {
                 // Detect if player has a punishment
-                this.punishmentActions.checkBan(player, user);
+                this.punishmentActions.checkBan(user);
 
                 // Execute authentication handler
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
@@ -111,7 +111,6 @@ public class UserAccessResponse implements Listener {
                     event.setJoinMessage("");
                 }
 
-                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true); //TODO: Set at commons bungee
                 playerField.set(player, new UserPermissions(player, user, userStorage, gameSessionManager, translator));
 
                 if (this.instance.getServerRecord().getServerType() == ServerType.LOBBY &&

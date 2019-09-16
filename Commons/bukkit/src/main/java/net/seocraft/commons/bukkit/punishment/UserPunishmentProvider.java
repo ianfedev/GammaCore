@@ -10,6 +10,7 @@ import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
+import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -33,6 +34,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
 
     private ListeningExecutorService executorService;
     private Channel<Punishment> punishmentChannel;
+    private Channel<UserExpulsion> expulsionChannel;
     @Inject private ObjectMapper mapper;
     @Inject private PunishmentCreateRequest punishmentCreateRequest;
     @Inject private PunishmentGetRequest punishmentGetRequest;
@@ -44,7 +46,8 @@ public class UserPunishmentProvider implements PunishmentProvider {
     @Inject UserPunishmentProvider(UserStorageProvider userStorageProvider, PunishmentActions punishmentActions, ListeningExecutorService executorService, Messager messager) {
         this.executorService = executorService;
         this.punishmentChannel = messager.getChannel("punishments", Punishment.class);
-        this.punishmentChannel.registerListener(new PunishmentListener(userStorageProvider, punishmentActions));
+        this.expulsionChannel = messager.getChannel("proxyBan", UserExpulsion.class);
+        this.punishmentChannel.registerListener(new PunishmentListener(userStorageProvider, punishmentActions, expulsionChannel));
     }
 
     @Override

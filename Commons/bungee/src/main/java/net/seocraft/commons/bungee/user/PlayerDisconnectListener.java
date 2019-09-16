@@ -26,11 +26,11 @@ public class PlayerDisconnectListener implements Listener {
         ProxiedPlayer player = event.getPlayer();
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(player.getName()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                this.gameSessionManager.removeGameSession(event.getPlayer().getName());
+                this.gameSessionManager.removeGameSession(player.getName());
                 this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), false);
             } else {
                 player.disconnect(
-                        new TextComponent(ChatColor.RED + "Error when logging out, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + userAsyncResponse.getThrowedException().getClass().getSimpleName())
+                        new TextComponent(ChatColor.RED + "Error when logging out, please login and logout to refresh your \n\n session status. \n\n" + ChatColor.GRAY + "Error Type: " + userAsyncResponse.getThrowedException().getClass().getSimpleName())
                 );
             }
         });

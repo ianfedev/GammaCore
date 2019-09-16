@@ -7,21 +7,34 @@ import com.google.common.io.ByteStreams;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedBinder;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import net.seocraft.api.core.concurrent.AsyncResponse;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.online.OnlineStatusManager;
+import net.seocraft.api.core.redis.messager.Channel;
+import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.UserExpulsion;
+import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.commons.bungee.punishment.PunishmentListener;
 import net.seocraft.commons.bungee.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bungee.server.ServerModule;
 import net.seocraft.commons.bungee.user.PlayerDisconnectListener;
 import net.seocraft.commons.bungee.user.PlayerJoinListener;
 import net.seocraft.commons.core.CoreModule;
+import net.seocraft.commons.core.translation.TranslatableField;
 
 import java.io.*;
 import java.util.logging.Level;
@@ -31,15 +44,23 @@ public class CommonsBungee extends Plugin {
 
     @Inject private PlayerJoinListener playerJoinListener;
     @Inject private PlayerDisconnectListener playerDisconnectListener;
+    @Inject private UserStorageProvider userStorageProvider;
+    @Inject private GameSessionManager gameSessionManager;
+    @Inject private OnlineStatusManager onlineStatusManager;
+    @Inject private TranslatableField translatableField;
+    @Inject private Messager messager;
 
     @Inject private ServerLoad serverLoad;
     private Server serverRecord;
+    private Channel<UserExpulsion> punishmentChannel;
+
 
     @Override
     public void onEnable() {
         loadConfig();
         try {
             this.serverRecord = this.serverLoad.setupServer();
+            this.registerBanListener();
 
             getProxy().getPluginManager().registerListener(this, playerJoinListener);
             getProxy().getPluginManager().registerListener(this, playerDisconnectListener);
@@ -47,6 +68,18 @@ public class CommonsBungee extends Plugin {
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
             this.getLogger().log(Level.SEVERE, "[Bungee-API] There was an error initializating server.");
             this.getProxy().stop();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        for (ProxiedPlayer player : getProxy().getPlayers()) {
+            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(player.getName()), userAsyncResponse -> {
+                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                    this.gameSessionManager.removeGameSession(player.getName());
+                    this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), false);
+                }
+            });
         }
     }
 
@@ -65,10 +98,6 @@ public class CommonsBungee extends Plugin {
                 throw new RuntimeException("Unable to create configuration file", e);
             }
         }
-    }
-
-    public Configuration getConfig() throws IOException {
-        return ConfigurationProvider.getProvider(YamlConfiguration.class).load(new File(getDataFolder(), "config.yml"));
     }
 
     @Override
@@ -92,6 +121,12 @@ public class CommonsBungee extends Plugin {
 
     public Server getServerRecord() {
         return this.serverRecord;
+    }
+
+    private void registerBanListener() {
+        punishmentChannel = this.messager.getChannel("proxyBan", UserExpulsion.class);
+        this.punishmentChannel.registerListener(new PunishmentListener(this, translatableField));
+
     }
 
 }
