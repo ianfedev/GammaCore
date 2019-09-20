@@ -7,6 +7,7 @@ import de.dytanic.cloudnet.common.document.gson.JsonDocument;
 import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.permission.IPermissionUser;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
+import de.dytanic.cloudnet.driver.service.ServiceTask;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -21,13 +22,10 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class GammaLobbySwitcher implements CloudManager {
+public class GammaCloudManager implements CloudManager {
 
     @Inject private ServerManager serverManager;
 
@@ -77,13 +75,22 @@ public class GammaLobbySwitcher implements CloudManager {
     }
 
     @Override
-    public void getOnlinePlayers(@NotNull Gamemode gamemode) {
-        int counter;
-        for (SubGamemode sub : gamemode.getSubGamemodes()) {
-            for (IPermissionUser user : CloudNetDriver.getInstance().getUsers()) {
-
-            }
-        }
+    public UUID createCloudService(@NotNull String taskName) {
+        ServiceTask task = CloudNetDriver.getInstance().getServiceTask(taskName);
+        ServiceInfoSnapshot snapshot = CloudNetDriver.getInstance().createCloudService(task);
+        CloudNetDriver.getInstance().startCloudService(snapshot);
+        return snapshot.getServiceId().getUniqueId();
     }
+
+    @Override
+    public boolean isConnected(@NotNull UUID service) {
+        return CloudNetDriver.getInstance().getCloudService(service).isConnected();
+    }
+
+    @Override
+    public @NotNull String getSlug(@NotNull UUID service) {
+        return CloudNetDriver.getInstance().getCloudService(service).getServiceId().getName();
+    }
+
 
 }

@@ -11,6 +11,7 @@ import net.seocraft.lobby.command.TeleportCommand;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
 import net.seocraft.lobby.hiding.HidingGadgetListener;
 import net.seocraft.lobby.hiding.LobbyHidingGadget;
+import net.seocraft.lobby.hotbar.GameSelectorListener;
 import net.seocraft.lobby.hotbar.HotbarListener;
 import net.seocraft.lobby.listener.InventoryInteractionListener;
 import net.seocraft.lobby.listener.*;
@@ -29,6 +30,7 @@ public class Lobby extends JavaPlugin {
     @Inject private HidingGadgetCommand hidingGadgetCommand;
     @Inject private TeleportCommand teleportCommand;
 
+    @Inject private GameSelectorListener gameSelectorListener;
     @Inject private HidingGadgetListener hidingGadgetListener;
     @Inject private PlayerBlockInteractionListener playerBlockInteractionListener;
     @Inject private HotbarListener hotbarListener;
@@ -52,6 +54,7 @@ public class Lobby extends JavaPlugin {
         dispatcher.registerCommandClass(this.hidingGadgetCommand);
         dispatcher.registerCommandClass(this.teleportCommand);
 
+        getServer().getPluginManager().registerEvents(this.gameSelectorListener, this);
         getServer().getPluginManager().registerEvents(this.lobbyConnectionListener, this);
         getServer().getPluginManager().registerEvents(this.hidingGadgetListener, this);
         getServer().getPluginManager().registerEvents(this.lobbySelectorListener, this);

@@ -7,6 +7,7 @@ import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.lobby.GameMenuManager;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.concurrent.AsyncResponse;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.InventoryUtils;
 import net.seocraft.commons.bukkit.util.LoreDisplayArray;
@@ -62,8 +63,8 @@ public class LobbyGameManager implements GameMenuManager {
 
                         gamemodeMeta.setLore(loreDisplayArray);
                         gamemodeBase.setItemMeta(gamemodeMeta);
+                        gamemodeBase = NBTTagHandler.addString(gamemodeBase, "game_selector_opt", gamemode.getLobbyGroup());
                         inventoryItems.put(gamemode.getNavigatorSlot(), gamemodeBase);
-                        this.cloudManager.getOnlinePlayers(gamemode);
                     });
                 } else {
                     ItemStack emptyBase = new ItemStack(Material.BARRIER, 1);

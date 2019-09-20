@@ -10,5 +10,5 @@ import java.io.IOException;
 
 public interface MatchFinder {
 
-    @NotNull FinderResult findAvailableMatch(@NotNull String gamemode, @NotNull String subGamemode) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
+    @NotNull FinderResult findAvailableMatch(@NotNull String gamemode, @NotNull String subGamemode, @NotNull String serverGroup) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
 }

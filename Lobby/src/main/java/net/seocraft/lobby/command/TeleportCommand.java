@@ -5,6 +5,7 @@ import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import org.bukkit.Bukkit;
@@ -12,10 +13,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.UUID;
+
 public class TeleportCommand implements CommandClass {
 
     @Inject private TeleportManager teleportManager;
-    @Inject private GameSessionManager gameSessionManager;
+    @Inject private CloudManager cloudManager;
 
     @Command(names = {"tp", "teleport", "tele"}, usage = "/<command> <target> [-s]", permission = "commons.staff.lobby.tp")
     public boolean teleportCommand(CommandSender commandSender, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
@@ -59,19 +62,5 @@ public class TeleportCommand implements CommandClass {
         return true;
     }
 
-    /*public boolean testCommand() {
-        GameSession gameSession = this.gameSessionManager.getCachedSession("MomlessTomato");
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(GameSession.class, new ModelSerializer<>(GameSession.class))
-                .registerTypeAdapter(GameSession.class, new ModelDeserializer<>(GameSession.class))
-                .enableComplexMapKeySerialization()
-                .serializeNulls()
-                .setPrettyPrinting()
-                .create();
-        String yeison = gson.toJson(gameSession, GameSession.class);
-        System.out.println(yeison);
-        System.out.println(gson.fromJson(yeison, GameSession.class).getPlayerId());
-        return true;
-    }*/
 
 }
