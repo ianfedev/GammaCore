@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit.game.match;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -24,6 +25,7 @@ import net.seocraft.commons.core.backend.map.MapGetRequest;
 import net.seocraft.commons.core.backend.match.MatchCreateRequest;
 import net.seocraft.commons.core.backend.match.MatchFindRequest;
 import net.seocraft.commons.core.backend.match.MatchGetRequest;
+import net.seocraft.commons.core.backend.match.MatchUpdateRequest;
 import net.seocraft.commons.core.utils.TimeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +40,7 @@ public class GameMatchProvider implements MatchProvider {
     @Inject private MatchGetRequest matchGetRequest;
     @Inject private MapGetRequest mapGetRequest;
     @Inject private MatchFindRequest matchFindRequest;
+    @Inject private MatchUpdateRequest matchUpdateRequest;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private MatchCreateRequest matchCreateRequest;
     @Inject private ObjectMapper objectMapper;
@@ -147,5 +150,17 @@ public class GameMatchProvider implements MatchProvider {
                 response,
                 new TypeReference<Set<Match>>(){}
         );
+    }
+
+    @Override
+    public @NotNull Match updateMatch(@NotNull Match match) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError {
+
+        String response = this.matchUpdateRequest.executeRequest(
+                this.objectMapper.writeValueAsString(match),
+                match.getId(),
+                this.serverTokenQuery.getToken()
+        );
+
+        return this.objectMapper.readValue(response, Match.class);
     }
 }
