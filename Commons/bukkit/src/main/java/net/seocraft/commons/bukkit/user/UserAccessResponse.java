@@ -4,7 +4,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.game.management.FinderResult;
+import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
@@ -44,15 +47,13 @@ public class UserAccessResponse implements Listener {
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private ObjectMapper mapper;
     @Inject private UserStorageProvider userStorage;
-    @Inject private CommonsBukkit bukkit;
     @Inject private GameSessionManager gameSessionManager;
-    @Inject private FriendshipProvider friendshipProvider;
-    @Inject private UserFormatter userFormatter;
     @Inject private ServerManager serverManager;
     @Inject private UserAccessRequest request;
-    @Inject private OnlineStatusManager onlineStatusManager;
+    @Inject private GameLoginManager gameLoginManager;
     @Inject private BukkitTokenQuery tokenHandler;
     @Inject private PunishmentActions punishmentActions;
+    @Inject private RedisClient redisClient;
     @Inject private TranslatableField translator;
     private static Field playerField;
 
@@ -127,9 +128,14 @@ public class UserAccessResponse implements Listener {
 
                 if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
                     if (this.instance.pairedGame) {
-
+                        FinderResult result = this.mapper.readValue(
+                                this.redisClient.getString("pairing:" + user.getId()),
+                                FinderResult.class
+                        );
+                        this.gameLoginManager.matchPlayerJoin(result, user, player);
+                        event.setJoinMessage("");
                     } else {
-                        // TODO: Kick if game was not paired
+                        player.kickPlayer(ChatColor.RED + "This game is being initialized, please try again.");
                     }
                 }
             }

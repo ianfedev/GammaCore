@@ -9,4 +9,6 @@ public interface FinderResult {
     @NotNull Server getServer();
 
     @NotNull Match getMatch();
+
+    boolean isSpectable();
 }

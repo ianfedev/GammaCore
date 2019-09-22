@@ -39,12 +39,11 @@ public class GameMatchFinder implements MatchFinder {
             ).stream().findAny();
 
             if (server.isPresent()) {
-                return new GameResult(server.get(), selectedMatch);
+                return new GameResult(server.get(), selectedMatch, false);
             } else {
                throw new InternalServerError("Error obtaining match server");
             }
         } else {
-
             UUID serviceUUID = this.cloudManager.createCloudService(serverGroup);
             while (true) {
                 if (this.cloudManager.isConnected(serviceUUID)) {
@@ -66,12 +65,10 @@ public class GameMatchFinder implements MatchFinder {
                             }
                             assert match != null;
                             Match selectedMatch = this.matchProvider.findMatchByIdSync(match);
-                            return new GameResult(foundServer, selectedMatch);
+                            return new GameResult(foundServer, selectedMatch, false);
                         } else {
                             throw new InternalServerError("Error obtaining match server");
                         }
-                    } else {
-                        throw new InternalServerError("Error obtaining match server");
                     }
                 }
             }

@@ -2,6 +2,8 @@ package net.seocraft.commons.bukkit.game.management;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.game.management.CoreGameManagement;
+import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.management.MapFileManager;
 import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
@@ -24,22 +26,21 @@ import java.util.logging.Level;
 
 public class CraftGameLoginManager implements GameLoginManager {
 
-    @Inject private RedisClient redisClient;
     @Inject private MapFileManager mapFileManager;
     @Inject private ObjectMapper mapper;
-    @Inject private CommonsBukkit instance;
+    @Inject private CoreGameManagement coreGameManagement;
     @Inject private TranslatableField translatableField;
 
     @Override
-    public void matchPlayerJoin(@NotNull Match match, @NotNull User user, @NotNull Player player) {
-        if (this.redisClient.existsKey("spectate:" + user.getId() + ":" + this.instance.getServerRecord().getId())) {
+    public void matchPlayerJoin(@NotNull FinderResult match, @NotNull User user, @NotNull Player player) {
+        if (match.isSpectable()) {
             // TODO: Set spectator tools
         } else {
 
             Optional<GameMap> matchMap = this.mapFileManager.getPlayableMaps()
                     .keySet()
                     .stream()
-                    .filter(map -> map.getId().equalsIgnoreCase(match.getId()))
+                    .filter(map -> map.getId().equalsIgnoreCase(match.getMatch().getId()))
                     .findAny();
 
             if (matchMap.isPresent()) {
@@ -52,7 +53,7 @@ public class CraftGameLoginManager implements GameLoginManager {
                     player.setHealth(20);
                     player.setFoodLevel(20);
 
-                    World matchWorld = Bukkit.getWorld("match_" + match.getId());
+                    World matchWorld = Bukkit.getWorld("match_" + match.getMatch().getId());
                     if (matchWorld != null) {
                         Location location = new Location(
                                 matchWorld,

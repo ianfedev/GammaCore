@@ -7,6 +7,6 @@ import org.jetbrains.annotations.NotNull;
 
 public interface GameLoginManager {
 
-    void matchPlayerJoin(@NotNull Match match, @NotNull User user, @NotNull Player player);
+    void matchPlayerJoin(@NotNull FinderResult result, @NotNull User user, @NotNull Player player);
 
 }

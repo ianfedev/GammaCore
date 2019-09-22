@@ -11,9 +11,10 @@ public class GameResult implements FinderResult {
 
     @NotNull private Server server;
     @NotNull private Match match;
+    private boolean spectable;
 
-    @ConstructorProperties({"server", "match"})
-    public GameResult(@NotNull Server server, @NotNull Match match) {
+    @ConstructorProperties({"server", "match", "spectable"})
+    public GameResult(@NotNull Server server, @NotNull Match match, boolean spectable) {
         this.server = server;
         this.match = match;
     }
@@ -26,5 +27,10 @@ public class GameResult implements FinderResult {
     @Override
     public @NotNull Match getMatch() {
         return this.match;
+    }
+
+    @Override
+    public boolean isSpectable() {
+        return this.spectable;
     }
 }
