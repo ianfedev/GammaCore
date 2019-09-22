@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.game.map;
 
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
+import net.seocraft.api.bukkit.game.map.partial.MapCoordinates;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
@@ -16,9 +17,10 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
     @NotNull private String gamemode;
     @NotNull private String subGamemode;
     @NotNull private String description;
+    @NotNull private MapCoordinates lobbyCoordinates;
 
-    @ConstructorProperties({"name", "author", "version", "contributors", "gamemode", "subGamemode", "description"})
-    public CraftMapConfiguration(@NotNull String name, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description) {
+    @ConstructorProperties({"name", "author", "version", "contributors", "gamemode", "subGamemode", "description", "lobbyCoordinates"})
+    public CraftMapConfiguration(@NotNull String name, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description, @NotNull MapCoordinates lobbyCoordinates) {
         this.name = name;
         this.author = author;
         this.version = version;
@@ -26,6 +28,7 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
         this.description = description;
+        this.lobbyCoordinates = lobbyCoordinates;
     }
 
     @Override
@@ -61,6 +64,11 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
     @Override
     public @NotNull String getDescription() {
         return this.description;
+    }
+
+    @Override
+    public @NotNull MapCoordinates getLobbyCoordinates() {
+        return this.lobbyCoordinates;
     }
 
 }

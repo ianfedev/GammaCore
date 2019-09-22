@@ -7,20 +7,22 @@ import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.MapProvider;
 import net.seocraft.api.bukkit.game.management.MapFileManager;
+import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -30,10 +32,10 @@ import static net.seocraft.commons.core.utils.FileManagerUtils.fileToBase64Strin
 @Singleton
 public class CraftMapFileManager implements MapFileManager {
 
-    @NotNull private Set<GameMap> playableMaps =  new HashSet<>();
-    @Inject private CommonsBukkit instance;
+    @NotNull private Map<GameMap, File> playableMaps =  new HashMap<>();
     @Inject private MapProvider mapProvider;
     @Inject private ObjectMapper mapper;
+    @Inject private CommonsBukkit instance;
 
     @Override
     public void configureMapFolder() {
@@ -94,7 +96,7 @@ public class CraftMapFileManager implements MapFileManager {
                                 configuration.getDescription()
                         );
                         if (mapFile.exists()) mapFile.delete();
-                        this.playableMaps.add(map);
+                        this.playableMaps.put(map, folder);
                         Bukkit.getLogger().log(
                                 Level.INFO,
                                 "[GameAPI] Loaded successfully map {0}.",
@@ -133,8 +135,26 @@ public class CraftMapFileManager implements MapFileManager {
     }
 
     @Override
-    public @NotNull Set<GameMap> getPlayableMaps() {
+    public @NotNull Map<GameMap, File> getPlayableMaps() {
         return this.playableMaps;
+    }
+
+    @Override
+    public @NotNull World loadMatchWorld(@NotNull Match match) throws IOException {
+        File serverPath = new File("./match_" + match.getId());
+        serverPath.mkdir();
+        for (Map.Entry entry : this.playableMaps.entrySet()) {
+            GameMap map = (GameMap) entry.getKey();
+            if (map.getId().equalsIgnoreCase(match.getMap())) {
+                FileUtils.copyDirectory(
+                        (File) entry.getValue(),
+                        serverPath
+                );
+            }
+        }
+
+        WorldCreator worldCreator = new WorldCreator("match_" + match.getId());
+        return worldCreator.createWorld();
     }
 
 }

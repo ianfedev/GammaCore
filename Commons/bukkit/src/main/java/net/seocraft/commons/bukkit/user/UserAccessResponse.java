@@ -125,6 +125,13 @@ public class UserAccessResponse implements Listener {
                 );
                 this.instance.setServerRecord(updatableServer);
 
+                if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
+                    if (this.instance.pairedGame) {
+
+                    } else {
+                        // TODO: Kick if game was not paired
+                    }
+                }
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IllegalAccessException | IOException error) {
             error.printStackTrace();

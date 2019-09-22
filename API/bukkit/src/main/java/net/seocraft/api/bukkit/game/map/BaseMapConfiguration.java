@@ -1,6 +1,7 @@
 package net.seocraft.api.bukkit.game.map;
 
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
+import net.seocraft.api.bukkit.game.map.partial.MapCoordinates;
 import net.seocraft.api.core.storage.Model;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,5 +22,7 @@ public interface BaseMapConfiguration {
     @NotNull String getSubGamemode();
 
     @NotNull String getDescription();
+
+    @NotNull MapCoordinates getLobbyCoordinates();
 
 }

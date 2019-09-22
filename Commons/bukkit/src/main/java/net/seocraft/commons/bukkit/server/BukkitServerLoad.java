@@ -5,6 +5,7 @@ import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.*;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -30,7 +31,7 @@ public class BukkitServerLoad implements ServerLoad {
     @Inject private ServerManager serverManager;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ServerDisconnectRequest serverDisconnectRequest;
-    @Inject private CraftMapFileManager craftMapFileManager;
+    @Inject private CoreGameManagement coreGameManagement;
     @Inject private RedisClient redisClient;
 
     public Server setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
@@ -67,7 +68,8 @@ public class BukkitServerLoad implements ServerLoad {
                             )
                             .findFirst();
                     if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
-                    this.craftMapFileManager.configureMapFolder();
+
+                    this.coreGameManagement.initializeGameCore(gamemode, subGamemode.get());
 
                     return this.serverManager.loadServer(
                             Bukkit.getServerName(),

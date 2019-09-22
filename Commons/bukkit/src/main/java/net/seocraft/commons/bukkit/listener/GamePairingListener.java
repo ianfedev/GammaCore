@@ -14,5 +14,6 @@ public class GamePairingListener implements Listener {
     @EventHandler
     public void gamePairingListener(GamePairingEvent event) {
         Bukkit.getScheduler().cancelTask(this.instance.pairingRunnable);
+        this.instance.pairedGame = true;
     }
 }

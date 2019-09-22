@@ -32,6 +32,7 @@ import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listener.GamePairingListener;
 import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
+import net.seocraft.commons.bukkit.listener.MatchUpdateListener;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -58,6 +59,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private AuthenticationCommandsListener authenticationCommandsListener;
 
     @Inject private GamePairingListener gamePairingListener;
+    @Inject private MatchUpdateListener matchUpdateListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
     @Inject private UserDisconnectListener userDisconnectListener;
 
@@ -78,6 +80,7 @@ public class CommonsBukkit extends JavaPlugin {
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
+    public boolean pairedGame = false;
     public int pairingRunnable;
     @NotNull public Server serverRecord;
 
@@ -91,14 +94,13 @@ public class CommonsBukkit extends JavaPlugin {
             this.serverRecord = this.serverLoad.setupServer();
 
             if (this.serverRecord.getServerType() == ServerType.GAME) {
-                this.craftMapFileManager.configureMapFolder();
-                // The punishment event should be called in the main thread only
                 Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().callEvent(
                         new GameProcessingReadyEvent(
                                 Objects.requireNonNull(this.serverRecord.getGamemode()),
                                 Objects.requireNonNull(this.serverRecord.getSubGamemode())
                         )
                 ));
+                this.craftMapFileManager.configureMapFolder();
                 pairingRunnable = Bukkit.getScheduler().scheduleSyncDelayedTask(
                         this,
                         ()  -> {
@@ -123,6 +125,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(friendCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
+        getServer().getPluginManager().registerEvents(matchUpdateListener, this);
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userAccessResponse, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);

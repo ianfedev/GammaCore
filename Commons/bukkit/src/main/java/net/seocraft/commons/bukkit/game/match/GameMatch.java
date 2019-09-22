@@ -5,6 +5,7 @@ import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.match.partial.Team;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
 import java.util.Set;
 
 public class GameMatch implements Match {
@@ -18,6 +19,7 @@ public class GameMatch implements Match {
     @NotNull private String gamemode;
     @NotNull private String subGamemode;
 
+    @ConstructorProperties({"_id", "map", "createdAt", "teams", "status", "winner", "gamemode", "subGamemode"})
     public GameMatch(@NotNull String id, @NotNull String map, long createdAt, @NotNull Set<Team> teams, @NotNull MatchStatus status, @NotNull Set<String> winner, @NotNull String gamemode, @NotNull String subGamemode) {
         this.id = id;
         this.map = map;

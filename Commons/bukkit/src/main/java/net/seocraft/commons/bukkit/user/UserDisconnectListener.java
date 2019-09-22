@@ -58,8 +58,6 @@ public class UserDisconnectListener implements Listener {
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
                 }
             }
-            //TODO: Create CommonsBungee
-            // this.gameSessionManager.removeGameSession(event.getPlayer().getName());
         });
     }
 }
