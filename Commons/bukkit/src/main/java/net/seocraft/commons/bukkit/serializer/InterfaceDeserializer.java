@@ -10,6 +10,7 @@ import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
+import net.seocraft.api.bukkit.game.map.partial.MapCoordinates;
 import net.seocraft.api.bukkit.game.map.partial.Rating;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.partial.Team;
@@ -25,6 +26,7 @@ import net.seocraft.commons.bukkit.game.map.CoreMap;
 import net.seocraft.commons.bukkit.game.map.CraftMapConfiguration;
 import net.seocraft.commons.bukkit.game.map.partial.MapContribution;
 import net.seocraft.commons.bukkit.game.map.partial.MapRating;
+import net.seocraft.commons.bukkit.game.map.partial.PartialCoordinates;
 import net.seocraft.commons.bukkit.game.match.GameMatch;
 import net.seocraft.commons.bukkit.game.match.partial.GameTeam;
 import net.seocraft.commons.bukkit.game.match.partial.GameTeamMember;
@@ -42,6 +44,7 @@ public class InterfaceDeserializer {
                 .addMapping(SubGamemode.class, CoreSubGamemode.class)
                 .addMapping(Contribution.class, MapContribution.class)
                 .addMapping(Rating.class, MapRating.class)
+                .addMapping(MapCoordinates.class, PartialCoordinates.class)
                 .addMapping(GameMap.class, CoreMap.class)
                 .addMapping(BaseMapConfiguration.class, CraftMapConfiguration.class)
                 .addMapping(Team.class, GameTeam.class)

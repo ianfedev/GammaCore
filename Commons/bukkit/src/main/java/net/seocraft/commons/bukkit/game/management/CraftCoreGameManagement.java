@@ -12,14 +12,13 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class CraftCoreGameManagement implements CoreGameManagement {
@@ -57,12 +56,12 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void addWaitingPlayer(Player player) {
+    public void addWaitingPlayer(@NotNull Player player) {
         this.waitingPlayers.add(player);
     }
 
     @Override
-    public void removeWaitingPlayer(Player player) {
+    public void removeWaitingPlayer(@NotNull Player player) {
         this.waitingPlayers.remove(player);
     }
 
@@ -72,22 +71,22 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void addSpectatingPlayer(Player player) {
+    public void addSpectatingPlayer(@NotNull Player player) {
         this.spectatingPlayers.add(player);
     }
 
     @Override
-    public void removeSpectatingPlayer(Player player) {
+    public void removeSpectatingPlayer(@NotNull Player player) {
         this.spectatingPlayers.remove(player);
     }
 
     @Override
-    public void initializeMatch(Match match) {
+    public void initializeMatch(@NotNull Match match) {
         this.matchAssignation.put(match, new HashSet<>());
     }
 
     @Override
-    public void updateMatch(Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
+    public void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
 
         Match updatedMatch = this.matchProvider.updateMatch(match);
 
@@ -101,16 +100,38 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void addMatchPlayer(String match, User player) {
+    public void addMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match)) list.add(player);
         });
     }
 
     @Override
-    public void removeMatchPlayer(String match, User player) {
+    public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
         });
+    }
+
+    @Override
+    public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
+        Set<Player> matchPlayer = new HashSet<>();
+        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
+            if (entry.getKey().getId().equalsIgnoreCase(match)) {
+                for (User user: entry.getValue()) matchPlayer.add(Bukkit.getPlayer(user.getUsername()));
+            }
+        }
+        return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
+    @Override
+    public @NotNull Set<User> getMatchUsers(@NotNull String match) {
+        Set<User> userSet = new HashSet<>();
+        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
+            if (match.equalsIgnoreCase(entry.getKey().getId())) {
+                userSet = entry.getValue();
+            }
+        }
+        return userSet;
     }
 }

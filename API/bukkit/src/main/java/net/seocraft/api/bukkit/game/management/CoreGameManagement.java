@@ -24,22 +24,26 @@ public interface CoreGameManagement {
 
     @NotNull Set<Player> getWaitingPlayers();
 
-    void addWaitingPlayer(Player player);
+    void addWaitingPlayer(@NotNull Player player);
 
-    void removeWaitingPlayer(Player player);
+    void removeWaitingPlayer(@NotNull Player player);
 
     @NotNull Set<Player> getSpectatingPlayers();
 
-    void addSpectatingPlayer(Player player);
+    void addSpectatingPlayer(@NotNull Player player);
 
-    void removeSpectatingPlayer(Player player);
+    void removeSpectatingPlayer(@NotNull Player player);
 
-    void initializeMatch(Match match);
+    void initializeMatch(@NotNull Match match);
 
-    void updateMatch(Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
+    void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
 
-    void addMatchPlayer(String match, User player);
+    void addMatchPlayer(@NotNull String match, @NotNull User player);
 
-    void removeMatchPlayer(String match, User player);
+    void removeMatchPlayer(@NotNull String match, @NotNull User player);
+
+    @NotNull Set<Player> getMatchPlayers(@NotNull String match);
+
+    @NotNull Set<User> getMatchUsers(@NotNull String match);
 
 }

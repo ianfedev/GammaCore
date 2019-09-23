@@ -128,12 +128,19 @@ public class UserAccessResponse implements Listener {
 
                 if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
                     if (this.instance.pairedGame) {
-                        FinderResult result = this.mapper.readValue(
-                                this.redisClient.getString("pairing:" + user.getId()),
-                                FinderResult.class
-                        );
-                        this.gameLoginManager.matchPlayerJoin(result, user, player);
-                        event.setJoinMessage("");
+
+                        String pairing = this.redisClient.getString("pairing:" + user.getId());
+
+                        if (!pairing.equals("")) {
+                            FinderResult result = this.mapper.readValue(
+                                    pairing,
+                                    FinderResult.class
+                            );
+                            this.gameLoginManager.matchPlayerJoin(result, user, player);
+                            event.setJoinMessage("");
+                        } else {
+                            player.kickPlayer(ChatColor.RED + "You were not paired to this server, please try again.");
+                        }
                     } else {
                         player.kickPlayer(ChatColor.RED + "This game is being initialized, please try again.");
                     }
