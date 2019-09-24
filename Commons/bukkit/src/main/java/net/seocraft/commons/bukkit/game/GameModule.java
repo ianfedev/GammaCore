@@ -29,6 +29,7 @@ public class GameModule extends ProtectedModule {
         bind(GameLoginManager.class).to(CraftGameLoginManager.class);
         bind(CoreGameManagement.class).to(CraftCoreGameManagement.class);
         bind(MatchFinder.class).to(GameMatchFinder.class);
+        expose(CoreGameManagement.class);
         expose(MatchFinder.class);
         expose(MapFileManager.class);
         expose(GamemodeProvider.class);

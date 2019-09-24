@@ -1,5 +1,6 @@
 package net.seocraft.api.bukkit.game.map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
@@ -75,5 +76,8 @@ public interface GameMap extends Model {
      * @return UNIX Timestamp with registration day of the map.
      */
     long getRegisteredDate();
+
+    @JsonIgnore
+    void setMapJSON(@NotNull String json);
 
 }

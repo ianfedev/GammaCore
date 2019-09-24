@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -96,6 +97,7 @@ public class CraftMapFileManager implements MapFileManager {
                                 configuration.getDescription()
                         );
                         if (mapFile.exists()) mapFile.delete();
+                        map.setMapJSON(String.join("\n", Files.readAllLines( new File(folder, "config.json").toPath())));
                         this.playableMaps.put(map, folder);
                         Bukkit.getLogger().log(
                                 Level.INFO,

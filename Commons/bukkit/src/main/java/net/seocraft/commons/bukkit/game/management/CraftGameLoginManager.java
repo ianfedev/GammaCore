@@ -38,7 +38,6 @@ public class CraftGameLoginManager implements GameLoginManager {
         if (match.isSpectable()) {
             // TODO: Set spectator tools
         } else {
-
             Optional<GameMap> matchMap = this.mapFileManager.getPlayableMaps()
                     .keySet()
                     .stream()
@@ -87,7 +86,7 @@ public class CraftGameLoginManager implements GameLoginManager {
                                             this.translatableField.getUnspacedField(user.getLanguage(), "commons_joined_dynamic")
                                                     .replace(
                                                             "%%player%%",
-                                                            this.userFormatter.getUserFormat(
+                                                            this.userFormatter.getUserColor(
                                                                     user,
                                                                     this.bukkitAPI.getConfig().getString("realm")
                                                             ) + ChatColor.YELLOW
@@ -104,11 +103,6 @@ public class CraftGameLoginManager implements GameLoginManager {
                             );
 
                         }
-
-
-
-
-
                     } else {
                         player.kickPlayer(ChatColor.RED +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_pairing_error"));
                     }
@@ -116,6 +110,7 @@ public class CraftGameLoginManager implements GameLoginManager {
                     Bukkit.getLogger().log(Level.WARNING, "[Game API] There was an error paring user {0} to a match. ({1})",
                             new Object[]{user.getUsername(), e.getMessage()});
                     player.kickPlayer(ChatColor.RED +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_pairing_error"));
+                    e.printStackTrace();
                 }
             } else {
                 Bukkit.getLogger().log(Level.WARNING, "[Game API] There was an error paring user {0} to a match.",

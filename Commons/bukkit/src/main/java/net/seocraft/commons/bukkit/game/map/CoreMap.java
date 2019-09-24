@@ -106,4 +106,9 @@ public class CoreMap implements GameMap {
         return this.registeredDate;
     }
 
+    @Override
+    public void setMapJSON(@NotNull String json) {
+        this.configuration = json;
+    }
+
 }
