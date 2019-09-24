@@ -30,9 +30,10 @@ import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
-import net.seocraft.commons.bukkit.listener.GamePairingListener;
+import net.seocraft.commons.bukkit.listener.game.GamePairingListener;
 import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
-import net.seocraft.commons.bukkit.listener.MatchUpdateListener;
+import net.seocraft.commons.bukkit.listener.game.MatchUpdateListener;
+import net.seocraft.commons.bukkit.listener.game.PlayerDamageListener;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -52,11 +53,14 @@ import java.util.logging.Level;
 
 public class CommonsBukkit extends JavaPlugin {
 
-    // --- Authentication mode related listeners //
+    // --- Authentication mode related listeners --- //
     @Inject private AuthenticationEnvironmentEventsListener authenticationMovementListener;
     @Inject private AuthenticationLanguageMenuListener authenticationLanguageMenuListener;
     @Inject private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
     @Inject private AuthenticationCommandsListener authenticationCommandsListener;
+
+    // --- Game API related listeners --- //
+    @Inject private PlayerDamageListener playerDamageListener;
 
     @Inject private GamePairingListener gamePairingListener;
     @Inject private MatchUpdateListener matchUpdateListener;
@@ -135,6 +139,10 @@ public class CommonsBukkit extends JavaPlugin {
         if (getConfig().getBoolean("authentication.enabled", false)) {
             enableAuthentication();
         }
+
+        if (this.getServerRecord().getServerType().equals(ServerType.GAME)) {
+            enableGameEvents();
+        }
     }
 
     @Override
@@ -188,6 +196,10 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(authenticationLanguageSelectListener, this);
         getServer().getPluginManager().registerEvents(authenticationMovementListener, this);
 
+    }
+
+    private void enableGameEvents() {
+        getServer().getPluginManager().registerEvents(playerDamageListener, this);
     }
 
     public Server getServerRecord() {

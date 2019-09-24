@@ -63,10 +63,7 @@ public class AuthenticationEnvironmentEventsListener implements Listener {
                         ) + "."
                 );
             } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
-                ChatAlertLibrary.errorChatAlert(
-                        player,
-                        null
-                );
+                ChatAlertLibrary.errorChatAlert(player);
             } finally {
                 event.setCancelled(true);
             }

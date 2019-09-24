@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.listener;
+package net.seocraft.commons.bukkit.listener.game;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.event.MatchUpdateEvent;

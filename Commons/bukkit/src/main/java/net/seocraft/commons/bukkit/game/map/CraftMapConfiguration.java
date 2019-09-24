@@ -18,9 +18,10 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
     @NotNull private String subGamemode;
     @NotNull private String description;
     @NotNull private MapCoordinates lobbyCoordinates;
+    @NotNull private MapCoordinates spectatorSpawn;
 
-    @ConstructorProperties({"name", "author", "version", "contributors", "gamemode", "subGamemode", "description", "lobbyCoordinates"})
-    public CraftMapConfiguration(@NotNull String name, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description, @NotNull MapCoordinates lobbyCoordinates) {
+    @ConstructorProperties({"name", "author", "version", "contributors", "gamemode", "subGamemode", "description", "lobbyCoordinates", "spectatorSpawn"})
+    public CraftMapConfiguration(@NotNull String name, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description, @NotNull MapCoordinates lobbyCoordinates, @NotNull MapCoordinates spectatorSpawn) {
         this.name = name;
         this.author = author;
         this.version = version;
@@ -29,6 +30,7 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
         this.subGamemode = subGamemode;
         this.description = description;
         this.lobbyCoordinates = lobbyCoordinates;
+        this.spectatorSpawn = spectatorSpawn;
     }
 
     @Override
@@ -69,6 +71,11 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
     @Override
     public @NotNull MapCoordinates getLobbyCoordinates() {
         return this.lobbyCoordinates;
+    }
+
+    @Override
+    public @NotNull MapCoordinates getSpectatorSpawn() {
+        return this.spectatorSpawn;
     }
 
 }

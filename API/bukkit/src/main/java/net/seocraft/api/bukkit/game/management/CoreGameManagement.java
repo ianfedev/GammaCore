@@ -2,14 +2,17 @@ package net.seocraft.api.bukkit.game.management;
 
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Set;
@@ -45,5 +48,15 @@ public interface CoreGameManagement {
     @NotNull Set<Player> getMatchPlayers(@NotNull String match);
 
     @NotNull Set<User> getMatchUsers(@NotNull String match);
+
+    @Nullable Match getPlayerMatch(@NotNull Player player);
+
+    @Nullable Match getPlayerMatch(@NotNull User user);
+
+    @NotNull GameMap getMatchMap(@NotNull Match match);
+
+    @NotNull Location getLobbyLocation(@NotNull Match match) throws IOException;
+
+    @NotNull Location getSpawnLocation(@NotNull Match match) throws IOException;
 
 }

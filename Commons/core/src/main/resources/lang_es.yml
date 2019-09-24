@@ -171,6 +171,13 @@ game_5d586f5634a44a74e4826045_description: "Vuelve al menú principal"
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas
 commons_joined_dynamic: ¡%%player%% se ha unido (%%actual%%/%%max%%)!
+commons_left_dynamic: ¡%%player%% ha salido (%%actual%%/%%max%%)!
+commons_start_countdown: ¡El juego iniciará en %%left%% segundos!
+commons_countdown_cancelled: "¡La partida se ha cancelado por falta de jugadores!"
+commons_countdown_cancelled_silent: "¡Un administrador ha cancelado la cuenta atrás!. Se iniciará nuevamente cuando ingrese otro jugador"
+commons_countdown_cancelled_forced: "¡%%player%% ha cancelado la cuenta atrás!. Se iniciará nuevamente cuando ingrese otro jugador"
+commons_countdown_forced: "¡%%player%% ha forzado el inicio de la partida!"
+commons_countdown_forced_silent: "¡Un administrador ha forzado el inicio de la partida la partida!"
 
 # Common words translations
 commons_main_lobby: Lobby Principal

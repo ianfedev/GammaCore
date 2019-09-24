@@ -9,4 +9,6 @@ public interface GameLoginManager {
 
     void matchPlayerJoin(@NotNull FinderResult result, @NotNull User user, @NotNull Player player);
 
+    void matchPlayerLeave(@NotNull Match match, @NotNull User user, @NotNull Player player);
+
 }

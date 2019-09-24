@@ -25,4 +25,6 @@ public interface BaseMapConfiguration {
 
     @NotNull MapCoordinates getLobbyCoordinates();
 
+    @NotNull MapCoordinates getSpectatorSpawn();
+
 }

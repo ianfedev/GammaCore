@@ -1,10 +1,14 @@
 package net.seocraft.commons.bukkit.game.management;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
+import net.seocraft.api.bukkit.game.management.MapFileManager;
+import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
+import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -13,8 +17,11 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -24,6 +31,8 @@ import java.util.stream.Collectors;
 public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Inject private MatchProvider matchProvider;
+    @Inject private MapFileManager mapFileManager;
+    @Inject private ObjectMapper mapper;
 
     private Gamemode gamemode;
     private SubGamemode subGamemode;
@@ -133,5 +142,80 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             }
         }
         return userSet;
+    }
+
+    @Override
+    public @Nullable Match getPlayerMatch(@NotNull Player player) {
+        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
+            for (User user : entry.getValue()) {
+                if (user.getUsername().equalsIgnoreCase(player.getName())) return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public @Nullable Match getPlayerMatch(@NotNull User user) {
+        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
+            for (User matchUser : entry.getValue()) {
+                if (matchUser.getId().equalsIgnoreCase(user.getId())) return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public @NotNull GameMap getMatchMap(@NotNull Match match) {
+        Optional<GameMap> matchMap = this.mapFileManager.getPlayableMaps()
+                .keySet()
+                .stream()
+                .filter(map -> map.getId().equalsIgnoreCase(match.getMap()))
+                .findFirst();
+        if (!matchMap.isPresent()) throw new IllegalStateException("Core Management was processed without maps");
+        return matchMap.get();
+    }
+
+    @Override
+    public @NotNull Location getLobbyLocation(@NotNull Match match) throws IOException {
+        World matchWorld = Bukkit.getWorld("match_" + match.getId());
+        if (matchWorld != null) {
+            GameMap matchMap = this.getMatchMap(match);
+
+            BaseMapConfiguration mapConfiguration = this.mapper.readValue(
+                    matchMap.getConfiguration(),
+                    BaseMapConfiguration.class
+            );
+
+            return new Location(
+                    matchWorld,
+                    mapConfiguration.getLobbyCoordinates().getX(),
+                    mapConfiguration.getLobbyCoordinates().getY(),
+                    mapConfiguration.getLobbyCoordinates().getZ()
+            );
+        } else {
+            throw new IllegalStateException("Match has not been loaded");
+        }
+    }
+
+    @Override
+    public @NotNull Location getSpawnLocation(@NotNull Match match) throws IOException {
+        World matchWorld = Bukkit.getWorld("match_" + match.getId());
+        if (matchWorld != null) {
+            GameMap matchMap = this.getMatchMap(match);
+
+            BaseMapConfiguration mapConfiguration = this.mapper.readValue(
+                    matchMap.getConfiguration(),
+                    BaseMapConfiguration.class
+            );
+
+            return new Location(
+                    matchWorld,
+                    mapConfiguration.getSpectatorSpawn().getX(),
+                    mapConfiguration.getSpectatorSpawn().getY(),
+                    mapConfiguration.getSpectatorSpawn().getZ()
+            );
+        } else {
+            throw new IllegalStateException("Match has not been loaded");
+        }
     }
 }
