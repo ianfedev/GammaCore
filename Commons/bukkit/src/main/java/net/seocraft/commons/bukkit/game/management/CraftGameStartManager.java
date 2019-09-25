@@ -47,7 +47,10 @@ public class CraftGameStartManager implements GameStartManager {
                     this.instance,
                     30,
                     (time) -> involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
-                    () -> Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()))
+                    () -> {
+                        scheduledStarts.remove(match.getId());
+                        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()));
+                    }
             );
             timer.scheduleTimer();
             scheduledStarts.put(match.getId(), timer.getAssignedTaskId());
@@ -64,7 +67,7 @@ public class CraftGameStartManager implements GameStartManager {
                 this.instance,
                 seconds,
                 () -> {
-                    scheduledStarts.remove(match.getId());
+
                     involvedUsers.forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
                         if (player != null) {
@@ -82,23 +85,20 @@ public class CraftGameStartManager implements GameStartManager {
                     });
                 },
                 (time) -> this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
-                () -> Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()))
+                () -> {
+                    scheduledStarts.remove(match.getId());
+                    Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()));
+                }
         );
         timer.scheduleTimer();
         scheduledStarts.put(match.getId(), timer.getAssignedTaskId());
-        System.out.println("Forced match: " + match.getId());
-        this.scheduledStarts.forEach((a, b) -> {
-            System.out.println("Match: " + a + " - " + b.toString());
-        });
     }
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match) {
         if (this.scheduledStarts.containsKey(match.getId())) {
-
             Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
             involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
-
             Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
             this.scheduledStarts.remove(match.getId());
             involvedUsers.forEach(user -> {
@@ -114,8 +114,6 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent) {
-        System.out.println("Cancelled match: " + match.getId());
-        this.scheduledStarts.forEach((a, b) -> System.out.println("Match: " + a + " - " + b.toString()));
         if (this.scheduledStarts.containsKey(match.getId())) {
             Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
             this.scheduledStarts.remove(match.getId());
