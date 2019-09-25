@@ -3,6 +3,7 @@ package net.seocraft.commons.bukkit.command;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.bcm.parametric.annotation.Flag;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
@@ -60,7 +61,7 @@ public class MatchCommand implements CommandClass {
     }
 
     @Command(names = {"match start"}, permission = "commons.staff.match.start", min = 1, usage = "/<command> <time> [-s]")
-    public boolean startCommand(CommandSender commandSender, int time, @Parameter(value = "s", isFlag = true) boolean silent) {
+    public boolean startCommand(CommandSender commandSender, int time, @Flag(value = 's') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             GameSession playerSession;
@@ -129,7 +130,7 @@ public class MatchCommand implements CommandClass {
     }
 
     @Command(names = {"match cancel"}, permission = "commons.staff.match.cancel", usage = "/<command> [-s]")
-    public boolean cancelCommand(CommandSender commandSender, @Parameter(value = "s", isFlag = true) boolean silent) {
+    public boolean cancelCommand(CommandSender commandSender, @Flag(value = 's') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             GameSession playerSession;
