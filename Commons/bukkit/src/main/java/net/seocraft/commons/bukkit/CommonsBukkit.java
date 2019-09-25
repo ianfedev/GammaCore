@@ -128,7 +128,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(whisperCommand);
         dispatcher.registerCommandClass(punishmentCommand);
         dispatcher.registerCommandClass(friendCommand);
-        dispatcher.registerCommand(matchCommand);
+        dispatcher.registerCommandClass(matchCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
         getServer().getPluginManager().registerEvents(matchUpdateListener, this);
