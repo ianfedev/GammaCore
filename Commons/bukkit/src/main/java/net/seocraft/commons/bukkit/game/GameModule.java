@@ -26,6 +26,8 @@ public class GameModule extends ProtectedModule {
         bind(SpectatorManager.class).to(CraftSpectatorManager.class);
         bind(MatchFinder.class).to(GameMatchFinder.class);
         expose(CoreGameManagement.class);
+        expose(SpectatorManager.class);
+        expose(GameStartManager.class);
         expose(MatchFinder.class);
         expose(MapFileManager.class);
         expose(GamemodeProvider.class);
