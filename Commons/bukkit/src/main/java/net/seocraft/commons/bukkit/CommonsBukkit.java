@@ -76,6 +76,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private WhisperCommand whisperCommand;
     @Inject private PunishmentCommand punishmentCommand;
     @Inject private FriendCommand friendCommand;
+    @Inject private MatchCommand matchCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
@@ -127,6 +128,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(whisperCommand);
         dispatcher.registerCommandClass(punishmentCommand);
         dispatcher.registerCommandClass(friendCommand);
+        dispatcher.registerCommand(matchCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
         getServer().getPluginManager().registerEvents(matchUpdateListener, this);

@@ -1,10 +1,8 @@
 package net.seocraft.api.bukkit.game.map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.partial.GameRating;
-import net.seocraft.api.bukkit.game.map.partial.Rating;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
@@ -12,7 +10,6 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 

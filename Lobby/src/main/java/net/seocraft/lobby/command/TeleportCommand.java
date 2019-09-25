@@ -91,5 +91,4 @@ public class TeleportCommand implements CommandClass {
         return true;
     }
 
-
 }

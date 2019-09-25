@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
+import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
@@ -21,7 +22,7 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
-public class MatchCommand {
+public class MatchCommand implements CommandClass {
 
     @Inject private GameSessionManager gameSessionManager;
     @Inject private GameStartManager gameStartManager;
