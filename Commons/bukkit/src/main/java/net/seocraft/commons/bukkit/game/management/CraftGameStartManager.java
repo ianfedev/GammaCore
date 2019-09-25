@@ -10,12 +10,15 @@ import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.CountdownTimer;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,15 +46,7 @@ public class CraftGameStartManager implements GameStartManager {
             CountdownTimer timer = new CountdownTimer(
                     this.instance,
                     30,
-                    (time) -> involvedUsers.forEach(user -> {
-                        Player player = Bukkit.getPlayer(user.getUsername());
-                        if (player != null) {
-                            player.sendMessage(
-                                    ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_start_countdown")
-                                            .replace("%%left%%", ChatColor.GOLD + "" + time.getSecondsLeft() + ChatColor.YELLOW)
-                            );
-                        }
-                    }),
+                    (time) -> involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
                     () -> Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()))
             );
             timer.scheduleTimer();
@@ -80,21 +75,13 @@ public class CraftGameStartManager implements GameStartManager {
                             } else {
                                 player.sendMessage(
                                         ChatColor.GREEN  + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_forced")
-                                        .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.GREEN)
+                                                .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.GREEN)
                                 );
                             }
                         }
                     });
                 },
-                (time) -> this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> {
-                    Player player = Bukkit.getPlayer(user.getUsername());
-                    if (player != null) {
-                        player.sendMessage(
-                                ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_start_countdown")
-                                        .replace("%%left%%", ChatColor.GOLD + "" + ChatColor.YELLOW)
-                        );
-                    }
-                }),
+                (time) -> this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
                 () -> Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()))
         );
         timer.scheduleTimer();
@@ -123,21 +110,36 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent) {
-        Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
-        this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
-            Player player = Bukkit.getPlayer(matchUser.getUsername());
-            if (player != null) {
-                if (silent) {
-                    player.sendMessage(
-                            ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_silent")
-                    );
-                } else {
-                    player.sendMessage(
-                            ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_cancelled_forced")
-                            .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.RED)
-                    );
+        if (this.scheduledStarts.containsKey(match.getId())) {
+            Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
+            this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
+                Player player = Bukkit.getPlayer(matchUser.getUsername());
+                if (player != null) {
+                    if (silent) {
+                        player.sendMessage(
+                                ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_silent")
+                        );
+                    } else {
+                        player.sendMessage(
+                                ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_cancelled_forced")
+                                        .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.RED)
+                        );
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Player player = Bukkit.getPlayer(user.getUsername());
+            if (player != null) ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_not_started"));
+        }
+    }
+
+    private void sendCountdownAlert(@Nullable Player player, int seconds, @NotNull String language) {
+        if (player != null) {
+            player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 1f);
+            player.sendMessage(
+                    ChatColor.YELLOW + this.translatableField.getUnspacedField(language, "commons_start_countdown")
+                            .replace("%%left%%", ChatColor.GOLD + "" + seconds + ChatColor.YELLOW)
+            );
+        }
     }
 }

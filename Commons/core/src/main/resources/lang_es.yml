@@ -181,6 +181,7 @@ commons_countdown_cancelled_forced: "¡%%player%% ha cancelado la cuenta atrás!
 commons_countdown_forced: "¡%%player%% ha forzado el inicio de la partida!"
 commons_countdown_forced_silent: "¡Un administrador ha forzado el inicio de la partida la partida!"
 commons_countdown_forced_invalid: "¡Solo puedes cambiar el tiempo de inicio entre 5 y 300 segundos!"
+commons_countdown_not_started: "¡No se encuentra ninguna cuenta regresiva en la partida!"
 commons_not_ingame: "¡No te encuentras en una partida!"
 commons_not_gameserver: "¡No te encuentras en un servidor de juegos!"
 
