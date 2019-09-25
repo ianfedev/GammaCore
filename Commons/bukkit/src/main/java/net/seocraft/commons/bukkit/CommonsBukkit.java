@@ -43,6 +43,7 @@ import net.seocraft.commons.bukkit.user.UserDisconnectListener;
 import net.seocraft.commons.bukkit.user.UserModule;
 import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
+import net.seocraft.commons.core.backend.match.MatchCleanupRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -81,6 +82,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
     @Inject private CraftMapFileManager craftMapFileManager;
+    @Inject private MatchCleanupRequest matchCleanupRequest;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();

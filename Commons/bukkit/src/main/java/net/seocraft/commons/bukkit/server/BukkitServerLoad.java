@@ -13,7 +13,7 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
+import net.seocraft.commons.core.backend.match.MatchCleanupRequest;
 import net.seocraft.commons.core.backend.server.ServerDisconnectRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,6 +31,7 @@ public class BukkitServerLoad implements ServerLoad {
     @Inject private ServerManager serverManager;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ServerDisconnectRequest serverDisconnectRequest;
+    @Inject private MatchCleanupRequest matchCleanupRequest;
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private RedisClient redisClient;
 
@@ -119,5 +120,7 @@ public class BukkitServerLoad implements ServerLoad {
         String token = this.serverTokenQuery.getToken();
         this.redisClient.deleteHash("authorization", this.instance.getServerRecord().getId());
         this.serverDisconnectRequest.executeRequest(token);
+
+        if (this.instance.getServerRecord().getServerType() == ServerType.GAME) this.matchCleanupRequest.executeRequest(token);
     }
 }
