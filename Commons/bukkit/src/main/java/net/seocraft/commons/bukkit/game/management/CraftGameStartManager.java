@@ -85,6 +85,7 @@ public class CraftGameStartManager implements GameStartManager {
                 () -> Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()))
         );
         timer.scheduleTimer();
+        System.out.println("Forced match: " + match);
         scheduledStarts.put(match.getId(), timer.getAssignedTaskId());
     }
 
@@ -110,6 +111,7 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent) {
+        System.out.println("Cancelled match: " + match);
         if (this.scheduledStarts.containsKey(match.getId())) {
             Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {

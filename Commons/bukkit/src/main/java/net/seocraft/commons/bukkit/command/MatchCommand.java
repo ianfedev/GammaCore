@@ -7,6 +7,7 @@ import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.server.ServerType;
@@ -86,6 +87,17 @@ public class MatchCommand implements CommandClass {
                                     return;
                                 }
 
+                                if (!playerMatch.getStatus().equals(MatchStatus.WAITING)) {
+                                    ChatAlertLibrary.errorChatAlert(
+                                            player,
+                                            this.translatableField.getField(
+                                                    user.getLanguage(),
+                                                    "commons_countdown_already_started"
+                                            )
+                                    );
+                                    return;
+                                }
+
                                 this.gameStartManager.forceMatchCountdown(
                                         playerMatch,
                                         time,
@@ -133,6 +145,18 @@ public class MatchCommand implements CommandClass {
                             if (alertNotGameServer(player, user)) return;
 
                             if (playerMatch != null) {
+
+                                if (!playerMatch.getStatus().equals(MatchStatus.WAITING)) {
+                                    ChatAlertLibrary.errorChatAlert(
+                                            player,
+                                            this.translatableField.getField(
+                                                    user.getLanguage(),
+                                                    "commons_countdown_already_started"
+                                            )
+                                    );
+                                    return;
+                                }
+
                                 this.gameStartManager.cancelMatchCountdown(
                                         playerMatch,
                                         user,
