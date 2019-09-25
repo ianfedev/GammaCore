@@ -31,7 +31,7 @@ public class MatchCommand implements CommandClass {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translatableField;
 
-    @Command(names = {"match", "match help"}, permission = "commons.staff.match.help")
+    @Command(names = {"match help"}, permission = "commons.staff.match.help")
     public boolean mainCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
