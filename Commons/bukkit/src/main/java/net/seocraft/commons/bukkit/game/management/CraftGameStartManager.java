@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Singleton
 public class CraftGameStartManager implements GameStartManager {
@@ -35,10 +36,14 @@ public class CraftGameStartManager implements GameStartManager {
     @Override
     public void startMatchCountdown(@NotNull Match match) {
         if (!this.scheduledStarts.containsKey(match.getId())) {
+
+            Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
+            involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+
             CountdownTimer timer = new CountdownTimer(
                     this.instance,
                     30,
-                    (time) -> this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> {
+                    (time) -> involvedUsers.forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
                         if (player != null) {
                             player.sendMessage(
@@ -56,12 +61,16 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void forceMatchCountdown(@NotNull Match match, int seconds, @NotNull User issuer, boolean silent) {
+
+        Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
+        involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+
         CountdownTimer timer = new CountdownTimer(
                 this.instance,
                 seconds,
                 () -> {
                     scheduledStarts.remove(match.getId());
-                    this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> {
+                    involvedUsers.forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
                         if (player != null) {
                             if (silent) {
@@ -95,9 +104,13 @@ public class CraftGameStartManager implements GameStartManager {
     @Override
     public void cancelMatchCountdown(@NotNull Match match) {
         if (this.scheduledStarts.containsKey(match.getId())) {
+
+            Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
+            involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+
             Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
             this.scheduledStarts.remove(match.getId());
-            this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> {
+            involvedUsers.forEach(user -> {
                 Player player = Bukkit.getPlayer(user.getUsername());
                 if (player != null) {
                     player.sendMessage(

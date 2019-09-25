@@ -39,6 +39,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     private Set<Player> waitingPlayers;
     private Set<Player> spectatingPlayers;
     private Map<Match, Set<User>> matchAssignation;
+    private Map<Match, Set<User>> spectatorAssignation;
 
     @Override
     public void initializeGameCore(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) {
@@ -47,6 +48,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.waitingPlayers = new HashSet<>();
         this.spectatingPlayers = new HashSet<>();
         this.matchAssignation = new HashMap<>();
+        this.spectatorAssignation = new HashMap<>();
     }
 
     @Override
@@ -92,6 +94,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void initializeMatch(@NotNull Match match) {
         this.matchAssignation.put(match, new HashSet<>());
+        this.spectatorAssignation.put(match, new HashSet<>());
     }
 
     @Override
@@ -116,8 +119,18 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
+    public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
+        this.spectatorAssignation.forEach((processMatch, list) -> {
+            if (processMatch.getId().equalsIgnoreCase(match)) list.add(player);
+        });
+    }
+
+    @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.forEach((processMatch, list) -> {
+            if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
+        });
+        this.spectatorAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
         });
     }
@@ -131,6 +144,28 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             }
         }
         return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
+    @Override
+    public @NotNull Set<Player> getMatchSpectators(@NotNull String match) {
+        Set<Player> matchPlayer = new HashSet<>();
+        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
+            if (entry.getKey().getId().equalsIgnoreCase(match)) {
+                for (User user: entry.getValue()) matchPlayer.add(Bukkit.getPlayer(user.getUsername()));
+            }
+        }
+        return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
+    @Override
+    public @NotNull Set<User> getMatchSpectatorsUsers(@NotNull String match) {
+        Set<User> userSet = new HashSet<>();
+        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
+            if (match.equalsIgnoreCase(entry.getKey().getId())) {
+                userSet = entry.getValue();
+            }
+        }
+        return userSet;
     }
 
     @Override
@@ -151,12 +186,22 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                 if (user.getUsername().equalsIgnoreCase(player.getName())) return entry.getKey();
             }
         }
+        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
+            for (User user : entry.getValue()) {
+                if (user.getUsername().equalsIgnoreCase(player.getName())) return entry.getKey();
+            }
+        }
         return null;
     }
 
     @Override
     public @Nullable Match getPlayerMatch(@NotNull User user) {
         for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
+            for (User matchUser : entry.getValue()) {
+                if (matchUser.getId().equalsIgnoreCase(user.getId())) return entry.getKey();
+            }
+        }
+        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
             for (User matchUser : entry.getValue()) {
                 if (matchUser.getId().equalsIgnoreCase(user.getId())) return entry.getKey();
             }
@@ -198,7 +243,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public @NotNull Location getSpawnLocation(@NotNull Match match) throws IOException {
+    public @NotNull Location getSpectatorSpawnLocation(@NotNull Match match) throws IOException {
         World matchWorld = Bukkit.getWorld("match_" + match.getId());
         if (matchWorld != null) {
             GameMap matchMap = this.getMatchMap(match);

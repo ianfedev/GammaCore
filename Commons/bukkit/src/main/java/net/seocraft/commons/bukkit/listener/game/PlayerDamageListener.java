@@ -35,7 +35,7 @@ public class PlayerDamageListener implements Listener {
                             }
 
                             if (this.coreGameManagement.getSpectatingPlayers().contains(player)) {
-                                player.teleport(this.coreGameManagement.getSpawnLocation(match));
+                                player.teleport(this.coreGameManagement.getSpectatorSpawnLocation(match));
                                 event.setCancelled(true);
                                 return;
                             }

@@ -170,6 +170,8 @@ game_5d586f5634a44a74e4826045_description: "Vuelve al menú principal"
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas
+commons_spectator_join: ¡%%player%% se ha unido a la partida como espectador!
+commons_spectator_leave: ¡%%player%% ha dejado de espectar en la partida!
 commons_joined_dynamic: ¡%%player%% se ha unido (%%actual%%/%%max%%)!
 commons_left_dynamic: ¡%%player%% ha salido (%%actual%%/%%max%%)!
 commons_start_countdown: ¡El juego iniciará en %%left%% segundos!

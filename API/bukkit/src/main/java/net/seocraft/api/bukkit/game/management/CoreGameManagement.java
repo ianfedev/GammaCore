@@ -43,9 +43,15 @@ public interface CoreGameManagement {
 
     void addMatchPlayer(@NotNull String match, @NotNull User player);
 
+    void addSpectatorPlayer(@NotNull String match, @NotNull User player);
+
     void removeMatchPlayer(@NotNull String match, @NotNull User player);
 
     @NotNull Set<Player> getMatchPlayers(@NotNull String match);
+
+    @NotNull Set<Player> getMatchSpectators(@NotNull String match);
+
+    @NotNull Set<User> getMatchSpectatorsUsers(@NotNull String match);
 
     @NotNull Set<User> getMatchUsers(@NotNull String match);
 
@@ -57,6 +63,6 @@ public interface CoreGameManagement {
 
     @NotNull Location getLobbyLocation(@NotNull Match match) throws IOException;
 
-    @NotNull Location getSpawnLocation(@NotNull Match match) throws IOException;
+    @NotNull Location getSpectatorSpawnLocation(@NotNull Match match) throws IOException;
 
 }
