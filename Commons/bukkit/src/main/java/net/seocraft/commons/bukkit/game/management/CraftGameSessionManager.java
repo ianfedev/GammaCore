@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.game.management;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
+import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
 import net.seocraft.api.bukkit.game.management.*;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
@@ -22,41 +23,13 @@ public class CraftGameSessionManager implements GameLoginManager {
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private GameStartManager gameStartManager;
     @Inject private TranslatableField translatableField;
-    @Inject private SpectatorManager spectatorManager;
     @Inject private UserFormatter userFormatter;
     @Inject private BukkitAPI bukkitAPI;
 
     @Override
     public void matchPlayerJoin(@NotNull FinderResult match, @NotNull User user, @NotNull Player player) {
         if (match.isSpectable()) {
-                try {
-                    this.spectatorManager.enableSpectatorMode(user, player);
-
-                    if (match.getMatch().getStatus().equals(MatchStatus.WAITING)) {
-                        player.teleport(this.coreGameManagement.getLobbyLocation(match.getMatch()));
-                    } else {
-                        player.teleport(this.coreGameManagement.getSpectatorSpawnLocation(match.getMatch()));
-                    }
-                    this.coreGameManagement.addSpectatorPlayer(match.getMatch().getId(), user);
-
-                    Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(match.getMatch().getId());
-                    matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getMatch().getId()));
-
-                    matchPlayers.forEach(onlinePlayer -> {
-                        Player playerRecord = Bukkit.getPlayer(onlinePlayer.getUsername());
-                        if (playerRecord != null) {
-                            ChatAlertLibrary.infoAlert(
-                                    playerRecord,
-                                    this.translatableField.getUnspacedField(
-                                            onlinePlayer.getLanguage(),
-                                            "commons_spectator_join"
-                                    ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")))
-                            );
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match.getMatch(), user, player, false, true));
         } else {
             player.setHealth(20);
             player.setFoodLevel(20);

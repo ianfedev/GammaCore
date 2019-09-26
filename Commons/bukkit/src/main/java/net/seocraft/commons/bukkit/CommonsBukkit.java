@@ -34,6 +34,7 @@ import net.seocraft.commons.bukkit.listener.game.GamePairingListener;
 import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
 import net.seocraft.commons.bukkit.listener.game.MatchUpdateListener;
 import net.seocraft.commons.bukkit.listener.game.PlayerDamageListener;
+import net.seocraft.commons.bukkit.listener.game.PlayerSpectatorListener;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -62,6 +63,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     // --- Game API related listeners --- //
     @Inject private PlayerDamageListener playerDamageListener;
+    @Inject private PlayerSpectatorListener playerSpectatorListener;
 
     @Inject private GamePairingListener gamePairingListener;
     @Inject private MatchUpdateListener matchUpdateListener;
@@ -204,6 +206,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     private void enableGameEvents() {
         getServer().getPluginManager().registerEvents(playerDamageListener, this);
+        getServer().getPluginManager().registerEvents(playerSpectatorListener, this);
     }
 
     public Server getServerRecord() {
