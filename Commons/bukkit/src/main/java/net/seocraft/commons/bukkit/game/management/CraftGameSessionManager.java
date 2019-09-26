@@ -47,12 +47,13 @@ public class CraftGameSessionManager implements GameLoginManager {
                 });
 
                 Set<Player> matchPlayers = this.coreGameManagement.getMatchPlayers(match.getMatch().getId());
+                int actualPlayers = matchPlayers.size();
                 matchPlayers.addAll(this.coreGameManagement.getMatchSpectators(match.getMatch().getId()));
 
                 for (Player matchPlayer : matchPlayers) {
                     player.showPlayer(matchPlayer);
                     matchPlayer.showPlayer(player);
-                    player.sendMessage(
+                    matchPlayer.sendMessage(
                             ChatColor.YELLOW +
                                     this.translatableField.getUnspacedField(user.getLanguage(), "commons_joined_dynamic")
                                             .replace(
@@ -64,7 +65,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                                             )
                                             .replace(
                                                     "%%actual%%",
-                                                    ChatColor.AQUA + "" + matchPlayers.size() + ChatColor.YELLOW
+                                                    ChatColor.AQUA + "" + actualPlayers + ChatColor.YELLOW
                                             )
                                             .replace(
                                                     "%%max%%",
@@ -73,7 +74,7 @@ public class CraftGameSessionManager implements GameLoginManager {
 
                     );
 
-                    if (matchPlayers.size() >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
+                    if (actualPlayers >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                         this.gameStartManager.startMatchCountdown(match.getMatch());
                     }
 
@@ -92,12 +93,13 @@ public class CraftGameSessionManager implements GameLoginManager {
 
         if (this.coreGameManagement.getWaitingPlayers().contains(player)) {
             Set<Player> matchPlayers = this.coreGameManagement.getMatchPlayers(match.getId());
+            int actualPlayers = matchPlayers.size();
             matchPlayers.addAll(this.coreGameManagement.getMatchSpectators(match.getId()));
 
             for (Player matchPlayer : matchPlayers) {
                 player.showPlayer(matchPlayer);
                 matchPlayer.showPlayer(player);
-                player.sendMessage(
+                matchPlayer.sendMessage(
                         ChatColor.YELLOW +
                                 this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_dynamic")
                                         .replace(
@@ -109,7 +111,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                                         )
                                         .replace(
                                                 "%%actual%%",
-                                                ChatColor.AQUA + "" + matchPlayers.size() + ChatColor.YELLOW
+                                                ChatColor.AQUA + "" + actualPlayers + ChatColor.YELLOW
                                         )
                                         .replace(
                                                 "%%max%%",
@@ -121,7 +123,7 @@ public class CraftGameSessionManager implements GameLoginManager {
             }
             this.coreGameManagement.removeWaitingPlayer(player);
 
-            if (matchPlayers.size() < this.coreGameManagement.getSubGamemode().getMinPlayers()) {
+            if (actualPlayers < this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                 this.gameStartManager.cancelMatchCountdown(match);
             }
 
