@@ -81,6 +81,11 @@ public class CommonsBungee extends Plugin {
                 }
             });
         }
+        try {
+            this.serverLoad.disconnectServer();
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError ex) {
+            this.getLogger().log(Level.SEVERE, "[Bungee-API] There was an error shutting down the server. ({0})", ex.getMessage());
+        }
     }
 
     private void loadConfig() {
