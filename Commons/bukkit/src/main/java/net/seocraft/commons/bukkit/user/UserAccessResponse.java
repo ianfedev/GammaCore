@@ -136,6 +136,7 @@ public class UserAccessResponse implements Listener {
                                     pairing,
                                     FinderResult.class
                             );
+                            System.out.println(result.isSpectable());
                             this.gameLoginManager.matchPlayerJoin(result, user, player);
                             event.setJoinMessage("");
                         } else {

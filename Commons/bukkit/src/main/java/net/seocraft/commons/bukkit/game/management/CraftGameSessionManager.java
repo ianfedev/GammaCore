@@ -5,7 +5,6 @@ import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
 import net.seocraft.api.bukkit.game.management.*;
 import net.seocraft.api.bukkit.game.match.Match;
-import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -28,6 +27,7 @@ public class CraftGameSessionManager implements GameLoginManager {
 
     @Override
     public void matchPlayerJoin(@NotNull FinderResult match, @NotNull User user, @NotNull Player player) {
+        System.out.println(match.isSpectable());
         if (match.isSpectable()) {
             Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match.getMatch(), user, player, false, true));
         } else {

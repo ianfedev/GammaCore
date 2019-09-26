@@ -80,9 +80,11 @@ public class TeleportCommand implements CommandClass {
     public boolean testCommand(CommandSender sender) {
         try {
             FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "skywars_solo", true);
+            String finderResult = this.mapper.writeValueAsString(result);
+            System.out.println(finderResult);
             this.client.setString(
                     "pairing:" + this.gameSessionManager.getCachedSession(sender.getName()).getPlayerId(),
-                    this.mapper.writeValueAsString(result)
+                    finderResult
             );
             this.cloudManager.sendPlayerToServer((Player) sender, result.getServer().getSlug());
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException unauthorized) {
