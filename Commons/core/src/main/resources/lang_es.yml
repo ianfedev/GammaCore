@@ -192,6 +192,9 @@ commons_countdown_not_started: "¡No se encuentra ninguna cuenta regresiva en la
 commons_countdown_already_started: "¡La partida ya se ha empezado!"
 commons_not_ingame: "¡No te encuentras en una partida!"
 commons_not_gameserver: "¡No te encuentras en un servidor de juegos!"
+commons_invalidation_error: "¡Ha ocurrido un error al invalidar la partida!"
+commons_invalidation_success: "Un administrador ha invalidado la partida, eso significa que no contará dentro de las estadísticas. Ahora estás en modo espectador, tienes dos minutos para salir antes de que la partida se cierre"
+commons_invalidation_expulse: "¡La partida cerrará en %%seconds%% segundos!"
 
 # Common words translations
 commons_main_lobby: Lobby Principal

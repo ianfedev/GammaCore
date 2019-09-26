@@ -43,6 +43,7 @@ public class PlayerSpectatorListener implements Listener {
             }
 
             this.coreGameManagement.addSpectatorPlayer(gameMatch.getId(), user);
+            this.coreGameManagement.addSpectatingPlayer(player);
 
             Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(gameMatch.getId());
             matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(gameMatch.getId()));
@@ -68,7 +69,6 @@ public class PlayerSpectatorListener implements Listener {
             player.setFlying(true);
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
-            this.coreGameManagement.addSpectatingPlayer(player);
 
             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
                 if (!this.coreGameManagement.getSpectatingPlayers().contains(onlinePlayer)) {

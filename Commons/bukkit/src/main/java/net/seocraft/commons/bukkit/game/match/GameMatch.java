@@ -67,6 +67,11 @@ public class GameMatch implements Match {
     }
 
     @Override
+    public void setWinner(@NotNull Set<String> winner) {
+        this.winner = winner;
+    }
+
+    @Override
     public @NotNull String getGamemode() {
         return this.gamemode;
     }

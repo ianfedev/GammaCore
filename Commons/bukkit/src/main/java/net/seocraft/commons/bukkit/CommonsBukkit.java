@@ -30,11 +30,8 @@ import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
-import net.seocraft.commons.bukkit.listener.game.GamePairingListener;
+import net.seocraft.commons.bukkit.listener.game.*;
 import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
-import net.seocraft.commons.bukkit.listener.game.MatchUpdateListener;
-import net.seocraft.commons.bukkit.listener.game.PlayerDamageListener;
-import net.seocraft.commons.bukkit.listener.game.PlayerSpectatorListener;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -67,6 +64,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private GamePairingListener gamePairingListener;
     @Inject private MatchUpdateListener matchUpdateListener;
+    @Inject private GameFinishedListener gameFinishedListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
     @Inject private UserDisconnectListener userDisconnectListener;
 
@@ -84,7 +82,6 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
     @Inject private CraftMapFileManager craftMapFileManager;
-    @Inject private MatchCleanupRequest matchCleanupRequest;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
@@ -207,6 +204,7 @@ public class CommonsBukkit extends JavaPlugin {
     private void enableGameEvents() {
         getServer().getPluginManager().registerEvents(playerDamageListener, this);
         getServer().getPluginManager().registerEvents(playerSpectatorListener, this);
+        getServer().getPluginManager().registerEvents(gameFinishedListener, this);
     }
 
     public Server getServerRecord() {

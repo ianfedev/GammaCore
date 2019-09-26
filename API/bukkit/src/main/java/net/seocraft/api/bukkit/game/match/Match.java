@@ -21,6 +21,8 @@ public interface Match extends Model {
 
     @NotNull Set<String> getWinner();
 
+    void setWinner(@NotNull Set<String> winner);
+
     @NotNull String getGamemode();
 
     @NotNull String getSubGamemode();

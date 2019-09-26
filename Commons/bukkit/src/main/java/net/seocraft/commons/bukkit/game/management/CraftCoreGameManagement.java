@@ -3,6 +3,8 @@ package net.seocraft.commons.bukkit.game.management;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
@@ -11,12 +13,18 @@ import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
+import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.util.CountdownTimer;
+import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -33,6 +41,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Inject private MatchProvider matchProvider;
     @Inject private MapFileManager mapFileManager;
     @Inject private ObjectMapper mapper;
+    @Inject private TranslatableField translatableField;
+    @Inject private CloudManager cloudManager;
+    @Inject private CommonsBukkit instance;
 
     private Gamemode gamemode;
     private SubGamemode subGamemode;
@@ -95,6 +106,12 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void initializeMatch(@NotNull Match match) {
         this.matchAssignation.put(match, new HashSet<>());
         this.spectatorAssignation.put(match, new HashSet<>());
+    }
+
+    @Override
+    public void finishMatch(@NotNull Match match) {
+        this.matchAssignation.remove(match);
+        this.matchAssignation.remove(match);
     }
 
     @Override
@@ -262,5 +279,61 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         } else {
             throw new IllegalStateException("Match has not been loaded");
         }
+    }
+
+    @Override
+    public void invalidateMatch(@NotNull Match match) throws Unauthorized, IOException, BadRequest, NotFound, InternalServerError {
+        match.setStatus(MatchStatus.INVALIDATED);
+        this.updateMatch(match);
+        this.getMatchUsers(match.getId()).forEach(user -> {
+            Player player = Bukkit.getPlayer(user.getId());
+            if (player != null) {
+                Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false, false));
+                ChatAlertLibrary.infoAlert(
+                        player,
+                        this.translatableField.getUnspacedField(
+                                user.getLanguage(),
+                                "commons_invalidation_success"
+                        ) + "."
+                );
+            }
+        });
+        this.matchAssignation.remove(match);
+
+        CountdownTimer timer = new CountdownTimer(
+                this.instance,
+                120,
+                (time) -> {
+                    if (time.getSecondsLeft() == 60 || time.getSecondsLeft() == 30 || (time.getSecondsLeft() < 10 && time.getSecondsLeft() < 1)) {
+                        this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
+                            Player player = Bukkit.getPlayer(user.getId());
+                            if (player != null) {
+                                ChatAlertLibrary.infoAlert(
+                                        player,
+                                        this.translatableField.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_invalidation_expulse"
+                                        ).replace(
+                                                "%%seconds%%",
+                                                ChatColor.RED + "" + time.getSecondsLeft() + " " + ChatColor.AQUA
+                                        )
+                                );
+                            }
+                        });
+                    }
+                },
+                () -> {
+                    this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
+                        Player player = Bukkit.getPlayer(user.getId());
+                        if (player != null) {
+                            this.cloudManager.sendPlayerToGroup(player, gamemode.getLobbyGroup());
+                        }
+                        this.spectatingPlayers.remove(player);
+                    });
+                    this.spectatorAssignation.remove(match);
+                }
+        );
+
+        timer.scheduleTimer();
     }
 }

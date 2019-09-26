@@ -39,6 +39,8 @@ public interface CoreGameManagement {
 
     void initializeMatch(@NotNull Match match);
 
+    void finishMatch(@NotNull Match match);
+
     void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
 
     void addMatchPlayer(@NotNull String match, @NotNull User player);
@@ -64,5 +66,7 @@ public interface CoreGameManagement {
     @NotNull Location getLobbyLocation(@NotNull Match match) throws IOException;
 
     @NotNull Location getSpectatorSpawnLocation(@NotNull Match match) throws IOException;
+
+    void invalidateMatch(@NotNull Match match) throws Unauthorized, IOException, BadRequest, NotFound, InternalServerError;
 
 }
