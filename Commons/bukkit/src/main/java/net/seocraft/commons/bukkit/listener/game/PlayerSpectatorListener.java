@@ -64,6 +64,7 @@ public class PlayerSpectatorListener implements Listener {
 
             player.setHealth(20);
             player.setFoodLevel(20);
+            player.setAllowFlight(true);
             player.setFlying(true);
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
