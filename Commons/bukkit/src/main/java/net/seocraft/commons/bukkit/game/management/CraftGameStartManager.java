@@ -7,6 +7,7 @@ import net.seocraft.api.bukkit.event.GameReadyEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -87,7 +88,7 @@ public class CraftGameStartManager implements GameStartManager {
                 (time) -> this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
                 () -> {
                     scheduledStarts.remove(match.getId());
-                    Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()));
+                    Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
                 }
         );
         timer.scheduleTimer();

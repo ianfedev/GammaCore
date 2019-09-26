@@ -17,6 +17,8 @@ public interface Match extends Model {
 
     @NotNull MatchStatus getStatus();
 
+    void setStatus(@NotNull MatchStatus status);
+
     @NotNull Set<String> getWinner();
 
     @NotNull String getGamemode();

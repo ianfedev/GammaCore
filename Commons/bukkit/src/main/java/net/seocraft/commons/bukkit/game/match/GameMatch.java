@@ -57,6 +57,11 @@ public class GameMatch implements Match {
     }
 
     @Override
+    public void setStatus(@NotNull MatchStatus status) {
+        this.status = status;
+    }
+
+    @Override
     public @NotNull Set<String> getWinner() {
         return this.winner;
     }
