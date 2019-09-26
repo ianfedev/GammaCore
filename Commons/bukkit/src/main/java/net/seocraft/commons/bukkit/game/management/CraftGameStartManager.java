@@ -50,7 +50,7 @@ public class CraftGameStartManager implements GameStartManager {
                     (time) -> involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
                     () -> {
                         scheduledStarts.remove(match.getId());
-                        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match.getId()));
+                        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
                     }
             );
             timer.scheduleTimer();
