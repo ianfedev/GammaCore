@@ -6,13 +6,13 @@ import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.management.MatchFinder;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -26,8 +26,12 @@ public class GameMatchFinder implements MatchFinder {
     @Inject private ServerManager serverManager;
     @Inject private CloudManager cloudManager;
 
-    public @NotNull FinderResult findAvailableMatch(@NotNull String gamemode, @NotNull String subGamemode, @NotNull String serverGroup) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
-        Set<Match> matchList = this.matchProvider.findMatchSync(gamemode, subGamemode, null);
+    public @NotNull FinderResult findAvailableMatch(@NotNull String gamemode, @NotNull String subGamemode, @NotNull String serverGroup, boolean spectable) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
+        Set<Match> matchList = this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.WAITING);
+        if (spectable) {
+            matchList.addAll(this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.STARTING));
+            matchList.addAll(this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.INGAME));
+        }
         if (!matchList.isEmpty()) {
             Match selectedMatch = matchList.stream().findAny().get();
             Optional<Server> server = this.serverManager.getServerByQuerySync(
@@ -39,7 +43,7 @@ public class GameMatchFinder implements MatchFinder {
             ).stream().findAny();
 
             if (server.isPresent()) {
-                return new GameResult(server.get(), selectedMatch, false);
+                return new GameResult(server.get(), selectedMatch, spectable);
             } else {
                throw new InternalServerError("Error obtaining match server");
             }
@@ -65,7 +69,7 @@ public class GameMatchFinder implements MatchFinder {
                             }
                             assert match != null;
                             Match selectedMatch = this.matchProvider.findMatchByIdSync(match);
-                            return new GameResult(foundServer, selectedMatch, false);
+                            return new GameResult(foundServer, selectedMatch, spectable);
                         } else {
                             throw new InternalServerError("Error obtaining match server");
                         }

@@ -1,7 +1,7 @@
 package net.seocraft.api.bukkit.game.match;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.ListenableFuture;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -26,8 +26,9 @@ public interface MatchProvider {
     @NotNull ListenableFuture<AsyncResponse<Set<Match>>> findMatch(
             @Nullable String gamemode,
             @Nullable String subGamemode,
-            @Nullable String map
-    );
+            @Nullable String map,
+            @NotNull MatchStatus status
+            );
 
     @NotNull ListenableFuture<AsyncResponse<Match>> findMatchById(@NotNull String id);
 
@@ -36,7 +37,8 @@ public interface MatchProvider {
     @NotNull Set<Match> findMatchSync(
             @Nullable String gamemode,
             @Nullable String subGamemode,
-            @Nullable String map
+            @Nullable String map,
+            @NotNull MatchStatus status
     ) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
 
     @NotNull Match updateMatch(@NotNull Match match) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;

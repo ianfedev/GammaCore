@@ -79,7 +79,7 @@ public class TeleportCommand implements CommandClass {
     @Command(names = {"test"})
     public boolean testCommand(CommandSender sender) {
         try {
-            FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "skywars_solo");
+            FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "skywars_solo", true);
             this.client.setString(
                     "pairing:" + this.gameSessionManager.getCachedSession(sender.getName()).getPlayerId(),
                     this.mapper.writeValueAsString(result)

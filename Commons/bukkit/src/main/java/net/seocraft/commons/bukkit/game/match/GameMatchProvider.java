@@ -99,10 +99,10 @@ public class GameMatchProvider implements MatchProvider {
     }
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<Set<Match>>> findMatch(@Nullable String gamemode, @Nullable String subGamemode, @Nullable String map) {
+    public @NotNull ListenableFuture<AsyncResponse<Set<Match>>> findMatch(@Nullable String gamemode, @Nullable String subGamemode, @Nullable String map, @NotNull MatchStatus status) {
         return this.executorService.submit(() -> {
             try {
-                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, this.findMatchSync(gamemode, subGamemode, map));
+                return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, this.findMatchSync(gamemode, subGamemode, map, status));
             } catch (IOException | Unauthorized | BadRequest | NotFound | InternalServerError e) {
                 return new AsyncResponse<>(e, AsyncResponse.Status.ERROR, null);
             }
@@ -129,7 +129,7 @@ public class GameMatchProvider implements MatchProvider {
     }
 
     @Override
-    public @NotNull Set<Match> findMatchSync(@Nullable String gamemode, @Nullable String subGamemode, @Nullable String map) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError {
+    public @NotNull Set<Match> findMatchSync(@Nullable String gamemode, @Nullable String subGamemode, @Nullable String map, @NotNull MatchStatus status) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError {
         ObjectNode node = this.objectMapper.createObjectNode();
         if (map != null) node.put("map", map);
         if (gamemode != null) {
@@ -139,6 +139,24 @@ public class GameMatchProvider implements MatchProvider {
         }
 
         if (map == null && gamemode == null && subGamemode == null) throw new IllegalArgumentException("No query specified.");
+
+        switch (status) {
+            case INGAME: {
+                node.put("status", "ingame");
+                break;
+            }
+            case STARTING: {
+                node.put("status", "starting");
+                break;
+            }
+            case WAITING: {
+                node.put("status", "waiting");
+                break;
+            }
+            default: {
+                throw new IllegalArgumentException("You can only pass INGAME/WAITING/STARTING status.");
+            }
+        }
 
         String response = this.matchFindRequest.executeRequest(
                 this.objectMapper.writeValueAsString(node),
