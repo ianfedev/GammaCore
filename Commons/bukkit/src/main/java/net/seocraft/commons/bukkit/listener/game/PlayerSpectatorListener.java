@@ -8,6 +8,7 @@ import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
+import net.seocraft.commons.bukkit.game.management.menu.SpectatorToolbar;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
@@ -55,7 +56,7 @@ public class PlayerSpectatorListener implements Listener {
                                 this.translatableField.getUnspacedField(
                                         onlinePlayer.getLanguage(),
                                         "commons_spectator_join"
-                                ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")))
+                                ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.AQUA)
                         );
                     }
                 });
@@ -65,6 +66,7 @@ public class PlayerSpectatorListener implements Listener {
             player.setFoodLevel(20);
             player.setFlying(true);
             player.setGameMode(GameMode.ADVENTURE);
+            player.getInventory().clear();
             this.coreGameManagement.addSpectatingPlayer(player);
 
             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
@@ -75,7 +77,12 @@ public class PlayerSpectatorListener implements Listener {
                 }
             });
 
-            // TODO: Give toolbar to spectators
+            if (!event.isCustom()) {
+                // TODO: Create spectator tools and create implementations
+            }
+
+            player.getInventory().setItem(7, SpectatorToolbar.getPlayAgainItem(user.getLanguage(), translatableField, this.coreGameManagement.getSubGamemode().getScoreboard(), event.isManual()));
+            player.getInventory().setItem(8, SpectatorToolbar.getLobbyReturnItem(user.getLanguage(), translatableField, this.coreGameManagement.getGamemode().getLobbyGroup()));
 
         } catch (IOException e) {
             player.kickPlayer(
