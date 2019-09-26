@@ -27,7 +27,6 @@ public class CraftGameSessionManager implements GameLoginManager {
 
     @Override
     public void matchPlayerJoin(@NotNull FinderResult match, @NotNull User user, @NotNull Player player) {
-        System.out.println(match.isSpectable());
         if (match.isSpectable()) {
             Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match.getMatch(), user, player, false, true));
         } else {

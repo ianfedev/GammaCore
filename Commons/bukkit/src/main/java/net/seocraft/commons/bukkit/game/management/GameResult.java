@@ -17,6 +17,7 @@ public class GameResult implements FinderResult {
     public GameResult(@NotNull Server server, @NotNull Match match, boolean spectable) {
         this.server = server;
         this.match = match;
+        this.spectable = spectable;
     }
 
     @Override
