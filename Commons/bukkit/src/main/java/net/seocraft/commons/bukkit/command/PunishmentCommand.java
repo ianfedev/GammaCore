@@ -455,19 +455,4 @@ public class PunishmentCommand implements CommandClass {
         }
     }
 
-    @Command(names = {"debugspec"})
-    public boolean debugSpectatorCommand(CommandSender sender) {
-        System.out.println("----------------------------------");
-        System.out.println("Waiting players:");
-        this.coreGameManagement.getWaitingPlayers().forEach(player -> {
-            System.out.println(player.getName());
-        });
-        System.out.println("----------------------------------");
-        System.out.println("Spectating players:");
-        this.coreGameManagement.getSpectatingPlayers().forEach(player -> {
-            System.out.println(player.getName());
-        });
-
-        return true;
-    }
 }
