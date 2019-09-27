@@ -31,8 +31,9 @@ public class CraftGameStartManager implements GameStartManager {
     @Inject private UserFormatter userFormatter;
     @Inject private TranslatableField translatableField;
     @Inject private BukkitAPI bukkitAPI;
-    @Inject private CommonsBukkit instance;
     @Inject private RedisClient client;
+
+    private CommonsBukkit instance;
 
     @NotNull private String scheduledField;
 
