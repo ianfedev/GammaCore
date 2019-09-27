@@ -145,7 +145,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
         System.out.println("Added spectator player: " + player.getUsername());
-        this.matchAssignation.put(match, player);
+        this.spectatorAssignation.put(match, player);
     }
 
     @Override
