@@ -18,6 +18,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -28,21 +29,35 @@ import java.util.logging.Level;
 public class UserDisconnectListener implements Listener {
 
     @Inject private UserStorageProvider userStorageProvider;
+    @Inject private GameLoginManager gameLoginManager;
+    @Inject private CoreGameManagement coreGameManagement;
     @Inject private ServerManager serverManager;
     @Inject private CommonsBukkit commonsBukkit;
 
     @EventHandler
     public void disconnectListenerEvent(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
             boolean disconnection = false;
             while (!disconnection) {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     Server updatableRecord = this.commonsBukkit.getServerRecord();
                     User user = userAsyncResponse.getResponse();
+
                     updatableRecord.getOnlinePlayers().remove(user.getId());
                     try {
                         this.serverManager.updateServer(updatableRecord);
                         this.commonsBukkit.setServerRecord(updatableRecord);
+
+                        Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
+
+                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME) && playerMatch != null) {
+                            this.gameLoginManager.matchPlayerLeave(
+                                    playerMatch,
+                                    user,
+                                    player
+                            );
+                        }
                         disconnection = true;
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException error) {
                         Bukkit.getLogger().log(Level.SEVERE, "[Commons] Error logging out player from server. ({0})", error.getMessage());
@@ -54,6 +69,15 @@ public class UserDisconnectListener implements Listener {
                         updatableRecord.getOnlinePlayers().remove(user.getId());
                         this.serverManager.updateServer(updatableRecord);
                         this.commonsBukkit.setServerRecord(updatableRecord);
+                        Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
+
+                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME) && playerMatch != null) {
+                            this.gameLoginManager.matchPlayerLeave(
+                                    playerMatch,
+                                    user,
+                                    player
+                            );
+                        }
                         disconnection = true;
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
                 }
