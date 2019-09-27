@@ -68,7 +68,10 @@ public class UserDisconnectListener implements Listener {
         this.commonsBukkit.setServerRecord(updatableRecord);
         if (
                 this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME) &&
-                this.coreGameManagement.getWaitingPlayers().contains(event.getPlayer())
+                (
+                        this.coreGameManagement.getWaitingPlayers().contains(event.getPlayer()) ||
+                        this.coreGameManagement.getSpectatingPlayers().contains(event.getPlayer())
+                )
         ) {
             Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
             if (playerMatch != null) {
