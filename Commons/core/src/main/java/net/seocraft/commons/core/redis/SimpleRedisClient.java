@@ -6,12 +6,12 @@ import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.redis.RedissonJacksonCodec;
 import net.seocraft.commons.core.redis.messager.RedisClientConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.redisson.config.SingleServerConfig;
 
-import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Map;
@@ -87,6 +87,21 @@ public class SimpleRedisClient implements RedisClient {
     @Override
     public void setHash(String key, String field, @Nullable String value) {
         getPool().<String, String>getMap(key).put(field, value);
+    }
+
+    @Override
+    public void clearHash(String key) {
+        getPool().getMap(key).clear();
+    }
+
+    @Override
+    public boolean existsInHash(String key, String field) {
+        return getPool().<String,String>getMap(key).containsKey(key);
+    }
+
+    @Override
+    public @Nullable String getFromHash(String key, String field) {
+        return getPool().<String,String>getMap(key).get(key);
     }
 
     @Override

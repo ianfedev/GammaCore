@@ -1,9 +1,9 @@
 package net.seocraft.api.core.redis;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.redisson.api.RedissonClient;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,6 +23,12 @@ public interface RedisClient {
     void setLastStringElement(String key);
 
     void setHash(String key, String field, @Nullable String value);
+
+    void clearHash(String key);
+
+    boolean existsInHash(String key, String field);
+
+    @Nullable String getFromHash(String key, String field);
 
     void deleteHash(String key, String field);
 
