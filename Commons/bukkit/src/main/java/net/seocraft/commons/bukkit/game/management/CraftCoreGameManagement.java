@@ -141,14 +141,21 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void addMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.forEach((processMatch, list) -> {
-            if (processMatch.getId().equalsIgnoreCase(match)) list.add(player);
+
+            if (processMatch.getId().equalsIgnoreCase(match)) {
+                System.out.println("Added match player: " + player.getUsername());
+                list.add(player);
+            }
         });
     }
 
     @Override
     public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
         this.spectatorAssignation.forEach((processMatch, list) -> {
-            if (processMatch.getId().equalsIgnoreCase(match)) list.add(player);
+            if (processMatch.getId().equalsIgnoreCase(match)) {
+                System.out.println("Added match player: " + player.getUsername());
+                list.add(player);
+            }
         });
     }
 
