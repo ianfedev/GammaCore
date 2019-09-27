@@ -81,8 +81,10 @@ public class UserAccessResponse implements Listener {
         node.put("ip", ip);
         try {
 
+            String responseRaw = this.request.executeRequest(this.mapper.writeValueAsString(node), tokenHandler.getToken());
+            System.out.println(responseRaw);
             JsonNode response = this.mapper.readTree(
-                    this.request.executeRequest(this.mapper.writeValueAsString(node), tokenHandler.getToken())
+                    responseRaw
             );
 
             String playerIdentifier = response.get("user").asText();
