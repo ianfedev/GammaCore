@@ -135,7 +135,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                                         )
                                         .replace(
                                                 "%%actual%%",
-                                                ChatColor.AQUA + "" + (actualPlayers - 1) + ChatColor.YELLOW
+                                                ChatColor.AQUA + "" + actualPlayers + ChatColor.YELLOW
                                         )
                                         .replace(
                                                 "%%max%%",
