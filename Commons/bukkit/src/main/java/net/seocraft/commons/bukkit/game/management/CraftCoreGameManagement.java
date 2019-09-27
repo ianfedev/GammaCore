@@ -146,9 +146,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
+            list.forEach(l -> System.out.println(l.getUsername()));
         });
         this.spectatorAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
+            list.forEach(l -> System.out.println(l.getUsername()));
         });
     }
 
