@@ -111,10 +111,13 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void finishMatch(@NotNull Match match) {
-        this.matchAssignation.forEach((matchId, user) -> {
+        Map<String, User> matchAssignation = this.matchAssignation;
+        Map<String, User> spectatorAssignation = this.spectatorAssignation;
+
+        matchAssignation.forEach((matchId, user) -> {
             if (matchId.equalsIgnoreCase(match.getId())) this.matchAssignation.remove(matchId);
         });
-        this.spectatorAssignation.forEach((matchId, user) -> {
+        spectatorAssignation.forEach((matchId, user) -> {
             if (matchId.equalsIgnoreCase(match.getId())) this.spectatorAssignation.remove(matchId);
         });
         this.actualMatches.remove(match);
@@ -124,8 +127,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
 
         Match updatedMatch = this.matchProvider.updateMatch(match);
+        Map<String, User> matchAssignation = this.matchAssignation;
 
-        this.matchAssignation.forEach((processMatch, list) -> {
+        matchAssignation.forEach((processMatch, list) -> {
             if (processMatch.equalsIgnoreCase(match.getId())) {
                 this.actualMatches.remove(match);
                 this.actualMatches.add(updatedMatch);
@@ -145,15 +149,18 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
+        Map<String, User> matchAssignation = this.matchAssignation;
+        Map<String, User> spectatorAssignation = this.spectatorAssignation;
+
         if (!this.matchAssignation.isEmpty()) {
-            this.matchAssignation.forEach((matchId, user) -> {
+            matchAssignation.forEach((matchId, user) -> {
                 if (user.getUsername().equalsIgnoreCase(player.getUsername())) {
                     this.matchAssignation.remove(matchId, user);
                 }
             });
         }
         if (!this.spectatorAssignation.isEmpty()){
-            this.spectatorAssignation.forEach((matchId, user) -> {
+            spectatorAssignation.forEach((matchId, user) -> {
                 if (user.getUsername().equalsIgnoreCase(player.getUsername())) {
                     this.spectatorAssignation.remove(matchId, user);
                 }
