@@ -5,6 +5,7 @@ import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
+import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
@@ -40,6 +41,7 @@ public class PunishmentCommand implements CommandClass {
     @Inject private TranslatableField translator;
     @Inject private OnlineStatusManager onlinePlayers;
     @Inject private PunishmentProvider punishmentProvider;
+    @Inject private CoreGameManagement coreGameManagement;
     @Inject private GameSessionManager gameSessionManager;
     @Inject private Messager messager;
     @Inject private PunishmentActions punishmentActions;
@@ -451,5 +453,21 @@ public class PunishmentCommand implements CommandClass {
         } else {
             return false;
         }
+    }
+
+    @Command(names = {"debugspec"})
+    public boolean debugSpectatorCommand(CommandSender sender) {
+        System.out.println("----------------------------------");
+        System.out.println("Waiting players:");
+        this.coreGameManagement.getWaitingPlayers().forEach(player -> {
+            System.out.println(player.getName());
+        });
+        System.out.println("----------------------------------");
+        System.out.println("Spectating players:");
+        this.coreGameManagement.getSpectatingPlayers().forEach(player -> {
+            System.out.println(player.getName());
+        });
+
+        return true;
     }
 }

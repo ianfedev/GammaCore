@@ -74,6 +74,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getWaitingPlayers() {
+        this.matchAssignation.forEach((match, user) -> {
+            user.forEach(player -> {
+                System.out.println("SpecAssign: " + match.getId() + " - " + player.getUsername());
+            });
+        });
         return this.waitingPlayers;
     }
 
@@ -89,6 +94,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getSpectatingPlayers() {
+        this.spectatorAssignation.forEach((match, user) -> {
+            user.forEach(player -> {
+                System.out.println("SpecAssign: " + match.getId() + " - " + player.getUsername());
+            });
+        });
         return this.spectatingPlayers;
     }
 
