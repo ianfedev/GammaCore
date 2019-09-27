@@ -164,8 +164,10 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
         Set<Player> matchPlayer = new HashSet<>();
+        System.out.println(match);
         if (!this.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
+                System.out.println(entry.getKey() + " - " + entry.getValue().getUsername());
                 if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }
@@ -175,8 +177,10 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<Player> getMatchSpectators(@NotNull String match) {
         Set<Player> matchPlayer = new HashSet<>();
+        System.out.println(match);
         if (!this.spectatorAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entrySet()) {
+                System.out.println(entry.getKey() + " - " + entry.getValue().getUsername());
                 if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }
