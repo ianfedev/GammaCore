@@ -44,33 +44,21 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Inject private CloudManager cloudManager;
     @Inject private CommonsBukkit instance;
 
-    private Gamemode gamemode;
-    private SubGamemode subGamemode;
-    private Set<Player> waitingPlayers;
-    private Set<Player> spectatingPlayers;
-    private Set<Match> actualMatches;
-    private Map<String, User> matchAssignation;
-    private Map<String, User> spectatorAssignation;
+    private Set<Player> waitingPlayers = new HashSet<>();
+    private Set<Player> spectatingPlayers = new HashSet<>();
+    private Set<Match> actualMatches = new HashSet<>();
+    private Map<String, User> matchAssignation = new HashMap<>();
+    private Map<String, User> spectatorAssignation = new HashMap<>();
 
-    @Override
-    public void initializeGameCore(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) {
-        this.gamemode = gamemode;
-        this.subGamemode = subGamemode;
-        this.actualMatches = new HashSet<>();
-        this.waitingPlayers = new HashSet<>();
-        this.spectatingPlayers = new HashSet<>();
-        this.matchAssignation = new HashMap<>();
-        this.spectatorAssignation = new HashMap<>();
-    }
 
     @Override
     public @NotNull Gamemode getGamemode() {
-        return this.gamemode;
+        return this.instance.serverGamemode;
     }
 
     @Override
     public @NotNull SubGamemode getSubGamemode() {
-        return this.subGamemode;
+        return this.instance.serverSubGamemode;
     }
 
     @Override
@@ -169,14 +157,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
-
-        System.out.println(this.matchAssignation.size());
-
         Set<Player> matchPlayer = new HashSet<>();
-        System.out.println("Showing data of match: " + match);
         if (!this.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
-                System.out.println(entry.getKey() + " - " + entry.getValue().getUsername());
                 if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }
@@ -185,13 +168,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getMatchSpectators(@NotNull String match) {
-
-        System.out.println(this.matchAssignation.size());
         Set<Player> matchPlayer = new HashSet<>();
-        System.out.println("Showing data of match: " + match);
         if (!this.spectatorAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entrySet()) {
-                System.out.println(entry.getKey() + " - " + entry.getValue().getUsername());
                 if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }
@@ -365,7 +344,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                     this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getId());
                         if (player != null) {
-                            this.cloudManager.sendPlayerToGroup(player, gamemode.getLobbyGroup());
+                            this.cloudManager.sendPlayerToGroup(player, this.getGamemode().getLobbyGroup());
                         }
                         this.spectatingPlayers.remove(player);
                     });

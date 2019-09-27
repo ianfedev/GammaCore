@@ -10,6 +10,8 @@ import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.core.friend.FriendshipProvider;
@@ -88,6 +90,8 @@ public class CommonsBukkit extends JavaPlugin {
     public ParametricCommandHandler parametricCommandHandler;
     public boolean pairedGame = false;
     public int pairingRunnable;
+    public Gamemode serverGamemode;
+    public SubGamemode serverSubGamemode;
     @NotNull public Server serverRecord;
 
     @Override

@@ -70,7 +70,8 @@ public class BukkitServerLoad implements ServerLoad {
                             .findFirst();
                     if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
 
-                    this.coreGameManagement.initializeGameCore(gamemode, subGamemode.get());
+                    this.instance.serverGamemode = gamemode;
+                    this.instance.serverSubGamemode = subGamemode.get();
 
                     return this.serverManager.loadServer(
                             Bukkit.getServerName(),
