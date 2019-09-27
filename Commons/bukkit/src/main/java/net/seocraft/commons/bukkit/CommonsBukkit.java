@@ -12,6 +12,7 @@ import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.core.friend.FriendshipProvider;
@@ -22,6 +23,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
 import net.seocraft.api.core.server.ServerType;
+import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
@@ -45,6 +47,7 @@ import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
 import net.seocraft.commons.core.backend.match.MatchCleanupRequest;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -84,6 +87,13 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
     @Inject private CraftMapFileManager craftMapFileManager;
+
+    // --- Game related arrays --- //
+    public Set<Player> waitingPlayers = new HashSet<>();
+    public Set<Player> spectatingPlayers = new HashSet<>();
+    public Set<Match> actualMatches = new HashSet<>();
+    public Map<String, User> matchAssignation = new HashMap<>();
+    public Map<String, User> spectatorAssignation = new HashMap<>();
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
