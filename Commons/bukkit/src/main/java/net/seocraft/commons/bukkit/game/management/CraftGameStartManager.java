@@ -68,7 +68,7 @@ public class CraftGameStartManager implements GameStartManager {
                 this.instance,
                 seconds,
                 () -> {
-
+                    if (this.scheduledStarts.containsKey(match.getId())) Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
                     involvedUsers.forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
                         if (player != null) {
@@ -123,12 +123,12 @@ public class CraftGameStartManager implements GameStartManager {
                 if (player != null) {
                     if (silent) {
                         player.sendMessage(
-                                ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_silent")
+                                ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_silent") + "."
                         );
                     } else {
                         player.sendMessage(
                                 ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_cancelled_forced")
-                                        .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.RED)
+                                        .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.RED) + "."
                         );
                     }
                 }

@@ -32,6 +32,7 @@ public class CraftGameSessionManager implements GameLoginManager {
         } else {
             player.setHealth(20);
             player.setFoodLevel(20);
+            player.getInventory().clear();
             try {
                 player.teleport(this.coreGameManagement.getLobbyLocation(match.getMatch()));
                 player.setGameMode(GameMode.ADVENTURE);
@@ -143,7 +144,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                             this.translatableField.getUnspacedField(
                                     onlinePlayer.getLanguage(),
                                     "commons_spectator_leave"
-                            ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")))
+                            ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.AQUA)
                     );
                 }
             });
