@@ -138,7 +138,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void addMatchPlayer(@NotNull String match, @NotNull User player) {
-        System.out.println("added spectator player: " + player.getUsername());
+        System.out.println("added match player: " + player.getUsername());
         this.matchAssignation.put(match, player);
     }
 
@@ -151,12 +151,19 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.forEach((matchId, user) -> {
-            if (user.getUsername().equalsIgnoreCase(player.getId())) this.matchAssignation.remove(matchId, user);
+            if (user.getUsername().equalsIgnoreCase(player.getId())) {
+                System.out.println("Match remove: " + player.getUsername());
+                this.matchAssignation.remove(matchId, user);
+            }
         });
         this.spectatorAssignation.forEach((matchId, user) -> {
-            if (user.getUsername().equalsIgnoreCase(player.getId())) this.spectatorAssignation.remove(matchId, user);
+            if (user.getUsername().equalsIgnoreCase(player.getId())) {
+                System.out.println("Spectator remove: " + player.getUsername());
+                this.spectatorAssignation.remove(matchId, user);
+            }
         });
-        System.out.println("Spectator player remove: " + player.getUsername());
+        System.out.println("Match remaining: " + this.matchAssignation.size());
+        System.out.println("Match remaining: " + this.spectatorAssignation.size());
     }
 
     @Override
