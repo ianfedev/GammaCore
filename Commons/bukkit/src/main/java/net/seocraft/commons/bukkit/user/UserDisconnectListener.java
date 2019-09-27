@@ -30,8 +30,6 @@ public class UserDisconnectListener implements Listener {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private ServerManager serverManager;
     @Inject private CommonsBukkit commonsBukkit;
-    @Inject private GameLoginManager gameLoginManager;
-    @Inject private CoreGameManagement coreGameManagement;
 
     @EventHandler
     public void disconnectListenerEvent(PlayerQuitEvent event) {
@@ -43,7 +41,8 @@ public class UserDisconnectListener implements Listener {
                     User user = userAsyncResponse.getResponse();
                     updatableRecord.getOnlinePlayers().remove(user.getId());
                     try {
-                        finalUpdate(event, user, updatableRecord);
+                        this.serverManager.updateServer(updatableRecord);
+                        this.commonsBukkit.setServerRecord(updatableRecord);
                         disconnection = true;
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException error) {
                         Bukkit.getLogger().log(Level.SEVERE, "[Commons] Error logging out player from server. ({0})", error.getMessage());
@@ -53,7 +52,8 @@ public class UserDisconnectListener implements Listener {
                         User user = this.userStorageProvider.findUserByNameSync(event.getPlayer().getName());
                         Server updatableRecord = this.commonsBukkit.getServerRecord();
                         updatableRecord.getOnlinePlayers().remove(user.getId());
-                        finalUpdate(event, user, updatableRecord);
+                        this.serverManager.updateServer(updatableRecord);
+                        this.commonsBukkit.setServerRecord(updatableRecord);
                         disconnection = true;
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
                 }
@@ -61,26 +61,4 @@ public class UserDisconnectListener implements Listener {
         });
     }
 
-    private void finalUpdate(PlayerQuitEvent event, User user, Server updatableRecord) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
-        this.serverManager.updateServer(
-                updatableRecord
-        );
-        this.commonsBukkit.setServerRecord(updatableRecord);
-        if (
-                this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME) &&
-                (
-                        this.coreGameManagement.getWaitingPlayers().contains(event.getPlayer()) ||
-                        this.coreGameManagement.getSpectatingPlayers().contains(event.getPlayer())
-                )
-        ) {
-            Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
-            if (playerMatch != null) {
-                this.gameLoginManager.matchPlayerLeave(
-                        playerMatch,
-                        user,
-                        event.getPlayer()
-                );
-            }
-        }
-    }
 }

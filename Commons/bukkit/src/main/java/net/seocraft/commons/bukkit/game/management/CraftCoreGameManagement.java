@@ -304,7 +304,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                 this.instance,
                 120,
                 (time) -> {
-                    if (time.getSecondsLeft() == 60 || time.getSecondsLeft() == 30 || (time.getSecondsLeft() < 10 && time.getSecondsLeft() < 1)) {
+                    if (time.isImportantSecond()) {
                         this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
                             Player player = Bukkit.getPlayer(user.getId());
                             if (player != null) {

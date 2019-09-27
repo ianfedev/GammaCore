@@ -7,7 +7,6 @@ import net.seocraft.api.bukkit.event.GameReadyEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
-import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -47,7 +46,9 @@ public class CraftGameStartManager implements GameStartManager {
             CountdownTimer timer = new CountdownTimer(
                     this.instance,
                     30,
-                    (time) -> involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
+                    (time) -> {
+                        if (time.isImportantSecond()) involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
+                    },
                     () -> {
                         scheduledStarts.remove(match.getId());
                         Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
@@ -62,14 +63,18 @@ public class CraftGameStartManager implements GameStartManager {
     public void forceMatchCountdown(@NotNull Match match, int seconds, @NotNull User issuer, boolean silent) {
 
         Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
+        int matchUsers =  involvedUsers.size();
         involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+        if (this.scheduledStarts.containsKey(match.getId())) {
+            Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
+            this.scheduledStarts.remove(match.getId());
+        }
 
-        CountdownTimer timer = new CountdownTimer(
-                this.instance,
-                seconds,
-                () -> {
-                    if (this.scheduledStarts.containsKey(match.getId())) Bukkit.getScheduler().cancelTask(this.scheduledStarts.get(match.getId()));
-                    involvedUsers.forEach(user -> {
+        if (matchUsers >= 2) {
+            CountdownTimer timer = new CountdownTimer(
+                    this.instance,
+                    seconds,
+                    () -> involvedUsers.forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
                         if (player != null) {
                             if (silent) {
@@ -83,16 +88,27 @@ public class CraftGameStartManager implements GameStartManager {
                                 );
                             }
                         }
-                    });
-                },
-                (time) -> this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage())),
-                () -> {
-                    scheduledStarts.remove(match.getId());
-                    Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
-                }
-        );
-        timer.scheduleTimer();
-        scheduledStarts.put(match.getId(), timer.getAssignedTaskId());
+                    }),
+                    (time) -> {
+                        if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
+                    },
+                    () -> {
+                        scheduledStarts.remove(match.getId());
+                        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
+                    }
+            );
+            timer.scheduleTimer();
+            scheduledStarts.put(match.getId(), timer.getAssignedTaskId());
+        } else {
+            Player player = Bukkit.getPlayer(issuer.getUsername());
+            ChatAlertLibrary.errorChatAlert(
+                    player,
+                    this.translatableField.getUnspacedField(
+                            issuer.getLanguage(),
+                            "commons_countdown_insufficient"
+                    )
+            );
+        }
     }
 
     @Override

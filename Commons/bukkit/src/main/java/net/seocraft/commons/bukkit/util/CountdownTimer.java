@@ -90,4 +90,8 @@ public class CountdownTimer implements Runnable {
         this.assignedTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this, 0L, 20L);
     }
 
+    public boolean isImportantSecond() {
+        return ((this.secondsLeft % 15) == 0) || (this.secondsLeft < 11 && this.secondsLeft >= 1);
+    }
+
 }
