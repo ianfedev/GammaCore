@@ -93,12 +93,12 @@ public class CraftGameStartManager implements GameStartManager {
                         if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> {
-                        scheduledStarts.remove(match.getId());
+                        cancel(match.getId());
                         Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
                     }
             );
-            timer.scheduleTimer();
             scheduledStarts.put(match.getId(), timer.getAssignedTaskId());
+            timer.scheduleTimer();
         } else {
             Player player = Bukkit.getPlayer(issuer.getUsername());
             ChatAlertLibrary.errorChatAlert(
@@ -163,5 +163,9 @@ public class CraftGameStartManager implements GameStartManager {
                             .replace("%%left%%", ChatColor.GOLD + "" + seconds + ChatColor.YELLOW)
             );
         }
+    }
+
+    private void cancel(String id) {
+        this.scheduledStarts.remove(id);
     }
 }
