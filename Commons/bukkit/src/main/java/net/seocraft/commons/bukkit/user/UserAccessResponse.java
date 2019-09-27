@@ -81,18 +81,15 @@ public class UserAccessResponse implements Listener {
         node.put("ip", ip);
         try {
 
-            String responseRaw = this.request.executeRequest(this.mapper.writeValueAsString(node), tokenHandler.getToken());
-            System.out.println(responseRaw);
             JsonNode response = this.mapper.readTree(
-                    responseRaw
+                    this.request.executeRequest(this.mapper.writeValueAsString(node), tokenHandler.getToken())
             );
 
-            String playerIdentifier = response.get("user").asText();
-
-            User user = this.userStorage.getCachedUserSync(playerIdentifier);
             if (response.get("multi").asBoolean()) {
-                // TODO: Handle multi-account issue
+                player.kickPlayer("multi");
             } else {
+                String playerIdentifier = response.get("user").asText();
+                User user = this.userStorage.getCachedUserSync(playerIdentifier);
                 // Detect if player has a punishment
                 this.punishmentActions.checkBan(user);
 
