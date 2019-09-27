@@ -118,8 +118,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void initializeMatch(@NotNull Match match) {
         Set<User> matchAssignation = new HashSet<>();
         Set<User> spectatorAssignation = new HashSet<>();
-        System.out.println(matchAssignation);
-        System.out.println(spectatorAssignation);
+        System.out.println("Initial match: " + matchAssignation);
+        System.out.println("Initial spec: " + spectatorAssignation);
         this.matchAssignation.put(match, matchAssignation);
         this.spectatorAssignation.put(match, spectatorAssignation);
     }
