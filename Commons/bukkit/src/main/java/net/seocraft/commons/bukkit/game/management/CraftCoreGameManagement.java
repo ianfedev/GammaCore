@@ -49,13 +49,15 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     private SubGamemode subGamemode;
     private Set<Player> waitingPlayers;
     private Set<Player> spectatingPlayers;
-    private Map<Match, Set<User>> matchAssignation;
-    private Map<Match, Set<User>> spectatorAssignation;
+    private Set<Match> actualMatches;
+    private Map<String, User> matchAssignation;
+    private Map<String, User> spectatorAssignation;
 
     @Override
     public void initializeGameCore(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
+        this.actualMatches = new HashSet<>();
         this.waitingPlayers = new HashSet<>();
         this.spectatingPlayers = new HashSet<>();
         this.matchAssignation = new HashMap<>();
@@ -74,12 +76,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getWaitingPlayers() {
-        this.matchAssignation.forEach((match, user) -> {
-            System.out.println("List waiting id: " + user + user.getClass());
-            user.forEach(player -> {
-                System.out.println("WaitingAssign: " + match.getId() + " - " + player.getUsername());
-            });
-        });
+        this.matchAssignation.forEach((match, user) -> System.out.println("WaitingAssign: " + match + " - " + user.getUsername()));
         return this.waitingPlayers;
     }
 
@@ -95,12 +92,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getSpectatingPlayers() {
-        this.spectatorAssignation.forEach((match, user) -> {
-            System.out.println("List spectator id: " + user + user.getClass());
-            user.forEach(player -> {
-                System.out.println("SpecAssign: " + match.getId() + " - " + player.getUsername());
-            });
-        });
+        this.spectatorAssignation.forEach((match, user) -> System.out.println("WaitingAssign: " + match + " - " + user.getUsername()));
         return this.spectatingPlayers;
     }
 
@@ -116,18 +108,18 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void initializeMatch(@NotNull Match match) {
-        Set<User> matchAssignation = new HashSet<>();
-        Set<User> spectatorAssignation = new LinkedHashSet<>();
-        System.out.println("Initial match: " + matchAssignation);
-        System.out.println("Initial spec: " + spectatorAssignation);
-        this.matchAssignation.put(match, matchAssignation);
-        this.spectatorAssignation.put(match, spectatorAssignation);
+        this.actualMatches.add(match);
     }
 
     @Override
     public void finishMatch(@NotNull Match match) {
-        this.matchAssignation.remove(match);
-        this.matchAssignation.remove(match);
+        this.matchAssignation.forEach((matchId, user) -> {
+            if (matchId.equalsIgnoreCase(match.getId())) this.matchAssignation.remove(matchId);
+        });
+        this.spectatorAssignation.forEach((matchId, user) -> {
+            if (matchId.equalsIgnoreCase(match.getId())) this.spectatorAssignation.remove(matchId);
+        });
+        this.actualMatches.remove(match);
     }
 
     @Override
@@ -137,54 +129,36 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
         System.out.println("Updating match...");
         this.matchAssignation.forEach((processMatch, list) -> {
-            if (processMatch.getId().equalsIgnoreCase(match.getId())) {
-                Set<User> userSet = this.matchAssignation.get(match);
-                userSet.forEach(user -> {System.out.println("User Updated - " + user.getUsername());});
-                this.matchAssignation.remove(match);
-                this.matchAssignation.put(updatedMatch, userSet);
+            if (processMatch.equalsIgnoreCase(match.getId())) {
+                this.actualMatches.remove(match);
+                this.actualMatches.add(updatedMatch);
             }
         });
     }
 
     @Override
     public void addMatchPlayer(@NotNull String match, @NotNull User player) {
-        this.matchAssignation.forEach((processMatch, list) -> {
-
-            if (processMatch.getId().equalsIgnoreCase(match)) {
-                System.out.println("Added match player: " + player.getUsername());
-                list.add(player);
-            }
-        });
+        System.out.println("added spectator player: " + player.getUsername());
+        this.matchAssignation.put(match, player);
     }
 
     @Override
     public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
-        this.spectatorAssignation.forEach((processMatch, list) -> {
-            if (processMatch.getId().equalsIgnoreCase(match)) {
-                System.out.println("Added spectator player: " + player.getUsername());
-                list.add(player);
-            }
-        });
+        System.out.println("Added spectator player: " + player.getUsername());
+        this.matchAssignation.put(match, player);
     }
 
     @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
-        this.matchAssignation.forEach((processMatch, list) -> {
-            if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
-
-        });
-        this.spectatorAssignation.forEach((processMatch, list) -> {
-            if (processMatch.getId().equalsIgnoreCase(match)) list.remove(player);
-        });
+        this.matchAssignation.remove(match, player);
+        this.spectatorAssignation.remove(match, player);
     }
 
     @Override
     public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
         Set<Player> matchPlayer = new HashSet<>();
-        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
-            if (entry.getKey().getId().equalsIgnoreCase(match)) {
-                for (User user: entry.getValue()) matchPlayer.add(Bukkit.getPlayer(user.getUsername()));
-            }
+        for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
         }
         return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
     }
@@ -192,10 +166,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<Player> getMatchSpectators(@NotNull String match) {
         Set<Player> matchPlayer = new HashSet<>();
-        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
-            if (entry.getKey().getId().equalsIgnoreCase(match)) {
-                for (User user: entry.getValue()) matchPlayer.add(Bukkit.getPlayer(user.getUsername()));
-            }
+        for (Map.Entry<String, User> entry : this.spectatorAssignation.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
         }
         return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
     }
@@ -203,10 +175,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<User> getMatchSpectatorsUsers(@NotNull String match) {
         Set<User> userSet = new HashSet<>();
-        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
-            if (match.equalsIgnoreCase(entry.getKey().getId())) {
-                userSet = entry.getValue();
-            }
+        for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
+            userSet.add(entry.getValue());
         }
         return userSet;
     }
@@ -214,24 +184,26 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<User> getMatchUsers(@NotNull String match) {
         Set<User> userSet = new HashSet<>();
-        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
-            if (match.equalsIgnoreCase(entry.getKey().getId())) {
-                userSet = entry.getValue();
-            }
+        for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(match)) userSet.add(entry.getValue());
         }
         return userSet;
     }
 
     @Override
     public @Nullable Match getPlayerMatch(@NotNull Player player) {
-        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
-            for (User user : entry.getValue()) {
-                if (user.getUsername().equalsIgnoreCase(player.getName())) return entry.getKey();
+        for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
+            if (entry.getValue().getUsername().equalsIgnoreCase(player.getName())) {
+                for (Match match: this.actualMatches) {
+                    if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                }
             }
         }
-        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
-            for (User user : entry.getValue()) {
-                if (user.getUsername().equalsIgnoreCase(player.getName())) return entry.getKey();
+        for (Map.Entry<String, User> entry : this.spectatorAssignation.entrySet()) {
+            if (entry.getValue().getUsername().equalsIgnoreCase(player.getName())) {
+                for (Match match: this.actualMatches) {
+                    if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                }
             }
         }
         return null;
@@ -239,14 +211,18 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @Nullable Match getPlayerMatch(@NotNull User user) {
-        for (Map.Entry<Match, Set<User>> entry : this.matchAssignation.entrySet()) {
-            for (User matchUser : entry.getValue()) {
-                if (matchUser.getId().equalsIgnoreCase(user.getId())) return entry.getKey();
+        for (Map.Entry<String, User> entry : this.matchAssignation.entrySet()) {
+            if (entry.getValue().getUsername().equalsIgnoreCase(user.getUsername())) {
+                for (Match match: this.actualMatches) {
+                    if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                }
             }
         }
-        for (Map.Entry<Match, Set<User>> entry : this.spectatorAssignation.entrySet()) {
-            for (User matchUser : entry.getValue()) {
-                if (matchUser.getId().equalsIgnoreCase(user.getId())) return entry.getKey();
+        for (Map.Entry<String, User> entry : this.spectatorAssignation.entrySet()) {
+            if (entry.getValue().getUsername().equalsIgnoreCase(user.getUsername())) {
+                for (Match match: this.actualMatches) {
+                    if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                }
             }
         }
         return null;
@@ -324,7 +300,6 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                 );
             }
         });
-        this.matchAssignation.remove(match);
 
         CountdownTimer timer = new CountdownTimer(
                 this.instance,
@@ -356,7 +331,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                         }
                         this.spectatingPlayers.remove(player);
                     });
-                    this.spectatorAssignation.remove(match);
+                    this.finishMatch(match);
                 }
         );
 
