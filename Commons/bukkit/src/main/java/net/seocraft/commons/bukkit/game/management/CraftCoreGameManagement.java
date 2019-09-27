@@ -75,6 +75,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<Player> getWaitingPlayers() {
         this.matchAssignation.forEach((match, user) -> {
+            System.out.println("List waiting id: " + user);
             user.forEach(player -> {
                 System.out.println("WaitingAssign: " + match.getId() + " - " + player.getUsername());
             });
@@ -95,6 +96,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull Set<Player> getSpectatingPlayers() {
         this.spectatorAssignation.forEach((match, user) -> {
+            System.out.println("List spectator id: " + user);
             user.forEach(player -> {
                 System.out.println("SpecAssign: " + match.getId() + " - " + player.getUsername());
             });
@@ -129,9 +131,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
         Match updatedMatch = this.matchProvider.updateMatch(match);
 
+        System.out.println("Updating match...");
         this.matchAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match.getId())) {
                 Set<User> userSet = this.matchAssignation.get(match);
+                userSet.forEach(user -> {System.out.println("User Updated - " + user.getUsername());});
                 this.matchAssignation.remove(match);
                 this.matchAssignation.put(updatedMatch, userSet);
             }
