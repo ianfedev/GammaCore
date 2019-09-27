@@ -96,8 +96,8 @@ public class CraftGameStartManager implements GameStartManager {
                         Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
                     }
             );
-            this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
             timer.scheduleTimer();
+            this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
         } else {
             Player player = Bukkit.getPlayer(issuer.getUsername());
             ChatAlertLibrary.errorChatAlert(
