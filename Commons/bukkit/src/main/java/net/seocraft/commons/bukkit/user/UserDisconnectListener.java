@@ -49,14 +49,18 @@ public class UserDisconnectListener implements Listener {
                         this.serverManager.updateServer(updatableRecord);
                         this.commonsBukkit.setServerRecord(updatableRecord);
 
-                        Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
 
-                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME) && playerMatch != null) {
-                            this.gameLoginManager.matchPlayerLeave(
-                                    playerMatch,
-                                    user,
-                                    player
-                            );
+
+                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
+                            Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
+
+                            if (playerMatch != null) {
+                                this.gameLoginManager.matchPlayerLeave(
+                                        playerMatch,
+                                        user,
+                                        player
+                                );
+                            }
                         }
                         disconnection = true;
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException error) {
@@ -69,14 +73,17 @@ public class UserDisconnectListener implements Listener {
                         updatableRecord.getOnlinePlayers().remove(user.getId());
                         this.serverManager.updateServer(updatableRecord);
                         this.commonsBukkit.setServerRecord(updatableRecord);
-                        Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
 
-                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME) && playerMatch != null) {
-                            this.gameLoginManager.matchPlayerLeave(
-                                    playerMatch,
-                                    user,
-                                    player
-                            );
+                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
+                            Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
+
+                            if (playerMatch != null) {
+                                this.gameLoginManager.matchPlayerLeave(
+                                        playerMatch,
+                                        user,
+                                        player
+                                );
+                            }
                         }
                         disconnection = true;
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}

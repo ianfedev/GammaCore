@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit.game;
 
+import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.management.*;
@@ -22,7 +23,7 @@ public class GameModule extends ProtectedModule {
         bind(PartyProvider.class).to(GamePartyProvider.class);
         bind(GameLoginManager.class).to(CraftGameSessionManager.class);
         bind(GameStartManager.class).to(CraftGameStartManager.class);
-        bind(CoreGameManagement.class).to(CraftCoreGameManagement.class);
+        bind(CoreGameManagement.class).to(CraftCoreGameManagement.class).in(Scopes.SINGLETON);
         bind(MatchFinder.class).to(GameMatchFinder.class);
         expose(CoreGameManagement.class);
         expose(GameStartManager.class);

@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Singleton
 public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Inject private MatchProvider matchProvider;
@@ -170,6 +169,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
+
+        System.out.println(this.matchAssignation.size());
+
         Set<Player> matchPlayer = new HashSet<>();
         System.out.println("Showing data of match: " + match);
         if (!this.matchAssignation.isEmpty()) {
@@ -183,6 +185,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getMatchSpectators(@NotNull String match) {
+
+        System.out.println(this.matchAssignation.size());
         Set<Player> matchPlayer = new HashSet<>();
         System.out.println("Showing data of match: " + match);
         if (!this.spectatorAssignation.isEmpty()) {
