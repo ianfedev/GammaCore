@@ -76,7 +76,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public @NotNull Set<Player> getWaitingPlayers() {
         this.matchAssignation.forEach((match, user) -> {
             user.forEach(player -> {
-                System.out.println("SpecAssign: " + match.getId() + " - " + player.getUsername());
+                System.out.println("WaitingAssign: " + match.getId() + " - " + player.getUsername());
             });
         });
         return this.waitingPlayers;
@@ -153,7 +153,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
         this.spectatorAssignation.forEach((processMatch, list) -> {
             if (processMatch.getId().equalsIgnoreCase(match)) {
-                System.out.println("Added match player: " + player.getUsername());
+                System.out.println("Added spectator player: " + player.getUsername());
                 list.add(player);
             }
         });
