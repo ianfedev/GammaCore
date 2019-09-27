@@ -117,7 +117,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void initializeMatch(@NotNull Match match) {
         Set<User> matchAssignation = new HashSet<>();
-        Set<User> spectatorAssignation = new HashSet<>();
+        Set<User> spectatorAssignation = new LinkedHashSet<>();
         System.out.println("Initial match: " + matchAssignation);
         System.out.println("Initial spec: " + spectatorAssignation);
         this.matchAssignation.put(match, matchAssignation);
