@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Singleton
 public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Inject private MatchProvider matchProvider;
@@ -152,9 +153,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
+        System.out.println("Match players: " + match);
         Set<Player> matchPlayer = new HashSet<>();
         if (!this.instance.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.instance.matchAssignation.entrySet()) {
+                System.out.println(entry.getKey() + " - " + entry.getValue().getUsername());
                 if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }

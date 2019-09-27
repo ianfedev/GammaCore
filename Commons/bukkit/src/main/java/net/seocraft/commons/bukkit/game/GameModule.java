@@ -23,7 +23,7 @@ public class GameModule extends ProtectedModule {
         bind(PartyProvider.class).to(GamePartyProvider.class);
         bind(GameLoginManager.class).to(CraftGameSessionManager.class);
         bind(GameStartManager.class).to(CraftGameStartManager.class);
-        bind(CoreGameManagement.class).to(CraftCoreGameManagement.class).in(Scopes.SINGLETON);
+        bind(CoreGameManagement.class).to(CraftCoreGameManagement.class);
         bind(MatchFinder.class).to(GameMatchFinder.class);
         expose(CoreGameManagement.class);
         expose(GameStartManager.class);
