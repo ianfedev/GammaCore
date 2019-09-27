@@ -92,6 +92,29 @@ public class CraftGameSessionManager implements GameLoginManager {
     @Override
     public void matchPlayerLeave(@NotNull Match match, @NotNull User user, @NotNull Player player) {
 
+        if (this.coreGameManagement.getSpectatingPlayers().contains(player)) {
+
+            Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(match.getId());
+            matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+
+            matchPlayers.forEach(onlinePlayer -> {
+                Player playerRecord = Bukkit.getPlayer(onlinePlayer.getUsername());
+                if (playerRecord != null) {
+                    ChatAlertLibrary.infoAlert(
+                            playerRecord,
+                            this.translatableField.getUnspacedField(
+                                    onlinePlayer.getLanguage(),
+                                    "commons_spectator_leave"
+                            ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.AQUA)
+                    );
+                }
+            });
+
+            this.coreGameManagement.removeSpectatingPlayer(player);
+            this.coreGameManagement.removeMatchPlayer(match.getId(), user);
+            return;
+        }
+
         if (this.coreGameManagement.getWaitingPlayers().contains(player)) {
             Set<Player> matchPlayers = this.coreGameManagement.getMatchPlayers(match.getId());
             int actualPlayers = matchPlayers.size();
@@ -112,7 +135,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                                         )
                                         .replace(
                                                 "%%actual%%",
-                                                ChatColor.AQUA + "" + actualPlayers + ChatColor.YELLOW
+                                                ChatColor.AQUA + "" + (actualPlayers - 1) + ChatColor.YELLOW
                                         )
                                         .replace(
                                                 "%%max%%",
@@ -122,36 +145,12 @@ public class CraftGameSessionManager implements GameLoginManager {
                 );
 
             }
-            this.coreGameManagement.removeWaitingPlayer(player);
-
             if (actualPlayers < this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                 this.gameStartManager.cancelMatchCountdown(match);
             }
-
-            return;
         }
 
-        if (this.coreGameManagement.getSpectatingPlayers().contains(player)) {
-
-            Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(match.getId());
-            matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
-
-            matchPlayers.forEach(onlinePlayer -> {
-                Player playerRecord = Bukkit.getPlayer(onlinePlayer.getUsername());
-                if (playerRecord != null) {
-                    ChatAlertLibrary.infoAlert(
-                            playerRecord,
-                            this.translatableField.getUnspacedField(
-                                    onlinePlayer.getLanguage(),
-                                    "commons_spectator_leave"
-                            ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.AQUA)
-                    );
-                }
-            });
-
-            this.coreGameManagement.removeSpectatingPlayer(player);
-        }
-
+        this.coreGameManagement.removeWaitingPlayer(player);
         this.coreGameManagement.removeMatchPlayer(match.getId(), user);
 
     }

@@ -51,6 +51,7 @@ public class CraftGameStartManager implements GameStartManager {
                     () -> {
                         this.client.deleteHash(getScheduledString(), match.getId());
                         Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
+                        this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
                     }
             );
             timer.scheduleTimer();
@@ -94,6 +95,7 @@ public class CraftGameStartManager implements GameStartManager {
                     () -> {
                         this.client.deleteHash(getScheduledString(), match.getId());
                         Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
+                        this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
                     }
             );
             timer.scheduleTimer();
