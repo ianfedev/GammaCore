@@ -135,11 +135,12 @@ public class CraftGameStartManager implements GameStartManager {
     public void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent) {
 
         Map<String, String> temporalCountdown = this.client.getHashFields(getScheduledString());
-        temporalCountdown.forEach((one, two) -> System.out.println(one + " - " + two));
 
         if (temporalCountdown.containsKey(match.getId())) {
 
-            Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
+            int taskId = Integer.parseInt(temporalCountdown.get(match.getId()));
+
+            Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
                 Player player = Bukkit.getPlayer(matchUser.getUsername());
