@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 @Singleton
@@ -49,25 +48,24 @@ public class CraftGameStartManager implements GameStartManager {
                     (time) -> {
                         if (time.isImportantSecond()) involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
-                    () -> {
-                        this.client.deleteHash(getScheduledString(), match.getId());
-                        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
-                        this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
-                    }
+                    () -> startMatch(match)
             );
             timer.scheduleTimer();
-            this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
+            if (timer.getAssignedTaskId() != null) this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
         }
     }
 
     @Override
     public void forceMatchCountdown(@NotNull Match match, int seconds, @NotNull User issuer, boolean silent) {
 
+        Map<String, String> temporalCountdown = this.client.getHashFields(getScheduledString());
+
         Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
         int matchUsers =  involvedUsers.size();
         involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
-        if (this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
-            Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
+        if (temporalCountdown.containsKey(match.getId())) {
+            int cancellableTask = Integer.parseInt(temporalCountdown.get(match.getId()));
+            Bukkit.getScheduler().cancelTask(cancellableTask);
             this.client.deleteHash(getScheduledString(), match.getId());
         }
 
@@ -93,14 +91,10 @@ public class CraftGameStartManager implements GameStartManager {
                     (time) -> {
                         if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
-                    () -> {
-                        this.client.deleteHash(getScheduledString(), match.getId());
-                        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
-                        this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
-                    }
+                    () -> startMatch(match)
             );
             timer.scheduleTimer();
-            this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
+            if (timer.getAssignedTaskId() != null) this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
         } else {
             Player player = Bukkit.getPlayer(issuer.getUsername());
             ChatAlertLibrary.errorChatAlert(
@@ -115,10 +109,12 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match) {
-        if (this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
+        Map<String, String> temporalCountdown = this.client.getHashFields(getScheduledString());
+        if (temporalCountdown.containsKey(match.getId())) {
             Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
             involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
-            Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
+            int taskId = Integer.parseInt(temporalCountdown.get(match.getId()));
+            Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
             involvedUsers.forEach(user -> {
                 Player player = Bukkit.getPlayer(user.getUsername());
@@ -161,6 +157,13 @@ public class CraftGameStartManager implements GameStartManager {
             Player player = Bukkit.getPlayer(user.getUsername());
             if (player != null) ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_not_started"));
         }
+    }
+
+    private void startMatch(Match match) {
+        this.client.deleteHash(getScheduledString(), match.getId());
+        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
+        this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
+
     }
 
     private void sendCountdownAlert(@Nullable Player player, int seconds, @NotNull String language) {
