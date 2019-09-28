@@ -179,6 +179,12 @@ public class GameMatchProvider implements MatchProvider {
                 this.serverTokenQuery.getToken()
         );
 
-        return this.objectMapper.readValue(response, Match.class);
+        System.out.println("--------------------");
+        System.out.println(response);
+        Match returnableMatch = this.objectMapper.readValue(response, Match.class);
+        System.out.println(returnableMatch.getStatus());
+        System.out.println("--------------------");
+
+        return returnableMatch;
     }
 }
