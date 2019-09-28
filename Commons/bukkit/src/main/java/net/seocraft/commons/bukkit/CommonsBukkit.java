@@ -107,7 +107,8 @@ public class CommonsBukkit extends JavaPlugin {
                 Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().callEvent(
                         new GameProcessingReadyEvent(
                                 Objects.requireNonNull(this.serverRecord.getGamemode()),
-                                Objects.requireNonNull(this.serverRecord.getSubGamemode())
+                                Objects.requireNonNull(this.serverRecord.getSubGamemode()),
+                                this.serverRecord.getMaxRunning()
                         )
                 ));
                 this.craftMapFileManager.configureMapFolder();

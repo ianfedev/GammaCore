@@ -36,6 +36,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -111,19 +112,31 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void initializeMatch(@NotNull Set<Team> teams, @NotNull String map) throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
-        Match createdMatch = this.matchProvider.createMatch(
-                map,
-                teams,
-                this.gamemode.getId(),
-                this.subGamemode.getId()
-        );
-        this.actualMatches.add(createdMatch);
-        this.mapFileManager.loadMatchWorld(createdMatch);
-        this.instance.getServerRecord().addMatch(createdMatch.getId());
-        this.serverManager.updateServer(
-                this.instance.getServerRecord()
-        );
+    public void initializeMatch(@NotNull Set<Team> teams) throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
+
+        Map<GameMap, File> playableMaps = this.mapFileManager.getPlayableMaps();
+
+        Optional<GameMap> firstMap = playableMaps
+                .keySet()
+                .stream()
+                .findAny();
+
+        if (firstMap.isPresent()) {
+            Match createdMatch = this.matchProvider.createMatch(
+                    firstMap.get().getId(),
+                    teams,
+                    this.gamemode.getId(),
+                    this.subGamemode.getId()
+            );
+            this.actualMatches.add(createdMatch);
+            this.mapFileManager.loadMatchWorld(createdMatch);
+            this.instance.getServerRecord().addMatch(createdMatch.getId());
+            this.serverManager.updateServer(
+                    this.instance.getServerRecord()
+            );
+        } else {
+            throw new InternalServerError("No playable maps could be found");
+        }
     }
 
     @Override
