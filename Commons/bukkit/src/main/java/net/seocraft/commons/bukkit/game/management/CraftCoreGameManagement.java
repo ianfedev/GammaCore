@@ -339,7 +339,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.getMatchUsers(match.getId()).forEach(user -> {
             Player player = Bukkit.getPlayer(user.getUsername());
             if (player != null) {
-                Bukkit.getScheduler().runTask(this.instance, () -> Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false, false)));
+                Bukkit.getScheduler().runTask(this.instance, () -> Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false)));
                 ChatAlertLibrary.infoAlert(
                         player,
                         this.translatableField.getUnspacedField(

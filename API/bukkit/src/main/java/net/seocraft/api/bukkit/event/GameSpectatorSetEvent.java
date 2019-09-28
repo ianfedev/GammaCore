@@ -24,6 +24,15 @@ public class GameSpectatorSetEvent extends Event {
         this.manual = manual;
     }
 
+    public GameSpectatorSetEvent(@NotNull Match match, @NotNull User user, @NotNull Player player, boolean custom) {
+        this.match = match;
+        this.user = user;
+        this.player = player;
+        this.custom = custom;
+        this.manual = false;
+    }
+
+
     @Override
     public HandlerList getHandlers() {
         return handlerList;
