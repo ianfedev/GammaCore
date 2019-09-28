@@ -129,16 +129,13 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
         Match updatedMatch = this.matchProvider.updateMatch(match);
-        System.out.println(updatedMatch.getStatus());
         this.actualMatches = this.actualMatches.stream().map(m -> {
-            System.out.println(m.getId() + " - " + m.getStatus());
             if (m.getId().equalsIgnoreCase(match.getId())) {
                 return updatedMatch;
             } else {
                 return m;
             }
         }).collect(Collectors.toSet());
-        System.out.println(this.actualMatches.size());
     }
 
     @Override
@@ -323,7 +320,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         match.setStatus(MatchStatus.INVALIDATED);
         this.updateMatch(match);
         this.getMatchUsers(match.getId()).forEach(user -> {
-            Player player = Bukkit.getPlayer(user.getId());
+            Player player = Bukkit.getPlayer(user.getUsername());
             if (player != null) {
                 Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false, false));
                 ChatAlertLibrary.infoAlert(
@@ -342,7 +339,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                 (time) -> {
                     if (time.isImportantSecond()) {
                         this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
-                            Player player = Bukkit.getPlayer(user.getId());
+                            Player player = Bukkit.getPlayer(user.getUsername());
                             if (player != null) {
                                 ChatAlertLibrary.infoAlert(
                                         player,
@@ -360,7 +357,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                 },
                 () -> {
                     this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
-                        Player player = Bukkit.getPlayer(user.getId());
+                        Player player = Bukkit.getPlayer(user.getUsername());
                         if (player != null) {
                             this.cloudManager.sendPlayerToGroup(player, gamemode.getLobbyGroup());
                         }
