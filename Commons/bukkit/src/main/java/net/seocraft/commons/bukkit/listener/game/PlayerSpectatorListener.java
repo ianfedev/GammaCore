@@ -31,6 +31,8 @@ public class PlayerSpectatorListener implements Listener {
     @EventHandler
     public void playerSpectatorListener(GameSpectatorSetEvent event) {
 
+        System.out.println("Spectator called: " + event.getPlayer().getName());
+
         Match gameMatch = event.getMatch();
         Player player = event.getPlayer();
         User user = event.getUser();
