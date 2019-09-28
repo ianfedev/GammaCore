@@ -88,20 +88,11 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private ServerLoad serverLoad;
     @Inject private CraftMapFileManager craftMapFileManager;
 
-    // --- Game related arrays --- //
-    public Set<Player> waitingPlayers = new HashSet<>();
-    public Set<Player> spectatingPlayers = new HashSet<>();
-    public Set<Match> actualMatches = new HashSet<>();
-    public Map<String, User> matchAssignation = new HashMap<>();
-    public Map<String, User> spectatorAssignation = new HashMap<>();
-
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
     public boolean pairedGame = false;
     public int pairingRunnable;
-    public Gamemode serverGamemode;
-    public SubGamemode serverSubGamemode;
     @NotNull public Server serverRecord;
 
     @Override

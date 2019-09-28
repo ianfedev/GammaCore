@@ -19,6 +19,8 @@ import java.util.Set;
 
 public interface CoreGameManagement {
 
+    void initializeGameCore(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode);
+
     @NotNull Gamemode getGamemode();
 
     @NotNull SubGamemode getSubGamemode();
