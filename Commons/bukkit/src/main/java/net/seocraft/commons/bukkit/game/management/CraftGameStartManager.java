@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -132,7 +133,12 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent) {
-        if (this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
+
+        Map<String, String> temporalCountdown = this.client.getHashFields(getScheduledString());
+        temporalCountdown.forEach((one, two) -> System.out.println(one + " - " + two));
+
+        if (temporalCountdown.containsKey(match.getId())) {
+
             Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
             this.client.deleteHash(getScheduledString(), match.getId());
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
