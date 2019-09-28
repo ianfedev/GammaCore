@@ -114,7 +114,10 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void finishMatch(@NotNull Match match) {
 
-        this.matchAssignation.entries().forEach((entry) -> {
+        Multimap<String, User> matchAssignation = this.matchAssignation;
+        Multimap<String, User> spectatorAssignation = this.spectatorAssignation;
+
+        matchAssignation.entries().forEach((entry) -> {
             if (entry.getKey().equalsIgnoreCase(match.getId())) this.matchAssignation.remove(entry.getKey(), entry.getValue());
         });
         spectatorAssignation.entries().forEach((entry) -> {
@@ -149,15 +152,18 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
 
+        Multimap<String, User> matchAssignation = this.matchAssignation;
+        Multimap<String, User> spectatorAssignation = this.spectatorAssignation;
+
         if (!this.matchAssignation.isEmpty()) {
-            this.matchAssignation.entries().forEach((entry) -> {
+            matchAssignation.entries().forEach((entry) -> {
                 if (entry.getValue().getUsername().equalsIgnoreCase(player.getUsername())) {
                     this.matchAssignation.remove(entry.getKey(), entry.getValue());
                 }
             });
         }
         if (!this.spectatorAssignation.isEmpty()){
-            this.spectatorAssignation.entries().forEach((entry) -> {
+            spectatorAssignation.entries().forEach((entry) -> {
                 if (entry.getValue().getUsername().equalsIgnoreCase(player.getUsername())) {
                     this.spectatorAssignation.remove(entry.getKey(), entry.getValue());
                 }
