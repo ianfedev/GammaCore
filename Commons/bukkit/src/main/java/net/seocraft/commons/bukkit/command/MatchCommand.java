@@ -215,7 +215,7 @@ public class MatchCommand implements CommandClass {
                                             player,
                                             this.translatableField.getField(
                                                     user.getLanguage(),
-                                                    "commons_invalidation_error"
+                                                    "commons_invalidation_notingame"
                                             )
                                     );
                                 }

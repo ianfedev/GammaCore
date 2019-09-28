@@ -196,6 +196,7 @@ commons_not_gameserver: "¡No te encuentras en un servidor de juegos!"
 commons_invalidation_error: "¡Ha ocurrido un error al invalidar la partida!"
 commons_invalidation_success: "Un administrador ha invalidado la partida, eso significa que no contará dentro de las estadísticas. Ahora estás en modo espectador, tienes dos minutos para salir antes de que la partida se cierre"
 commons_invalidation_expulse: "¡La partida cerrará en %%seconds%% segundos!"
+commons_invalidation_notingame: "¡La partida que quieres invalidar no ha iniciado!"
 
 # Common words translations
 commons_main_lobby: Lobby Principal

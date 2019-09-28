@@ -136,6 +136,7 @@ public class UserAccessResponse implements Listener {
                                     FinderResult.class
                             );
                             this.gameLoginManager.matchPlayerJoin(result, user, player);
+                            this.redisClient.deleteString(pairing);
                             event.setJoinMessage("");
                         } else {
                             player.kickPlayer(ChatColor.RED + "You were not paired to this server, please try again.");
