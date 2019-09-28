@@ -36,7 +36,6 @@ public class CraftMapFileManager implements MapFileManager {
     @NotNull private Map<GameMap, File> playableMaps =  new HashMap<>();
     @Inject private MapProvider mapProvider;
     @Inject private ObjectMapper mapper;
-    @Inject private CommonsBukkit instance;
 
     @Override
     public void configureMapFolder() {

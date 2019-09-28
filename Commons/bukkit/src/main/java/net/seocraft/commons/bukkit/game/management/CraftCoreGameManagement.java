@@ -112,7 +112,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void initializeMatch(@NotNull Set<Team> teams) throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
+    public void initializeMatch() throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
 
         Map<GameMap, File> playableMaps = this.mapFileManager.getPlayableMaps();
 
@@ -124,7 +124,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         if (firstMap.isPresent()) {
             Match createdMatch = this.matchProvider.createMatch(
                     firstMap.get().getId(),
-                    teams,
+                    new HashSet<>(),
                     this.gamemode.getId(),
                     this.subGamemode.getId()
             );
@@ -180,6 +180,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
         this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getUsername().equalsIgnoreCase(player.getUsername()));
         this.spectatorAssignation.entries().removeIf((entry) -> entry.getValue().getUsername().equalsIgnoreCase(player.getUsername()));
+    }
+
+    @Override
+    public Set<Match> getActualMatches() {
+        return this.actualMatches;
     }
 
     @Override

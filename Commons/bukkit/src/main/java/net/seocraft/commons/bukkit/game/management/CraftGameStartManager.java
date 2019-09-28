@@ -7,7 +7,12 @@ import net.seocraft.api.bukkit.event.GameReadyEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -21,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
 
@@ -159,10 +165,32 @@ public class CraftGameStartManager implements GameStartManager {
         }
     }
 
+    @Override
+    public void kickErrorPlayers(Match match) {
+        this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> {
+            Player player = Bukkit.getPlayer(user.getUsername());
+            if (player != null) {
+                player.kickPlayer(
+                        ChatColor.RED +
+                                this.translatableField.getUnspacedField(
+                                        user.getLanguage(),
+                                        "gamelayout_error_starting"
+                                )
+                );
+            }
+        });
+    }
+
     private void startMatch(Match match) {
-        this.client.deleteHash(getScheduledString(), match.getId());
-        Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
-        this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
+        try {
+            this.client.deleteHash(getScheduledString(), match.getId());
+            match.setStatus(MatchStatus.STARTING);
+            this.coreGameManagement.updateMatch(match);
+            Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
+            this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
+        } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException ex) {
+            this.kickErrorPlayers(match);
+        }
 
     }
 

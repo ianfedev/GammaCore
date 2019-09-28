@@ -38,7 +38,7 @@ public interface CoreGameManagement {
 
     void removeSpectatingPlayer(@NotNull Player player);
 
-    void initializeMatch(@NotNull Set<Team> teams) throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError;
+    void initializeMatch() throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError;
 
     void finishMatch(@NotNull Match match);
 
@@ -49,6 +49,8 @@ public interface CoreGameManagement {
     void addSpectatorPlayer(@NotNull String match, @NotNull User player);
 
     void removeMatchPlayer(@NotNull String match, @NotNull User player);
+
+    Set<Match> getActualMatches();
 
     @NotNull Set<Player> getMatchPlayers(@NotNull String match);
 

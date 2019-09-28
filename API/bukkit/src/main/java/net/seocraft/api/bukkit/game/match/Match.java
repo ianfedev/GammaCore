@@ -19,6 +19,8 @@ public interface Match extends Model {
 
     void setStatus(@NotNull MatchStatus status);
 
+    void setTeams(@NotNull Set<Team> teams);
+
     @NotNull Set<String> getWinner();
 
     void setWinner(@NotNull Set<String> winner);

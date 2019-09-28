@@ -9,12 +9,10 @@ public class GameProcessingReadyEvent extends Event {
     private static HandlerList handlerList = new HandlerList();
     @NotNull private String gamemode;
     @NotNull private String subGamemode;
-    private int allowedStarts;
 
-    public GameProcessingReadyEvent(@NotNull String gamemode, @NotNull String subGamemode, int allowedStarts) {
+    public GameProcessingReadyEvent(@NotNull String gamemode, @NotNull String subGamemode) {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
-        this.allowedStarts = allowedStarts;
     }
 
     @Override
@@ -34,7 +32,4 @@ public class GameProcessingReadyEvent extends Event {
         return this.subGamemode;
     }
 
-    public int getAllowedStarts() {
-        return this.allowedStarts;
-    }
 }

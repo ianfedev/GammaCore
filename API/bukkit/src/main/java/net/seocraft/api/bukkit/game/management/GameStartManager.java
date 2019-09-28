@@ -14,4 +14,6 @@ public interface GameStartManager {
 
     void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent);
 
+    void kickErrorPlayers(Match match);
+
 }

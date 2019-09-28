@@ -69,6 +69,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private GamePairingListener gamePairingListener;
     @Inject private GameFinishedListener gameFinishedListener;
+    @Inject private GameStartedListener gameStartedListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
     @Inject private UserDisconnectListener userDisconnectListener;
 
@@ -107,8 +108,7 @@ public class CommonsBukkit extends JavaPlugin {
                 Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().callEvent(
                         new GameProcessingReadyEvent(
                                 Objects.requireNonNull(this.serverRecord.getGamemode()),
-                                Objects.requireNonNull(this.serverRecord.getSubGamemode()),
-                                this.serverRecord.getMaxRunning()
+                                Objects.requireNonNull(this.serverRecord.getSubGamemode())
                         )
                 ));
                 this.craftMapFileManager.configureMapFolder();
@@ -209,6 +209,7 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(playerDamageListener, this);
         getServer().getPluginManager().registerEvents(playerSpectatorListener, this);
         getServer().getPluginManager().registerEvents(gameFinishedListener, this);
+        getServer().getPluginManager().registerEvents(gameStartedListener, this);
     }
 
     public Server getServerRecord() {
