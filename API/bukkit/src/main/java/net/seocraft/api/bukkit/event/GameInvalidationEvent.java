@@ -1,15 +1,16 @@
 package net.seocraft.api.bukkit.event;
 
+import net.seocraft.api.bukkit.game.match.Match;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class MatchUpdateEvent extends Event {
+public class GameInvalidationEvent extends Event {
 
     private static HandlerList handlerList = new HandlerList();
-    @NotNull private String match;
+    @NotNull private Match match;
 
-    public MatchUpdateEvent(@NotNull String match) {
+    public GameInvalidationEvent(@NotNull Match match) {
         this.match = match;
     }
 
@@ -22,9 +23,8 @@ public class MatchUpdateEvent extends Event {
         return handlerList;
     }
 
-    public @NotNull String getMatch() {
+    public @NotNull Match getMatch() {
         return this.match;
     }
-
 
 }

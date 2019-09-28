@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.event.GameInvalidationEvent;
 import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -16,10 +17,12 @@ import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
+import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -44,6 +47,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Inject private MapFileManager mapFileManager;
     @Inject private ObjectMapper mapper;
     @Inject private TranslatableField translatableField;
+    @Inject private ServerManager serverManager;
     @Inject private CloudManager cloudManager;
     @Inject private CommonsBukkit instance;
 
@@ -107,8 +111,19 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void initializeMatch(@NotNull Match match) {
-        this.actualMatches.add(match);
+    public void initializeMatch(@NotNull Set<Team> teams, @NotNull String map) throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
+        Match createdMatch = this.matchProvider.createMatch(
+                map,
+                teams,
+                this.gamemode.getId(),
+                this.subGamemode.getId()
+        );
+        this.actualMatches.add(createdMatch);
+        this.mapFileManager.loadMatchWorld(createdMatch);
+        this.instance.getServerRecord().addMatch(createdMatch.getId());
+        this.serverManager.updateServer(
+                this.instance.getServerRecord()
+        );
     }
 
     @Override
@@ -320,6 +335,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         CountdownTimer timer = new CountdownTimer(
                 this.instance,
                 120,
+                () -> Bukkit.getScheduler().runTask(this.instance, () -> Bukkit.getPluginManager().callEvent(new GameInvalidationEvent(match))),
                 (time) -> {
                     if (time.isImportantSecond()) {
                         this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {

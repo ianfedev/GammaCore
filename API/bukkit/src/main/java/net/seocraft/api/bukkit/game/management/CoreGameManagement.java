@@ -4,6 +4,7 @@ import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -37,7 +38,7 @@ public interface CoreGameManagement {
 
     void removeSpectatingPlayer(@NotNull Player player);
 
-    void initializeMatch(@NotNull Match match);
+    void initializeMatch(@NotNull Set<Team> teams, @NotNull String map) throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError;
 
     void finishMatch(@NotNull Match match);
 

@@ -68,7 +68,6 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private PlayerSpectatorListener playerSpectatorListener;
 
     @Inject private GamePairingListener gamePairingListener;
-    @Inject private MatchUpdateListener matchUpdateListener;
     @Inject private GameFinishedListener gameFinishedListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
     @Inject private UserDisconnectListener userDisconnectListener;
@@ -137,7 +136,6 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(matchCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
-        getServer().getPluginManager().registerEvents(matchUpdateListener, this);
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userAccessResponse, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
