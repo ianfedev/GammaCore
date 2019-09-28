@@ -210,6 +210,8 @@ public class MatchCommand implements CommandClass {
 
                             if (playerMatch != null) {
 
+                                System.out.println(playerMatch.getStatus());
+
                                 if (playerMatch.getStatus() != MatchStatus.INGAME) {
                                     ChatAlertLibrary.errorChatAlert(
                                             player,

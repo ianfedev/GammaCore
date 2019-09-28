@@ -131,7 +131,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
         Match updatedMatch = this.matchProvider.updateMatch(match);
         this.actualMatches.remove(updatedMatch);
+        System.out.println(actualMatches.size());
         this.actualMatches.add(updatedMatch);
+        actualMatches.forEach((m) -> {
+            System.out.println(m.getStatus());
+        });
     }
 
     @Override
