@@ -150,24 +150,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
-
-        Multimap<String, User> matchAssignation = this.matchAssignation;
-        Multimap<String, User> spectatorAssignation = this.spectatorAssignation;
-
-        if (!this.matchAssignation.isEmpty()) {
-            matchAssignation.entries().forEach((entry) -> {
-                if (entry.getValue().getUsername().equalsIgnoreCase(player.getUsername())) {
-                    this.matchAssignation.remove(entry.getKey(), entry.getValue());
-                }
-            });
-        }
-        if (!this.spectatorAssignation.isEmpty()){
-            spectatorAssignation.entries().forEach((entry) -> {
-                if (entry.getValue().getUsername().equalsIgnoreCase(player.getUsername())) {
-                    this.spectatorAssignation.remove(entry.getKey(), entry.getValue());
-                }
-            });
-        }
+        this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getUsername().equalsIgnoreCase(player.getUsername()));
+        this.spectatorAssignation.entries().removeIf((entry) -> entry.getValue().getUsername().equalsIgnoreCase(player.getUsername()));
     }
 
     @Override
@@ -322,7 +306,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.getMatchUsers(match.getId()).forEach(user -> {
             Player player = Bukkit.getPlayer(user.getUsername());
             if (player != null) {
-                Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false, false));
+                Bukkit.getScheduler().runTask(this.instance, () -> Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false, false)));
                 ChatAlertLibrary.infoAlert(
                         player,
                         this.translatableField.getUnspacedField(
