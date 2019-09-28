@@ -37,7 +37,7 @@ public class CraftGameStartManager implements GameStartManager {
     @Override
     public void startMatchCountdown(@NotNull Match match) {
 
-        if (!this.client.existsInHash(getScheduledString(), match.getId())) {
+        if (!this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
 
             Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
             involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
@@ -65,7 +65,7 @@ public class CraftGameStartManager implements GameStartManager {
         Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
         int matchUsers =  involvedUsers.size();
         involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
-        if (this.client.existsInHash(getScheduledString(), match.getId())) {
+        if (this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
             Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
             this.client.deleteHash(getScheduledString(), match.getId());
         }
@@ -114,7 +114,7 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match) {
-        if (this.client.existsInHash(getScheduledString(), match.getId())) {
+        if (this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
             Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
             involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
             Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
@@ -132,7 +132,7 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void cancelMatchCountdown(@NotNull Match match, @NotNull User user, boolean silent) {
-        if (this.client.existsInHash(getScheduledString(), match.getId())) {
+        if (this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
             Bukkit.getScheduler().cancelTask(Integer.parseInt(Objects.requireNonNull(this.client.getFromHash(getScheduledString(), match.getId()))));
             this.client.deleteHash(getScheduledString(), match.getId());
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
