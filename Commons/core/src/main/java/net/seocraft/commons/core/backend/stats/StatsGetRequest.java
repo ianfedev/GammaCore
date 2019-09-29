@@ -1,17 +1,16 @@
-package net.seocraft.commons.core.backend.server;
+package net.seocraft.commons.core.backend.stats;
 
-import net.seocraft.commons.core.backend.http.HttpRequest;
-import net.seocraft.commons.core.backend.http.HttpType;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import org.jetbrains.annotations.NotNull;
+import net.seocraft.commons.core.backend.http.HttpRequest;
+import net.seocraft.commons.core.backend.http.HttpType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerGetRequest extends HttpRequest {
+public class StatsGetRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
     private String id;
@@ -26,10 +25,10 @@ public class ServerGetRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "server/get/" + this.id;
+        return "stats/get/" + this.id;
     }
 
-    public String executeRequest(@NotNull String id, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public String executeRequest(String id, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.id = id;
         this.headers.put("authorization", token);
         return getResponse();

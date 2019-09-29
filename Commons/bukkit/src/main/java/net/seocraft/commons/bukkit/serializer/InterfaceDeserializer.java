@@ -17,6 +17,8 @@ import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.bukkit.game.match.partial.TeamMember;
 import net.seocraft.api.bukkit.game.party.Party;
 import net.seocraft.api.bukkit.punishment.Punishment;
+import net.seocraft.api.bukkit.stats.Stats;
+import net.seocraft.api.bukkit.stats.skywars.SkyWarsStats;
 import net.seocraft.api.core.friend.Friendship;
 import net.seocraft.commons.bukkit.friend.UserFriendship;
 import net.seocraft.commons.bukkit.game.gamemode.CoreGamemode;
@@ -32,6 +34,8 @@ import net.seocraft.commons.bukkit.game.match.partial.GameTeam;
 import net.seocraft.commons.bukkit.game.match.partial.GameTeamMember;
 import net.seocraft.commons.bukkit.game.party.GameParty;
 import net.seocraft.commons.bukkit.punishment.UserPunishment;
+import net.seocraft.commons.bukkit.stats.GameStats;
+import net.seocraft.commons.bukkit.stats.skywars.GameSkyWarsStats;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class InterfaceDeserializer {
@@ -52,6 +56,8 @@ public class InterfaceDeserializer {
                 .addMapping(FinderResult.class, GameResult.class)
                 .addMapping(Match.class, GameMatch.class)
                 .addMapping(Party.class, GameParty.class)
+                .addMapping(Stats.class, GameStats.class)
+                .addMapping(SkyWarsStats.class, GameSkyWarsStats.class)
                 .addMapping(Punishment.class, UserPunishment.class);
         module.setAbstractTypes(resolver);
         return module;
