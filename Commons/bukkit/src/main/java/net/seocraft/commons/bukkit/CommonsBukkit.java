@@ -190,6 +190,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.expose(FriendshipProvider.class);
         binder.expose(PunishmentProvider.class);
         binder.expose(WhisperManager.class);
+        binder.expose(StatsProvider.class);
     }
 
     private void loadConfig() {

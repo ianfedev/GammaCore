@@ -79,7 +79,6 @@ public class TeleportCommand implements CommandClass {
     @Command(names = {"test"})
     public boolean testCommand(CommandSender sender) {
         try {
-
             Stats playerStats = this.statsProvider.getPlayerStats(this.userStorageProvider.findUserByIdSync("5d8e8bf11af627456703dd93"));
             playerStats.getSkyWarsStats().addCoins(15);
             this.statsProvider.updatePlayerStats(playerStats);
