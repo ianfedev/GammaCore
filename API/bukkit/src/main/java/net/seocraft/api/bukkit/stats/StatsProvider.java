@@ -1,6 +1,5 @@
 package net.seocraft.api.bukkit.stats;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;

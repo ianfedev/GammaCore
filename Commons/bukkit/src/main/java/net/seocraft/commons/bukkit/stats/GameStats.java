@@ -13,7 +13,8 @@ public class GameStats implements Stats {
     @NotNull private SkyWarsStats skyWarsStats;
 
     @ConstructorProperties({
-            "owner",
+            "_id",
+            "user",
             "skyWars"
     })
     public GameStats(@NotNull String id, @NotNull String owner, @NotNull SkyWarsStats skyWarsStats) {
