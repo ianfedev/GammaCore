@@ -1,19 +1,36 @@
 package net.seocraft.lobby.command;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
+import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.game.management.FinderResult;
+import net.seocraft.api.bukkit.game.management.MatchFinder;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.redis.RedisClient;
+import net.seocraft.api.core.session.GameSessionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+
 public class TeleportCommand implements CommandClass {
 
     @Inject private TeleportManager teleportManager;
+    @Inject private MatchFinder matchFinder;
+    @Inject private GameSessionManager gameSessionManager;
+    @Inject private CloudManager cloudManager;
+    @Inject private ObjectMapper mapper;
+    @Inject private RedisClient client;
 
     @Command(names = {"tp", "teleport", "tele"}, usage = "/<command> <target> [-s]", permission = "commons.staff.lobby.tp")
     public boolean teleportCommand(CommandSender commandSender, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
@@ -55,6 +72,26 @@ public class TeleportCommand implements CommandClass {
             }
         }
         return true;
+    }
+
+    @Command(names = {"test"})
+    public boolean testCommand(CommandSender sender) {
+        try {
+            FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "skywars_normal", false);
+            testSpectator(sender, result);
+        } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException unauthorized) {
+            unauthorized.printStackTrace();
+        }
+        return true;
+    }
+
+    private void testSpectator(CommandSender sender, FinderResult result) throws IOException {
+        String finderResult = this.mapper.writeValueAsString(result);
+        this.client.setString(
+                "pairing:" + this.gameSessionManager.getCachedSession(sender.getName()).getPlayerId(),
+                finderResult
+        );
+        this.cloudManager.sendPlayerToServer((Player) sender, result.getServer().getSlug());
     }
 
 }
