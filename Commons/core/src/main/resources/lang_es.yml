@@ -63,6 +63,11 @@ commons_punish_expires: Expira en
 # General translations
 commons_plugin_developer: Nuestros plugins han sido creados por nuestro equipo de desarrolladores, conoce más en
 commons_commands_disabled: No puedes utilizar comandos en este momento
+commons_verify_error: "¡Debes ingresar un correo electrónico válido! (%%pattern%%)"
+commons_verify_already: "¡Ya se ha verificado tu correo anteriormente!"
+commons_verify_sent: "¡Se ha enviado un correo electrónico a %%mail%%!"
+commons_verify_already_sent: "¡Ya se te ha enviado un correo electrónico! Intentalo de nuevo en 5 minutos..."
+commons_verify_error_request: "¡Ha ocurrido un error al intentar verificar tu correo electrónico!"
 
 # Message translations
 commons_message_from: De
