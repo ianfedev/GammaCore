@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
+import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
@@ -22,7 +23,7 @@ import org.bukkit.entity.Player;
 
 import java.io.IOException;
 
-public class VerificationCommand {
+public class VerificationCommand implements CommandClass {
 
     @Inject private GameSessionManager gameSessionManager;
     @Inject private UserStorageProvider userStorageProvider;
