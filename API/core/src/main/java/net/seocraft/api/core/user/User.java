@@ -9,7 +9,6 @@ import net.seocraft.api.core.user.partial.Disguise;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Date;
 import java.util.List;
 
 public interface User extends Model {

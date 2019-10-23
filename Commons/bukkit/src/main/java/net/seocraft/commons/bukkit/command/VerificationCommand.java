@@ -1,5 +1,8 @@
 package net.seocraft.commons.bukkit.command;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
@@ -30,6 +33,7 @@ public class VerificationCommand implements CommandClass {
     @Inject private TranslatableField translatableField;
     @Inject private UserMailVerification userMailVerification;
     @Inject private ServerTokenQuery serverTokenQuery;
+    @Inject private ObjectMapper mapper;
 
     @Command(names = {"verify", "verificar", "link"}, usage = "/<command> <mail>")
     public boolean mainCommand(CommandSender commandSender, String mail) {
@@ -58,8 +62,14 @@ public class VerificationCommand implements CommandClass {
 
                             if (mail.matches(regex)) {
                                 try {
-                                    this.userMailVerification.executeRequest(user.getId(), this.serverTokenQuery.getToken());
+                                    ObjectNode node = mapper.createObjectNode();
+                                    node.put("username", user.getUsername());
+                                    node.put("email", mail);
 
+                                    this.userMailVerification.executeRequest(
+                                            this.mapper.writeValueAsString(node),
+                                            this.serverTokenQuery.getToken()
+                                    );
                                     ChatAlertLibrary.infoAlert(
                                             player,
                                             this.translatableField.getUnspacedField(
@@ -68,7 +78,7 @@ public class VerificationCommand implements CommandClass {
                                             ).replace("%%mail%%", ChatColor.YELLOW + mail + ChatColor.AQUA)
                                     );
 
-                                } catch (Unauthorized | InternalServerError | NotFound unauthorized) {
+                                } catch (Unauthorized | InternalServerError | JsonProcessingException | NotFound unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(
                                             player,
                                             this.translatableField.getUnspacedField(

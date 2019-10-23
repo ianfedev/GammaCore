@@ -13,7 +13,7 @@ import java.util.Map;
 public class UserMailVerification extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
-    private String id;
+    private String body;
 
     @Override
     public Map<String, String> getHeaders() {
@@ -21,15 +21,20 @@ public class UserMailVerification extends HttpRequest {
     }
 
     public HttpType getType() {
-        return HttpType.GET;
+        return HttpType.POST;
     }
 
     public String getURL() {
-        return "user/email-verification/" + id;
+        return "user/email-register";
     }
 
-    public String executeRequest(String id, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.id = id;
+    @Override
+    public String getJSONParams() {
+        return this.body;
+    }
+
+    public String executeRequest(String request, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.body = request;
         this.headers.put("authorization", token);
         return getResponse();
     }
