@@ -72,4 +72,10 @@ public interface CoreGameManagement {
 
     void invalidateMatch(@NotNull Match match) throws Unauthorized, IOException, BadRequest, NotFound, InternalServerError;
 
+    void updateMatchRemaingTime(@NotNull String match, @NotNull Integer time);
+
+    int getRemainingTime(@NotNull String match);
+
+    void removeMatchTime(@NotNull String match);
+
 }

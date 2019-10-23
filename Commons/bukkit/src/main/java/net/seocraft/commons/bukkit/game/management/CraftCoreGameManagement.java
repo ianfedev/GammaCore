@@ -59,6 +59,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     private Set<Match> actualMatches;
     private Multimap<String, User> matchAssignation;
     private Multimap<String, User> spectatorAssignation;
+    private Map<String, Integer> remainingTime;
 
     @Override
     public void initializeGameCore(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) {
@@ -69,6 +70,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.actualMatches = new HashSet<>();
         this.matchAssignation = ArrayListMultimap.create();
         this.spectatorAssignation = ArrayListMultimap.create();
+        this.remainingTime = new HashMap<>();
     }
 
     @Override
@@ -134,6 +136,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             this.serverManager.updateServer(
                     this.instance.getServerRecord()
             );
+            this.remainingTime.put(createdMatch.getId(), -1);
         } else {
             throw new InternalServerError("No playable maps could be found");
         }
@@ -386,5 +389,20 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         );
 
         timer.scheduleTimer();
+    }
+
+    @Override
+    public void updateMatchRemaingTime(@NotNull String match, @NotNull Integer time) {
+        this.remainingTime.put(match, time);
+    }
+
+    @Override
+    public int getRemainingTime(@NotNull String match) {
+        return this.remainingTime.get(match);
+    }
+
+    @Override
+    public void removeMatchTime(@NotNull String match) {
+        this.remainingTime.remove(match);
     }
 }

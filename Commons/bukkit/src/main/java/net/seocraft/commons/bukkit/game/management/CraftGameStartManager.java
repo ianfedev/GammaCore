@@ -52,6 +52,7 @@ public class CraftGameStartManager implements GameStartManager {
                     this.instance,
                     30,
                     (time) -> {
+                        this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
                         if (time.isImportantSecond()) involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> startMatch(match)
@@ -95,6 +96,7 @@ public class CraftGameStartManager implements GameStartManager {
                         }
                     }),
                     (time) -> {
+                        this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
                         if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> startMatch(match)
@@ -122,6 +124,7 @@ public class CraftGameStartManager implements GameStartManager {
             int taskId = Integer.parseInt(temporalCountdown.get(match.getId()));
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
+            this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
             involvedUsers.forEach(user -> {
                 Player player = Bukkit.getPlayer(user.getUsername());
                 if (player != null) {
@@ -144,6 +147,7 @@ public class CraftGameStartManager implements GameStartManager {
 
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
+            this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
                 Player player = Bukkit.getPlayer(matchUser.getUsername());
                 if (player != null) {
