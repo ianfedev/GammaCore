@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.event.GamePlayerJoinEvent;
 import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
@@ -137,6 +138,7 @@ public class UserAccessResponse implements Listener {
                             );
                             this.gameLoginManager.matchPlayerJoin(result, user, player);
                             this.redisClient.deleteString(pairing);
+                            Bukkit.getPluginManager().callEvent(new GamePlayerJoinEvent(user));
                             event.setJoinMessage("");
                         } else {
                             player.kickPlayer(ChatColor.RED + "You were not paired to this server, please try again.");

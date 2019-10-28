@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.game.management;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
+import net.seocraft.api.bukkit.event.GamePlayerLeaveEvent;
 import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
 import net.seocraft.api.bukkit.game.management.*;
 import net.seocraft.api.bukkit.game.match.Match;
@@ -152,6 +153,7 @@ public class CraftGameSessionManager implements GameLoginManager {
 
         this.coreGameManagement.removeWaitingPlayer(player);
         this.coreGameManagement.removeMatchPlayer(match.getId(), user);
+        Bukkit.getPluginManager().callEvent(new GamePlayerLeaveEvent(user));
 
     }
 }

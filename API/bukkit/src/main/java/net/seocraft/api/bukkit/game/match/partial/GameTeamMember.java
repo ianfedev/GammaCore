@@ -1,6 +1,5 @@
-package net.seocraft.commons.bukkit.game.match.partial;
+package net.seocraft.api.bukkit.game.match.partial;
 
-import net.seocraft.api.bukkit.game.match.partial.TeamMember;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;

@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.game.match.partial;
+package net.seocraft.api.bukkit.game.match.partial;
 
 import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.bukkit.game.match.partial.TeamMember;
