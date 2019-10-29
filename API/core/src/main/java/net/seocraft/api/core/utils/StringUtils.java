@@ -1,4 +1,4 @@
-package net.seocraft.commons.core.utils;
+package net.seocraft.api.core.utils;
 
 public class StringUtils {
     public static String capitalizeString(String string) {

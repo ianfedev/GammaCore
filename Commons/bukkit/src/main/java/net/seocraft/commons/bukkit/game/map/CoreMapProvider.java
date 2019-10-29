@@ -23,7 +23,7 @@ import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.game.map.partial.MapContribution;
 import net.seocraft.commons.core.backend.map.MapLoadRequest;
 import net.seocraft.commons.core.backend.map.MapVoteRequest;
-import net.seocraft.commons.core.utils.TimeUtils;
+import net.seocraft.api.core.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 

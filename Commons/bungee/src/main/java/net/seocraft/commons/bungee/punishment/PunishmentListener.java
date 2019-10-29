@@ -7,7 +7,7 @@ import net.seocraft.api.core.redis.messager.ChannelListener;
 import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.commons.bungee.CommonsBungee;
 import net.seocraft.commons.core.translation.TranslatableField;
-import net.seocraft.commons.core.utils.TimeUtils;
+import net.seocraft.api.core.utils.TimeUtils;
 
 public class PunishmentListener implements ChannelListener<UserExpulsion> {
 

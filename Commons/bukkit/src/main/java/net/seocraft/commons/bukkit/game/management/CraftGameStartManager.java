@@ -17,7 +17,7 @@ import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.commons.bukkit.util.CountdownTimer;
+import net.seocraft.api.bukkit.utils.CountdownTimer;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

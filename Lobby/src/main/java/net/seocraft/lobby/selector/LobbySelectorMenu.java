@@ -13,7 +13,7 @@ import net.seocraft.commons.bukkit.util.HeadLibrary;
 import net.seocraft.commons.bukkit.util.InventoryUtils;
 import net.seocraft.commons.core.model.GammaPagination;
 import net.seocraft.commons.core.translation.TranslatableField;
-import net.seocraft.commons.core.utils.StringUtils;
+import net.seocraft.api.core.utils.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
