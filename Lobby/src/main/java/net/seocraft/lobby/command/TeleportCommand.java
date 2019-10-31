@@ -77,7 +77,7 @@ public class TeleportCommand implements CommandClass {
     @Command(names = {"test"})
     public boolean testCommand(CommandSender sender) {
         try {
-            FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "skywars_normal", false);
+            FinderResult result = this.matchFinder.findAvailableMatch("5db64666df034f2e9a3b4800", "5db645eea534664c62702cbe", "tnt_run", false);
             testSpectator(sender, result);
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException unauthorized) {
             unauthorized.printStackTrace();
