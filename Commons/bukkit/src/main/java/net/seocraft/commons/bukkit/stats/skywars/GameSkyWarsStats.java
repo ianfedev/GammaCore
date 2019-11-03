@@ -12,18 +12,27 @@ public class GameSkyWarsStats implements SkyWarsStats {
     private int deaths;
     private int coins;
     @NotNull private Set<String> kits;
+    @NotNull private Set<String> cages;
+    @NotNull private String currentKit;
+    @NotNull private String currentCage;
 
     @ConstructorProperties({
             "kills",
             "deaths",
             "coins",
-            "kits"
+            "kits",
+            "cages",
+            "currentKit",
+            "currentCage"
     })
-    public GameSkyWarsStats(int kills, int deaths, int coins, @NotNull Set<String> kits) {
+    public GameSkyWarsStats(int kills, int deaths, int coins, @NotNull Set<String> kits, @NotNull Set<String> cages, @NotNull String currentKit, @NotNull String currentCage) {
         this.kills = kills;
         this.deaths = deaths;
         this.coins = coins;
         this.kits = kits;
+        this.cages = cages;
+        this.currentKit = currentKit;
+        this.currentCage = currentCage;
     }
 
     @Override
@@ -64,6 +73,26 @@ public class GameSkyWarsStats implements SkyWarsStats {
     @Override
     public @NotNull Set<String> getKits() {
         return this.kits;
+    }
+
+    @Override
+    public @NotNull Set<String> getCages() {
+        return this.cages;
+    }
+
+    @Override
+    public @NotNull String getCurrentCage() {
+        return this.currentCage;
+    }
+
+    @Override
+    public @NotNull String getCurrentKit() {
+        return this.currentKit;
+    }
+
+    @Override
+    public void addCage(@NotNull String cage) {
+        this.cages.add(cage);
     }
 
     @Override

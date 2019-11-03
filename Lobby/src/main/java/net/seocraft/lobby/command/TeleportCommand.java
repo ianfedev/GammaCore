@@ -74,11 +74,18 @@ public class TeleportCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"test"})
-    public boolean testCommand(CommandSender sender) {
+    @Command(names = {"test"}, usage = "/<command> <game>")
+    public boolean testCommand(CommandSender sender, String name) {
         try {
-            FinderResult result = this.matchFinder.findAvailableMatch("5db64666df034f2e9a3b4800", "5db645eea534664c62702cbe", "tnt_run", false);
-            testSpectator(sender, result);
+            if (name.equalsIgnoreCase("skywars")) {
+                FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "tnt_run", false);
+                testSpectator(sender, result);
+            }
+
+            if (name.equalsIgnoreCase("tntrun")) {
+                FinderResult result = this.matchFinder.findAvailableMatch("5db64666df034f2e9a3b4800", "5db645eea534664c62702cbe", "tnt_run", false);
+                testSpectator(sender, result);
+            }
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException unauthorized) {
             unauthorized.printStackTrace();
         }

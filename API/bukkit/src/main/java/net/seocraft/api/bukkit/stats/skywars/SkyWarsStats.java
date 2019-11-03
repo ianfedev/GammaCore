@@ -25,8 +25,17 @@ public interface SkyWarsStats {
     @JsonIgnore
     void removeCoins(int coins);
 
-    Set<String> getKits();
+    @NotNull Set<String> getKits();
+
+    @NotNull String getCurrentKit();
 
     @JsonIgnore
     void addKit(@NotNull String kit);
+
+    @NotNull Set<String> getCages();
+
+    @NotNull String getCurrentCage();
+
+    @JsonIgnore
+    void addCage(@NotNull String cage);
 }
