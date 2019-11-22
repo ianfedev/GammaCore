@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Flag;
+import net.md_5.bungee.api.ChatColor;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
@@ -21,12 +22,14 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.util.ChatGlyphs;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 
 public class MatchCommand implements CommandClass {
@@ -130,6 +133,61 @@ public class MatchCommand implements CommandClass {
             } catch (IOException e) {
                 ChatAlertLibrary.errorChatAlert(player);
             }
+        }
+        return true;
+    }
+
+    @Command(names = {"match debug"}, permission = "commons.staff.match.debug")
+    public boolean debugCommand(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+
+            Player player = (Player) commandSender;
+            player.sendMessage(ChatColor.GOLD + ChatGlyphs.SEPARATOR.getContent());
+
+            player.sendMessage(ChatColor.GREEN + "Gamemode: " + ChatColor.YELLOW + this.coreGameManagement.getGamemode().getName());
+            player.sendMessage(ChatColor.GREEN + "SubGamemode: " + ChatColor.YELLOW + this.coreGameManagement.getSubGamemode().getName());
+
+            StringBuilder waitingPlayers = new StringBuilder();
+            for (Player wp : this.coreGameManagement.getWaitingPlayers()) {
+                waitingPlayers.append(wp.getName()).append(", ");
+            }
+            waitingPlayers.substring(0, waitingPlayers.length() - 2);
+            player.sendMessage(ChatColor.GREEN + "Waiting Players: " + ChatColor.YELLOW + waitingPlayers.toString());
+
+            StringBuilder spectatingPlayers = new StringBuilder();
+            for (Player sp : this.coreGameManagement.getSpectatingPlayers()) {
+                spectatingPlayers.append(sp.getName()).append(", ");
+            }
+            spectatingPlayers.substring(0, spectatingPlayers.length() - 2);
+            player.sendMessage(ChatColor.GREEN + "Spectating Players: " + ChatColor.YELLOW + spectatingPlayers.toString());
+
+            player.sendMessage(ChatColor.GREEN + "Actual matches:");
+            for (Match match : this.coreGameManagement.getActualMatches()) {
+                player.sendMessage(ChatColor.YELLOW + match.getId().substring(0, 5) + " - " + match.getStatus());
+            }
+
+            player.sendMessage(ChatColor.GOLD + ChatGlyphs.SEPARATOR.getContent());
+        }
+        return true;
+    }
+
+    @Command(names = {"match assignation"}, permission = "commons.staff.match.debug")
+    public boolean assignationCommand(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+
+            Player player = (Player) commandSender;
+            player.sendMessage(ChatColor.GOLD + ChatGlyphs.SEPARATOR.getContent());
+            player.sendMessage(ChatColor.GREEN + "Match assignation: ");
+            for (Map.Entry<String, User> entry : this.coreGameManagement.getMatchAssignations().entries()) {
+                player.sendMessage(ChatColor.YELLOW + entry.getValue().getUsername() + " - " + entry.getKey());
+            }
+
+            player.sendMessage(ChatColor.GOLD + ChatGlyphs.SEPARATOR.getContent());
+            player.sendMessage(ChatColor.GREEN + "Spectator assignation: ");
+            for (Map.Entry<String, User> entry : this.coreGameManagement.getSpectatorAssignations().entries()) {
+                player.sendMessage(ChatColor.YELLOW + entry.getValue().getUsername() + " - " + entry.getKey());
+            }
+            player.sendMessage(ChatColor.GOLD + ChatGlyphs.SEPARATOR.getContent());
         }
         return true;
     }

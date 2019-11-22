@@ -53,7 +53,6 @@ public class GameMatchProvider implements MatchProvider {
                     .ofNullable(this.gamemodeProvider.getGamemodeSync(gamemode))
                     .orElseThrow(() -> new InternalServerError("Error finding author record."));
         } catch (Unauthorized | BadRequest | NotFound | IOException | InternalServerError unauthorized) {
-            unauthorized.printStackTrace();
             throw new InternalServerError("Error finding author record.");
         }
 
@@ -71,7 +70,6 @@ public class GameMatchProvider implements MatchProvider {
                     GameMap.class
             );
         } catch (Unauthorized | BadRequest | NotFound | IOException ex) {
-            ex.printStackTrace();
             throw new InternalServerError("Map not found");
         }
 

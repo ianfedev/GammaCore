@@ -404,4 +404,14 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void removeMatchTime(@NotNull String match) {
         this.remainingTime.remove(match);
     }
+
+    @Override
+    public @NotNull Multimap<String, User> getMatchAssignations() {
+        return this.matchAssignation;
+    }
+
+    @Override
+    public @NotNull Multimap<String, User> getSpectatorAssignations() {
+        return this.spectatorAssignation;
+    }
 }

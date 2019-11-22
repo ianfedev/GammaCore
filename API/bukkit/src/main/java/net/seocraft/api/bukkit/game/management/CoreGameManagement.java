@@ -1,5 +1,6 @@
 package net.seocraft.api.bukkit.game.management;
 
+import com.google.common.collect.Multimap;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.map.GameMap;
@@ -77,5 +78,9 @@ public interface CoreGameManagement {
     int getRemainingTime(@NotNull String match);
 
     void removeMatchTime(@NotNull String match);
+
+    @NotNull Multimap<String, User> getMatchAssignations();
+
+    @NotNull Multimap<String, User> getSpectatorAssignations();
 
 }
