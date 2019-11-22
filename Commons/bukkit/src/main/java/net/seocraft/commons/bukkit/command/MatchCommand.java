@@ -151,14 +151,14 @@ public class MatchCommand implements CommandClass {
             for (Player wp : this.coreGameManagement.getWaitingPlayers()) {
                 waitingPlayers.append(wp.getName()).append(", ");
             }
-            waitingPlayers.substring(0, waitingPlayers.length() - 2);
+            if (waitingPlayers.toString().length() >= 2) waitingPlayers.substring(0, waitingPlayers.length() - 2);
             player.sendMessage(ChatColor.GREEN + "Waiting Players: " + ChatColor.YELLOW + waitingPlayers.toString());
 
             StringBuilder spectatingPlayers = new StringBuilder();
             for (Player sp : this.coreGameManagement.getSpectatingPlayers()) {
                 spectatingPlayers.append(sp.getName()).append(", ");
             }
-            spectatingPlayers.substring(0, spectatingPlayers.length() - 2);
+            if (spectatingPlayers.toString().length() >= 2) spectatingPlayers.substring(0, spectatingPlayers.length() - 2);
             player.sendMessage(ChatColor.GREEN + "Spectating Players: " + ChatColor.YELLOW + spectatingPlayers.toString());
 
             player.sendMessage(ChatColor.GREEN + "Actual matches:");
