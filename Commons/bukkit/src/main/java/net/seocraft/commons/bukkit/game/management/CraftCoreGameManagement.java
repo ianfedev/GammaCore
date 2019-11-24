@@ -176,12 +176,13 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
         this.spectatorAssignation.put(match, player);
+        this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getId().equalsIgnoreCase(player.getId()));
     }
 
     @Override
     public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
-        this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getUsername().equalsIgnoreCase(player.getUsername()));
-        this.spectatorAssignation.entries().removeIf((entry) -> entry.getValue().getUsername().equalsIgnoreCase(player.getUsername()));
+        this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getId().equalsIgnoreCase(player.getId()));
+        this.spectatorAssignation.entries().removeIf((entry) -> entry.getValue().getId().equalsIgnoreCase(player.getId()));
     }
 
     @Override
