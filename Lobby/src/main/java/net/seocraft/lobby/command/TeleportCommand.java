@@ -77,7 +77,7 @@ public class TeleportCommand implements CommandClass {
     @Command(names = {"test"}, usage = "/<command> <game>")
     public boolean testCommand(CommandSender sender, String name) {
         try {
-            if (name.equalsIgnoreCase("skywars")) {
+            if (name.equalsIgnoreCase("games")) {
                 FinderResult result = this.matchFinder.findAvailableMatch("5d5a11f35f1de46c232babae", "5d5a12c08f2258859e1ea7c9", "tnt_run", false);
                 testSpectator(sender, result);
             }

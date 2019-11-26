@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.stats.skywars;
+package net.seocraft.api.bukkit.stats.games;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jetbrains.annotations.NotNull;

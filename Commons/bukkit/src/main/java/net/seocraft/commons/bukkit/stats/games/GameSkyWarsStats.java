@@ -1,6 +1,6 @@
-package net.seocraft.commons.bukkit.stats.skywars;
+package net.seocraft.commons.bukkit.stats.games;
 
-import net.seocraft.api.bukkit.stats.skywars.SkyWarsStats;
+import net.seocraft.api.bukkit.stats.games.SkyWarsStats;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
