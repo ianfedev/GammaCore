@@ -1,5 +1,6 @@
-package net.seocraft.commons.bukkit.util;
+package net.seocraft.api.bukkit.utils;
 
+import net.seocraft.api.bukkit.utils.DefaultFontInfo;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

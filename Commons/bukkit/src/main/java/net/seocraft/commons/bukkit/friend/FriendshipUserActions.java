@@ -9,7 +9,7 @@ import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.friend.FriendshipAction;
 import net.seocraft.api.core.user.User;
-import net.seocraft.commons.bukkit.util.ChatGlyphs;
+import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

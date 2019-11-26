@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.util;
+package net.seocraft.api.bukkit.utils;
 
 public enum ChatGlyphs {
     SEPARATOR("-----------------------------------------------------");
