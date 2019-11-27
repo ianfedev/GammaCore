@@ -18,4 +18,6 @@ public interface MapFileManager {
 
     @NotNull World loadMatchWorld(@NotNull Match match) throws IOException;
 
+    void unloadMatchWorld(@NotNull Match match) throws IOException;
+
 }

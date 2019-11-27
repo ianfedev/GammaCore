@@ -143,9 +143,25 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void finishMatch(@NotNull Match match) {
+        Set<Player> players = getMatchPlayers(match.getId());
+        players.addAll(getMatchSpectators(match.getId()));
+
         this.matchAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
         this.spectatorAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
-        this.actualMatches.remove(match);
+        this.actualMatches.removeIf((matchIterator) -> matchIterator.getId().equalsIgnoreCase(match.getId()));
+
+        this.instance.getServer().getScheduler().scheduleSyncDelayedTask(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player,this.gamemode.getLobbyGroup())), 60L);
+
+        int deleted = 0;
+        while (deleted <= 3) {
+            try {
+                this.mapFileManager.unloadMatchWorld(match);
+                deleted = 3;
+            } catch (IOException ignore) {
+                deleted++;
+            }
+        }
+
     }
 
     @Override
