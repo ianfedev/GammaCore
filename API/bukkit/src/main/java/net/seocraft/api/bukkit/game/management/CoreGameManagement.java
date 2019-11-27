@@ -43,7 +43,7 @@ public interface CoreGameManagement {
 
     void finishMatch(@NotNull Match match);
 
-    boolean updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
+    void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
 
     void addMatchPlayer(@NotNull String match, @NotNull User player);
 
