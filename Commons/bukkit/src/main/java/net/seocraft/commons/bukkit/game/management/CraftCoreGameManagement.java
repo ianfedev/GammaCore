@@ -143,16 +143,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void finishMatch(@NotNull Match match) {
-
-        Multimap<String, User> matchAssignation = this.matchAssignation;
-        Multimap<String, User> spectatorAssignation = this.spectatorAssignation;
-
-        matchAssignation.entries().forEach((entry) -> {
-            if (entry.getKey().equalsIgnoreCase(match.getId())) this.matchAssignation.remove(entry.getKey(), entry.getValue());
-        });
-        spectatorAssignation.entries().forEach((entry) -> {
-            if (entry.getKey().equalsIgnoreCase(match.getId())) this.matchAssignation.remove(entry.getKey(), entry.getValue());
-        });
+        this.matchAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
+        this.spectatorAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
         this.actualMatches.remove(match);
     }
 
