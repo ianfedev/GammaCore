@@ -149,7 +149,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
-    public void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
+    public boolean updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
         Match updatedMatch = this.matchProvider.updateMatch(match);
         this.actualMatches = this.actualMatches.stream().map(m -> {
             if (m.getId().equalsIgnoreCase(match.getId())) {
@@ -158,6 +158,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                 return m;
             }
         }).collect(Collectors.toSet());
+        return true;
     }
 
     @Override
