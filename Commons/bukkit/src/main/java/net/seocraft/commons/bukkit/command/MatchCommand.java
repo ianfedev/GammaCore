@@ -81,7 +81,6 @@ public class MatchCommand implements CommandClass {
                             User user = userAsyncResponse.getResponse();
 
                             Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
-                            System.out.println("Match which player obtains: " + playerMatch.getId());
 
                             if (alertNotGameServer(player, user)) return;
 
