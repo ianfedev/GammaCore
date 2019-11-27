@@ -11,7 +11,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.commons.bukkit.util.ChatGlyphs;
+import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.commons.core.translation.TranslatableField;
 import net.seocraft.lobby.hotbar.HotbarItemCollection;
 import net.seocraft.api.bukkit.lobby.TeleportManager;

@@ -28,7 +28,7 @@ import net.seocraft.api.core.friend.FriendshipAction;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.commons.bukkit.friend.FriendshipUserActions;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.commons.bukkit.util.ChatGlyphs;
+import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.commons.core.model.GammaPagination;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.OfflinePlayer;
