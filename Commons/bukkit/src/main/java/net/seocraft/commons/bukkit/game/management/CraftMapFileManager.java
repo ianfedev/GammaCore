@@ -12,12 +12,12 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -155,7 +155,14 @@ public class CraftMapFileManager implements MapFileManager {
         }
 
         WorldCreator worldCreator = new WorldCreator("match_" + match.getId());
-        return worldCreator.createWorld();
+        World world = worldCreator.createWorld();
+        world.getEntities().forEach((entity) -> {
+            if ((entity instanceof LivingEntity) && !(entity instanceof Player)) entity.remove();
+        });
+        world.setTime(1000);
+        world.setGameRuleValue("doMobSpawning", "false");
+        world.setGameRuleValue("doDaylightCycle", "false");
+        return world;
     }
 
     @Override
