@@ -150,7 +150,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.spectatorAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
         this.actualMatches.removeIf((matchIterator) -> matchIterator.getId().equalsIgnoreCase(match.getId()));
 
-        this.instance.getServer().getScheduler().scheduleSyncDelayedTask(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player,this.gamemode.getLobbyGroup())), 60L);
+        this.instance.getServer().getScheduler().runTaskLaterAsynchronously(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player,this.gamemode.getLobbyGroup())), 60L);
 
         int deleted = 0;
         while (deleted <= 3) {
