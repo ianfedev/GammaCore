@@ -151,17 +151,6 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.actualMatches.removeIf((matchIterator) -> matchIterator.getId().equalsIgnoreCase(match.getId()));
 
         this.instance.getServer().getScheduler().runTaskLaterAsynchronously(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player,this.gamemode.getLobbyGroup())), 60L);
-
-        int deleted = 0;
-        while (deleted <= 3) {
-            try {
-                this.mapFileManager.unloadMatchWorld(match);
-                deleted = 3;
-            } catch (IOException ignore) {
-                deleted++;
-            }
-        }
-
     }
 
     @Override

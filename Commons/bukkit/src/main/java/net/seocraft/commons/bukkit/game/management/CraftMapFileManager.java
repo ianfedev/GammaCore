@@ -165,14 +165,4 @@ public class CraftMapFileManager implements MapFileManager {
         return world;
     }
 
-    @Override
-    public void unloadMatchWorld(@NotNull Match match) throws IOException {
-        World world = Bukkit.getWorld("match_" + match.getId());
-        File worldPath = new File("./match_" + match.getId());
-        if (world != null && worldPath.exists()) {
-            Bukkit.getServer().unloadWorld(world, false);
-            FileUtils.deleteDirectory(worldPath);
-        }
-    }
-
 }
