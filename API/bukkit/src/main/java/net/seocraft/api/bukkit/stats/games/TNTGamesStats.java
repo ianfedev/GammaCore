@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public interface TNTGamesStats {
 
-    int getTNTRunDoubleJump();
+    int getRunDoubleJump();
 
     int getCoins();
 

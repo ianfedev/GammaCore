@@ -2,19 +2,25 @@ package net.seocraft.commons.bukkit.stats.games;
 
 import net.seocraft.api.bukkit.stats.games.TNTGamesStats;
 
+import java.beans.ConstructorProperties;
+
 public class GameTNTGamesStats implements TNTGamesStats {
 
-    private int TNTRunDoubleJump;
+    private int runDoubleJump;
     private int coins;
 
-    public GameTNTGamesStats(int TNTRunDoubleJump, int coins) {
-        this.TNTRunDoubleJump = TNTRunDoubleJump;
+    @ConstructorProperties({
+            "runDoubleJump",
+            "coins"
+    })
+    public GameTNTGamesStats(int runDoubleJump, int coins) {
+        this.runDoubleJump = runDoubleJump;
         this.coins = coins;
     }
 
     @Override
-    public int getTNTRunDoubleJump() {
-        return this.TNTRunDoubleJump;
+    public int getRunDoubleJump() {
+        return this.runDoubleJump;
     }
 
     @Override
