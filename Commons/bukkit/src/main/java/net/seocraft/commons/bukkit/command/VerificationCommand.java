@@ -35,7 +35,7 @@ public class VerificationCommand implements CommandClass {
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ObjectMapper mapper;
 
-    @Command(names = {"verify", "verificar", "link"}, usage = "/<command> <mail>")
+    @Command(names = {"verify", "linkaccount", "verificar", "link"}, usage = "/<command> <mail>")
     public boolean mainCommand(CommandSender commandSender, String mail) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
