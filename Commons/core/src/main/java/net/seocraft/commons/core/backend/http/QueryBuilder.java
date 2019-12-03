@@ -20,7 +20,7 @@ public class QueryBuilder {
             URIBuilder uri = new URIBuilder()
                     .setScheme("httpS")
                     .setHost(this.config.getHost())
-                    .setPort(this.config.getPort())
+                    //.setPort(this.config.getPort())
                     .setPath(this.config.getSuffix() + "/" + url);
             for (Map.Entry<String, String> entry: params.entrySet()) {
                 uri.setParameter(entry.getKey(), entry.getValue());
