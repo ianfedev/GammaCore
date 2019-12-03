@@ -18,7 +18,7 @@ public class QueryBuilder {
     URI getURI(String url, Map<String, String> params) {
         try {
             URIBuilder uri = new URIBuilder()
-                    .setScheme("http")
+                    .setScheme("httpS")
                     .setHost(this.config.getHost())
                     .setPort(this.config.getPort())
                     .setPath(this.config.getSuffix() + "/" + url);

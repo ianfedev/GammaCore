@@ -37,6 +37,7 @@ import net.seocraft.commons.bukkit.game.party.GameParty;
 import net.seocraft.commons.bukkit.punishment.UserPunishment;
 import net.seocraft.commons.bukkit.stats.GameStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
+import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class InterfaceDeserializer {
@@ -59,7 +60,7 @@ public class InterfaceDeserializer {
                 .addMapping(Party.class, GameParty.class)
                 .addMapping(Stats.class, GameStats.class)
                 .addMapping(SkyWarsStats.class, GameSkyWarsStats.class)
-                .addMapping(TNTGamesStats.class, TNTGamesStats.class)
+                .addMapping(TNTGamesStats.class, GameTNTGamesStats.class)
                 .addMapping(Punishment.class, UserPunishment.class);
         module.setAbstractTypes(resolver);
         return module;
