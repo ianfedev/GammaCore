@@ -17,7 +17,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.seocraft</groupId>
+            <groupId>org.github.paperspigot</groupId>
             <artifactId>paperspigot</artifactId>
             <scope>provided</scope>
         </dependency>

@@ -123,9 +123,9 @@
             </dependency>
             <!-- Bukkit -->
             <dependency>
-                <groupId>net.seocraft</groupId>
+                <groupId>org.github.paperspigot</groupId>
                 <artifactId>paperspigot</artifactId>
-                <version>1.8.8</version>
+                <version>1.8.8-R0.1-20191203.000214-1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
