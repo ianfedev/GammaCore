@@ -47,6 +47,7 @@ public class UserAccessResponse implements Listener {
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private AuthenticationLoginListener loginListener;
     @Inject private ObjectMapper mapper;
+    @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private UserStorageProvider userStorage;
     @Inject private GameSessionManager gameSessionManager;
     @Inject private ServerManager serverManager;
@@ -139,6 +140,12 @@ public class UserAccessResponse implements Listener {
                             this.gameLoginManager.matchPlayerJoin(result, user, player);
                             this.redisClient.deleteString(pairing);
                             Bukkit.getPluginManager().callEvent(new GamePlayerJoinEvent(user));
+
+                            if (this.gameSessionManager.getCachedSession(user.getUsername()) == null) {
+                                this.gameSessionManager.createGameSession(user,  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
+                                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
+                            }
+
                             event.setJoinMessage("");
                         } else {
                             player.kickPlayer(ChatColor.RED + "You were not paired to this server, please try again.");

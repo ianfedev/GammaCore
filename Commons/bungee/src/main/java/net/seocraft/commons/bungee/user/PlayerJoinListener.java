@@ -29,14 +29,17 @@ public class PlayerJoinListener implements Listener {
                     this.gameSessionManager.createGameSession(userAsyncResponse.getResponse(),  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
                     this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), true);
                 } catch (JsonProcessingException e) {
+                    e.printStackTrace();
                     player.disconnect(
                             new TextComponent(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + e.getClass().getSimpleName())
                     );
                 }
             } else {
-                player.disconnect(
-                        new TextComponent(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + userAsyncResponse.getThrowedException().getClass().getSimpleName())
-                );
+                if (userAsyncResponse.getStatusCode() != 404) {
+                    player.disconnect(
+                            new TextComponent(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + userAsyncResponse.getThrowedException().getClass().getSimpleName())
+                    );
+                }
             }
         });
     }
