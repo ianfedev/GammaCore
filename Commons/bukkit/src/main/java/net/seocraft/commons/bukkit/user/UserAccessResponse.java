@@ -152,6 +152,7 @@ public class UserAccessResponse implements Listener {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
             Bukkit.getLogger().log(Level.SEVERE, "[Commons] Something went wrong when logging player {0} ({1}): {2}",
                     new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
+            error.printStackTrace();
         }
     }
 
