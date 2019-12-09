@@ -78,7 +78,7 @@ public class VerificationCommand implements CommandClass {
                                             ).replace("%%mail%%", ChatColor.YELLOW + mail + ChatColor.AQUA)
                                     );
 
-                                } catch (Unauthorized | InternalServerError | JsonProcessingException | NotFound unauthorized) {
+                                } catch (BadRequest | InternalServerError | JsonProcessingException | NotFound unauthorized) {
                                     ChatAlertLibrary.errorChatAlert(
                                             player,
                                             this.translatableField.getUnspacedField(
@@ -87,7 +87,7 @@ public class VerificationCommand implements CommandClass {
                                             )
                                     );
                                     unauthorized.printStackTrace();
-                                } catch (BadRequest badRequest) {
+                                } catch (Unauthorized badRequest) {
                                     ChatAlertLibrary.errorChatAlert(
                                             player,
                                             this.translatableField.getUnspacedField(
