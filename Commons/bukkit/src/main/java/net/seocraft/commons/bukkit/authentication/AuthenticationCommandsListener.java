@@ -69,8 +69,7 @@ public class AuthenticationCommandsListener implements Listener {
 
             } catch (NoPermissionsException ex) {
                 event.getPlayer().sendMessage(ChatColor.RED + ex.getMessage());
-
-            } catch (CommandUsageException | ArgumentsParseException ex) {
+            } catch (CommandUsageException ex) {
                 String message = ChatColor.RED + ChatColor.translateAlternateColorCodes('&', ex.getMessage());
                 String[] splitMessage = message.split("\n");
 

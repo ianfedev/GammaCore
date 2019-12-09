@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.bcm.parametric.annotation.Flag;
 import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.punishment.Punishment;
@@ -48,7 +49,7 @@ public class PunishmentCommand implements CommandClass {
     @Inject private UserStorageProvider userStorageProvider;
 
     @Command(names = {"ban", "tempban", "suspender", "st", "tb", "tban", "pban", "sp"}, permission = "commons.staff.punish", min = 1, usage = "/<command> <target> [duration] [reason] [-s]")
-    public boolean banCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
+    public boolean banCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -247,7 +248,7 @@ public class PunishmentCommand implements CommandClass {
     }
 
     @Command(names = {"kick", "expulsar"}, permission = "commons.staff.kick", min = 1, usage = "/<command> <target> [reason] [-s]")
-    public boolean kickCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
+    public boolean kickCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -338,7 +339,7 @@ public class PunishmentCommand implements CommandClass {
     }
 
     @Command(names = {"warn", "advertir"}, permission = "commons.staff.warn", min = 1, usage = "/<command> <target> [reason] [-s]")
-    public boolean warnCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Parameter(value = "s", isFlag =  true) boolean silent) {
+    public boolean warnCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;

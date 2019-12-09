@@ -9,6 +9,7 @@ import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
+import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -101,8 +102,8 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, new NoOpPermissionMessageProvider(), getLogger());
-        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), new NoOpPermissionMessageProvider());
+        parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, null, ParameterProviderRegistry.createRegistry(), getLogger());
+        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), null, ParameterProviderRegistry.createRegistry());
         loadConfig();
 
         try {
