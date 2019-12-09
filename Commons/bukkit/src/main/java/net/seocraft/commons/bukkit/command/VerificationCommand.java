@@ -86,6 +86,7 @@ public class VerificationCommand implements CommandClass {
                                                     "commons_verify_error_request"
                                             )
                                     );
+                                    unauthorized.printStackTrace();
                                 } catch (BadRequest badRequest) {
                                     ChatAlertLibrary.errorChatAlert(
                                             player,

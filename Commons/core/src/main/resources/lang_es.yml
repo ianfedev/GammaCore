@@ -138,7 +138,7 @@ commons_lobby_profile: Mi perfil
 commons_lobby_profile_description: "Muy pronto podrás ver tu%n%perfil en el juego"
 commons_lobby_selector: Seleccionar Lobby
 commons_lobby_selector_description: "Elige el lobby en el que quieres estar"
-commons_lobby_selector_error: "Ha ocurrido un error al obtener la lista de juegos"
+commons_lobby_selector_error: "Ha ocurrido un error al ejecutar esta acción"
 commons_lobby_selector_empty: "Juegos no disponibles"
 commons_lobby_selector_empty_lore: "Actualmente no se encuentran juegos%n%registrados en el sistema. Lo más%n%probable es que se encuentren en%n%mantenimiento"
 commons_lobby_selector_empty_note: "Para saber más sigue nuestro Twitter"
@@ -157,7 +157,6 @@ commons_lobby_selector_title: "Lobby - #%%number%%"
 commons_lobby_selector_connect: "¡Haz click para conectarte!"
 commons_lobby_selector_already: "¡Ya te encuentras conectado!"
 commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
-commons_Lobby_selector_error: "Ha ocurrido un error al abrir el selector de lobbies"
 
 # Custom Gamemode translations
 # How to:
