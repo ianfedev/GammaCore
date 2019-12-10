@@ -97,12 +97,16 @@ public class UserAccessResponse implements Listener {
 
                 // Execute authentication handler
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
-                    if (this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
+                    if (!this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
                         this.loginListener.authenticationLoginListener(
                                 player,
                                 response.get("registered").asBoolean(),
                                 user.getLanguage()
                         );
+                        Bukkit.getScheduler().runTaskLater(this.instance, () -> {
+                            Player dp = Bukkit.getPlayer(user.getUsername());
+                            if (dp != null) player.kickPlayer(ChatColor.RED + this.translator.getUnspacedField(user.getLanguage(), "authentication_delay_exceeded"));
+                        }, 20*30);
                     } else {
                         player.kickPlayer(ChatColor.RED +
                                 this.translator.getUnspacedField(user.getLanguage(),"authentication_too_many_attempts") + "\n\n" + ChatColor.GRAY +
