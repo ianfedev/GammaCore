@@ -18,6 +18,7 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,14 +45,16 @@ public class GammaCloudManager implements CloudManager {
     @Override
     @SuppressWarnings("unchecked")
     public void sendPlayerToGroup(@NotNull Player player, @NotNull String group) {
-        CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
-            @Override
-            public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
-                if (!serviceInfoSnapshots.isEmpty()) {
-                    serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
+        while (Bukkit.getPlayer(player.getName()) == null) {
+            CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
+                @Override
+                public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
+                    if (!serviceInfoSnapshots.isEmpty()) {
+                        serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override

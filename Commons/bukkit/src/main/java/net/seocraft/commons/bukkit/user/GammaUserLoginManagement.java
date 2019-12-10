@@ -119,7 +119,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                                         this.translatableField.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
                                                 .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
                         );
-                        this.cloudManager.sendPlayerToGroup(player, user.getLastLobby());
+                        this.cloudManager.sendPlayerToGroup(player, this.instance.getConfig().getString("api.redirect"));
 
                     } catch (InternalServerError | Unauthorized | NotFound | BadRequest | JsonProcessingException error) {
                         Bukkit.getLogger().log(Level.WARNING,
@@ -198,7 +198,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                             user.getLanguage(),
                             "authentication_logged_main"
                     ).replace(
-                            "%%main_lobby%%",
+                            "%%lobby%%",
                             ChatColor.YELLOW +
                             this.translatableField.getUnspacedField(
                                     user.getLanguage(),
