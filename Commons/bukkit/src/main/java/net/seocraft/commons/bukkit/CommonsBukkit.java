@@ -16,6 +16,7 @@ import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.stats.StatsProvider;
+import net.seocraft.api.bukkit.user.UserLoginManagement;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -43,10 +44,7 @@ import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
 import net.seocraft.commons.bukkit.stats.GameStatsProvider;
-import net.seocraft.commons.bukkit.user.UserAccessResponse;
-import net.seocraft.commons.bukkit.user.UserChatListener;
-import net.seocraft.commons.bukkit.user.UserDisconnectListener;
-import net.seocraft.commons.bukkit.user.UserModule;
+import net.seocraft.commons.bukkit.user.*;
 import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
 import net.seocraft.commons.core.backend.match.MatchCleanupRequest;
@@ -173,6 +171,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class).in(Scopes.SINGLETON);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class).in(Scopes.SINGLETON);
         binder.bind(StatsProvider.class).to(GameStatsProvider.class).in(Scopes.SINGLETON);
+        binder.bind(UserLoginManagement.class).to(GammaUserLoginManagement.class).in(Scopes.SINGLETON);
         binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
         binder.bind(ObjectMapper.class).toProvider(() -> {
             ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());

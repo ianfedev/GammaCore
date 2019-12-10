@@ -1,49 +1,19 @@
 package net.seocraft.commons.bukkit.command;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
-import net.seocraft.api.bukkit.cloud.CloudManager;
-import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
-import net.seocraft.api.core.session.GameSessionManager;
-import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.api.core.concurrent.CallbackWrapper;
-import net.seocraft.api.core.concurrent.AsyncResponse;
-import net.seocraft.api.core.http.exceptions.BadRequest;
-import net.seocraft.api.core.http.exceptions.InternalServerError;
-import net.seocraft.api.core.http.exceptions.NotFound;
-import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.utils.TimeUtils;
-import net.seocraft.commons.core.backend.user.UserLoginRequest;
-import net.seocraft.api.core.user.User;
-import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
+import net.seocraft.api.bukkit.user.UserLoginManagement;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.commons.core.translation.TranslatableField;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.logging.Level;
 
 public class LoginCommand extends AbstractAdvancedCommand {
 
-    @Inject private CommonsBukkit instance;
-    @Inject private CloudManager lobbySwitcher;
-    @Inject private BukkitTokenQuery tokenQuery;
-    @Inject private ObjectMapper mapper;
-    @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
-    @Inject private TranslatableField translator;
-    @Inject private UserLoginRequest userLoginRequest;
-    @Inject private GameSessionManager gameSessionManager;
-    @Inject private UserStorageProvider userStorageProvider;
+    @Inject private UserLoginManagement userLoginManagement;
 
     public LoginCommand() {
         super(
@@ -64,85 +34,10 @@ public class LoginCommand extends AbstractAdvancedCommand {
     public boolean execute(CommandContext commandContext) {
         Player player = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
         try {
-            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                    User user = userAsyncResponse.getResponse();
-                    if (!this.instance.unregisteredPlayers.contains(player.getUniqueId())) {
-                        try {
-                            ObjectNode node = mapper.createObjectNode();
-                            node.put("username", player.getName());
-                            node.put("password", commandContext.getArgument(0));
-                            this.userLoginRequest.executeRequest(
-                                    this.mapper.writeValueAsString(node),
-                                    this.tokenQuery.getToken()
-                            );
-                            this.instance.loginAttempts.put(
-                                    player.getUniqueId(),
-                                    this.instance.loginAttempts.get(player.getUniqueId()) + 1
-                            );
-                            if (user.getLastGame().equalsIgnoreCase("registrandose")) {
-                                ChatAlertLibrary.infoAlert(player,
-                                        this.translator.getUnspacedField(
-                                                user.getLanguage(), "authentication_logged_main"
-                                        ).replace("%%main_lobby%%", ChatColor.YELLOW +
-                                                this.translator.getUnspacedField(user.getLanguage(), "commons_main_lobby")
-                                                + ChatColor.AQUA)
-                                );
-                                this.lobbySwitcher.sendPlayerToGroup(player, "main_lobby");
-                            } else {
-                                ChatAlertLibrary.infoAlert(player,
-                                        this.translator.getUnspacedField(
-                                                user.getLanguage(), "authentication_logged_secondary"
-                                        ).replace("%%game%%", ChatColor.YELLOW +
-                                                user.getLastLobby()
-                                                + ChatColor.AQUA)
-                                );
-                                this.lobbySwitcher.sendPlayerToGroup(player, user.getLastLobby());
-                            }
-                        } catch (Unauthorized unauthorized) {
-                            Integer newAttempts = this.instance.loginAttempts.get(player.getUniqueId()) + 1;
-                            if (newAttempts >= 3) {
-                                Date remainingDate = TimeUtils.addMinutes(new Date(), 3);
-                                this.authenticationAttemptsHandler.setAttemptLock(
-                                        player.getUniqueId().toString(),
-                                        TimeUtils.getUnixStamp(remainingDate).toString()
-                                );
-                                Bukkit.getScheduler().runTask(this.instance, () -> player.kickPlayer(ChatColor.RED +
-                                        this.translator.getUnspacedField(user.getLanguage(),"authentication_too_many_attempts") + "\n\n" + ChatColor.GRAY +
-                                        this.translator.getUnspacedField(user.getLanguage(), "authentication_try_again_delay") +
-                                        ": " + this.authenticationAttemptsHandler.getAttemptLockDelay(player.getUniqueId().toString())
-                                ));
-                                this.instance.loginAttempts.remove(player.getUniqueId());
-                            } else {
-                                this.instance.loginAttempts.put(
-                                        player.getUniqueId(),
-                                        newAttempts
-                                );
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translator.getField(user.getLanguage(), "authentication_incorrect_password") +
-                                                ChatColor.GRAY + "[" + newAttempts + "/3]"
-                                );
-                            }
-                        } catch (InternalServerError | NotFound | BadRequest | JsonProcessingException error) {
-                            Bukkit.getLogger().log(Level.WARNING,
-                                    "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
-                                    new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
-                            Bukkit.getScheduler().runTask(this.instance, () -> player.kickPlayer(ChatColor.RED + this.translator.getUnspacedField(user.getLanguage(), "authentication_login_error") + ". \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName()));
-                        }
-                    } else {
-                        ChatAlertLibrary.errorChatAlert(player,
-                                this.translator.getField(user.getLanguage(),"authentication_not_registered") +
-                                        ChatColor.YELLOW + "/register <" +
-                                        this.translator.getUnspacedField(user.getLanguage(),"commons_password")
-                                        + ">"
-                        );
-                    }
-                } else {
-                    ChatAlertLibrary.errorChatAlert(player);
-                }
-            });
+            this.userLoginManagement.loginUser(player, commandContext.getArgument(0));
         } catch (IOException e) {
             ChatAlertLibrary.errorChatAlert(player);
+            e.printStackTrace();
         }
         return true;
     }

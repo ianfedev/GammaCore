@@ -16,31 +16,25 @@ public class AuthenticationAttemptsHandler {
     @Inject private RedisClient client;
 
     public void setAttemptLock(String uuid, String date) {
-        client.setHash("authentication_locks", uuid, date);
-        Bukkit.getScheduler().runTaskLaterAsynchronously(this.instance, () -> this.client.deleteHash("authentication_locks", "uuid"), 1000*60*3);
+        client.setString("authlock:" + uuid, date);
+        client.setExpiration("authlock:" + uuid, 180);
     }
 
     public boolean getAttemptStatus(String uuid) {
-        if (this.client.existsKey("authentication_locks") && this.client.getHashFields("authentication_locks").containsKey(uuid)) {
-            return TimeUtils.parseUnixStamp(
-                    Integer.parseInt(
-                            this.client.getHashFields("authentication_locks").get(uuid))
-            ).before(new Date());
-        } else {
-            return true;
-        }
+        return this.client.existsKey("authlock:" + uuid);
     }
 
     public String getAttemptLockDelay(String uuid) {
-        if (this.client.existsKey("authentication_locks") && this.client.getHashFields("authentication_locks").containsKey(uuid)) {
+
+        if (this.client.existsKey("authlock:" + uuid)) {
             return getRemainingTime(
                     TimeUtils.parseUnixStamp(
-                            Integer.parseInt(this.client.getHashFields("authentication_locks").get(uuid))
+                            Integer.parseInt(this.client.getString("authlock:" + uuid))
                     )
             );
-        } else {
-            return getRemainingTime(new Date());
         }
+
+        return getRemainingTime(new Date());
     }
 
     private String getRemainingTime(Date date) {
