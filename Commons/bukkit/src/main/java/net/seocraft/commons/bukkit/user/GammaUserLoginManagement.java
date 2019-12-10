@@ -103,6 +103,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                                     this.translatableField.getUnspacedField(user.getLanguage(),"commons_password")
                                     + ">"
                     );
+                    return;
                 }
 
                 if (password.length() > 7) {
