@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class GammaCloudManager implements CloudManager {
@@ -54,6 +55,9 @@ public class GammaCloudManager implements CloudManager {
                     }
                 }
             });
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException ignore) {}
         }
     }
 
