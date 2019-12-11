@@ -11,6 +11,7 @@ import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
+import net.seocraft.api.core.session.GameSession;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -95,8 +96,8 @@ public class UserAccessResponse implements Listener {
                 // Detect if player has a punishment
                 this.punishmentActions.checkBan(user);
 
-                System.out.println(this.gameSessionManager.getCachedSession(user.getUsername()));
-                if (null == null) {
+                GameSession gameSession = this.gameSessionManager.getCachedSession(user.getUsername());
+                if (gameSession == null) {
                     this.gameSessionManager.createGameSession(user,  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
                     this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
                 }
