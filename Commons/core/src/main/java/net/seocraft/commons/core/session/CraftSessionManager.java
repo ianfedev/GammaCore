@@ -28,10 +28,13 @@ public class CraftSessionManager implements GameSessionManager {
 
     @Override
     public @Nullable GameSession getCachedSession(@NotNull String username) throws IOException {
-        return this.mapper.readValue(
-                this.client.getString("session:" + username.toLowerCase()),
-                GameSession.class
-        );
+        if (sessionExists(username)) {
+            return this.mapper.readValue(
+                    this.client.getString("session:" + username.toLowerCase()),
+                    GameSession.class
+            );
+        }
+        return null;
     }
 
     @Override
