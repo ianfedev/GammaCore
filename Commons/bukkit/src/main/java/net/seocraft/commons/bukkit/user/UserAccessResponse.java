@@ -95,7 +95,8 @@ public class UserAccessResponse implements Listener {
                 // Detect if player has a punishment
                 this.punishmentActions.checkBan(user);
 
-                if (this.gameSessionManager.getCachedSession(user.getUsername()) == null) {
+                System.out.println(this.gameSessionManager.getCachedSession(user.getUsername()));
+                if (null == null) {
                     this.gameSessionManager.createGameSession(user,  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
                     this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
                 }
