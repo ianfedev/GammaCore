@@ -119,6 +119,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                                         this.translatableField.getUnspacedField(user.getLanguage(), "authentication_welcome_new")
                                                 .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
                         );
+                        System.out.println(this.instance.getConfig().getString("authentication.redirect"));
                         this.cloudManager.sendPlayerToGroup(player, this.instance.getConfig().getString("authentication.redirect"));
 
                     } catch (InternalServerError | Unauthorized | NotFound | BadRequest | JsonProcessingException error) {
