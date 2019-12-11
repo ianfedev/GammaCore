@@ -119,7 +119,7 @@ public class UserJoinListener implements Listener {
                     event.setJoinMessage("");
                 }
 
-                updateServerRecord(player);
+                updateServerRecord(playerIdentifier);
 
             }
 
@@ -170,9 +170,9 @@ public class UserJoinListener implements Listener {
         }
     }
 
-    private void updateServerRecord(@NotNull Player player) throws Unauthorized, IOException, BadRequest, NotFound, InternalServerError {
+    private void updateServerRecord(@NotNull String id) throws Unauthorized, IOException, BadRequest, NotFound, InternalServerError {
         Server updatableServer = this.instance.getServerRecord();
-        updatableServer.getOnlinePlayers().add(player.getUniqueId().toString());
+        updatableServer.getOnlinePlayers().add(id);
         this.serverManager.updateServer(
                 updatableServer
         );
