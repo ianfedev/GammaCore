@@ -46,7 +46,7 @@ public class GammaCloudManager implements CloudManager {
     @Override
     @SuppressWarnings("unchecked")
     public void sendPlayerToGroup(@NotNull Player player, @NotNull String group) {
-        while (Bukkit.getPlayer(player.getName()) == null) {
+        while (Bukkit.getPlayer(player.getName()) != null) {
             CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
                 @Override
                 public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
