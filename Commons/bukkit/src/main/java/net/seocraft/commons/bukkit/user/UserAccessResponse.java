@@ -95,6 +95,11 @@ public class UserAccessResponse implements Listener {
                 // Detect if player has a punishment
                 this.punishmentActions.checkBan(user);
 
+                if (this.gameSessionManager.getCachedSession(user.getUsername()) == null) {
+                    this.gameSessionManager.createGameSession(user,  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
+                    this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
+                }
+
                 // Execute authentication handler
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     if (!this.authenticationAttemptsHandler.getAttemptStatus(playerId.toString())) {
@@ -144,11 +149,6 @@ public class UserAccessResponse implements Listener {
                             this.gameLoginManager.matchPlayerJoin(result, user, player);
                             this.redisClient.deleteString(pairing);
                             Bukkit.getPluginManager().callEvent(new GamePlayerJoinEvent(user));
-
-                            if (this.gameSessionManager.getCachedSession(user.getUsername()) == null) {
-                                this.gameSessionManager.createGameSession(user,  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
-                                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
-                            }
 
                             event.setJoinMessage("");
                         } else {
