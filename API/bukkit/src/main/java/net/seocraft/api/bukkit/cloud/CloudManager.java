@@ -15,6 +15,8 @@ public interface CloudManager {
 
     @NotNull Set<LobbyIcon> getGroupLobbies(@NotNull String group);
 
+    int getOnlinePlayers();
+
     @NotNull UUID createCloudService(@NotNull String taskName);
 
     boolean isConnected(@NotNull UUID service);

@@ -16,6 +16,7 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class GammaCloudManager implements CloudManager {
 
     @Inject private ServerManager serverManager;
+    @Inject private RedisClient redisClient;
     @Inject private CommonsBukkit instance;
 
     @Override
@@ -94,6 +96,11 @@ public class GammaCloudManager implements CloudManager {
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
                     return null;
                 }).filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
+    @Override
+    public int getOnlinePlayers() {
+        return this.redisClient.getKeys("session:*").size();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Lobby extends JavaPlugin {
     @Inject private HotbarListener hotbarListener;
     @Inject private LobbyConnectionListener lobbyConnectionListener;
     @Inject private LobbySelectorListener lobbySelectorListener;
-    @Inject private PlayerDeathListener playerDeathListener;
+    @Inject private PlayerDamageListener playerDamageListener;
     @Inject private InventoryInteractionListener inventoryInteractionEvent;
     @Inject private InventoryDropListener inventoryDropEvent;
 
@@ -61,7 +61,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.playerBlockInteractionListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryInteractionEvent, this);
         getServer().getPluginManager().registerEvents(this.hotbarListener, this);
-        getServer().getPluginManager().registerEvents(this.playerDeathListener, this);
+        getServer().getPluginManager().registerEvents(this.playerDamageListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
 
     }

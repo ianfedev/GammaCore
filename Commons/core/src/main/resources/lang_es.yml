@@ -23,6 +23,8 @@
 #  %%reset%% = Reset            #
 # ----------------------------- #
 
+network_final_name: Seocraft Network
+
 # Authentication related translations
 authentication_registered_title: Hola
 authentication_registered_sub: Ingresa utilizando
@@ -158,6 +160,12 @@ commons_lobby_selector_connect: "¡Haz click para conectarte!"
 commons_lobby_selector_already: "¡Ya te encuentras conectado!"
 commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
 
+# Lobby Scoreboard
+commons_lobby_scoreboard_rank: "Rango"
+commons_lobby_scoreboard_level: "Nivel"
+commons_lobby_scoreboard_lobby: "Lobby"
+commons_lobby_scoreboard_players: "Jugadores"
+
 # Custom Gamemode translations
 # How to:
 # Every gamemode has an ID (_id from MongoDB Schema).
@@ -171,6 +179,10 @@ commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
 
 game_5d586f5634a44a74e4826045_title: Lobby principal
 game_5d586f5634a44a74e4826045_description: "Vuelve al menú principal"
+game_5d5a11f35f1de46c232babae_title: SkyWars
+game_5d5a11f35f1de46c232babae_description: "%%dark_gray%%Juego Clásico%n%n%Disfruta del clásico juego SkyWars%n%en Seocraft Network. Recuerda que se actualizará%n%constantemente para una experiencia%n% única."
+game_5db64666df034f2e9a3b4800_title: Juegos TNT
+game_5db64666df034f2e9a3b4800_description: "%%dark_gray%%Juego Rápidos%n%n%¡Divertidos minijuegos con %%red%%TNT!"
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas

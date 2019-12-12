@@ -5,6 +5,9 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.seocraft.api.bukkit.BukkitAPI;
+import net.seocraft.api.bukkit.board.ScoreboardManager;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.core.session.GameSession;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
@@ -13,6 +16,8 @@ import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.commons.core.translation.TranslatableField;
+import net.seocraft.lobby.Lobby;
+import net.seocraft.lobby.board.LobbyScoreboardTask;
 import net.seocraft.lobby.hotbar.HotbarItemCollection;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import org.bukkit.Bukkit;
@@ -27,8 +32,12 @@ public class LobbyConnectionListener implements Listener {
 
     @Inject private HotbarItemCollection hotbarItemCollection;
     @Inject private TranslatableField translator;
+    @Inject private ScoreboardManager scoreboardManager;
+    @Inject private Lobby instance;
     @Inject private TeleportManager teleportManager;
+    @Inject private CloudManager cloudManager;
     @Inject private GameSessionManager gameSessionManager;
+    @Inject private BukkitAPI bukkitAPI;
     @Inject private FriendshipProvider friendshipProvider;
 
     @EventHandler
@@ -80,6 +89,12 @@ public class LobbyConnectionListener implements Listener {
                         player.sendMessage(baseComponent);
 
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+
+                        new LobbyScoreboardTask(
+                                scoreboardManager, cloudManager, translator, bukkitAPI,
+                                player.getName(),
+                                playerRecord
+                        ).runTaskTimer(this.instance, 0, 20*60);
                     }
                 } catch (IOException e) {
                     ChatAlertLibrary.errorChatAlert(player);
