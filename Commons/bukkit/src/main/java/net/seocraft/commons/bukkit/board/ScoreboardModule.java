@@ -6,7 +6,6 @@ import net.seocraft.api.bukkit.board.ScoreboardManager;
 import net.seocraft.api.bukkit.board.ScoreboardRemover;
 import net.seocraft.api.bukkit.board.line.ScoreboardLineCreator;
 import net.seocraft.api.bukkit.board.line.ScoreboardLineRemover;
-import net.seocraft.api.bukkit.board.lobby.LobbyScoreboardStats;
 import net.seocraft.commons.bukkit.board.line.SimpleScoreboardLineCreator;
 import net.seocraft.commons.bukkit.board.line.SimpleScoreboardLineRemover;
 
