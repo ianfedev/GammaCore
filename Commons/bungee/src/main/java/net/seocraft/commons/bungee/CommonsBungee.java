@@ -26,6 +26,7 @@ import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
 import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bungee.punishment.PunishmentListener;
@@ -74,12 +75,11 @@ public class CommonsBungee extends Plugin {
     @Override
     public void onDisable() {
         for (ProxiedPlayer player : getProxy().getPlayers()) {
-            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(player.getName()), userAsyncResponse -> {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                    this.gameSessionManager.removeGameSession(player.getName());
-                    this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), false);
-                }
-            });
+            try {
+                User user = this.userStorageProvider.findUserByNameSync(player.getName());
+                this.gameSessionManager.removeGameSession(player.getName());
+                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), false);
+            } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
         }
         try {
             this.serverLoad.disconnectServer();
