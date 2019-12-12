@@ -56,7 +56,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             lobbyBoard.setLine(1, " ");
 
             lobbyBoard.setLine(2, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
+                    + ChatColor.WHITE + "0"
             );
             lobbyBoard.setLine(3, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
@@ -66,7 +66,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             );
 
             lobbyBoard.setLine(4, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + "#" + Bukkit.getServer().getName()
+                    + ChatColor.WHITE + "#" + Bukkit.getServerId()
             );
             lobbyBoard.setLine(5, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
@@ -76,7 +76,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             );
 
             lobbyBoard.setLine(6, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + ("" + user.getLevel())
+                    + ChatColor.WHITE + user.getLevel()
             );
             lobbyBoard.setLine(7, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
