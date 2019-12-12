@@ -50,25 +50,25 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     ChatColor.GOLD + "" + ChatColor.BOLD + "Seocraft Network"
             );
             lobbyBoard.apply(scoreboardPlayer);
-            lobbyBoard.setLine(0, " ");
+            lobbyBoard.setLine(10, " ");
 
-            lobbyBoard.setLine(1, ChatColor.YELLOW +
+            lobbyBoard.setLine(9, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_rank"
                     )
             );
-            lobbyBoard.setLine(2, "" +
+            lobbyBoard.setLine(8, "" +
                     ChatColor.valueOf(primaryFlair.getColor().toUpperCase()) + user.getPrimaryGroup().getName()
             );
 
-            lobbyBoard.setLine(3, ChatColor.YELLOW +
+            lobbyBoard.setLine(7, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_level"
                     )
             );
-            lobbyBoard.setLine(4, ChatColor.YELLOW + "\u00BB "
+            lobbyBoard.setLine(6, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.WHITE + user.getLevel()
             );
 
@@ -78,22 +78,22 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                             "commons_lobby_scoreboard_lobby"
                     )
             );
-            lobbyBoard.setLine(6, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + "#" + Bukkit.getServer().getName().split("-")[0]
+            lobbyBoard.setLine(4, ChatColor.YELLOW + "\u00BB "
+                    + ChatColor.WHITE + "#" + Bukkit.getServer().getName()
             );
 
-            lobbyBoard.setLine(7, ChatColor.YELLOW +
+            lobbyBoard.setLine(3, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_players"
                     )
             );
-            lobbyBoard.setLine(8, ChatColor.YELLOW + "\u00BB "
+            lobbyBoard.setLine(2, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
             );
 
-            lobbyBoard.setLine(9, " ");
-            lobbyBoard.setLine(10, ChatColor.YELLOW + "www.seocraft.net"
+            lobbyBoard.setLine(1, " ");
+            lobbyBoard.setLine(0, ChatColor.YELLOW + "www.seocraft.net"
             );
 
 
