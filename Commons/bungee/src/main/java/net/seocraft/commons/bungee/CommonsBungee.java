@@ -74,9 +74,10 @@ public class CommonsBungee extends Plugin {
 
     @Override
     public void onDisable() {
+        System.out.println("Server disconnecting");
         try {
             this.serverLoad.disconnectServer();
-
+            System.out.println("Server disconnected");
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 try {
                     User user = this.userStorageProvider.findUserByNameSync(player.getName());
