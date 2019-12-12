@@ -74,15 +74,17 @@ public class CommonsBungee extends Plugin {
 
     @Override
     public void onDisable() {
-        for (ProxiedPlayer player : getProxy().getPlayers()) {
-            try {
-                User user = this.userStorageProvider.findUserByNameSync(player.getName());
-                this.gameSessionManager.removeGameSession(player.getName());
-                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), false);
-            } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
-        }
         try {
             this.serverLoad.disconnectServer();
+
+            for (ProxiedPlayer player : getProxy().getPlayers()) {
+                try {
+                    User user = this.userStorageProvider.findUserByNameSync(player.getName());
+                    this.gameSessionManager.removeGameSession(player.getName());
+                    this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), false);
+                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
+            }
+
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError ex) {
             this.getLogger().log(Level.SEVERE, "[Bungee-API] There was an error shutting down the server. ({0})", ex.getMessage());
         }
