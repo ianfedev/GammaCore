@@ -20,6 +20,7 @@ import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,24 +47,33 @@ public class GammaCloudManager implements CloudManager {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void sendPlayerToGroup(@NotNull Player player, @NotNull String group) {
-        CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
-            @Override
-            public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
-                if (!serviceInfoSnapshots.isEmpty()) {
-                    serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
+        sendPlayerToGroupSecured(player, group, 0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void sendPlayerToGroupSecured(@NotNull Player player, @NotNull String group, int time) {
+        final int finalTimer = time + 1;
+        if (finalTimer < 3) {
+            CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
+                @Override
+                public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
+                    if (!serviceInfoSnapshots.isEmpty()) {
+                        serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
+                    }
+                    Bukkit.getScheduler().runTaskLater(
+                            instance,
+                            () -> {
+                                Player taskPlayer = Bukkit.getPlayer(player.getName());
+                                if (taskPlayer != null) sendPlayerToGroupSecured(player, group, finalTimer);
+                            },
+                            60
+                    );
                 }
-                Bukkit.getScheduler().runTaskLater(
-                        instance,
-                        () -> {
-                            Player taskPlayer = Bukkit.getPlayer(player.getName());
-                            if (taskPlayer != null) sendPlayerToServer(player, group);
-                        },
-                        60
-                );
-            }
-        });
+            });
+        } else {
+            player.sendMessage(ChatColor.RED + "There was an error trying to connecting you to this server, please try again. Att: Seocraft Network ;)");
+        }
     }
 
     @Override
