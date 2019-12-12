@@ -18,6 +18,7 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
+import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 public class GammaCloudManager implements CloudManager {
 
     @Inject private ServerManager serverManager;
+    @Inject private CommonsBukkit instance;
 
     @Override
     public void sendPlayerToServer(@NotNull Player player, @NotNull String server) {
@@ -46,19 +48,22 @@ public class GammaCloudManager implements CloudManager {
     @Override
     @SuppressWarnings("unchecked")
     public void sendPlayerToGroup(@NotNull Player player, @NotNull String group) {
-        while (Bukkit.getPlayer(player.getName()) != null) {
-            CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
-                @Override
-                public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
-                    if (!serviceInfoSnapshots.isEmpty()) {
-                        serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
-                    }
+        CloudNetDriver.getInstance().getCloudServicesAsync(group).addListener(new ITaskListener<Collection<ServiceInfoSnapshot>>() {
+            @Override
+            public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
+                if (!serviceInfoSnapshots.isEmpty()) {
+                    serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
                 }
-            });
-            try {
-                TimeUnit.SECONDS.sleep(5);
-            } catch (InterruptedException ignore) {}
-        }
+                Bukkit.getScheduler().runTaskLater(
+                        instance,
+                        () -> {
+                            Player taskPlayer = Bukkit.getPlayer(player.getName());
+                            if (taskPlayer != null) sendPlayerToServer(player, group);
+                        },
+                        60
+                );
+            }
+        });
     }
 
     @Override
