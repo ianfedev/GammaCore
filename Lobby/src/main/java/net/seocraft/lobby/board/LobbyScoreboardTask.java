@@ -58,8 +58,8 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                             "commons_lobby_scoreboard_rank"
                     )
             );
-            lobbyBoard.setLine(8, "" +
-                    ChatColor.valueOf(primaryFlair.getColor().toUpperCase()) + user.getPrimaryGroup().getName()
+            lobbyBoard.setLine(8, ChatColor.YELLOW + "\u00BB "
+                    + ChatColor.valueOf(primaryFlair.getColor().toUpperCase()) + user.getPrimaryGroup().getName()
             );
 
             lobbyBoard.setLine(7, ChatColor.YELLOW +
@@ -69,7 +69,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     )
             );
             lobbyBoard.setLine(6, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + user.getLevel()
+                    + ChatColor.WHITE + ("" + user.getLevel())
             );
 
             lobbyBoard.setLine(5, ChatColor.YELLOW +
