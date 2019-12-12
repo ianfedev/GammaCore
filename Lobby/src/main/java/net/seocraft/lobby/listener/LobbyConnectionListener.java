@@ -89,12 +89,6 @@ public class LobbyConnectionListener implements Listener {
                         player.sendMessage(baseComponent);
 
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
-
-                        new LobbyScoreboardTask(
-                                scoreboardManager, cloudManager, translator, bukkitAPI,
-                                player.getName(),
-                                playerRecord
-                        ).runTaskTimer(this.instance, 0, 20*60);
                     }
                 } catch (IOException e) {
                     ChatAlertLibrary.errorChatAlert(player);
@@ -104,6 +98,11 @@ public class LobbyConnectionListener implements Listener {
         }
 
 
+        new LobbyScoreboardTask(
+                scoreboardManager, cloudManager, translator, bukkitAPI,
+                player.getName(),
+                playerRecord
+        ).runTaskTimer(this.instance, 0, 20*60);
 
     }
 }
