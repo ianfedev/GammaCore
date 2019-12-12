@@ -97,7 +97,7 @@ public class HotbarItemCollection {
                 this.translatableField.getUnspacedField(
                         l,
                         "commons_lobby_hiding_description"
-                ) + ".",
+                ),
                 ChatColor.GRAY
         );
         loreDisplayArray.add("");
