@@ -98,7 +98,7 @@ public class GammaCloudManager implements CloudManager {
 
     @Override
     public @NotNull String getOnlinePlayers() {
-        return BukkitCloudNetHelper.getOnlineCount() + "";
+        return this.redisClient.getKeys("session:*") + "";
     }
 
     @NotNull
