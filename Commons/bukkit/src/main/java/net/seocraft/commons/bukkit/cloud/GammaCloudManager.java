@@ -98,7 +98,7 @@ public class GammaCloudManager implements CloudManager {
 
     @Override
     public @NotNull String getOnlinePlayers() {
-        return this.redisClient.getKeys("session:*") + "";
+        return this.redisClient.getKeys("session:*").size() + "";
     }
 
     @NotNull
