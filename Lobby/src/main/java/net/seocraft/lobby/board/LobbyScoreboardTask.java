@@ -62,7 +62,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_players"
-                    )
+                    ) + " " + this.cloudManager.getOnlinePlayers()
             );
 
             lobbyBoard.setLine(4, ChatColor.YELLOW + "\u00BB "
