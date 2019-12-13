@@ -9,6 +9,7 @@ import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.permission.IPermissionUser;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
+import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper;
 import de.dytanic.cloudnet.ext.bridge.node.CloudNetBridgeModule;
 import de.dytanic.cloudnet.ext.syncproxy.bungee.BungeeCloudNetSyncProxyPlugin;
 import net.seocraft.api.bukkit.cloud.CloudManager;
@@ -103,9 +104,10 @@ public class GammaCloudManager implements CloudManager {
 
     @Override
     public @NotNull String getOnlinePlayers() {
-        return BungeeCloudNetSyncProxyPlugin.getInstance().getSyncProxyOnlineCount() + "";
+        return BukkitCloudNetHelper.getOnlineCount() + "";
     }
 
+    @NotNull
     @Override
     public UUID createCloudService(@NotNull String taskName) {
         ServiceTask task = CloudNetDriver.getInstance().getServiceTask(taskName);
