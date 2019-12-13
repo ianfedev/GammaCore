@@ -17,16 +17,16 @@
 
     <repositories>
         <repository>
+            <id>cloudnet-repo</id>
+            <url>https://cloudnetservice.eu/repositories/</url>
+        </repository>
+        <repository>
             <id>gamma-releases</id>
             <url>https://repo.seocraft.net/repository/gamma-releases</url>
         </repository>
         <repository>
             <id>gamma-snapshots</id>
             <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
-        </repository>
-        <repository>
-            <id>cloudnet-repo</id>
-            <url>https://cloudnetservice.eu/repositories/</url>
         </repository>
     </repositories>
 
@@ -54,6 +54,11 @@
                 <groupId>de.dytanic.cloudnet</groupId>
                 <artifactId>cloudnet</artifactId>
                 <version>3.0.0-RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>de.dytanic.cloudnet</groupId>
+                <artifactId>cloudnet-syncproxy</artifactId>
+                <version>3.1.0-RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>de.dytanic.cloudnet</groupId>

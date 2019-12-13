@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.cloud;
 
 import com.google.inject.Inject;
+import de.dytanic.cloudnet.CloudNet;
 import de.dytanic.cloudnet.common.concurrent.ITask;
 import de.dytanic.cloudnet.common.concurrent.ITaskListener;
 import de.dytanic.cloudnet.common.document.gson.JsonDocument;
@@ -8,6 +9,8 @@ import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.permission.IPermissionUser;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
+import de.dytanic.cloudnet.ext.bridge.node.CloudNetBridgeModule;
+import de.dytanic.cloudnet.ext.syncproxy.bungee.BungeeCloudNetSyncProxyPlugin;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -99,8 +102,8 @@ public class GammaCloudManager implements CloudManager {
     }
 
     @Override
-    public int getOnlinePlayers() {
-        return this.redisClient.getKeys("session:*").size();
+    public @NotNull String getOnlinePlayers() {
+        return BungeeCloudNetSyncProxyPlugin.getInstance().getSyncProxyOnlineCount() + "";
     }
 
     @Override

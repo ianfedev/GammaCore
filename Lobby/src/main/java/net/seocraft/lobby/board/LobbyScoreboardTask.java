@@ -56,7 +56,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             lobbyBoard.setLine(1, " ");
 
             lobbyBoard.setLine(2, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + "0"
+                    + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
             );
             lobbyBoard.setLine(3, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(

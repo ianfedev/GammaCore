@@ -15,7 +15,7 @@ public interface CloudManager {
 
     @NotNull Set<LobbyIcon> getGroupLobbies(@NotNull String group);
 
-    int getOnlinePlayers();
+    @NotNull String getOnlinePlayers();
 
     @NotNull UUID createCloudService(@NotNull String taskName);
 
