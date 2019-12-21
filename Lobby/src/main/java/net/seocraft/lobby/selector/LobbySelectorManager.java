@@ -25,6 +25,7 @@ public class LobbySelectorManager implements SelectorManager {
 
         if (NPCConfiguration != null)
             NPCConfiguration.getKeys(false).forEach((key) -> {
+                System.out.println(key);
                 ConfigurationSection section = NPCConfiguration.getConfigurationSection(key);
                 String gameString = section.getString("gamemode");
 
@@ -56,8 +57,6 @@ public class LobbySelectorManager implements SelectorManager {
                                     section.getFloat("yaw"),
                                     section.getFloat("pitch")
                             );
-
-                            System.out.println(selectorNPC.getGamemode().getId());
 
                         } else {
                             throw new NotFound("The gamemode selected is null");
