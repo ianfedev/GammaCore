@@ -87,6 +87,11 @@ public class TeleportCommand implements CommandClass {
                 FinderResult result = this.matchFinder.findAvailableMatch("5db64666df034f2e9a3b4800", "5db645eea534664c62702cbe", "tnt_run", false);
                 testSpectator(sender, result);
             }
+
+            if (name.equalsIgnoreCase("tag")) {
+                FinderResult result = this.matchFinder.findAvailableMatch("5db64666df034f2e9a3b4800", "5d5a12c08f2258859e1ea7d8", "tnt_tag", false);
+                testSpectator(sender, result);
+            }
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException unauthorized) {
             unauthorized.printStackTrace();
         }
