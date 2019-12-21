@@ -38,7 +38,10 @@ public class LobbySelectorManager implements SelectorManager {
                         if (gamemode != null) {
                             if (section.getString("subGamemode") != null) {
                                 Optional<SubGamemode> subOptional = gamemode.getSubGamemodes().stream().filter(
-                                        sub -> sub.getId().equalsIgnoreCase(section.getString("gubGamemode"))
+                                        sub -> {
+                                            System.out.println(sub.getId());
+                                            return sub.getId().equalsIgnoreCase(section.getString("gubGamemode"));
+                                        }
                                 ).findFirst();
 
                                 if (!subOptional.isPresent()) throw new NotFound("The Sub Gamemode selected was not found");
@@ -62,7 +65,7 @@ public class LobbySelectorManager implements SelectorManager {
                             throw new NotFound("The gamemode selected is null");
                         }
                     } catch (Exception ex) {
-                        Bukkit.getLogger().log(Level.WARNING, "[Lobby] There was an error loading the '{0}' NPC. ({1})", new Object[]{key, ex.getMessage()});
+                        Bukkit.getLogger().log(Level.WARNING, "[Lobby] There was an error loading the {0} NPC. ({1})", new Object[]{key, ex.getMessage()});
                     }
 
                 }
