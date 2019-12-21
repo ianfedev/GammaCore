@@ -8,11 +8,14 @@ spawn:
   yaw: 0
   pitch: 0
   world: world
+# If you would like to generate a custom skin, you should go through this website
+# https://mineskin.org
 selector:
   selectorName:
     gamemode: ""
     subGamemode: ""
     skin: ""
+    signature: ""
     x: 0
     y: 0
     z: 0

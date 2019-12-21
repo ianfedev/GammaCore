@@ -132,6 +132,11 @@
                 <artifactId>paperspigot</artifactId>
                 <version>1.8.8-R0.1-20191203.000214-1</version>
             </dependency>
+            <dependency>
+                <groupId>net.seocraft</groupId>
+                <artifactId>CreatorEssentials</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

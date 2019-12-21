@@ -7,6 +7,7 @@ import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
 import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.creator.skin.CraftSkinProperty;
 import net.seocraft.lobby.Lobby;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -51,7 +52,10 @@ public class LobbySelectorManager implements SelectorManager {
                             SelectorNPC selectorNPC = new LobbySelectorNPC(
                                     gamemode,
                                     subGamemode,
-                                    section.getString("skin"),
+                                    new CraftSkinProperty(
+                                            section.getString("skin"),
+                                            section.getString("signature")
+                                    ),
                                     section.getFloat("x"),
                                     section.getFloat("sy"),
                                     section.getFloat("z"),
