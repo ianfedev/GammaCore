@@ -6,15 +6,11 @@ import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
-import net.seocraft.api.core.http.exceptions.BadRequest;
-import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
-import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.lobby.Lobby;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -36,7 +32,7 @@ public class LobbySelectorManager implements SelectorManager {
                 if (gameString != null) {
 
                     try {
-                        Gamemode gamemode = this.gamemodeProvider.getGamemodeSync("gamemode");
+                        Gamemode gamemode = this.gamemodeProvider.getGamemodeSync(gameString);
                         SubGamemode subGamemode;
 
                         if (gamemode != null) {
@@ -69,7 +65,7 @@ public class LobbySelectorManager implements SelectorManager {
                         } else {
                             throw new NotFound("The gamemode selected is null");
                         }
-                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
+                    } catch (Exception ex) {
                         Bukkit.getLogger().log(Level.WARNING, "[Lobby] There was an error loading the '{0}' NPC. ({1})", new Object[]{key, ex.getMessage()});
                     }
 
