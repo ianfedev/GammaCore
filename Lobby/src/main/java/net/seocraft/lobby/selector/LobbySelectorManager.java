@@ -25,7 +25,6 @@ public class LobbySelectorManager implements SelectorManager {
 
         if (NPCConfiguration != null)
             NPCConfiguration.getKeys(true).forEach((key) -> {
-                ConfigurationSection selector = NPCConfiguration.getConfigurationSection(key);
                 String gameString = this.lobby.getConfig().getString("selector." + key + ".gamemode");
                 System.out.println(gameString);
 
@@ -36,9 +35,9 @@ public class LobbySelectorManager implements SelectorManager {
                         SubGamemode subGamemode;
 
                         if (gamemode != null) {
-                            if (selector.getString("subGamemode") != null) {
+                            if (this.lobby.getConfig().getString("selector." + key + ".subGamemode") != null) {
                                 Optional<SubGamemode> subOptional = gamemode.getSubGamemodes().stream().filter(
-                                        sub -> sub.getId().equalsIgnoreCase(selector.getString("subGamemode"))
+                                        sub -> sub.getId().equalsIgnoreCase(this.lobby.getConfig().getString("selector." + key + ".gubGamemode"))
                                 ).findFirst();
 
                                 if (!subOptional.isPresent()) throw new NotFound("The Sub Gamemode selected was not found");
@@ -48,12 +47,12 @@ public class LobbySelectorManager implements SelectorManager {
                                 SelectorNPC selectorNPC = new LobbySelectorNPC(
                                         gamemode,
                                         subGamemode,
-                                        selector.getString("skin"),
-                                        selector.getFloat("x"),
-                                        selector.getFloat("y"),
-                                        selector.getFloat("z"),
-                                        selector.getFloat("yaw"),
-                                        selector.getFloat("pitch")
+                                        this.lobby.getConfig().getString("selector." + key + ".skin"),
+                                        this.lobby.getConfig().getFloat("selector." + key + ".x"),
+                                        this.lobby.getConfig().getFloat("selector." + key + ".y"),
+                                        this.lobby.getConfig().getFloat("selector." + key + ".z"),
+                                        this.lobby.getConfig().getFloat("selector." + key + ".yaw"),
+                                        this.lobby.getConfig().getFloat("selector." + key + ".pitch")
                                 );
 
                                 System.out.println(selectorNPC.getGamemode().getId());
