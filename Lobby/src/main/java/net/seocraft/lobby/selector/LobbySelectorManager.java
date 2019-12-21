@@ -31,8 +31,9 @@ public class LobbySelectorManager implements SelectorManager {
             NPCConfiguration.getKeys(true).forEach((key) -> {
 
                 ConfigurationSection selector = NPCConfiguration.getConfigurationSection(key);
+                String gameString = selector.getString("gamemode");
 
-                if (selector.getString("gamemode") != null) {
+                if (gameString != null) {
 
                     try {
                         Gamemode gamemode = this.gamemodeProvider.getGamemodeSync("gamemode");
@@ -71,8 +72,6 @@ public class LobbySelectorManager implements SelectorManager {
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
                         Bukkit.getLogger().log(Level.WARNING, "[Lobby] There was an error loading the '{0}' NPC. ({1})", new Object[]{key, ex.getMessage()});
                     }
-
-                    System.out.println(selector.getString("gamemode"));
 
                 }
             });
