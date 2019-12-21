@@ -13,21 +13,26 @@ public class LobbySelectorManager implements SelectorManager {
     @Override
     public void setupSelectorNPC() {
         ConfigurationSection NPCConfiguration = this.lobby.getConfig().getConfigurationSection("selector");
-        NPCConfiguration.getKeys(true).forEach((key) -> {
-            ConfigurationSection selector = NPCConfiguration.getConfigurationSection(key);
-            selector.getKeys(true).forEach(System.out::println);
 
-            /*SelectorNPC selectorNPC = new LobbySelectorNPC(
-                    ,
-                    selector.getString("subGamemode"),
-                    selector.getString("skin"),
-                    selector.getFloat("x"),
-                    selector.getFloat("y"),
-                    selector.getFloat("z"),
-                    selector.getFloat("yaw"),
-                    selector.getFloat("pitch")
-            );*/
-        });
+        if (NPCConfiguration != null)
+            NPCConfiguration.getKeys(true).forEach((key) -> {
+
+                ConfigurationSection selector = NPCConfiguration.getConfigurationSection(key);
+
+                if (selector.getString("gamemode") != null) {
+                    System.out.println(selector.getString("gamemode"));
+                    /*SelectorNPC selectorNPC = new LobbySelectorNPC(
+                            selector.getString("gamemode"),
+                            selector.getString("subGamemode"),
+                            selector.getString("skin"),
+                            selector.getFloat("x"),
+                            selector.getFloat("y"),
+                            selector.getFloat("z"),
+                            selector.getFloat("yaw"),
+                            selector.getFloat("pitch")
+                    );*/
+                }
+            });
 
     }
 

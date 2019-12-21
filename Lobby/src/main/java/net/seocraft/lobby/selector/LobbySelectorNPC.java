@@ -4,11 +4,12 @@ import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class LobbySelectorNPC implements SelectorNPC {
 
     @NotNull private Gamemode gamemode;
-    @NotNull private SubGamemode subGamemode;
+    @Nullable private SubGamemode subGamemode;
     @NotNull private String skin;
     private float x;
     private float y;
@@ -16,7 +17,7 @@ public class LobbySelectorNPC implements SelectorNPC {
     private float yaw;
     private float pitch;
 
-    public LobbySelectorNPC(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode, @NotNull String skin, float x, float y, float z, float yaw, float pitch) {
+    public LobbySelectorNPC(@NotNull Gamemode gamemode, @Nullable SubGamemode subGamemode, @NotNull String skin, float x, float y, float z, float yaw, float pitch) {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
         this.skin = skin;
@@ -31,7 +32,7 @@ public class LobbySelectorNPC implements SelectorNPC {
         return this.gamemode;
     }
 
-    public @NotNull SubGamemode getSubGamemode() {
+    public @Nullable SubGamemode getSubGamemode() {
         return this.subGamemode;
     }
 
