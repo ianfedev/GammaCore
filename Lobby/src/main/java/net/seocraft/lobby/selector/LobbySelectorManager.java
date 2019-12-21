@@ -62,6 +62,7 @@ public class LobbySelectorManager implements SelectorManager {
                                     section.getFloat("yaw"),
                                     section.getFloat("pitch")
                             );
+                            selectorNPC.create(this.lobby, key);
 
                         } else {
                             throw new NotFound("The gamemode selected is null");
