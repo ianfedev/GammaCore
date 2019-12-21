@@ -13,12 +13,9 @@ public class LobbySelectorManager implements SelectorManager {
     @Override
     public void setupSelectorNPC() {
         ConfigurationSection NPCConfiguration = this.lobby.getConfig().getConfigurationSection("selector");
-        System.out.println(NPCConfiguration);
-        NPCConfiguration.getKeys(true).forEach(System.out::println);
         NPCConfiguration.getKeys(true).forEach((key) -> {
-            ConfigurationSection selector = this.lobby.getConfig().getConfigurationSection("selector." + key);
-
-            System.out.println(selector.getString("gamemode"));
+            ConfigurationSection selector = NPCConfiguration.getConfigurationSection(key);
+            selector.getKeys(true).forEach(System.out::println);
 
             /*SelectorNPC selectorNPC = new LobbySelectorNPC(
                     ,
