@@ -102,7 +102,7 @@ public class CommonsBukkit extends JavaPlugin {
     public void onEnable() {
         parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, null, ParameterProviderRegistry.createRegistry(), getLogger());
         BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), null, ParameterProviderRegistry.createRegistry());
-        loadConfig();
+        saveDefaultConfig();
 
         try {
             this.serverRecord = this.serverLoad.setupServer();
@@ -195,11 +195,6 @@ public class CommonsBukkit extends JavaPlugin {
         binder.expose(PunishmentProvider.class);
         binder.expose(WhisperManager.class);
         binder.expose(StatsProvider.class);
-    }
-
-    private void loadConfig() {
-        getConfig().options().copyDefaults(true);
-        saveConfig();
     }
 
     private void enableAuthentication() {

@@ -51,7 +51,7 @@ public class Lobby extends JavaPlugin {
             Bukkit.shutdown();
         }
 
-        loadConfig();
+        saveDefaultConfig();
         BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), null, ParameterProviderRegistry.createRegistry());
 
         dispatcher.registerCommandClass(this.hidingGadgetCommand);
@@ -79,11 +79,6 @@ public class Lobby extends JavaPlugin {
         binder.bind(SelectorManager.class).to(LobbySelectorManager.class);
         binder.bind(TeleportManager.class).to(LobbyTeleportManager.class);
         binder.bind(Lobby.class).toInstance(this);
-    }
-
-    private void loadConfig() {
-        getConfig().options().copyDefaults(true);
-        saveConfig();
     }
 
 }
