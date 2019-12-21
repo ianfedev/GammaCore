@@ -95,8 +95,6 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             );
 
             lobbyBoard.setLine(10, " ");
-
-
             lobbyBoard.apply(scoreboardPlayer);
         } else {
             this.cancel();
