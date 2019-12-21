@@ -25,7 +25,6 @@ public class LobbySelectorManager implements SelectorManager {
 
         if (NPCConfiguration != null)
             NPCConfiguration.getKeys(false).forEach((key) -> {
-                System.out.println(key);
                 ConfigurationSection section = NPCConfiguration.getConfigurationSection(key);
                 String gameString = section.getString("gamemode");
 
@@ -39,8 +38,7 @@ public class LobbySelectorManager implements SelectorManager {
                             if (section.getString("subGamemode") != null) {
                                 Optional<SubGamemode> subOptional = gamemode.getSubGamemodes().stream().filter(
                                         sub -> {
-                                            System.out.println(sub.getId());
-                                            return sub.getId().equalsIgnoreCase(section.getString("gubGamemode"));
+                                            return sub.getId().equalsIgnoreCase(section.getString("subGamemode"));
                                         }
                                 ).findFirst();
 
