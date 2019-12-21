@@ -27,6 +27,7 @@ public class LobbySelectorManager implements SelectorManager {
             NPCConfiguration.getKeys(true).forEach((key) -> {
 
                 ConfigurationSection selector = NPCConfiguration.getConfigurationSection(key);
+                selector.getKeys(true).forEach(System.out::println);
                 String gameString = selector.getString("gamemode");
 
                 if (gameString != null) {
