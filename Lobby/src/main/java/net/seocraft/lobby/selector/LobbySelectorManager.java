@@ -13,6 +13,7 @@ public class LobbySelectorManager implements SelectorManager {
     @Override
     public void setupSelectorNPC() {
         ConfigurationSection NPCConfiguration = this.lobby.getConfig().getConfigurationSection("selector");
+        this.lobby.getConfig().getKeys(true).forEach(System.out::println);
         NPCConfiguration.getKeys(true).forEach((key) -> {
             ConfigurationSection selector = this.lobby.getConfig().getConfigurationSection("selector." + key);
 
