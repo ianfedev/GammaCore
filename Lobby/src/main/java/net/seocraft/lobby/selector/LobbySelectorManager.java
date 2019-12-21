@@ -41,25 +41,23 @@ public class LobbySelectorManager implements SelectorManager {
                                 ).findFirst();
 
                                 if (!subOptional.isPresent()) throw new NotFound("The Sub Gamemode selected was not found");
-
                                 subGamemode = subOptional.get();
-
-                                SelectorNPC selectorNPC = new LobbySelectorNPC(
-                                        gamemode,
-                                        subGamemode,
-                                        this.lobby.getConfig().getString("selector." + key + ".skin"),
-                                        this.lobby.getConfig().getFloat("selector." + key + ".x"),
-                                        this.lobby.getConfig().getFloat("selector." + key + ".y"),
-                                        this.lobby.getConfig().getFloat("selector." + key + ".z"),
-                                        this.lobby.getConfig().getFloat("selector." + key + ".yaw"),
-                                        this.lobby.getConfig().getFloat("selector." + key + ".pitch")
-                                );
-
-                                System.out.println(selectorNPC.getGamemode().getId());
-
                             } else {
                                 throw new NotFound("The Sub Gamemode selected was not found");
                             }
+
+                            SelectorNPC selectorNPC = new LobbySelectorNPC(
+                                    gamemode,
+                                    subGamemode,
+                                    this.lobby.getConfig().getString("selector." + key + ".skin"),
+                                    this.lobby.getConfig().getFloat("selector." + key + ".x"),
+                                    this.lobby.getConfig().getFloat("selector." + key + ".y"),
+                                    this.lobby.getConfig().getFloat("selector." + key + ".z"),
+                                    this.lobby.getConfig().getFloat("selector." + key + ".yaw"),
+                                    this.lobby.getConfig().getFloat("selector." + key + ".pitch")
+                            );
+
+                            System.out.println(selectorNPC.getGamemode().getId());
 
                         } else {
                             throw new NotFound("The gamemode selected is null");
