@@ -13,7 +13,7 @@ public class BukkitAPI extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
-        binder.publicBinder().install(new CreatorModule());
+        binder.install(new CreatorModule());
         binder.publicBinder().bind(BukkitAPI.class).toInstance(this);
     }
 
