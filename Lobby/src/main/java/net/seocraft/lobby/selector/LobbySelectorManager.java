@@ -38,9 +38,7 @@ public class LobbySelectorManager implements SelectorManager {
                         if (gamemode != null) {
                             if (section.getString("subGamemode") != null) {
                                 Optional<SubGamemode> subOptional = gamemode.getSubGamemodes().stream().filter(
-                                        sub -> {
-                                            return sub.getId().equalsIgnoreCase(section.getString("subGamemode"));
-                                        }
+                                        sub -> sub.getId().equalsIgnoreCase(section.getString("subGamemode"))
                                 ).findFirst();
 
                                 if (!subOptional.isPresent()) throw new NotFound("The Sub Gamemode selected was not found");
@@ -62,13 +60,16 @@ public class LobbySelectorManager implements SelectorManager {
                                     section.getFloat("yaw"),
                                     section.getFloat("pitch")
                             );
+
                             selectorNPC.create(this.lobby, key);
+
 
                         } else {
                             throw new NotFound("The gamemode selected is null");
                         }
                     } catch (Exception ex) {
                         Bukkit.getLogger().log(Level.WARNING, "[Lobby] There was an error loading the {0} NPC. ({1})", new Object[]{key, ex.getMessage()});
+                        ex.printStackTrace();
                     }
 
                 }
