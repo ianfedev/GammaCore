@@ -7,6 +7,7 @@ import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
 import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.creator.npc.NPCManager;
 import net.seocraft.creator.skin.CraftSkinProperty;
 import net.seocraft.lobby.Lobby;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ public class LobbySelectorManager implements SelectorManager {
 
     @Inject private Lobby lobby;
     @Inject private GamemodeProvider gamemodeProvider;
+    @Inject private NPCManager npcManager;
 
     @Override
     public void setupSelectorNPC() {
@@ -61,7 +63,7 @@ public class LobbySelectorManager implements SelectorManager {
                                     section.getFloat("pitch")
                             );
 
-                            selectorNPC.create(this.lobby, key);
+                            selectorNPC.create(this.lobby, key, npcManager);
 
 
                         } else {

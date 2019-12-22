@@ -20,7 +20,6 @@ public class LobbySelectorNPC implements SelectorNPC {
     @NotNull private Gamemode gamemode;
     @Nullable private SubGamemode subGamemode;
     @NotNull private SkinProperty skin;
-    @Inject private NPCManager npcManager;
     private float x;
     private float y;
     private float z;
@@ -71,12 +70,12 @@ public class LobbySelectorNPC implements SelectorNPC {
     }
 
     @Override
-    public void create(@NotNull Plugin plugin, @NotNull String name) {
+    public void create(@NotNull Plugin plugin, @NotNull String name, @NotNull NPCManager manager) {
 
         World world = Bukkit.getWorld(plugin.getConfig().getString("spawn.world"));
 
         if (world != null) {
-            this.npcManager.createPlayerNPC(
+            manager.createPlayerNPC(
                     plugin,
                     new Location(
                             world,
