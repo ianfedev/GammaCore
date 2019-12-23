@@ -11,6 +11,7 @@ import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.match.Match;
@@ -50,6 +51,7 @@ import net.seocraft.commons.core.CoreModule;
 import net.seocraft.commons.core.backend.match.MatchCleanupRequest;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -95,6 +97,7 @@ public class CommonsBukkit extends JavaPlugin {
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
     public ParametricCommandHandler parametricCommandHandler;
     public boolean pairedGame = false;
+    private boolean cloudDeploy = false;
     public int pairingRunnable;
     @NotNull public Server serverRecord;
 
@@ -167,6 +170,17 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void configure(ProtectedBinder binder) {
+
+        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
+            if (plugin.getName().equalsIgnoreCase("CloudNet-Bridge")) {
+                Bukkit.getLogger().log(Level.INFO, "[BukkitAPI] This server has been deployed in a cloud.");
+                this.cloudDeploy = true;
+            }
+        }
+
+        if (!this.cloudDeploy)
+            Bukkit.getLogger().log(Level.INFO, "[BukkitAPI] There was not found a cloud plugin. Starting standalone implementation. (This could restrict some functinos like server teleport or lobby icons)");
+
         binder.bind(FriendshipProvider.class).to(UserFriendshipProvider.class).in(Scopes.SINGLETON);
         binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class).in(Scopes.SINGLETON);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class).in(Scopes.SINGLETON);
@@ -189,7 +203,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.install(new GameModule());
         binder.install(new ServerModule());
         binder.install(new UserModule());
-        binder.install(new CloudModule());
+        binder.install(new CloudModule(this.cloudDeploy));
         binder.install(new ScoreboardModule());
         binder.expose(FriendshipProvider.class);
         binder.expose(PunishmentProvider.class);
@@ -221,6 +235,10 @@ public class CommonsBukkit extends JavaPlugin {
 
     public void setServerRecord(Server server) {
         this.serverRecord = server;
+    }
+
+    public boolean hasCloudDeploy() {
+        return this.cloudDeploy;
     }
 
 }

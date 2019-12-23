@@ -14,6 +14,7 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
+import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +28,7 @@ public class GameMatchFinder implements MatchFinder {
 
     @Inject private MatchProvider matchProvider;
     @Inject private ServerManager serverManager;
-    @Inject private BukkitAPI bukkitAPI;
+    @Inject private CommonsBukkit instance;
     @Inject private CloudManager cloudManager;
 
     public @NotNull FinderResult findAvailableMatch(@NotNull String gamemode, @NotNull String subGamemode, @NotNull String serverGroup, boolean spectable) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
@@ -52,7 +53,7 @@ public class GameMatchFinder implements MatchFinder {
                throw new InternalServerError("Error obtaining match server");
             }
         } else {
-            if (this.bukkitAPI.hasCloudDeploy()) {
+            if (this.instance.hasCloudDeploy()) {
                 UUID serviceUUID = this.cloudManager.createCloudService(serverGroup);
                 while (true) {
                     if (this.cloudManager.isConnected(serviceUUID)) {

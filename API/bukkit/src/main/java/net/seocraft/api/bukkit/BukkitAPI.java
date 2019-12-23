@@ -6,28 +6,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class BukkitAPI extends JavaPlugin {
+import java.util.logging.Level;
 
-    private boolean cloudDeploy = false;
+public class BukkitAPI extends JavaPlugin {
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        this.cloudDeploy = true;
     }
 
     @Override
     public void configure(ProtectedBinder binder) {
         binder.install(new CreatorModule());
         binder.publicBinder().bind(BukkitAPI.class).toInstance(this);
-
-        for (Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
-            System.out.println("Plugin: " + plugin.getName());
-        }
-    }
-
-    public boolean hasCloudDeploy() {
-        return this.cloudDeploy;
     }
 
 }
