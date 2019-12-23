@@ -69,8 +69,6 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.playerDamageListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
 
-
-
     }
 
     @Override

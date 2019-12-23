@@ -13,10 +13,10 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.server.ServerType;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.creator.intercept.PacketManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -33,10 +33,12 @@ public class UserDisconnectListener implements Listener {
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private ServerManager serverManager;
     @Inject private CommonsBukkit commonsBukkit;
+    @Inject private PacketManager packetManager;
 
     @EventHandler
     public void disconnectListenerEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        this.packetManager.uninjectPlayer(event.getPlayer());
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
             boolean disconnection = false;
             while (!disconnection) {

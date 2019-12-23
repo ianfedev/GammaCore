@@ -1,6 +1,5 @@
 package net.seocraft.lobby.selector;
 
-import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;

@@ -5,16 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
-import me.fixeddev.bcm.basic.NoOpPermissionMessageProvider;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.api.bukkit.BukkitAPI;
-import net.seocraft.api.bukkit.game.gamemode.Gamemode;
-import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
-import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.stats.StatsProvider;
 import net.seocraft.api.bukkit.user.UserLoginManagement;
@@ -48,9 +43,10 @@ import net.seocraft.commons.bukkit.stats.GameStatsProvider;
 import net.seocraft.commons.bukkit.user.*;
 import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
 import net.seocraft.commons.core.CoreModule;
-import net.seocraft.commons.core.backend.match.MatchCleanupRequest;
+import net.seocraft.creator.intercept.PacketManager;
+import net.seocraft.creator.npc.listener.NPCSpawnListener;
+import net.seocraft.creator.npc.listener.NPCUseListener;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -92,6 +88,10 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
     @Inject private CraftMapFileManager craftMapFileManager;
+
+    @Inject private PacketManager packetManager;
+    @Inject private NPCSpawnListener npcSpawnListener;
+    @Inject private NPCUseListener npcUseListener;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
@@ -136,6 +136,9 @@ public class CommonsBukkit extends JavaPlugin {
             Bukkit.getLogger().log(Level.SEVERE, "[Bukkit-API] Error when authorizing server load.");
             Bukkit.shutdown();
         }
+
+        this.packetManager.addPacketListener(this.npcSpawnListener);
+        this.packetManager.addPacketListener(this.npcUseListener);
 
         dispatcher.registerCommandClass(whisperCommand);
         dispatcher.registerCommandClass(punishmentCommand);

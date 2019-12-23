@@ -122,6 +122,11 @@
             </dependency>
             <!-- Bungee -->
             <dependency>
+                <groupId>net.seocraft</groupId>
+                <artifactId>CreatorEssentials</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
                 <groupId>io.github.waterfallmc</groupId>
                 <artifactId>waterfall-api</artifactId>
                 <version>1.14-20191202.235755-1</version>
@@ -131,11 +136,6 @@
                 <groupId>org.github.paperspigot</groupId>
                 <artifactId>paperspigot</artifactId>
                 <version>1.8.8-R0.1-20191203.000214-1</version>
-            </dependency>
-            <dependency>
-                <groupId>net.seocraft</groupId>
-                <artifactId>CreatorEssentials</artifactId>
-                <version>1.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -156,12 +156,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>io.netty</pattern>
-                            <shadedPattern>net.seocraft.lib.io.netty</shadedPattern>
-                        </relocation>
-                    </relocations>
+
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <filters>
                         <filter>

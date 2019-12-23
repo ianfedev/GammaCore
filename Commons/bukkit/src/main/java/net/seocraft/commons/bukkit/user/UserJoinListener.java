@@ -28,6 +28,7 @@ import net.seocraft.commons.bukkit.authentication.AuthenticationLoginListener;
 import net.seocraft.commons.bukkit.punishment.PunishmentActions;
 import net.seocraft.commons.core.backend.user.UserAccessRequest;
 import net.seocraft.commons.core.translation.TranslatableField;
+import net.seocraft.creator.intercept.PacketManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
@@ -58,6 +59,7 @@ public class UserJoinListener implements Listener {
     @Inject private CommonsBukkit instance;
 
     @Inject private UserAccessRequest userAccessRequest;
+    @Inject private PacketManager packetManager;
     private static Field playerField;
 
     static {
@@ -121,6 +123,8 @@ public class UserJoinListener implements Listener {
                 updateServerRecord(playerIdentifier);
 
             }
+
+            this.packetManager.injectPlayer(event.getPlayer());
 
         } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
