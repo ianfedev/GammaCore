@@ -1,10 +1,10 @@
 package net.seocraft.api.bukkit.lobby.selector;
 
+import net.seocraft.api.bukkit.creator.npc.NPC;
+import net.seocraft.api.bukkit.creator.npc.NPCManager;
+import net.seocraft.api.bukkit.creator.skin.SkinProperty;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
-import net.seocraft.creator.npc.NPC;
-import net.seocraft.creator.npc.NPCManager;
-import net.seocraft.creator.skin.SkinProperty;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,7 +1,7 @@
 package net.seocraft.commons.bukkit.board;
 
-import net.seocraft.api.bukkit.board.Scoreboard;
-import net.seocraft.api.bukkit.board.ScoreboardApplier;
+import net.seocraft.api.bukkit.creator.board.Scoreboard;
+import net.seocraft.api.bukkit.creator.board.ScoreboardApplier;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;

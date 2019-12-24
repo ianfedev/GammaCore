@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.board;
+package net.seocraft.api.bukkit.creator.board;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package net.seocraft.api.bukkit.board.line;
+package net.seocraft.api.bukkit.creator.board.line;
 
 import org.jetbrains.annotations.NotNull;
 

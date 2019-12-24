@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.user;
 
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.game.match.Match;
@@ -16,7 +17,6 @@ import net.seocraft.api.core.server.ServerType;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.creator.intercept.PacketManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

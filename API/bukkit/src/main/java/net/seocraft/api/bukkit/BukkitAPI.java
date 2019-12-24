@@ -2,9 +2,9 @@ package net.seocraft.api.bukkit;
 
 import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.creator.intercept.CraftPacketManager;
-import net.seocraft.creator.intercept.PacketManager;
-import net.seocraft.creator.npc.NPCModule;
+import net.seocraft.api.bukkit.creator.intercept.CraftPacketManager;
+import net.seocraft.api.bukkit.creator.intercept.PacketManager;
+import net.seocraft.api.bukkit.creator.npc.NPCModule;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BukkitAPI extends JavaPlugin {

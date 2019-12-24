@@ -1,8 +1,8 @@
-package net.seocraft.api.bukkit.board;
+package net.seocraft.api.bukkit.creator.board;
 
-import net.seocraft.api.bukkit.board.line.ScoreboardLine;
-import net.seocraft.api.bukkit.board.line.ScoreboardLineCreator;
-import net.seocraft.api.bukkit.board.line.ScoreboardLineRemover;
+import net.seocraft.api.bukkit.creator.board.line.ScoreboardLine;
+import net.seocraft.api.bukkit.creator.board.line.ScoreboardLineCreator;
+import net.seocraft.api.bukkit.creator.board.line.ScoreboardLineRemover;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

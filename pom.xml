@@ -120,12 +120,6 @@
                 <artifactId>annotations</artifactId>
                 <version>16.0.1</version>
             </dependency>
-            <!-- Bungee -->
-            <dependency>
-                <groupId>net.seocraft</groupId>
-                <artifactId>CreatorEssentials</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
             <dependency>
                 <groupId>io.github.waterfallmc</groupId>
                 <artifactId>waterfall-api</artifactId>
@@ -156,7 +150,12 @@
                     </execution>
                 </executions>
                 <configuration>
-
+                    <relocations>
+                        <relocation>
+                            <pattern>io.netty</pattern>
+                            <shadedPattern>net.seocraft.lib.netty</shadedPattern>
+                        </relocation>
+                    </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <filters>
                         <filter>

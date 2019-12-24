@@ -1,6 +1,6 @@
 package net.seocraft.commons.bukkit.board.line;
 
-import net.seocraft.api.bukkit.board.line.ScoreboardLine;
+import net.seocraft.api.bukkit.creator.board.line.ScoreboardLine;
 import org.jetbrains.annotations.NotNull;
 
 public class CraftScoreboardLine implements ScoreboardLine {
