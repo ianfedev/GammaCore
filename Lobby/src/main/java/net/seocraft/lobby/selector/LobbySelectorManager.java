@@ -53,11 +53,11 @@ public class LobbySelectorManager implements SelectorManager {
                                     gamemode,
                                     subGamemode,
                                     new CraftSkinProperty(
-                                            section.getString("skin"),
-                                            section.getString("signature")
+                                            section.getString("signature"),
+                                            section.getString("skin")
                                     ),
                                     section.getFloat("x"),
-                                    section.getFloat("sy"),
+                                    section.getFloat("y"),
                                     section.getFloat("z"),
                                     section.getFloat("yaw"),
                                     section.getFloat("pitch")

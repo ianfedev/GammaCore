@@ -3,7 +3,10 @@ package net.seocraft.lobby.selector;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
+import net.seocraft.creator.npc.NPC;
 import net.seocraft.creator.npc.NPCManager;
+import net.seocraft.creator.npc.action.ClickType;
+import net.seocraft.creator.npc.event.NPCInteractEvent;
 import net.seocraft.creator.skin.SkinProperty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -74,7 +77,7 @@ public class LobbySelectorNPC implements SelectorNPC {
         World world = Bukkit.getWorld(plugin.getConfig().getString("spawn.world"));
 
         if (world != null) {
-            manager.createPlayerNPC(
+            NPC npcPlayer = manager.createPlayerNPC(
                     plugin,
                     new Location(
                             world,
@@ -86,7 +89,17 @@ public class LobbySelectorNPC implements SelectorNPC {
                     ),
                     name,
                     this.skin
-            );
+            ).addActionHandler((npc, npcEvent) -> {
+                if (npcEvent instanceof NPCInteractEvent) {
+                    NPCInteractEvent interactEvent = (NPCInteractEvent) npcEvent;
+                    if (interactEvent.getClickType() == ClickType.RIGHT_CLICK) {
+                        npc.setPassenger(interactEvent.getPlayer());
+                    }
+                }
+            });
+            npcPlayer.setFrozen(false);
+            npcPlayer.setControllable(true);
+            Bukkit.getLogger().log(Level.INFO, "[Lobby] The NPC {0} was created successfully.", name);
         } else {
             Bukkit.getLogger().log(Level.WARNING, "[Lobby] The world {0} could not be found for NPC creation.", plugin.getConfig().getString("spawn.world"));
         }
