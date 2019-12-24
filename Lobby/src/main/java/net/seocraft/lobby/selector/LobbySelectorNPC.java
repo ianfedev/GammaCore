@@ -5,8 +5,6 @@ import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
 import net.seocraft.creator.npc.NPC;
 import net.seocraft.creator.npc.NPCManager;
-import net.seocraft.creator.npc.action.ClickType;
-import net.seocraft.creator.npc.event.NPCInteractEvent;
 import net.seocraft.creator.skin.SkinProperty;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,13 +20,14 @@ public class LobbySelectorNPC implements SelectorNPC {
     @NotNull private Gamemode gamemode;
     @Nullable private SubGamemode subGamemode;
     @NotNull private SkinProperty skin;
-    private float x;
-    private float y;
-    private float z;
-    private float yaw;
-    private float pitch;
+    private double x;
+    private double y;
+    private double z;
+    private double yaw;
+    private double pitch;
+    private boolean perk;
 
-    public LobbySelectorNPC(@NotNull Gamemode gamemode, @Nullable SubGamemode subGamemode, @NotNull SkinProperty skin, float x, float y, float z, float yaw, float pitch) {
+    public LobbySelectorNPC(@NotNull Gamemode gamemode, @Nullable SubGamemode subGamemode, @NotNull SkinProperty skin, double x, double y, double z, double yaw, double pitch, boolean perk) {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
         this.skin = skin;
@@ -37,6 +36,7 @@ public class LobbySelectorNPC implements SelectorNPC {
         this.z = z;
         this.yaw = yaw;
         this.pitch = pitch;
+        this.perk = perk;
     }
 
     public @NotNull Gamemode getGamemode() {
@@ -51,28 +51,28 @@ public class LobbySelectorNPC implements SelectorNPC {
         return this.skin;
     }
 
-    public float getX() {
+    public double getX() {
         return this.x;
     }
 
-    public float getY() {
+    public double getY() {
         return this.y;
     }
 
-    public float getZ() {
+    public double getZ() {
         return this.z;
     }
 
-    public float getYaw() {
+    public double getYaw() {
         return this.yaw;
     }
 
-    public float getPitch() {
+    public double getPitch() {
         return this.pitch;
     }
 
     @Override
-    public void create(@NotNull Plugin plugin, @NotNull String name, @NotNull NPCManager manager) {
+    public NPC create(@NotNull Plugin plugin, @NotNull String name, @NotNull NPCManager manager) {
 
         World world = Bukkit.getWorld(plugin.getConfig().getString("spawn.world"));
 
@@ -84,24 +84,24 @@ public class LobbySelectorNPC implements SelectorNPC {
                             this.x,
                             this.y,
                             this.z,
-                            this.yaw,
-                            this.pitch
+                            (float) this.yaw,
+                            (float) this.pitch
                     ),
                     name,
                     this.skin
-            ).addActionHandler((npc, npcEvent) -> {
-                if (npcEvent instanceof NPCInteractEvent) {
-                    NPCInteractEvent interactEvent = (NPCInteractEvent) npcEvent;
-                    if (interactEvent.getClickType() == ClickType.RIGHT_CLICK) {
-                        npc.setPassenger(interactEvent.getPlayer());
-                    }
-                }
-            });
-            npcPlayer.setFrozen(false);
-            npcPlayer.setControllable(true);
+            );
+            npcPlayer.setFrozen(true);
+            npcPlayer.setInvulnerable(true);
             Bukkit.getLogger().log(Level.INFO, "[Lobby] The NPC {0} was created successfully.", name);
+            return npcPlayer;
         } else {
             Bukkit.getLogger().log(Level.WARNING, "[Lobby] The world {0} could not be found for NPC creation.", plugin.getConfig().getString("spawn.world"));
         }
+        return null;
+    }
+
+    @Override
+    public boolean isPerk() {
+        return perk;
     }
 }

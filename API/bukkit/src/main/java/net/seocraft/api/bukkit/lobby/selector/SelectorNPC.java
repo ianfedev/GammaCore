@@ -2,6 +2,7 @@ package net.seocraft.api.bukkit.lobby.selector;
 
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.creator.npc.NPC;
 import net.seocraft.creator.npc.NPCManager;
 import net.seocraft.creator.skin.SkinProperty;
 import org.bukkit.plugin.Plugin;
@@ -16,16 +17,18 @@ public interface SelectorNPC {
 
     @NotNull SkinProperty getSkin();
 
-    float getX();
+    double getX();
 
-    float getY();
+    double getY();
 
-    float getZ();
+    double getZ();
 
-    float getYaw();
+    double getYaw();
 
-    float getPitch();
+    double getPitch();
 
-    void create(@NotNull Plugin plugin, @NotNull String name, @NotNull NPCManager manager);
+    boolean isPerk();
+
+    @Nullable NPC create(@NotNull Plugin plugin, @NotNull String name, @NotNull NPCManager manager);
 
 }

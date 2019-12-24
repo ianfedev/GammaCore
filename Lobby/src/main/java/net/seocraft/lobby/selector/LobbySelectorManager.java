@@ -1,18 +1,29 @@
 package net.seocraft.lobby.selector;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
+import net.seocraft.api.bukkit.game.management.FinderResult;
+import net.seocraft.api.bukkit.game.management.MatchFinder;
 import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.redis.RedisClient;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.creator.npc.NPC;
 import net.seocraft.creator.npc.NPCManager;
+import net.seocraft.creator.npc.action.ClickType;
+import net.seocraft.creator.npc.event.NPCInteractEvent;
 import net.seocraft.creator.skin.CraftSkinProperty;
 import net.seocraft.lobby.Lobby;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -20,6 +31,7 @@ public class LobbySelectorManager implements SelectorManager {
 
     @Inject private Lobby lobby;
     @Inject private GamemodeProvider gamemodeProvider;
+    @Inject private NPCRedirector NPCRedirector;
     @Inject private NPCManager npcManager;
 
     @Override
@@ -35,7 +47,7 @@ public class LobbySelectorManager implements SelectorManager {
 
                     try {
                         Gamemode gamemode = this.gamemodeProvider.getGamemodeSync(gameString);
-                        SubGamemode subGamemode;
+                        SubGamemode subGamemode = null;
 
                         if (gamemode != null) {
                             if (section.getString("subGamemode") != null) {
@@ -45,8 +57,6 @@ public class LobbySelectorManager implements SelectorManager {
 
                                 if (!subOptional.isPresent()) throw new NotFound("The Sub Gamemode selected was not found");
                                 subGamemode = subOptional.get();
-                            } else {
-                                throw new NotFound("The Sub Gamemode selected was not found");
                             }
 
                             SelectorNPC selectorNPC = new LobbySelectorNPC(
@@ -56,15 +66,33 @@ public class LobbySelectorManager implements SelectorManager {
                                             section.getString("signature"),
                                             section.getString("skin")
                                     ),
-                                    section.getFloat("x"),
-                                    section.getFloat("y"),
-                                    section.getFloat("z"),
-                                    section.getFloat("yaw"),
-                                    section.getFloat("pitch")
+                                    Double.parseDouble(section.getString("x")),
+                                    Double.parseDouble(section.getString("y")),
+                                    Double.parseDouble(section.getString("z")),
+                                    Double.parseDouble(section.getString("yaw")),
+                                    Double.parseDouble(section.getString("pitch")),
+                                    section.getBoolean("perk")
                             );
 
-                            selectorNPC.create(this.lobby, key, npcManager);
-
+                            NPC gameNPC =  selectorNPC.create(this.lobby, key, npcManager);
+                            if (gameNPC != null) {
+                                SubGamemode finalSubGamemode = subGamemode;
+                                gameNPC.addActionHandler((npc, npcEvent) -> {
+                                    if (npcEvent instanceof NPCInteractEvent) {
+                                        NPCInteractEvent interactEvent = (NPCInteractEvent) npcEvent;
+                                        if (interactEvent.getClickType() == ClickType.RIGHT_CLICK) {
+                                            this.NPCRedirector.redirectPlayer(
+                                                    gamemode,
+                                                    finalSubGamemode,
+                                                    interactEvent.getPlayer(),
+                                                    selectorNPC.isPerk()
+                                            );
+                                        }
+                                    }
+                                });
+                            } else {
+                                throw new InternalServerError("There was an error creating the NPC.");
+                            }
 
                         } else {
                             throw new NotFound("The gamemode selected is null");
