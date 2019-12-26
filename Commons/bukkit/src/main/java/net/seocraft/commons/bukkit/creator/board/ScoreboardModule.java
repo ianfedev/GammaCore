@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.board;
+package net.seocraft.commons.bukkit.creator.board;
 
 import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.bukkit.creator.board.ScoreboardApplier;
@@ -6,8 +6,8 @@ import net.seocraft.api.bukkit.creator.board.ScoreboardManager;
 import net.seocraft.api.bukkit.creator.board.ScoreboardRemover;
 import net.seocraft.api.bukkit.creator.board.line.ScoreboardLineCreator;
 import net.seocraft.api.bukkit.creator.board.line.ScoreboardLineRemover;
-import net.seocraft.commons.bukkit.board.line.SimpleScoreboardLineCreator;
-import net.seocraft.commons.bukkit.board.line.SimpleScoreboardLineRemover;
+import net.seocraft.commons.bukkit.creator.board.line.SimpleScoreboardLineCreator;
+import net.seocraft.commons.bukkit.creator.board.line.SimpleScoreboardLineRemover;
 
 public class ScoreboardModule extends ProtectedModule {
 

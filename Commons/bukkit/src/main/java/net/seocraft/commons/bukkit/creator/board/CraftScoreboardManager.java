@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.board;
+package net.seocraft.commons.bukkit.creator.board;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.creator.board.Scoreboard;
