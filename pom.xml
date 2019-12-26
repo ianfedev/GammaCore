@@ -28,6 +28,14 @@
             <id>gamma-snapshots</id>
             <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
         </repository>
+        <repository>
+            <id>seocraft-releases</id>
+            <url>https://repo.seocraft.net/repository/seocraft-releases</url>
+        </repository>
+        <repository>
+            <id>seocraft-snapshots</id>
+            <url>https://repo.seocraft.net/repository/seocraft-snapshots</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
