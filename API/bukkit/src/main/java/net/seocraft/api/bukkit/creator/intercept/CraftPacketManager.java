@@ -1,11 +1,11 @@
 package net.seocraft.api.bukkit.creator.intercept;
 
 import com.google.inject.Inject;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelDuplexHandler;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelPromise;
 import lombok.Getter;
+import net.seocraft.lib.netty.channel.Channel;
+import net.seocraft.lib.netty.channel.ChannelDuplexHandler;
+import net.seocraft.lib.netty.channel.ChannelHandlerContext;
+import net.seocraft.lib.netty.channel.ChannelPromise;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

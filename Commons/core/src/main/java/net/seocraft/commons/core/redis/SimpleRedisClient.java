@@ -37,6 +37,7 @@ public class SimpleRedisClient implements RedisClient {
             return pool;
         }
 
+
         String password = config.getPassword();
 
         Config redissonConfig = new Config()

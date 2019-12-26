@@ -1,7 +1,6 @@
 package net.seocraft.api.bukkit.creator.npc;
 
 import com.google.inject.Inject;
-import io.netty.channel.Channel;
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
 import net.seocraft.api.bukkit.creator.intercept.PacketAdapter;
@@ -9,6 +8,7 @@ import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.creator.npc.action.ClickType;
 import net.seocraft.api.bukkit.creator.npc.entity.NPCEntity;
 import net.seocraft.api.bukkit.creator.v_1_8_R3.npc.NPCEntityBase_v1_8_R3;
+import net.seocraft.lib.netty.channel.Channel;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;

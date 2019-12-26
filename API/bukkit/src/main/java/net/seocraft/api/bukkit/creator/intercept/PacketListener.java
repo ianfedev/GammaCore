@@ -1,6 +1,6 @@
 package net.seocraft.api.bukkit.creator.intercept;
 
-import io.netty.channel.Channel;
+import net.seocraft.lib.netty.channel.Channel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

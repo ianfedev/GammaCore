@@ -127,9 +127,9 @@
             </dependency>
             <!-- Bukkit -->
             <dependency>
-                <groupId>org.github.paperspigot</groupId>
+                <groupId>net.seocraft</groupId>
                 <artifactId>paperspigot</artifactId>
-                <version>1.8.8-R0.1-20191203.000214-1</version>
+                <version>1.8-20191225.234427-1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -150,12 +150,6 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <relocations>
-                        <relocation>
-                            <pattern>io.netty</pattern>
-                            <shadedPattern>net.seocraft.lib.netty</shadedPattern>
-                        </relocation>
-                    </relocations>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <filters>
                         <filter>

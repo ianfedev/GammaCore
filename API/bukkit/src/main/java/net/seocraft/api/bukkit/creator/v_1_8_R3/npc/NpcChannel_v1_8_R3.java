@@ -1,6 +1,6 @@
 package net.seocraft.api.bukkit.creator.v_1_8_R3.npc;
 
-import io.netty.channel.*;
+import net.seocraft.lib.netty.channel.*;
 
 import java.net.SocketAddress;
 

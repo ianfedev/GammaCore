@@ -2,12 +2,12 @@ package net.seocraft.api.bukkit.creator.npc.listener;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import io.netty.channel.Channel;
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import net.seocraft.api.bukkit.creator.intercept.PacketAdapter;
 import net.seocraft.api.bukkit.creator.npc.NPCManager;
 import net.seocraft.api.bukkit.creator.npc.action.ClickType;
 import net.seocraft.api.bukkit.creator.v_1_8_R3.npc.NPCEntityBase_v1_8_R3;
+import net.seocraft.lib.netty.channel.Channel;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

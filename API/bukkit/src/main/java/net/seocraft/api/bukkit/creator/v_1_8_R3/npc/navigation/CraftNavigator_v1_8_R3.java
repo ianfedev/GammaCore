@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-
 public class CraftNavigator_v1_8_R3 implements Navigator {
 
     @Override
