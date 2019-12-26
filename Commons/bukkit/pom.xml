@@ -21,6 +21,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>net.seocraft</groupId>
+            <artifactId>paperspigot</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>me.fixeddev</groupId>
             <artifactId>BCM-Bukkit</artifactId>
             <scope>compile</scope>
