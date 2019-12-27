@@ -62,26 +62,30 @@ public class CraftHologram implements Hologram {
 
     @Override
     public void removeLine(int line) {
-        if (line != 0) this.lines.remove(line - 1);
+        if (line > 0) {
+            CraftHologramLine hologramLine = (CraftHologramLine) this.getLines().get(line - 1);
+            hologramLine.getStand().remove();
+            this.getLines().remove(line - 1);
+        }
     }
 
     @Override
     public void setLine(int line, @NotNull String message) {
         if (this.lines.size() < line) {
+            this.removeLine(line);
         }
     }
 
     private @NotNull ArmorStand createStand(@NotNull String message, int position) {
-
         Location armorLocation = this.location;
-        armorLocation.setY(this.location.getY());
-
-        ArmorStand stand = (ArmorStand) this.location.getWorld().spawnEntity(this.location, EntityType.ARMOR_STAND);
+        armorLocation.setY(this.location.getY() - ((position - 1) * 2));
+        ArmorStand stand = (ArmorStand) this.location.getWorld().spawnEntity(armorLocation, EntityType.ARMOR_STAND);
         stand.setGravity(false);
         stand.setCanPickupItems(false);
         stand.setCustomNameVisible(true);
         stand.setCustomName(message);
         stand.setVisible(false);
+        return stand;
     }
 
 }
