@@ -6,4 +6,6 @@ public interface HologramLine {
 
     @NotNull String getText();
 
+    int getEntityId();
+
 }

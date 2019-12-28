@@ -1,6 +1,7 @@
 package net.seocraft.api.bukkit.creator.hologram;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -19,6 +20,11 @@ public interface Hologram {
     @NotNull List<HologramLine> getLines();
 
     /**
+     * @return the player which has assigned the hologram
+     */
+    @NotNull Player getPlayer();
+
+    /**
      * @return the location of the hologram
      */
     @NotNull Location getLocation();
@@ -32,6 +38,11 @@ public interface Hologram {
      * @param message add a new line to the hologram
      */
     void addLine(@NotNull String message);
+
+    /**
+     * Create space between lines
+     */
+    void addSpace();
 
     /**
      * @param line to remove (Can not be zero)

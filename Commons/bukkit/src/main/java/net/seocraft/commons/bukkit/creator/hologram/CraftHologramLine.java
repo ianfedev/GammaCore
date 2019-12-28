@@ -1,17 +1,16 @@
 package net.seocraft.commons.bukkit.creator.hologram;
 
 import net.seocraft.api.bukkit.creator.hologram.HologramLine;
-import org.bukkit.entity.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 
 public class CraftHologramLine implements HologramLine {
 
     @NotNull private String text;
-    @NotNull private ArmorStand stand;
+    private int entityId;
 
-    public CraftHologramLine(@NotNull String text, @NotNull ArmorStand stand) {
+    public CraftHologramLine(@NotNull String text, int entityId) {
         this.text = text;
-        this.stand = stand;
+        this.entityId = entityId;
     }
 
     @Override
@@ -19,7 +18,9 @@ public class CraftHologramLine implements HologramLine {
         return this.text;
     }
 
-    public @NotNull ArmorStand getStand() {
-        return stand;
+    @Override
+    public int getEntityId() {
+        return this.entityId;
     }
+
 }
