@@ -19,7 +19,6 @@ import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.api.core.server.ServerType;
-import net.seocraft.api.core.session.GameSession;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;

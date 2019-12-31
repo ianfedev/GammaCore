@@ -1,8 +1,8 @@
 package net.seocraft.lobby.hiding;
 
 import com.google.inject.Inject;
-import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

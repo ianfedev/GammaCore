@@ -5,7 +5,6 @@ import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
-import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;

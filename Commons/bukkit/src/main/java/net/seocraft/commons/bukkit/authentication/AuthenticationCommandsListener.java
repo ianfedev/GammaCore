@@ -2,16 +2,15 @@ package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
 import me.fixeddev.bcm.basic.Namespace;
-import me.fixeddev.bcm.basic.exceptions.ArgumentsParseException;
 import me.fixeddev.bcm.basic.exceptions.CommandException;
 import me.fixeddev.bcm.basic.exceptions.CommandUsageException;
 import me.fixeddev.bcm.basic.exceptions.NoPermissionsException;
-import net.seocraft.api.core.session.GameSessionManager;
-import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.session.GameSessionManager;
+import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;

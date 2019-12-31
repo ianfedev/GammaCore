@@ -1,7 +1,5 @@
 package net.seocraft.api.bukkit.game.match.partial;
 
-import net.seocraft.api.bukkit.game.match.partial.Team;
-import net.seocraft.api.bukkit.game.match.partial.TeamMember;
 import org.bukkit.ChatColor;
 import org.jetbrains.annotations.NotNull;
 

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.storage.Model;
-import net.seocraft.api.core.user.partial.IPRecord;
 import net.seocraft.api.core.user.partial.Disguise;
+import net.seocraft.api.core.user.partial.IPRecord;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

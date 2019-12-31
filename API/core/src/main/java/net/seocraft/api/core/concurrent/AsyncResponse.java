@@ -3,8 +3,6 @@ package net.seocraft.api.core.concurrent;
 import net.seocraft.api.core.http.exceptions.HTTPException;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
 /**
  * This class will wrap an async response with a success status or an exception
  * @param <T> Interface/Class that will be wrapped

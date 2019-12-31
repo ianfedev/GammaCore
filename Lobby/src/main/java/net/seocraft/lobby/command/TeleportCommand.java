@@ -6,23 +6,15 @@ import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Flag;
-import me.fixeddev.bcm.parametric.annotation.Parameter;
 import net.seocraft.api.bukkit.cloud.CloudManager;
-import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.management.MatchFinder;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
-import net.seocraft.api.core.http.exceptions.BadRequest;
-import net.seocraft.api.core.http.exceptions.InternalServerError;
-import net.seocraft.api.core.http.exceptions.NotFound;
-import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.session.GameSessionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.io.IOException;
 
 public class TeleportCommand implements CommandClass {
 

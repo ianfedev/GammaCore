@@ -14,6 +14,7 @@ import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.creator.npc.listener.NPCSpawnListener;
 import net.seocraft.api.bukkit.creator.npc.listener.NPCUseListener;
 import net.seocraft.api.bukkit.game.management.MapFileManager;
+import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.stats.StatsProvider;
 import net.seocraft.api.bukkit.user.UserLoginManagement;
@@ -30,10 +31,9 @@ import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener
 import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
-import net.seocraft.commons.bukkit.creator.board.ScoreboardModule;
 import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
-import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
+import net.seocraft.commons.bukkit.creator.board.ScoreboardModule;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
@@ -86,7 +86,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
-    @Inject private MapFileManager craftMapFileManager;
+    @Inject private MapFileManager mapFileManager;
 
     @Inject private PacketManager packetManager;
     @Inject private NPCSpawnListener npcSpawnListener;
@@ -116,7 +116,7 @@ public class CommonsBukkit extends JavaPlugin {
                                 Objects.requireNonNull(this.serverRecord.getSubGamemode())
                         )
                 ));
-                this.craftMapFileManager.configureMapFolder();
+                this.mapFileManager.configureMapFolder();
                 pairingRunnable = Bukkit.getScheduler().scheduleSyncDelayedTask(
                         this,
                         ()  -> {

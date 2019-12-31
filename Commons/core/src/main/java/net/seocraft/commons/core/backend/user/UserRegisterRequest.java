@@ -1,12 +1,11 @@
 package net.seocraft.commons.core.backend.user;
 
-import com.google.inject.Inject;
-import net.seocraft.commons.core.backend.http.HttpRequest;
-import net.seocraft.commons.core.backend.http.HttpType;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.commons.core.backend.http.HttpRequest;
+import net.seocraft.commons.core.backend.http.HttpType;
 
 import java.util.HashMap;
 import java.util.Map;

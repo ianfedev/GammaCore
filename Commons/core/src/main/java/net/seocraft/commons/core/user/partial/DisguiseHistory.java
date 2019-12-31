@@ -1,6 +1,5 @@
 package net.seocraft.commons.core.user.partial;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.user.partial.Disguise;
 import org.jetbrains.annotations.NotNull;
