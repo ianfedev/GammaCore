@@ -10,10 +10,10 @@ import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
 import me.fixeddev.inject.ProtectedBinder;
-import net.seocraft.api.bukkit.creator.hologram.LineCreator;
 import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.creator.npc.listener.NPCSpawnListener;
 import net.seocraft.api.bukkit.creator.npc.listener.NPCUseListener;
+import net.seocraft.api.bukkit.game.management.MapFileManager;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.stats.StatsProvider;
 import net.seocraft.api.bukkit.user.UserLoginManagement;
@@ -34,12 +34,10 @@ import net.seocraft.commons.bukkit.creator.board.ScoreboardModule;
 import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
-import net.seocraft.commons.bukkit.creator.hologram.CraftLineCreator;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listener.game.*;
-import net.seocraft.commons.bukkit.game.management.CraftMapFileManager;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
@@ -88,7 +86,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
-    @Inject private CraftMapFileManager craftMapFileManager;
+    @Inject private MapFileManager craftMapFileManager;
 
     @Inject private PacketManager packetManager;
     @Inject private NPCSpawnListener npcSpawnListener;

@@ -1,6 +1,5 @@
 package net.seocraft.commons.bukkit.game;
 
-import com.google.inject.Scopes;
 import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.management.*;
