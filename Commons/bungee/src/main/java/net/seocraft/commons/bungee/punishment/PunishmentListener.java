@@ -5,9 +5,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.seocraft.api.core.redis.messager.ChannelListener;
 import net.seocraft.api.core.user.UserExpulsion;
+import net.seocraft.api.core.utils.TimeUtils;
 import net.seocraft.commons.bungee.CommonsBungee;
 import net.seocraft.commons.core.translation.TranslatableField;
-import net.seocraft.api.core.utils.TimeUtils;
 
 public class PunishmentListener implements ChannelListener<UserExpulsion> {
 

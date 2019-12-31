@@ -1,10 +1,10 @@
 package net.seocraft.commons.bukkit.friend;
 
-import net.seocraft.api.core.friend.Friendship;
-import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.concurrent.AsyncResponse;
+import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.api.core.friend.Friendship;
 import net.seocraft.api.core.redis.messager.ChannelListener;
+import net.seocraft.api.core.user.UserStorageProvider;
 
 public class FriendshipListener implements ChannelListener<Friendship> {
 

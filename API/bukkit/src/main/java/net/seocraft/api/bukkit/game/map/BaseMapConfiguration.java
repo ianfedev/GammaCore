@@ -2,7 +2,6 @@ package net.seocraft.api.bukkit.game.map;
 
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.partial.MapCoordinates;
-import net.seocraft.api.core.storage.Model;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;

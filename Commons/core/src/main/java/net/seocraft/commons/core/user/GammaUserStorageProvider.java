@@ -12,12 +12,11 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.ServerTokenQuery;
-import net.seocraft.commons.core.backend.user.UserGetRequest;
-import net.seocraft.commons.core.backend.user.UserUpdateRequest;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.commons.core.backend.user.UserGetRequest;
+import net.seocraft.commons.core.backend.user.UserUpdateRequest;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 

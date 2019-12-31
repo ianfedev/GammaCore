@@ -1,7 +1,7 @@
 package net.seocraft.commons.bukkit.game.map;
 
-import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.GameMap;
+import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import net.seocraft.api.bukkit.game.map.partial.Rating;
 import org.jetbrains.annotations.NotNull;
 

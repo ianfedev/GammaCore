@@ -1,6 +1,5 @@
 package net.seocraft.api.bukkit.punishment;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -8,8 +7,6 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.bukkit.punishment.Punishment;
-import net.seocraft.api.bukkit.punishment.PunishmentType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

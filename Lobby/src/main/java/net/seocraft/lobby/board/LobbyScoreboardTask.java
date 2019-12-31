@@ -1,9 +1,9 @@
 package net.seocraft.lobby.board;
 
 import net.seocraft.api.bukkit.BukkitAPI;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.creator.board.Scoreboard;
 import net.seocraft.api.bukkit.creator.board.ScoreboardManager;
-import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.core.group.partial.Flair;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.core.group.partial.MinecraftFlair;

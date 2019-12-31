@@ -24,7 +24,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.waterfallmc</groupId>
+            <groupId>net.seocraft</groupId>
             <artifactId>waterfall-api</artifactId>
             <scope>provided</scope>
         </dependency>

@@ -129,9 +129,9 @@
                 <version>16.0.1</version>
             </dependency>
             <dependency>
-                <groupId>io.github.waterfallmc</groupId>
+                <groupId>net.seocraft</groupId>
                 <artifactId>waterfall-api</artifactId>
-                <version>1.14-20191202.235755-1</version>
+                <version>1.8</version>
             </dependency>
             <!-- Bukkit -->
             <dependency>
