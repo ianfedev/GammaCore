@@ -24,7 +24,7 @@ public class LobbySelectorManager implements SelectorManager {
 
     @Inject private Lobby lobby;
     @Inject private GamemodeProvider gamemodeProvider;
-    @Inject private NPCRedirector NPCRedirector;
+    @Inject private net.seocraft.commons.bukkit.cloud.NPCRedirector NPCRedirector;
     @Inject private NPCManager npcManager;
 
     @Override

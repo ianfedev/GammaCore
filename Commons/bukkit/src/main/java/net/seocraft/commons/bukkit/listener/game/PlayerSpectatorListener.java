@@ -42,6 +42,7 @@ public class PlayerSpectatorListener implements Listener {
                 player.teleport(this.coreGameManagement.getSpectatorSpawnLocation(gameMatch));
             }
 
+            this.coreGameManagement.removeMatchPlayer(gameMatch.getId(), user);
             this.coreGameManagement.addSpectatorPlayer(gameMatch.getId(), user);
             this.coreGameManagement.addSpectatingPlayer(player);
 

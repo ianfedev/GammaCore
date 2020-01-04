@@ -1,4 +1,4 @@
-package net.seocraft.lobby.event;
+package net.seocraft.commons.bukkit.event;
 
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -7,7 +7,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class LobbyCustomSelectionEvent extends Event {
+public class CustomSelectionEvent extends Event {
 
     private static HandlerList handlerList = new HandlerList();
     @NotNull private Player player;
@@ -15,7 +15,7 @@ public class LobbyCustomSelectionEvent extends Event {
     @NotNull private SubGamemode subGamemode;
     private boolean perk;
 
-    public LobbyCustomSelectionEvent(@NotNull Player player, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode, boolean perk) {
+    public CustomSelectionEvent(@NotNull Player player, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode, boolean perk) {
         this.player = player;
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;

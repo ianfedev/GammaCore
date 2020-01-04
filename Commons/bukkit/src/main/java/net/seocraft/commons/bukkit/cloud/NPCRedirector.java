@@ -1,8 +1,9 @@
-package net.seocraft.lobby.selector;
+package net.seocraft.commons.bukkit.cloud;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.cloud.ServerRedirector;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.management.FinderResult;
@@ -15,8 +16,8 @@ import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.session.GameSession;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.commons.bukkit.CommonsBukkit;
+import net.seocraft.commons.bukkit.event.CustomSelectionEvent;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
-import net.seocraft.lobby.event.LobbyCustomSelectionEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-public class NPCRedirector {
+public class NPCRedirector implements ServerRedirector {
 
     @Inject private GameSessionManager gameSessionManager;
     @Inject private CommonsBukkit instance;
@@ -43,7 +44,7 @@ public class NPCRedirector {
                 );
             } else {
                 if (subGamemode.canSelectMap()) {
-                    Bukkit.getPluginManager().callEvent(new LobbyCustomSelectionEvent(player, gamemode, subGamemode, perk));
+                    Bukkit.getPluginManager().callEvent(new CustomSelectionEvent(player, gamemode, subGamemode, perk));
                 } else {
                     FinderResult result;
                     try {

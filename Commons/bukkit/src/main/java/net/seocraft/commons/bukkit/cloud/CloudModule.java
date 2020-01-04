@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.cloud;
 
 import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.cloud.ServerRedirector;
 
 public class CloudModule extends ProtectedModule {
 
@@ -18,6 +19,7 @@ public class CloudModule extends ProtectedModule {
         } else {
             bind(CloudManager.class).to(CloudStandaloneManager.class);
         }
+        bind(ServerRedirector.class).to(NPCRedirector.class);
         expose(CloudManager.class);
     }
 
