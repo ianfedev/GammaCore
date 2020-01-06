@@ -75,27 +75,29 @@ public class LobbySelectorNPC implements SelectorNPC {
     public NPC create(@NotNull Plugin plugin, @NotNull String name, @NotNull NPCManager manager) {
 
         World world = Bukkit.getWorld(plugin.getConfig().getString("spawn.world"));
-
         if (world != null) {
+
+            Location location = new Location(
+                    world,
+                    this.x,
+                    this.y,
+                    this.z,
+                    (float) this.yaw,
+                    (float) this.pitch
+            );
+
             NPC npcPlayer = manager.createPlayerNPC(
                     plugin,
-                    new Location(
-                            world,
-                            this.x,
-                            this.y,
-                            this.z,
-                            (float) this.yaw,
-                            (float) this.pitch
-                    ),
-                    name,
+                    location,
+                    " ",
                     this.skin
             );
             npcPlayer.setFrozen(true);
             npcPlayer.setInvulnerable(true);
-            Bukkit.getLogger().log(Level.INFO, "[Lobby] The NPC {0} was created successfully.", name);
+            Bukkit.getLogger().log(Level.INFO, "[Lobby] NPC {0} created successfully.", name);
             return npcPlayer;
         } else {
-            Bukkit.getLogger().log(Level.WARNING, "[Lobby] The world {0} could not be found for NPC creation.", plugin.getConfig().getString("spawn.world"));
+            Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error creating NPC {0}.", name);
         }
         return null;
     }

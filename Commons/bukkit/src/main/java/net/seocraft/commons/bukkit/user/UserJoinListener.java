@@ -120,6 +120,7 @@ public class UserJoinListener implements Listener {
                     event.setJoinMessage("");
                 }
 
+                player.setDatabaseIdentifier(playerIdentifier);
                 updateServerRecord(playerIdentifier);
 
             }

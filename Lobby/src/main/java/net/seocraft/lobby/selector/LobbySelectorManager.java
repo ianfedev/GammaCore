@@ -13,6 +13,7 @@ import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.commons.bukkit.cloud.NPCRedirector;
 import net.seocraft.lobby.Lobby;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,7 +25,7 @@ public class LobbySelectorManager implements SelectorManager {
 
     @Inject private Lobby lobby;
     @Inject private GamemodeProvider gamemodeProvider;
-    @Inject private net.seocraft.commons.bukkit.cloud.NPCRedirector NPCRedirector;
+    @Inject private NPCRedirector npcRedirector;
     @Inject private NPCManager npcManager;
 
     @Override
@@ -67,6 +68,8 @@ public class LobbySelectorManager implements SelectorManager {
                                     section.getBoolean("perk")
                             );
 
+                            this.lobby.getLobbyNPC().add(selectorNPC);
+
                             NPC gameNPC =  selectorNPC.create(this.lobby, key, npcManager);
                             if (gameNPC != null) {
                                 SubGamemode finalSubGamemode = subGamemode;
@@ -74,7 +77,7 @@ public class LobbySelectorManager implements SelectorManager {
                                     if (npcEvent instanceof NPCInteractEvent) {
                                         NPCInteractEvent interactEvent = (NPCInteractEvent) npcEvent;
                                         if (interactEvent.getClickType() == ClickType.RIGHT_CLICK) {
-                                            this.NPCRedirector.redirectPlayer(
+                                            this.npcRedirector.redirectPlayer(
                                                     gamemode,
                                                     finalSubGamemode,
                                                     interactEvent.getPlayer(),
@@ -86,7 +89,6 @@ public class LobbySelectorManager implements SelectorManager {
                             } else {
                                 throw new InternalServerError("There was an error creating the NPC.");
                             }
-
                         } else {
                             throw new NotFound("The gamemode selected is null");
                         }
@@ -97,7 +99,6 @@ public class LobbySelectorManager implements SelectorManager {
 
                 }
             });
-
     }
 
 }

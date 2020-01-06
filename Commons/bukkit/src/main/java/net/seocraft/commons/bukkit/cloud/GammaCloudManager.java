@@ -7,8 +7,12 @@ import de.dytanic.cloudnet.common.document.gson.JsonDocument;
 import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
+import de.dytanic.cloudnet.ext.bridge.BridgePlayerManager;
+import de.dytanic.cloudnet.ext.bridge.ServiceInfoSnapshotUtil;
 import de.dytanic.cloudnet.ext.bridge.bukkit.BukkitCloudNetHelper;
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.LobbyIcon;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
@@ -94,8 +98,24 @@ public class GammaCloudManager implements CloudManager {
     }
 
     @Override
+    public int getGroupOnlinePlayers(@NotNull String name) {
+        int counter = 0;
+        for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name))
+            counter += ServiceInfoSnapshotUtil.getPlayers(snapshot).size();
+        return counter;
+    }
+
+    @Override
+    public int getGamemodeOnlinePlayers(@NotNull Gamemode gamemode) {
+        int counter = 0;
+        counter += getGroupOnlinePlayers(gamemode.getLobbyGroup());
+        for (SubGamemode subGamemode : gamemode.getSubGamemodes()) counter += getGroupOnlinePlayers(subGamemode.getServerGroup());
+        return counter;
+    }
+
+    @Override
     public @NotNull String getOnlinePlayers() {
-        return BukkitCloudNetHelper.getOnlineCount() + "";
+        return BridgePlayerManager.getInstance().getOnlinePlayers().size() + "";
     }
 
     @NotNull

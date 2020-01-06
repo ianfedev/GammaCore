@@ -8,8 +8,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.creator.board.ScoreboardManager;
-import net.seocraft.api.bukkit.creator.npc.NPCManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
+import net.seocraft.api.bukkit.lobby.selector.SelectorHologramManager;
+import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.session.GameSession;
@@ -37,10 +38,10 @@ public class LobbyConnectionListener implements Listener {
     @Inject private Lobby instance;
     @Inject private TeleportManager teleportManager;
     @Inject private CloudManager cloudManager;
+    @Inject private SelectorHologramManager hologramManager;
     @Inject private GameSessionManager gameSessionManager;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private FriendshipProvider friendshipProvider;
-    @Inject private NPCManager npcManager;
 
     @EventHandler
     public void lobbyConnectionListener(LobbyConnectionEvent event) {
@@ -48,6 +49,7 @@ public class LobbyConnectionListener implements Listener {
         User playerRecord = event.getPlayerRecord();
 
         this.teleportManager.spawnTeleport(player, null, true);
+        this.hologramManager.showSelectorHologram(playerRecord);
 
         this.hotbarItemCollection.setupPlayerHotbar(
                 player,
@@ -89,7 +91,6 @@ public class LobbyConnectionListener implements Listener {
                         clickComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friends requests"));
                         baseComponent.addExtra(clickComponent);
                         player.sendMessage(baseComponent);
-
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                     }
                 } catch (IOException e) {

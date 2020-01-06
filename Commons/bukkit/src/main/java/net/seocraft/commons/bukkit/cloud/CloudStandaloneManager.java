@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.cloud;
 
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.lobby.LobbyIcon;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import org.bukkit.entity.Player;
@@ -28,6 +29,16 @@ public class CloudStandaloneManager implements CloudManager {
                 new GammaLobbyIcon("Not in cloud environment", 0, 0, 0)
         );
         return deniedGroup;
+    }
+
+    @Override
+    public int getGroupOnlinePlayers(@NotNull String id) {
+        return 0;
+    }
+
+    @Override
+    public int getGamemodeOnlinePlayers(@NotNull Gamemode gamemode) {
+        return 0;
     }
 
     @Override

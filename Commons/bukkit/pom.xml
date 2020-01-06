@@ -16,13 +16,13 @@
     <dependencies>
         <dependency>
             <groupId>net.seocraft</groupId>
-            <artifactId>api-bukkit</artifactId>
-            <version>${project.version}</version>
+            <artifactId>paperspigot</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
-            <artifactId>paperspigot</artifactId>
+            <artifactId>api-bukkit</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

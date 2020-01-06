@@ -18,6 +18,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
+import org.bukkit.creator.hologram.Hologram;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,6 +39,7 @@ public class UserDisconnectListener implements Listener {
     @EventHandler
     public void disconnectListenerEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        player.getLinkedHolograms().forEach(Hologram::destroy);
         this.packetManager.uninjectPlayer(event.getPlayer());
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
             boolean disconnection = false;
