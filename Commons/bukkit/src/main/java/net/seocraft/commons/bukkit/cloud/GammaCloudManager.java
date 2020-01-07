@@ -100,8 +100,10 @@ public class GammaCloudManager implements CloudManager {
     @Override
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
-        for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name))
+        for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)){
+            System.out.println(snapshot.getServiceId().getName());
             counter += ServiceInfoSnapshotUtil.getPlayers(snapshot).size();
+        }
         return counter;
     }
 
