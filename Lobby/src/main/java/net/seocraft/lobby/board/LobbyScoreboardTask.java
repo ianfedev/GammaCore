@@ -52,7 +52,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
 
             lobbyBoard.setLine(0, ChatColor.YELLOW + "www.seocraft.net"
             );
-            lobbyBoard.setLine(1, " ");
+            lobbyBoard.setLine(1, " .");
 
             lobbyBoard.setLine(2, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
@@ -65,7 +65,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             );
 
             lobbyBoard.setLine(4, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + "#" + Bukkit.getServerId()
+                    + ChatColor.WHITE + "#" + Bukkit.getServerName().split("-")[1]
             );
             lobbyBoard.setLine(5, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
@@ -94,7 +94,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     )
             );
 
-            lobbyBoard.setLine(10, " ");
+            lobbyBoard.setLine(10, " .");
             lobbyBoard.apply(scoreboardPlayer);
         } else {
             this.cancel();
