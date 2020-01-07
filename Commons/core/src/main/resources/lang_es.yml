@@ -181,9 +181,13 @@ commons_lobby_scoreboard_players: "Jugadores"
 game_5d586f5634a44a74e4826045_title: Lobby principal
 game_5d586f5634a44a74e4826045_description: "Vuelve al menú principal"
 game_5d5a11f35f1de46c232babae_title: SkyWars
-game_5d5a11f35f1de46c232babae_description: "%%dark_gray%%Juego Clásico%n%%n%Disfruta del clásico juego SkyWars%n%en Seocraft Network. Recuerda que se%n%actualizará constantemente para una%n%experiencia única."
+game_5d5a11f35f1de46c232babae_description: "%%dark_gray%%Juego Clásico%n%%n%Disfruta del clásico juego SkyWars%n%en Seocraft Network. Recuerda que se%n%actualizará constantemente para una%n%experiencia única"
 game_5db64666df034f2e9a3b4800_title: Juegos TNT
-game_5db64666df034f2e9a3b4800_description: "%%dark_gray%%Juego Rápidos%n%%n%¡Divertidos minijuegos con %%red%%TNT!"
+game_5db64666df034f2e9a3b4800_description: "%%dark_gray%%Juego Rápidos%n%%n%Divertidos minijuegos con %%red%%TNT%%gray%%"
+game_5e14f49eff6607e52a32ed02_title: The Dungeon
+game_5e14f49eff6607e52a32ed02_description: "%%dark_gray%%Larga Duración%n%%n%Juega en nuestra modalidad%n%%%aqua%%FFA %%gray%%personalizada y lucha en%n%enuestra mazmorra para ganar"
+game_5e14f4e5ff6607e52a32ed48_title: BedWars
+game_5e14f4e5ff6607e52a32ed48_description: "%%dark_gray%%Juego por Equipos%n%%n%Protege la cama junto a tus%n%compañeros y destruye las%n%camas enemigas para ganar"
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas
