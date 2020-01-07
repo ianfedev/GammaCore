@@ -23,6 +23,7 @@ import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.selector.LobbySelectorManager;
 import net.seocraft.lobby.teleport.LobbyTeleportManager;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,5 +90,12 @@ public class Lobby extends JavaPlugin {
 
     public @NotNull Set<SelectorNPC> getLobbyNPC() {
         return lobbyNPC;
+    }
+
+    private void setupLobbyWorld() {
+        World world = Bukkit.getWorld(getConfig().getString("spawn.world"));
+        if (world != null) {
+            world.setGameRuleValue("doWeatherCycle", "false");
+        }
     }
 }
