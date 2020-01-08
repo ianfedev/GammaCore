@@ -11,12 +11,10 @@ import net.md_5.bungee.event.EventHandler;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.online.OnlineStatusManager;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
 
 public class PlayerJoinListener implements Listener {
 
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private UserStorageProvider userStorageProvider;
 
@@ -25,15 +23,7 @@ public class PlayerJoinListener implements Listener {
         ProxiedPlayer player = event.getPlayer();
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(player.getName()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                try {
-                    this.gameSessionManager.createGameSession(userAsyncResponse.getResponse(),  player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
-                    this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), true);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                    player.disconnect(
-                            new TextComponent(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + e.getClass().getSimpleName())
-                    );
-                }
+                this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), true);
             } else {
                 if (userAsyncResponse.getStatusCode() != 404) {
                     player.disconnect(

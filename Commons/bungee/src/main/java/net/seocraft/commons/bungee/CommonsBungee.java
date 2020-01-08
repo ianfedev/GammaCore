@@ -18,7 +18,6 @@ import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -33,13 +32,11 @@ import net.seocraft.commons.core.translation.TranslatableField;
 import java.io.*;
 import java.util.logging.Level;
 
-
 public class CommonsBungee extends Plugin {
 
     @Inject private PlayerJoinListener playerJoinListener;
     @Inject private PlayerDisconnectListener playerDisconnectListener;
     @Inject private UserStorageProvider userStorageProvider;
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private TranslatableField translatableField;
     @Inject private Messager messager;
@@ -74,7 +71,6 @@ public class CommonsBungee extends Plugin {
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 try {
                     User user = this.userStorageProvider.findUserByNameSync(player.getName());
-                    this.gameSessionManager.removeGameSession(player.getName());
                     this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), false);
                 } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
             }

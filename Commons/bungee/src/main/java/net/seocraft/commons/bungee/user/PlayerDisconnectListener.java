@@ -10,13 +10,10 @@ import net.md_5.bungee.event.EventHandler;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.online.OnlineStatusManager;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
 
 public class PlayerDisconnectListener implements Listener {
 
-
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private UserStorageProvider userStorageProvider;
 
@@ -25,7 +22,6 @@ public class PlayerDisconnectListener implements Listener {
         ProxiedPlayer player = event.getPlayer();
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(player.getName()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                this.gameSessionManager.removeGameSession(player.getName());
                 this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), false);
             } else {
                 player.disconnect(
