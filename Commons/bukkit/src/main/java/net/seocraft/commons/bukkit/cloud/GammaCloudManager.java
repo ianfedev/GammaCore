@@ -26,6 +26,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -103,8 +104,12 @@ public class GammaCloudManager implements CloudManager {
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
         for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)){
-            System.out.println(snapshot.getProperties().toJson());
-            counter += 1;
+            System.out.println(snapshot.getServiceId().getName());
+            @Nullable Collection<JsonDocument> collection = ServiceInfoSnapshotUtil.getPlayers(snapshot);
+            if (collection != null) {
+                System.out.println(collection.size());
+                counter += collection.size();
+            }
         }
         return counter;
     }
