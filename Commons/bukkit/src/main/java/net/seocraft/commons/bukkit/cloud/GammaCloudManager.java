@@ -1,7 +1,9 @@
 package net.seocraft.commons.bukkit.cloud;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import de.dytanic.cloudnet.common.concurrent.ITask;
@@ -105,9 +107,13 @@ public class GammaCloudManager implements CloudManager {
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
         for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)) {
-            List<JsonDocument> snapshotUsers = snapshot.getProperties().get("Players", (new TypeToken<JsonDocument>() {
-            }).getType());
-            System.out.println(snapshotUsers.size());
+            String snapshotUsers = snapshot.getProperties().toJson();
+            try {
+                ArrayNode node = (ArrayNode) this.mapper.readTree(snapshotUsers).get("Players");
+                System.out.println(node.size());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             counter += 0;
         }
         return counter;
