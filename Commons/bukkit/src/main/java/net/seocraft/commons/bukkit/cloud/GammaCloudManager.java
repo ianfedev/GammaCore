@@ -1,10 +1,8 @@
 package net.seocraft.commons.bukkit.cloud;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import de.dytanic.cloudnet.common.concurrent.ITask;
 import de.dytanic.cloudnet.common.concurrent.ITaskListener;
@@ -13,7 +11,6 @@ import de.dytanic.cloudnet.driver.CloudNetDriver;
 import de.dytanic.cloudnet.driver.service.ServiceInfoSnapshot;
 import de.dytanic.cloudnet.driver.service.ServiceTask;
 import de.dytanic.cloudnet.ext.bridge.BridgePlayerManager;
-import de.dytanic.cloudnet.ext.bridge.ServiceInfoSnapshotUtil;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -29,7 +26,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.*;
@@ -107,14 +103,14 @@ public class GammaCloudManager implements CloudManager {
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
         for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)) {
-            String snapshotUsers = snapshot.getProperties().toJson();
+            int size = 0;
             try {
-                ArrayNode node = (ArrayNode) this.mapper.readTree(snapshotUsers).get("Players");
-                System.out.println(node.size());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            counter += 0;
+                JsonNode node =  this.mapper.readTree(
+                        snapshot.getProperties().toJson()
+                ).get("Players");
+                if (node.isArray()) size = node.size();
+            } catch (IOException ignore) {}
+            counter += size;
         }
         return counter;
     }
