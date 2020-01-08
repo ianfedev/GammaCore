@@ -103,12 +103,7 @@ public class GammaCloudManager implements CloudManager {
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
         for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)){
-            try {
-                String object = this.mapper.writeValueAsString(snapshot.getProperties());
-                System.out.println(object);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            System.out.println(snapshot.getProperties().getString("Players"));
             counter += 1;
         }
         return counter;
