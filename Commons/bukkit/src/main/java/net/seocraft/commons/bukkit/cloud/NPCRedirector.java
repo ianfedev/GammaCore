@@ -13,7 +13,6 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
-import net.seocraft.api.core.session.GameSession;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.event.CustomSelectionEvent;
@@ -50,15 +49,12 @@ public class NPCRedirector implements ServerRedirector {
                     try {
                         result = this.matchFinder.findAvailableMatch(gamemode.getId(), subGamemode.getId(), subGamemode.getServerGroup(), false);
                         String finderResult = this.mapper.writeValueAsString(result);
-                        GameSession gameSession = this.gameSessionManager.getCachedSession(player.getName());
-                        if (gameSession != null) {
-                            this.client.setString(
-                                    "pairing:" + gameSession.getPlayerId(),
-                                    finderResult
-                            );
-                            this.client.setExpiration("pairing" + gameSession.getPlayerId(), 60);
-                            this.cloudManager.sendPlayerToServer(player, result.getServer().getSlug());
-                        }
+                        this.client.setString(
+                                "pairing:" + player.getDatabaseIdentifier(),
+                                finderResult
+                        );
+                        this.client.setExpiration("pairing" + player.getDatabaseIdentifier(), 60);
+                        this.cloudManager.sendPlayerToServer(player, result.getServer().getSlug());
                     } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException ex) {
                         ChatAlertLibrary.errorChatAlert(player, "Error pairing game, please try again.");
                         ex.printStackTrace();

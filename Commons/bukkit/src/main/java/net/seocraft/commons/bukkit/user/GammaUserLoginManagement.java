@@ -13,7 +13,6 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.ServerTokenQuery;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.utils.TimeUtils;
@@ -39,7 +38,6 @@ public class GammaUserLoginManagement implements UserLoginManagement {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translatableField;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private CloudManager cloudManager;
 
@@ -48,7 +46,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
 
     @Override
     public void loginUser(@NotNull Player player, @NotNull String password) throws IOException {
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
 
@@ -90,7 +88,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
 
     @Override
     public void registerUser(@NotNull Player player, @NotNull String password) throws IOException {
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
 

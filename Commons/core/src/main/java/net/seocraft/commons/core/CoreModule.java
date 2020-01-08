@@ -7,13 +7,11 @@ import me.fixeddev.inject.ProtectedModule;
 import net.seocraft.api.core.cooldown.CooldownManager;
 import net.seocraft.api.core.online.OnlineStatusManager;
 import net.seocraft.api.core.server.ServerManager;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.core.cooldown.CoreCooldownManager;
 import net.seocraft.commons.core.online.CraftOnlineStatusManager;
 import net.seocraft.commons.core.redis.RedisModule;
 import net.seocraft.commons.core.server.CoreServerManager;
-import net.seocraft.commons.core.session.CraftSessionManager;
 import net.seocraft.commons.core.user.GammaUserStorageProvider;
 
 import java.util.concurrent.ExecutorService;
@@ -29,14 +27,12 @@ public class CoreModule extends ProtectedModule {
         bind(CooldownManager.class).to(CoreCooldownManager.class);
         bind(OnlineStatusManager.class).to(CraftOnlineStatusManager.class);
         bind(ServerManager.class).to(CoreServerManager.class).in(Scopes.SINGLETON);
-        bind(GameSessionManager.class).to(CraftSessionManager.class).in(Scopes.SINGLETON);
         bind(UserStorageProvider.class).to(GammaUserStorageProvider.class).in(Scopes.SINGLETON);
         expose(ListeningExecutorService.class);
         expose(ExecutorService.class);
         expose(CooldownManager.class);
         expose(OnlineStatusManager.class);
         expose(ServerManager.class);
-        expose(GameSessionManager.class);
         expose(UserStorageProvider.class);
     }
 

@@ -10,11 +10,8 @@ import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.creator.board.ScoreboardManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorHologramManager;
-import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.api.core.friend.FriendshipProvider;
-import net.seocraft.api.core.session.GameSession;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -39,7 +36,6 @@ public class LobbyConnectionListener implements Listener {
     @Inject private TeleportManager teleportManager;
     @Inject private CloudManager cloudManager;
     @Inject private SelectorHologramManager hologramManager;
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private FriendshipProvider friendshipProvider;
 
@@ -59,13 +55,10 @@ public class LobbyConnectionListener implements Listener {
         // Detect when player has hiding gadget enabled
         if (playerRecord.isHiding()) {
             Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
-                GameSession handler;
                 try {
-                    handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
                     if (
-                            handler != null &&
-                                    !this.friendshipProvider.checkFriendshipStatus(playerRecord.getId(), handler.getPlayerId()) &&
-                                    !onlinePlayer.hasPermission("commons.staff.vanish")
+                            !this.friendshipProvider.checkFriendshipStatus(playerRecord.getId(), player.getDatabaseIdentifier()) &&
+                            !onlinePlayer.hasPermission("commons.staff.vanish")
                     ) {
                         player.hidePlayer(onlinePlayer);
                     }

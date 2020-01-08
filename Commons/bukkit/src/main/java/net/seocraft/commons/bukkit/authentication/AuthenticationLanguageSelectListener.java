@@ -6,10 +6,8 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
@@ -30,8 +28,6 @@ import java.util.logging.Level;
 public class AuthenticationLanguageSelectListener implements Listener {
 
     @Inject private TranslatableField translator;
-    @Inject private CommonsBukkit instance;
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private UserStorageProvider userStorageProvider;
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -54,7 +50,7 @@ public class AuthenticationLanguageSelectListener implements Listener {
 
             if (event.getClick().equals(ClickType.LEFT) && NBTTagHandler.hasString(clickedItem, "language_accessor")) {
                 try {
-                    User user = this.userStorageProvider.getCachedUserSync(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId());
+                    User user = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
                     if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {
                         user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
                         try {

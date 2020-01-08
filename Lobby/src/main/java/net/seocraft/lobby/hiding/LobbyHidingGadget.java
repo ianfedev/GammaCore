@@ -11,8 +11,6 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.session.GameSession;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -23,11 +21,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
-
 public class LobbyHidingGadget implements HidingGadgetManager {
 
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private Lobby instance;
     @Inject private HotbarItemCollection hotbarItemCollection;
@@ -37,120 +32,93 @@ public class LobbyHidingGadget implements HidingGadgetManager {
 
     @Override
     public void enableHiding(@NotNull Player player) {
-        GameSession session;
-        try {
-            session = this.gameSessionManager.getCachedSession(player.getName());
-            if (session != null) {
-                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()), userAsyncResponse -> {
-                    if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                        User user = userAsyncResponse.getResponse();
-                        if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
-                        user.setHiding(true);
-                        try {
-                            this.userStorageProvider.updateUser(user);
-                            Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
-                                GameSession handler;
-                                try {
-                                    handler = this.gameSessionManager.getCachedSession(onlinePlayer.getName());
-                                    if (
-                                            handler != null &&
-                                                    !this.friendshipProvider.checkFriendshipStatus(user.getId(), handler.getPlayerId()) &&
-                                                    !onlinePlayer.hasPermission("commons.staff.vanish") &&
-                                                    player != onlinePlayer
-                                    ) {
-                                        Bukkit.getScheduler().runTask(this.instance, () -> {
-                                            player.hidePlayer(onlinePlayer);
-                                        });
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
+            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                User user = userAsyncResponse.getResponse();
+                if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
+                user.setHiding(true);
+                try {
+                    this.userStorageProvider.updateUser(user);
+                    Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
+                        if (
+                                !this.friendshipProvider.checkFriendshipStatus(user.getId(), onlinePlayer.getDatabaseIdentifier()) &&
+                                        !onlinePlayer.hasPermission("commons.staff.vanish") &&
+                                        player != onlinePlayer
+                        ) {
+                            Bukkit.getScheduler().runTask(this.instance, () -> {
+                                player.hidePlayer(onlinePlayer);
                             });
-                            ChatAlertLibrary.errorChatAlert(
-                                    player,
-                                    this.translatableField.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_lobby_hiding_hidden"
-                                    )
-                            );
-                            this.cooldownManager.createCooldown(
-                                    user.getId(),
-                                    "hidingGadget",
-                                    3
-                            );
-                            setPlayerInventory(player, user);
-                        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException exception) {
-                            ChatAlertLibrary.errorChatAlert(
-                                    player,
-                                    this.translatableField.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_lobby_hiding_error"
-                                    ) + "."
-                            );
                         }
-                    } else {
-                        ChatAlertLibrary.errorChatAlert(player, null);
-                    }
-                });
+                    });
+                    ChatAlertLibrary.errorChatAlert(
+                            player,
+                            this.translatableField.getUnspacedField(
+                                    user.getLanguage(),
+                                    "commons_lobby_hiding_hidden"
+                            )
+                    );
+                    this.cooldownManager.createCooldown(
+                            user.getId(),
+                            "hidingGadget",
+                            3
+                    );
+                    setPlayerInventory(player, user);
+                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException exception) {
+                    ChatAlertLibrary.errorChatAlert(
+                            player,
+                            this.translatableField.getUnspacedField(
+                                    user.getLanguage(),
+                                    "commons_lobby_hiding_error"
+                            ) + "."
+                    );
+                }
             } else {
                 ChatAlertLibrary.errorChatAlert(player, null);
             }
-        } catch (IOException e) {
-            ChatAlertLibrary.errorChatAlert(player);
-        }
+        });
     }
 
     @Override
     public void disableHiding(@NotNull Player player) {
-        GameSession session;
-        try {
-            session = this.gameSessionManager.getCachedSession(player.getName());
-            if (session != null)  {
-                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(session.getPlayerId()), userAsyncResponse -> {
-                    if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                        User user = userAsyncResponse.getResponse();
-                        if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
-                        user.setHiding(false);
-                        try {
-                            this.userStorageProvider.updateUser(user);
-                            Bukkit.getOnlinePlayers().forEach(playerQuery -> {
-                                Bukkit.getScheduler().runTask(this.instance, () -> {
-                                    player.showPlayer(playerQuery);
-                                });
-                            });
-                            ChatAlertLibrary.infoAlert(
-                                    player,
-                                    this.translatableField.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_lobby_hiding_unhidden"
-                                    )
-                            );
-                            this.cooldownManager.createCooldown(
-                                    user.getId(),
-                                    "hidingGadget",
-                                    3
-                            );
-                            setPlayerInventory(player, user);
-                        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException exception) {
-                            ChatAlertLibrary.errorChatAlert(
-                                    player,
-                                    this.translatableField.getUnspacedField(
-                                            user.getLanguage(),
-                                            "commons_lobby_hiding_error"
-                                    ) + "."
-                            );
-                        }
-                    } else {
-                        System.out.println("Nulled");
-                        ChatAlertLibrary.errorChatAlert(player, null);
-                    }
-                });
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
+            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                User user = userAsyncResponse.getResponse();
+                if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
+                user.setHiding(false);
+                try {
+                    this.userStorageProvider.updateUser(user);
+                    Bukkit.getOnlinePlayers().forEach(playerQuery -> {
+                        Bukkit.getScheduler().runTask(this.instance, () -> {
+                            player.showPlayer(playerQuery);
+                        });
+                    });
+                    ChatAlertLibrary.infoAlert(
+                            player,
+                            this.translatableField.getUnspacedField(
+                                    user.getLanguage(),
+                                    "commons_lobby_hiding_unhidden"
+                            )
+                    );
+                    this.cooldownManager.createCooldown(
+                            user.getId(),
+                            "hidingGadget",
+                            3
+                    );
+                    setPlayerInventory(player, user);
+                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | JsonProcessingException exception) {
+                    ChatAlertLibrary.errorChatAlert(
+                            player,
+                            this.translatableField.getUnspacedField(
+                                    user.getLanguage(),
+                                    "commons_lobby_hiding_error"
+                            ) + "."
+                    );
+                }
             } else {
+                System.out.println("Nulled");
                 ChatAlertLibrary.errorChatAlert(player, null);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
     private void setPlayerInventory(Player player, User user) {

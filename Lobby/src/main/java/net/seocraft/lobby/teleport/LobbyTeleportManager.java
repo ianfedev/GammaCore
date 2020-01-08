@@ -10,8 +10,6 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.session.GameSession;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -31,22 +29,13 @@ public class LobbyTeleportManager implements TeleportManager {
     @Inject private TranslatableField translatableField;
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private UserFormatter userFormatter;
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private Lobby instance;
 
     @Override
     public void spawnTeleport(@NotNull Player player, @Nullable OfflinePlayer offlineTarget, boolean silent) {
 
-        GameSession playerSession = null;
-        try {
-            playerSession = this.gameSessionManager.getCachedSession(player.getName());
-        } catch (IOException e) {
-            ChatAlertLibrary.errorChatAlert(player);
-            return;
-        }
-
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -134,14 +123,8 @@ public class LobbyTeleportManager implements TeleportManager {
 
     @Override
     public void playerTeleport(@NotNull Player sender, @Nullable Player target, boolean silent) {
-        GameSession playerSession = null;
-        try {
-            playerSession = this.gameSessionManager.getCachedSession(sender.getName());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(sender.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -202,15 +185,7 @@ public class LobbyTeleportManager implements TeleportManager {
 
     @Override
     public void playerTeleportOwn(@NotNull Player sender, @Nullable Player target, boolean silent) {
-        GameSession playerSession = null;
-        try {
-            playerSession = this.gameSessionManager.getCachedSession(sender.getName());
-        } catch (IOException e) {
-            ChatAlertLibrary.errorChatAlert(sender);
-            return;
-        }
-
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(sender.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -271,15 +246,7 @@ public class LobbyTeleportManager implements TeleportManager {
 
     @Override
     public void playerTeleportAll(@NotNull Player player, boolean silent) {
-        GameSession playerSession = null;
-        try {
-            playerSession = this.gameSessionManager.getCachedSession(player.getName());
-        } catch (IOException e) {
-            ChatAlertLibrary.errorChatAlert(player);
-            return;
-        }
-
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(playerSession.getPlayerId()), userAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
@@ -292,15 +259,8 @@ public class LobbyTeleportManager implements TeleportManager {
                 );
 
                 Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                    GameSession session = null;
                     try {
-                        session = this.gameSessionManager.getCachedSession(player.getName());
-                    } catch (IOException e) {
-                        ChatAlertLibrary.errorChatAlert(player);
-                        return;
-                    }
-                    try {
-                        User playerRecord = this.userStorageProvider.getCachedUserSync(session.getPlayerId());
+                        User playerRecord = this.userStorageProvider.getCachedUserSync(onlinePlayer.getDatabaseIdentifier());
                         onlinePlayer.teleport(player);
 
                         if (!silent) ChatAlertLibrary.infoAlert(

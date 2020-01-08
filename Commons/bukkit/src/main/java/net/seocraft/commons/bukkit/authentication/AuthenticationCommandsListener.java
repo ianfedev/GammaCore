@@ -9,7 +9,6 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -32,8 +31,6 @@ public class AuthenticationCommandsListener implements Listener {
     @Inject
     private TranslatableField translator;
     @Inject
-    private GameSessionManager gameSessionManager;
-    @Inject
     private UserStorageProvider userStorageProvider;
 
     @EventHandler
@@ -41,7 +38,7 @@ public class AuthenticationCommandsListener implements Listener {
         Player player = event.getPlayer();
 
         try {
-            String userLanguage = this.userStorageProvider.getCachedUserSync(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()).getLanguage();
+            String userLanguage = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier()).getLanguage();
 
             if (!event.getMessage().contains("/register") && !event.getMessage().contains("/login")) {
                 ChatAlertLibrary.errorChatAlert(

@@ -5,7 +5,6 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
@@ -23,8 +22,6 @@ public class DisabledPluginsCommandListener implements Listener {
     @Inject
     private TranslatableField translator;
     @Inject
-    private GameSessionManager gameSessionManager;
-    @Inject
     private UserStorageProvider userStorageProvider;
 
 
@@ -33,7 +30,7 @@ public class DisabledPluginsCommandListener implements Listener {
         Player player = event.getPlayer();
 
         try {
-            String userLanguage = this.userStorageProvider.getCachedUserSync(this.gameSessionManager.getCachedSession(player.getName()).getPlayerId()).getLanguage();
+            String userLanguage = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier()).getLanguage();
 
             if (event.getMessage().equals("/pl") || event.getMessage().equals("/plugins")) {
                 ChatAlertLibrary.infoAlert(

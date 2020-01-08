@@ -25,7 +25,6 @@ public class CoreResolver {
                 .addMapping(Flair.class, MinecraftFlair.class)
                 .addMapping(Group.class, PermissionGroup.class)
                 .addMapping(Server.class, CoreServer.class)
-                .addMapping(GameSession.class, CraftSession.class)
                 .addMapping(Disguise.class, DisguiseHistory.class)
                 .addMapping(IPRecord.class, PlayerIP.class)
                 .addMapping(UserExpulsion.class, PlayerExpulsion.class)

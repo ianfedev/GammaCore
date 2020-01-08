@@ -4,7 +4,6 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.session.GameSession;
 import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 public class UserPermissions extends PermissibleBase {
 
     private UserStorageProvider userStorageProvider;
-    private GameSessionManager gameSessionManager;
     private TranslatableField translatableField;
     private Player player;
     private User user;
@@ -32,7 +30,6 @@ public class UserPermissions extends PermissibleBase {
         super(player);
         this.player = player;
         this.userStorageProvider = userStorageProvider;
-        this.gameSessionManager = gameSessionManager;
         this.translatableField = translatableField;
         this.user = user;
     }
@@ -40,51 +37,45 @@ public class UserPermissions extends PermissibleBase {
     @Override
     public boolean hasPermission(String s) {
         try {
-            GameSession session = this.gameSessionManager.getCachedSession(player.getName());
 
-            if (session != null) {
-                User newUser = this.userStorageProvider.getCachedUserSync(session.getPlayerId());
+            User newUser = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
 
-                Set<String> userPermissions = getFlattenPermissions(newUser);
+            Set<String> userPermissions = getFlattenPermissions(newUser);
 
-                if (userPermissions.contains(s)) {
+            if (userPermissions.contains(s)) {
+                return true;
+            }
+
+            String[] requestedPermissionTree = s.split("\\.");
+
+            for (String permission : userPermissions) {
+                if (permission.equalsIgnoreCase(s)) {
                     return true;
                 }
 
-                String[] requestedPermissionTree = s.split("\\.");
+                int scanningLength = requestedPermissionTree.length;
+                String[] permissionTree = permission.split("\\.");
 
-                for (String permission : userPermissions) {
-                    if (permission.equalsIgnoreCase(s)) {
+                if (permissionTree.length < scanningLength) {
+                    scanningLength = permissionTree.length;
+                }
+
+                for (int i = 0; i < scanningLength; i++) {
+                    if (permissionTree[i].equalsIgnoreCase("*")) {
                         return true;
                     }
 
-                    int scanningLength = requestedPermissionTree.length;
-                    String[] permissionTree = permission.split("\\.");
-
-                    if (permissionTree.length < scanningLength) {
-                        scanningLength = permissionTree.length;
-                    }
-
-                    for (int i = 0; i < scanningLength; i++) {
-                        if (permissionTree[i].equalsIgnoreCase("*")) {
-                            return true;
-                        }
-
-                        if (!requestedPermissionTree[i].equalsIgnoreCase(permissionTree[i])) {
-                            break;
-                        }
+                    if (!requestedPermissionTree[i].equalsIgnoreCase(permissionTree[i])) {
+                        break;
                     }
                 }
             }
-        } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
             ChatAlertLibrary.errorChatAlert(
                     player,
                     this.translatableField.getField(user.getLanguage(), "commons_permissions_error") + "."
             );
             Bukkit.getLogger().log(Level.SEVERE, "An exception ocurred while getting player " + player.getName() + " permissions", unauthorized);
-        } catch (IOException e) {
-            e.printStackTrace();
-            Bukkit.getLogger().log(Level.SEVERE, "An exception ocurred while getting player " + player.getName() + " permissions", e);
         }
         return false;
     }
