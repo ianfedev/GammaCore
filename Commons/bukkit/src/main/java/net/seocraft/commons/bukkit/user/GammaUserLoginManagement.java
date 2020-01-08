@@ -120,7 +120,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                                                 .replace("%%server%%", ChatColor.YELLOW + "Seocraft Network" + ChatColor.AQUA)
                         );
                         this.cloudManager.sendPlayerToGroup(player, this.instance.getConfig().getString("authentication.redirect"));
-
+                        this.instance.unregisteredPlayers.remove(player.getUniqueId());
                     } catch (InternalServerError | Unauthorized | NotFound | BadRequest | JsonProcessingException error) {
                         Bukkit.getLogger().log(Level.WARNING,
                                 "[Commons Auth] Something went wrong when authenticating player {0} ({1}): {2}",
