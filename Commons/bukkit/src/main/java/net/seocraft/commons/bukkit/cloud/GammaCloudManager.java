@@ -1,5 +1,7 @@
 package net.seocraft.commons.bukkit.cloud;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import de.dytanic.cloudnet.common.concurrent.ITask;
 import de.dytanic.cloudnet.common.concurrent.ITaskListener;
@@ -33,6 +35,7 @@ public class GammaCloudManager implements CloudManager {
 
     @Inject private ServerManager serverManager;
     @Inject private CommonsBukkit instance;
+    @Inject private ObjectMapper mapper;
 
     @Override
     public void sendPlayerToServer(@NotNull Player player, @NotNull String server) {
@@ -100,7 +103,12 @@ public class GammaCloudManager implements CloudManager {
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
         for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)){
-            System.out.println(snapshot.getProperties().getString("Motd"));
+            try {
+                String object = this.mapper.writeValueAsString(snapshot.getProperties());
+                System.out.println(object);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             counter += 1;
         }
         return counter;
