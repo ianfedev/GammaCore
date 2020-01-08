@@ -13,7 +13,6 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.event.CustomSelectionEvent;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
@@ -27,7 +26,6 @@ import java.io.IOException;
 
 public class NPCRedirector implements ServerRedirector {
 
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private CommonsBukkit instance;
     @Inject private CloudManager cloudManager;
     @Inject private ObjectMapper mapper;

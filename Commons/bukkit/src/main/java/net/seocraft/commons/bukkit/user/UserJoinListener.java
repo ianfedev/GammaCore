@@ -19,7 +19,6 @@ import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.api.core.server.ServerType;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -52,7 +51,6 @@ public class UserJoinListener implements Listener {
     @Inject private AuthenticationLoginListener authenticationLoginListener;
     @Inject private GameLoginManager gameLoginManager;
     @Inject private ServerManager serverManager;
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private TranslatableField translatableField;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private CommonsBukkit instance;
@@ -96,13 +94,9 @@ public class UserJoinListener implements Listener {
                 User user = this.userStorageProvider.getCachedUserSync(playerIdentifier);
                 this.punishmentActions.checkBan(user);
 
-                if (!this.gameSessionManager.sessionExists(player.getName())) {
+                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
 
-                    this.gameSessionManager.createGameSession(user, player.getAddress().getHostName(), "1.8.9"); //TODO: Get user version
-                    this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
-                }
-
-                playerField.set(player, new UserPermissions(player, user, userStorageProvider, gameSessionManager, translatableField));
+                playerField.set(player, new UserPermissions(player, user, userStorageProvider, translatableField));
 
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     executeAuthenticationProcess(

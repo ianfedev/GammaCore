@@ -7,9 +7,9 @@ import com.google.inject.Inject;
 import net.seocraft.api.bukkit.whisper.Whisper;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.bukkit.whisper.WhisperResponse;
+import net.seocraft.api.core.online.OnlineStatusManager;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
-import net.seocraft.api.core.session.GameSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
@@ -19,8 +19,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftWhisperManager implements WhisperManager {
 
-    @Inject private GameSessionManager gameSessionManager;
     @Inject private TranslatableField translator;
+    @Inject private OnlineStatusManager onlineStatusManager;
     private ListeningExecutorService executorService;
     private Channel<Whisper> whisperChannel;
 
@@ -55,7 +55,7 @@ public class CraftWhisperManager implements WhisperManager {
 
             Whisper whisper = new WhisperMessage(from, to, content);
 
-            if (!gameSessionManager.sessionExists(to.getUsername())) {
+            if (!this.onlineStatusManager.isPlayerOnline(to.getId())) {
                 return new WhisperResponse(null, WhisperResponse.Response.PLAYER_OFFLINE, whisper);
             }
 

@@ -1,16 +1,11 @@
 package net.seocraft.lobby.command;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Flag;
-import net.seocraft.api.bukkit.cloud.CloudManager;
-import net.seocraft.api.bukkit.game.management.MatchFinder;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
-import net.seocraft.api.core.redis.RedisClient;
-import net.seocraft.api.core.session.GameSessionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -19,11 +14,6 @@ import org.bukkit.entity.Player;
 public class TeleportCommand implements CommandClass {
 
     @Inject private TeleportManager teleportManager;
-    @Inject private MatchFinder matchFinder;
-    @Inject private GameSessionManager gameSessionManager;
-    @Inject private CloudManager cloudManager;
-    @Inject private ObjectMapper mapper;
-    @Inject private RedisClient client;
 
     @Command(names = {"tp", "teleport", "tele"}, usage = "/<command> <target> [-s]", permission = "commons.staff.lobby.tp")
     public boolean teleportCommand(CommandSender commandSender, OfflinePlayer target, @Flag('s') boolean silent) {
