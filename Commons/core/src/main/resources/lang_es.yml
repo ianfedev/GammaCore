@@ -160,6 +160,7 @@ commons_lobby_selector_connect: "¡Haz click para conectarte!"
 commons_lobby_selector_already: "¡Ya te encuentras conectado!"
 commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
 commons_lobby_click_play: "Clic para jugar"
+commons_lobby_play_along: "¡Juega junto a %%players%% más!"
 
 # Lobby Scoreboard
 commons_lobby_scoreboard_rank: "Rango"

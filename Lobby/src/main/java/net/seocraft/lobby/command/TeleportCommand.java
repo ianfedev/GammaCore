@@ -5,6 +5,7 @@ import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Flag;
+import me.fixeddev.bcm.parametric.annotation.Optional;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -44,8 +45,8 @@ public class TeleportCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"spawn"}, usage = "/<command> [target] [-s]", permission = "commons.staff.lobby.spawn")
-    public boolean spawnCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
+    @Command(names = {"spawn"}, max = 2, usage = "/<command> [target] [-s]", permission = "commons.staff.lobby.spawn")
+    public boolean spawnCommand(CommandSender commandSender, CommandContext context, @Optional OfflinePlayer target, @Flag('s') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             if (context.getArgumentsLength() == 1) {
