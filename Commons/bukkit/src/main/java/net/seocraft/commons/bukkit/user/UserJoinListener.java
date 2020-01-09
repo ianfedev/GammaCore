@@ -91,6 +91,7 @@ public class UserJoinListener implements Listener {
             } else {
 
                 String playerIdentifier = response.get("user").asText();
+                player.setDatabaseIdentifier(playerIdentifier);
                 User user = this.userStorageProvider.getCachedUserSync(playerIdentifier);
                 this.punishmentActions.checkBan(user);
 
@@ -113,8 +114,6 @@ public class UserJoinListener implements Listener {
                     executeGameCheck(user, player);
                     event.setJoinMessage("");
                 }
-
-                player.setDatabaseIdentifier(playerIdentifier);
                 updateServerRecord(playerIdentifier);
 
             }
