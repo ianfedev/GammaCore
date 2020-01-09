@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class LobbyTeleportManager implements TeleportManager {
 
@@ -116,7 +117,8 @@ public class LobbyTeleportManager implements TeleportManager {
                     }
                 });
             } else {
-                ChatAlertLibrary.errorChatAlert(player, null);
+                Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error teleporting player to spawn.", userAsyncResponse.getThrowedException());
+                ChatAlertLibrary.errorChatAlert(player);
             }
         });
     }
@@ -178,7 +180,8 @@ public class LobbyTeleportManager implements TeleportManager {
                     }
                 });
             } else {
-                ChatAlertLibrary.errorChatAlert(sender, null);
+                Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error teleporting player.", userAsyncResponse.getThrowedException());
+                ChatAlertLibrary.errorChatAlert(sender);
             }
         });
     }
@@ -239,7 +242,8 @@ public class LobbyTeleportManager implements TeleportManager {
                     }
                 });
             } else {
-                ChatAlertLibrary.errorChatAlert(sender, null);
+                Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error teleporting player.", userAsyncResponse.getThrowedException());
+                ChatAlertLibrary.errorChatAlert(sender);
             }
         });
     }
@@ -279,7 +283,8 @@ public class LobbyTeleportManager implements TeleportManager {
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
                 });
             } else {
-                ChatAlertLibrary.errorChatAlert(player, null);
+                Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error teleporting all the players.", userAsyncResponse.getThrowedException());
+                ChatAlertLibrary.errorChatAlert(player);
             }
         });
     }
