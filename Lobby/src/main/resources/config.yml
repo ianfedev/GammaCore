@@ -8,6 +8,7 @@ spawn:
   yaw: 0
   pitch: 0
   world: world
+mainLobby: ""
 # If you would like to generate a custom skin, you should go through this website
 # https://mineskin.org
 selector:

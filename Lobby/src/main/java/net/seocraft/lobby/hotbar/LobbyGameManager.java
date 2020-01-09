@@ -62,15 +62,17 @@ public class LobbyGameManager implements GameMenuManager {
                                 ) + ".",
                                 ChatColor.GRAY
                         );
-                        loreDisplayArray.add(" ");
-                        loreDisplayArray.add(
-                                (
-                                        ChatColor.YELLOW +
-                                                "\u25B6 " +
-                                                this.translatableField.getUnspacedField(l, "commons_lobby_play_along") +
-                                                " \u25C0"
-                                ).replace("%%players%%", "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode))
-                        );
+                        if (!this.instance.getConfig().getString("mainLobby").equalsIgnoreCase(gamemode.getId())) {
+                            loreDisplayArray.add(" ");
+                            loreDisplayArray.add(
+                                    (
+                                            ChatColor.YELLOW +
+                                                    "\u25B6 " +
+                                                    this.translatableField.getUnspacedField(l, "commons_lobby_play_along") +
+                                                    " \u25C0"
+                                    ).replace("%%players%%", "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode))
+                            );
+                        }
                         gamemodeMeta.setLore(loreDisplayArray);
                         gamemodeBase.setItemMeta(gamemodeMeta);
                         gamemodeBase = NBTTagHandler.addString(gamemodeBase, "game_selector_opt", gamemode.getLobbyGroup());
