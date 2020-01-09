@@ -21,12 +21,11 @@ public class CoreServer implements Server {
     private int maxTotal;
     private long startedAt;
     @NotNull private Set<String> onlinePlayers;
-    int maxPlayers;
     @NotNull private String cluster;
     @NotNull private Set<String> matches;
 
-    @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "maxPlayers", "cluster", "matches"})
-    public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull Set<String> onlinePlayers, int maxPlayers, @NotNull String cluster, @NotNull Set<String> matches) {
+    @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "cluster", "matches"})
+    public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull Set<String> onlinePlayers, @NotNull String cluster, @NotNull Set<String> matches) {
         this.id = id;
         this.slug = slug;
         this.serverType = serverType;
@@ -36,7 +35,6 @@ public class CoreServer implements Server {
         this.maxTotal = maxTotal;
         this.startedAt = startedAt;
         this.onlinePlayers = onlinePlayers;
-        this.maxPlayers = maxPlayers;
         this.cluster = cluster;
         this.matches = matches;
     }
@@ -89,11 +87,6 @@ public class CoreServer implements Server {
     @Override
     public @NotNull Set<String> getOnlinePlayers() {
         return this.onlinePlayers;
-    }
-
-    @Override
-    public int getMaxPlayers() {
-        return this.maxPlayers;
     }
 
     @Override

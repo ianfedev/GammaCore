@@ -21,7 +21,6 @@ public interface ServerManager {
             @Nullable String subGamemode,
             int maxRunning,
             int maxTotal,
-            int maxPlayers,
             @NotNull String cluster
     ) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException;
 

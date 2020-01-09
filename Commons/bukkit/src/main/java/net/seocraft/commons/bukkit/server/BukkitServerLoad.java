@@ -79,7 +79,6 @@ public class BukkitServerLoad implements ServerLoad {
                             subGamemode.get().getId(),
                             maxRunning,
                             maxTotal,
-                            Bukkit.getMaxPlayers(),
                             configuration.getString("api.cluster")
                     );
 
@@ -92,7 +91,6 @@ public class BukkitServerLoad implements ServerLoad {
                         null,
                         maxRunning,
                         maxTotal,
-                        Bukkit.getMaxPlayers(),
                         configuration.getString("api.cluster")
                 );
             }
@@ -104,7 +102,6 @@ public class BukkitServerLoad implements ServerLoad {
                     null,
                     maxRunning,
                     maxTotal,
-                    Bukkit.getMaxPlayers(),
                     configuration.getString("api.cluster")
             );
 

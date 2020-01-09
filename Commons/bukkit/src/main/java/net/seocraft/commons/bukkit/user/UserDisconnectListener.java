@@ -25,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.logging.Level;
 
 public class UserDisconnectListener implements Listener {
@@ -39,7 +40,8 @@ public class UserDisconnectListener implements Listener {
     @EventHandler
     public void disconnectListenerEvent(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        player.getLinkedHolograms().forEach(Hologram::destroy);
+        Set<Hologram> playerHolograms = player.getLinkedHolograms();
+        playerHolograms.forEach(Hologram::destroy);
         this.packetManager.uninjectPlayer(event.getPlayer());
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
             boolean disconnection = false;

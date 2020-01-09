@@ -46,7 +46,6 @@ public class BungeeServerLoad implements ServerLoad {
                 null,
                 0,
                 0,
-                1,
                 configuration.getString("api.cluster")
         );
 

@@ -35,8 +35,6 @@ public interface Server extends Model {
     @JsonProperty("players")
     @NotNull Set<String> getOnlinePlayers();
 
-    int getMaxPlayers();
-
     void addOnlinePlayer(String id);
 
     void removeOnlinePlayer(String id);
