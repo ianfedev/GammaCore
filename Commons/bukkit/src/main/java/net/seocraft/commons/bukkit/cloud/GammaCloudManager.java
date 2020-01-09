@@ -2,7 +2,6 @@ package net.seocraft.commons.bukkit.cloud;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.inject.Inject;
 import de.dytanic.cloudnet.common.concurrent.ITask;
 import de.dytanic.cloudnet.common.concurrent.ITaskListener;
@@ -15,12 +14,6 @@ import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.lobby.LobbyIcon;
-import net.seocraft.api.core.http.exceptions.BadRequest;
-import net.seocraft.api.core.http.exceptions.InternalServerError;
-import net.seocraft.api.core.http.exceptions.NotFound;
-import net.seocraft.api.core.http.exceptions.Unauthorized;
-import net.seocraft.api.core.server.Server;
-import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,7 +26,6 @@ import java.util.stream.Collectors;
 
 public class GammaCloudManager implements CloudManager {
 
-    @Inject private ServerManager serverManager;
     @Inject private CommonsBukkit instance;
     @Inject private ObjectMapper mapper;
 
@@ -84,33 +76,19 @@ public class GammaCloudManager implements CloudManager {
         return CloudNetDriver.getInstance()
                 .getCloudServiceByGroup(group)
                 .stream()
-                .map(s -> {
-                    s.getConfiguration();
-                    try {
-                        Optional<Server> server = this.serverManager.getServerByQuerySync(null, null, null,  null, s.getServiceId().getName()).stream().findFirst();
-                        return server.map(value -> new GammaLobbyIcon(
-                                s.getServiceId().getName(),
-                                value.getOnlinePlayers().size(),
-                                Integer.parseInt(s.getServiceId().getName().split("-")[1]),
-                                server.get().getMaxPlayers()
-                        )).orElse(null);
-                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
-                    return null;
-                }).filter(Objects::nonNull).collect(Collectors.toSet());
+                .map(s -> new GammaLobbyIcon(
+                        s.getServiceId().getName(),
+                        getServiceOnlinePlayers(s),
+                        Integer.parseInt(s.getServiceId().getName().split("-")[1]),
+                        s.getProperties().getInt("Max-Players")
+                )).collect(Collectors.toSet());
     }
 
     @Override
     public int getGroupOnlinePlayers(@NotNull String name) {
         int counter = 0;
         for (ServiceInfoSnapshot snapshot : CloudNetDriver.getInstance().getCloudServiceByGroup(name)) {
-            int size = 0;
-            try {
-                JsonNode node =  this.mapper.readTree(
-                        snapshot.getProperties().toJson()
-                ).get("Players");
-                if (node.isArray()) size = node.size();
-            } catch (IOException ignore) {}
-            counter += size;
+            counter += getServiceOnlinePlayers(snapshot);
         }
         return counter;
     }
@@ -145,6 +123,17 @@ public class GammaCloudManager implements CloudManager {
     @Override
     public @NotNull String getSlug(@NotNull UUID service) {
         return CloudNetDriver.getInstance().getCloudService(service).getServiceId().getName();
+    }
+
+    private int getServiceOnlinePlayers(@NotNull ServiceInfoSnapshot snapshot) {
+        int size = 0;
+        try {
+            JsonNode node =  this.mapper.readTree(
+                    snapshot.getProperties().toJson()
+            ).get("Players");
+            if (node.isArray()) size = node.size();
+        } catch (IOException ignore) {}
+        return size;
     }
 
 
