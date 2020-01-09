@@ -43,6 +43,7 @@ public class UserDisconnectListener implements Listener {
         Player player = event.getPlayer();
         Set<Hologram> playerHolograms = new HashSet<>(player.getLinkedHolograms());
         playerHolograms.forEach(Hologram::destroy);
+        player.stopPlayingSong();
         this.packetManager.uninjectPlayer(event.getPlayer());
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
             boolean disconnection = false;
@@ -55,8 +56,6 @@ public class UserDisconnectListener implements Listener {
                     try {
                         this.serverManager.updateServer(updatableRecord);
                         this.commonsBukkit.setServerRecord(updatableRecord);
-
-
 
                         if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
                             Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
