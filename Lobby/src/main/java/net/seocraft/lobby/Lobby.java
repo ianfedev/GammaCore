@@ -45,6 +45,7 @@ public class Lobby extends JavaPlugin {
     @Inject private SelectorManager selectorManager;
     @Inject private TeleportCommand teleportCommand;
 
+    @Inject private InventoryCloseListener inventoryCloseListener;
     @Inject private GameSelectorListener gameSelectorListener;
     @Inject private HidingGadgetListener hidingGadgetListener;
     @Inject private PlayerBlockInteractionListener playerBlockInteractionListener;
@@ -69,6 +70,7 @@ public class Lobby extends JavaPlugin {
         dispatcher.registerCommandClass(this.hidingGadgetCommand);
         dispatcher.registerCommandClass(this.teleportCommand);
 
+        getServer().getPluginManager().registerEvents(this.inventoryCloseListener, this);
         getServer().getPluginManager().registerEvents(this.gameSelectorListener, this);
         getServer().getPluginManager().registerEvents(this.lobbyConnectionListener, this);
         getServer().getPluginManager().registerEvents(this.hidingGadgetListener, this);
