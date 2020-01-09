@@ -12,6 +12,8 @@ import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.InventoryUtils;
 import net.seocraft.commons.bukkit.util.LoreDisplayArray;
 import net.seocraft.commons.core.translation.TranslatableField;
+import net.seocraft.lobby.Lobby;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -28,6 +30,7 @@ public class LobbyGameManager implements GameMenuManager {
     @Inject private GamemodeProvider gamemodeHandler;
     @Inject private CloudManager cloudManager;
     @Inject private TranslatableField translatableField;
+    @Inject private Lobby instance;
 
     @Override
     public void loadGameMenu(@NotNull Player player, @NotNull String l) {
@@ -50,30 +53,10 @@ public class LobbyGameManager implements GameMenuManager {
                                         "game_" + gamemode.getId() + "_title"
                                 )
                         );
-
-                        LoreDisplayArray<String> loreDisplayArray = new LoreDisplayArray<>();
-
-                        loreDisplayArray.add(
-                                this.translatableField.getUnspacedField(
-                                        l,
-                                        "game_" + gamemode.getId() + "_description"
-                                ) + ".",
-                                ChatColor.GRAY
-                        );
-                        loreDisplayArray.add(" ");
-                        loreDisplayArray.add(
-                                (
-                                        ChatColor.YELLOW +
-                                                "\u25B6" +
-                                                this.translatableField.getUnspacedField(l, "commons_lobby_play_along") +
-                                                "\u25C0"
-                                ).replace("%%players%%", "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode))
-                        );
-
-                        gamemodeMeta.setLore(loreDisplayArray);
                         gamemodeBase.setItemMeta(gamemodeMeta);
                         gamemodeBase = NBTTagHandler.addString(gamemodeBase, "game_selector_opt", gamemode.getLobbyGroup());
                         inventoryItems.put(gamemode.getNavigatorSlot(), gamemodeBase);
+                        arrowsAssign(gamemode, l, gamemodeBase, player, false);
                     });
                 } else {
                     ItemStack emptyBase = new ItemStack(Material.BARRIER, 1);
@@ -123,6 +106,47 @@ public class LobbyGameManager implements GameMenuManager {
                 );
             }
         });
+    }
+
+    private void arrowsAssign(@NotNull Gamemode gamemode, @NotNull String l, @NotNull ItemStack stack, @NotNull Player player, boolean on) {
+
+        ItemMeta meta = stack.getItemMeta();
+        LoreDisplayArray<String> loreDisplayArray = new LoreDisplayArray<>();
+
+        loreDisplayArray.add(
+                this.translatableField.getUnspacedField(
+                        l,
+                        "game_" + gamemode.getId() + "_description"
+                ) + ".",
+                ChatColor.GRAY
+        );
+        loreDisplayArray.add(" ");
+        if (on) {
+            loreDisplayArray.add(
+                    (
+                            ChatColor.YELLOW +
+                                    "\u25B6 " +
+                                    this.translatableField.getUnspacedField(l, "commons_lobby_play_along") +
+                                    " \u25C0"
+                    ).replace("%%players%%", "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode))
+            );
+        } else {
+            loreDisplayArray.add(
+                    (
+                            ChatColor.YELLOW +
+                                    "  " +
+                                    this.translatableField.getUnspacedField(l, "commons_lobby_play_along") +
+                                    "  "
+                    ).replace("%%players%%", "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode))
+            );
+        }
+
+        meta.setLore(loreDisplayArray);
+        stack.setItemMeta(meta);
+        player.updateInventory();
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> arrowsAssign(gamemode, l, stack, player, !on), 0, 20L);
+
     }
 
 }
