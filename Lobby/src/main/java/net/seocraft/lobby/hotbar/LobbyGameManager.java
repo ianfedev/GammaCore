@@ -145,7 +145,7 @@ public class LobbyGameManager implements GameMenuManager {
         stack.setItemMeta(meta);
         player.updateInventory();
 
-        int task = Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> arrowsAssign(gamemode, l, stack, player, !on), 0, 20L);
+        int task = Bukkit.getScheduler().runTaskLaterAsynchronously(instance, () -> arrowsAssign(gamemode, l, stack, player, !on), 40L).getTaskId();
         this.instance.getLobbyMenuClose().put(player, task);
 
     }
