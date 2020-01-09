@@ -24,16 +24,20 @@ import net.seocraft.lobby.selector.LobbySelectorManager;
 import net.seocraft.lobby.teleport.LobbyTeleportManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
 public class Lobby extends JavaPlugin {
 
     @NotNull private Set<SelectorNPC> lobbyNPC = new HashSet<>();
+    @NotNull private Map<Player, Integer> lobbyMenuClose = new HashMap<>();
 
     @Inject private CommonsBukkit instance;
 
@@ -97,5 +101,9 @@ public class Lobby extends JavaPlugin {
         if (world != null) {
             world.setGameRuleValue("doWeatherCycle", "false");
         }
+    }
+
+    public @NotNull Map<Player, Integer> getLobbyMenuClose() {
+        return lobbyMenuClose;
     }
 }
