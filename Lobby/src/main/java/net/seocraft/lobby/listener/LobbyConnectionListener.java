@@ -26,6 +26,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.io.IOException;
+import java.util.logging.Level;
 
 public class LobbyConnectionListener implements Listener {
 
@@ -87,6 +88,7 @@ public class LobbyConnectionListener implements Listener {
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                     }
                 } catch (IOException e) {
+                    Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error teleporting user to lobby.", e);
                     ChatAlertLibrary.errorChatAlert(player);
                 }
 
