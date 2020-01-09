@@ -44,7 +44,7 @@ public class LobbyGameManager implements GameMenuManager {
                         ItemMeta gamemodeMeta = gamemodeBase.getItemMeta();
 
                         gamemodeMeta.setDisplayName(
-                                ChatColor.GOLD +
+                                ChatColor.AQUA +
                                 this.translatableField.getUnspacedField(
                                         l,
                                         "game_" + gamemode.getId() + "_title"
@@ -63,10 +63,10 @@ public class LobbyGameManager implements GameMenuManager {
                         loreDisplayArray.add(" ");
                         loreDisplayArray.add(
                                 (
-                                        ChatColor.GOLD +
-                                                "\u2B9E" +
+                                        ChatColor.YELLOW +
+                                                "\u25B6" +
                                                 this.translatableField.getUnspacedField(l, "commons_lobby_play_along") +
-                                                "\u2B9C"
+                                                "\u25C0"
                                 ).replace("%%players%%", "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode))
                         );
 
