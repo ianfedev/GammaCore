@@ -193,7 +193,7 @@ public class HotbarItemCollection {
                 ChatColor.YELLOW +
                         this.translatableField.getField(
                                 l,
-                                "commons_lobby_hiding_gadget_show"
+                                "commons_lobby_selector"
                         ) +
                         ChatColor.GRAY
                         + "(" +
