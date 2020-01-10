@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
 import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.bcm.parametric.annotation.Optional;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -373,7 +374,7 @@ public class FriendCommand implements CommandClass {
     }
 
     @Command(names = {"friends force", "friend force", "f force"}, min = 1, usage = "/<command> <target> [second]", permission = "commons.staff.friends.force")
-    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, OfflinePlayer second) {
+    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Optional OfflinePlayer second) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
