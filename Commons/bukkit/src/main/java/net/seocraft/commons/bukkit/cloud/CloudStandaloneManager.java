@@ -42,8 +42,8 @@ public class CloudStandaloneManager implements CloudManager {
     }
 
     @Override
-    public @NotNull String getOnlinePlayers() {
-        return "NCI";
+    public int getOnlinePlayers() {
+        return 0;
     }
 
     @Override
