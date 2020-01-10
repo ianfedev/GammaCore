@@ -374,7 +374,7 @@ public class FriendCommand implements CommandClass {
     }
 
     @Command(names = {"friends force", "friend force", "f force"}, min = 1, usage = "/<command> <target> [second]", permission = "commons.staff.friends.force")
-    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Optional OfflinePlayer second) {
+    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Optional("a") OfflinePlayer second) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {

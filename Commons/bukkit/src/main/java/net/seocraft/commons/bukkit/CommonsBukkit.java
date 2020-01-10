@@ -29,10 +29,7 @@ import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.announcement.GammaAnnouncementHandler;
-import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener;
-import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
-import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
-import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageSelectListener;
+import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.creator.board.ScoreboardModule;
@@ -64,6 +61,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private AuthenticationEnvironmentEventsListener authenticationMovementListener;
     @Inject private AuthenticationLanguageMenuListener authenticationLanguageMenuListener;
     @Inject private AuthenticationLanguageSelectListener authenticationLanguageSelectListener;
+    @Inject private AuthenticationInventoryDropListener authenticationInventoryDropListener;
     @Inject private AuthenticationCommandsListener authenticationCommandsListener;
 
     // --- Game API related listeners --- //
@@ -228,6 +226,7 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(authenticationLanguageMenuListener, this);
         getServer().getPluginManager().registerEvents(authenticationLanguageSelectListener, this);
         getServer().getPluginManager().registerEvents(authenticationMovementListener, this);
+        getServer().getPluginManager().registerEvents(authenticationInventoryDropListener, this);
 
     }
 
@@ -238,7 +237,7 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(gameStartedListener, this);
     }
 
-    public Server getServerRecord() {
+    public @NotNull Server getServerRecord() {
         return this.serverRecord;
     }
 

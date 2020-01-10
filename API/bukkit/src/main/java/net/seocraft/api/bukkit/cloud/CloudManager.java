@@ -20,7 +20,7 @@ public interface CloudManager {
 
     int getGamemodeOnlinePlayers(@NotNull Gamemode gamemode);
 
-    @NotNull String getOnlinePlayers();
+    int getOnlinePlayers();
 
     @NotNull UUID createCloudService(@NotNull String taskName);
 

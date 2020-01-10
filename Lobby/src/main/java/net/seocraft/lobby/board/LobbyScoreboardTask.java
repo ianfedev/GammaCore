@@ -54,9 +54,17 @@ public class LobbyScoreboardTask extends BukkitRunnable {
             );
             lobbyBoard.setLine(2, "");
 
-            lobbyBoard.setLine(3, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
-            );
+            int players = this.cloudManager.getOnlinePlayers();
+            if (players > 1) {
+                lobbyBoard.setLine(3, ChatColor.YELLOW + "\u00BB "
+                        + ChatColor.WHITE + players
+                );
+            } else {
+                lobbyBoard.setLine(3, ChatColor.YELLOW + "\u00BB "
+                        + ChatColor.WHITE + "1"
+                );
+            }
+
             lobbyBoard.setLine(4, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
@@ -94,7 +102,7 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     )
             );
 
-            lobbyBoard.setLine(11, " .");
+            lobbyBoard.setLine(11, " ");
             lobbyBoard.apply(scoreboardPlayer);
         } else {
             this.cancel();

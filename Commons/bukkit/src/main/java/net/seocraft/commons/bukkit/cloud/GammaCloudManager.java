@@ -102,8 +102,8 @@ public class GammaCloudManager implements CloudManager {
     }
 
     @Override
-    public @NotNull String getOnlinePlayers() {
-        return BridgePlayerManager.getInstance().getOnlinePlayers().size() + "";
+    public int getOnlinePlayers() {
+        return BridgePlayerManager.getInstance().getOnlinePlayers().size();
     }
 
     @NotNull
