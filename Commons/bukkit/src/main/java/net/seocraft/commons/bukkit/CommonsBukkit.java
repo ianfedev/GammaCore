@@ -10,6 +10,7 @@ import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
 import me.fixeddev.bcm.parametric.ParametricCommandHandler;
 import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
 import me.fixeddev.inject.ProtectedBinder;
+import net.seocraft.api.bukkit.announcement.AnnouncementHandler;
 import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.creator.npc.listener.NPCSpawnListener;
 import net.seocraft.api.bukkit.creator.npc.listener.NPCUseListener;
@@ -27,6 +28,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerLoad;
 import net.seocraft.api.core.server.ServerType;
+import net.seocraft.commons.bukkit.announcement.GammaAnnouncementHandler;
 import net.seocraft.commons.bukkit.authentication.AuthenticationCommandsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationEnvironmentEventsListener;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLanguageMenuListener;
@@ -55,6 +57,8 @@ import java.util.*;
 import java.util.logging.Level;
 
 public class CommonsBukkit extends JavaPlugin {
+
+    @Inject private AnnouncementHandler announcementHandler;
 
     // --- Authentication mode related listeners --- //
     @Inject private AuthenticationEnvironmentEventsListener authenticationMovementListener;
@@ -151,6 +155,8 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
         getServer().getPluginManager().registerEvents(userDisconnectListener, this);
 
+        if (getConfig().getBoolean("announcement.enabled")) announcementHandler.startAnnouncementDisplaying();
+
 
         if (getConfig().getBoolean("authentication.enabled", false)) {
             enableAuthentication();
@@ -187,6 +193,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class).in(Scopes.SINGLETON);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class).in(Scopes.SINGLETON);
         binder.bind(StatsProvider.class).to(GameStatsProvider.class).in(Scopes.SINGLETON);
+        binder.bind(AnnouncementHandler.class).to(GammaAnnouncementHandler.class).in(Scopes.SINGLETON);
         binder.bind(UserLoginManagement.class).to(GammaUserLoginManagement.class).in(Scopes.SINGLETON);
         binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
         binder.bind(ObjectMapper.class).toProvider(() -> {

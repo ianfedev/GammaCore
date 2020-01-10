@@ -43,7 +43,6 @@ public class UserDisconnectListener implements Listener {
         Player player = event.getPlayer();
         Set<Hologram> playerHolograms = new HashSet<>(player.getLinkedHolograms());
         playerHolograms.forEach(Hologram::destroy);
-        player.stopPlayingSong();
         this.packetManager.uninjectPlayer(event.getPlayer());
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
             boolean disconnection = false;

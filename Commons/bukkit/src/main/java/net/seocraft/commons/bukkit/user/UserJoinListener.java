@@ -144,10 +144,10 @@ public class UserJoinListener implements Listener {
                     language
             );
 
-            /*Bukkit.getScheduler().runTaskLater(this.instance, () -> {
+            Bukkit.getScheduler().runTaskLater(this.instance, () -> {
                 Player dp = Bukkit.getPlayer(player.getName());
                 if (dp != null) player.kickPlayer(ChatColor.RED + this.translatableField.getUnspacedField(language, "authentication_delay_exceeded"));
-            }, 20*30);*/
+            }, 20*30);
 
         } else {
             player.kickPlayer(ChatColor.RED +

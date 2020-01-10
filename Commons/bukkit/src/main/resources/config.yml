@@ -8,3 +8,9 @@ authentication:
     world: world
     yaw: 0
     pitch: 0
+announcement:
+  enabled: false                                 # This will display announcements to everyone
+  delay: 60                                      # This is the time in seconds that will delay between every announcement
+  announcements:                                 # Write the key of the translation that you have written in language files
+    - ""
+    - ""

@@ -190,6 +190,16 @@ game_5e14f49eff6607e52a32ed02_description: "%%dark_gray%%Larga Duración%n%%n%Ju
 game_5e14f4e5ff6607e52a32ed48_title: BedWars
 game_5e14f4e5ff6607e52a32ed48_description: "%%dark_gray%%Juego por Equipos%n%%n%Protege la cama junto a tus%n%compañeros y destruye las%n%camas enemigas para ganar"
 
+
+# Custom Announcements Translations
+# How to:
+# Go to Commons config.yml and specify the string that will be announced. (Example: "announcement_base_help")
+# Remember: You can use colors and space from above to style the message
+announcement_twitter: "%%aqua%%¡Síguenos en Twitter como %%yellow%%@SeocraftNetwork%%aqua%% y haz parte de nuestra comunidad!"
+announcement_website: "%%green%%¡Regístrate en nuestra web %%blue%%www.seocraft.net %%green%%y ponte al día con nuestras actualizaciones semanales!"
+announcement_donation: "%%yellow%%¿Te gusta Seocraft Network?, ¡Realiza una donación ahora en %%gold%%seocraft.net/donaciones%%yellow%%!"
+announcement_idea: "%%aqua%%¿Tienes una idea?, ¡Postéala en el foro y podrá ser parte de Seocraft!"
+
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas
 commons_spectator_error: "¡Ha ocurrido un error al unirte como espectador!"

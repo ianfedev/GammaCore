@@ -24,7 +24,6 @@ public class AuthenticationLoginListener {
         player.setHealth(20);
         player.setFoodLevel(20);
         player.getInventory().setHeldItemSlot(4);
-        player.playSong("authentication");
         player.teleport(new Location(w, x, y, z, yaw, pitch));
         for (Player players : Bukkit.getOnlinePlayers()) {
             player.hidePlayer(players);
