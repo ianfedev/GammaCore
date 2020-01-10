@@ -196,9 +196,18 @@ game_5e14f4e5ff6607e52a32ed48_description: "%%dark_gray%%Juego por Equipos%n%%n%
 # Go to Commons config.yml and specify the string that will be announced. (Example: "announcement_base_help")
 # Remember: You can use colors and space from above to style the message
 announcement_twitter: "%%aqua%%¡Síguenos en Twitter como %%yellow%%@SeocraftNetwork%%aqua%% y haz parte de nuestra comunidad!"
-announcement_website: "%%green%%¡Regístrate en nuestra web %%blue%%www.seocraft.net %%green%%y ponte al día con nuestras actualizaciones semanales!"
+announcement_website: "%%yellow%%¡Regístrate en nuestra web %%gold%%www.seocraft.net %%ywllow%%y ponte al día con nuestras actualizaciones semanales!"
 announcement_donation: "%%yellow%%¿Te gusta Seocraft Network?, ¡Realiza una donación ahora en %%gold%%seocraft.net/donaciones%%yellow%%!"
 announcement_idea: "%%aqua%%¿Tienes una idea?, ¡Postéala en el foro y podrá ser parte de Seocraft!"
+
+# Custom Lobby Join Message
+# How to:
+# Every group has an ID (_id from MongoDB Schema).
+# Place a key with the format "joinalert_GROUPID" or keep empty to remove the message
+# Remember to keep the %%player%% placeholder in order to show who joined
+# Remember: You can use colors and space from above to style the message
+joinalert_5deaca21e2b2efe25f5281e1: "%%yellow%%¡El majestuoso %%player%% %%yellow%%ha llegado!
+
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas

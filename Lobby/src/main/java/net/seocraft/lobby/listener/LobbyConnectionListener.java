@@ -10,6 +10,7 @@ import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.creator.board.ScoreboardManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorHologramManager;
+import net.seocraft.api.bukkit.user.UserLobbyMessageHandler;
 import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.user.User;
@@ -39,6 +40,7 @@ public class LobbyConnectionListener implements Listener {
     @Inject private SelectorHologramManager hologramManager;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private FriendshipProvider friendshipProvider;
+    @Inject private UserLobbyMessageHandler userLobbyMessageHandler;
 
     @EventHandler
     public void lobbyConnectionListener(LobbyConnectionEvent event) {
@@ -47,6 +49,8 @@ public class LobbyConnectionListener implements Listener {
 
         this.teleportManager.spawnTeleport(player, null, true);
         this.hologramManager.showSelectorHologram(playerRecord);
+
+        this.userLobbyMessageHandler.alertUserJoinMessage(playerRecord);
 
         this.hotbarItemCollection.setupPlayerHotbar(
                 player,

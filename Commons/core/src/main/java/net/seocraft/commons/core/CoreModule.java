@@ -25,15 +25,15 @@ public class CoreModule extends ProtectedModule {
         bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8)));
         bind(ExecutorService.class).to(ListeningExecutorService.class);
         bind(CooldownManager.class).to(CoreCooldownManager.class);
+        bind(UserStorageProvider.class).to(GammaUserStorageProvider.class).in(Scopes.SINGLETON);
+        expose(UserStorageProvider.class);
         bind(OnlineStatusManager.class).to(CraftOnlineStatusManager.class);
         bind(ServerManager.class).to(CoreServerManager.class).in(Scopes.SINGLETON);
-        bind(UserStorageProvider.class).to(GammaUserStorageProvider.class).in(Scopes.SINGLETON);
         expose(ListeningExecutorService.class);
         expose(ExecutorService.class);
         expose(CooldownManager.class);
         expose(OnlineStatusManager.class);
         expose(ServerManager.class);
-        expose(UserStorageProvider.class);
     }
 
 }

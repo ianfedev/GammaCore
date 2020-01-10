@@ -40,6 +40,7 @@ public class UserDisconnectListener implements Listener {
 
     @EventHandler
     public void disconnectListenerEvent(PlayerQuitEvent event) {
+        event.setQuitMessage("");
         Player player = event.getPlayer();
         Set<Hologram> playerHolograms = new HashSet<>(player.getLinkedHolograms());
         playerHolograms.forEach(Hologram::destroy);

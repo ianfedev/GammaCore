@@ -108,7 +108,7 @@ public class UserJoinListener implements Listener {
                     event.setJoinMessage("");
                 }
 
-                executeLobbyCheck(user, player);
+                executeLobbyCheck(user, player, event);
 
                 if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
                     executeGameCheck(user, player);
@@ -158,11 +158,12 @@ public class UserJoinListener implements Listener {
         }
     }
 
-    private void executeLobbyCheck(@NotNull User user, @NotNull Player player) {
+    private void executeLobbyCheck(@NotNull User user, @NotNull Player player, @NotNull PlayerJoinEvent event) {
         if (
                 this.instance.getServerRecord().getServerType() == ServerType.LOBBY &&
                         Bukkit.getPluginManager().getPlugin("Lobby") != null
         ) {
+            event.setJoinMessage("");
             Bukkit.getPluginManager().callEvent(new LobbyConnectionEvent(user, player));
         }
     }
