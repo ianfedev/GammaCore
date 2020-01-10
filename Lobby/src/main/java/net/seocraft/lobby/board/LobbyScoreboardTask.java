@@ -50,51 +50,51 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     ChatColor.GOLD + "" + ChatColor.BOLD + "Seocraft Network"
             );
 
-            lobbyBoard.setLine(0, ChatColor.YELLOW + "www.seocraft.net"
+            lobbyBoard.setLine(1, ChatColor.YELLOW + "www.seocraft.net"
             );
-            lobbyBoard.setLine(1, " .");
+            lobbyBoard.setLine(2, "");
 
-            lobbyBoard.setLine(2, ChatColor.YELLOW + "\u00BB "
+            lobbyBoard.setLine(3, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
             );
-            lobbyBoard.setLine(3, ChatColor.YELLOW +
+            lobbyBoard.setLine(4, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_players"
                     )
             );
 
-            lobbyBoard.setLine(4, ChatColor.YELLOW + "\u00BB "
+            lobbyBoard.setLine(5, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.WHITE + "#" + Bukkit.getServerName().split("-")[1]
             );
-            lobbyBoard.setLine(5, ChatColor.YELLOW +
+            lobbyBoard.setLine(6, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_lobby"
                     )
             );
 
-            lobbyBoard.setLine(6, ChatColor.YELLOW + "\u00BB "
+            lobbyBoard.setLine(7, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.WHITE + user.getLevel()
             );
-            lobbyBoard.setLine(7, ChatColor.YELLOW +
+            lobbyBoard.setLine(8, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_level"
                     )
             );
 
-            lobbyBoard.setLine(8, ChatColor.YELLOW + "\u00BB "
+            lobbyBoard.setLine(9, ChatColor.YELLOW + "\u00BB "
                     + ChatColor.valueOf(primaryFlair.getColor().toUpperCase()) + user.getPrimaryGroup().getName()
             );
-            lobbyBoard.setLine(9, ChatColor.YELLOW +
+            lobbyBoard.setLine(10, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
                             user.getLanguage(),
                             "commons_lobby_scoreboard_rank"
                     )
             );
 
-            lobbyBoard.setLine(10, " .");
+            lobbyBoard.setLine(11, " .");
             lobbyBoard.apply(scoreboardPlayer);
         } else {
             this.cancel();
