@@ -50,20 +50,40 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     ChatColor.GOLD + "" + ChatColor.BOLD + "Seocraft Network"
             );
 
-            lobbyBoard.setLine(1, ChatColor.YELLOW + "www.seocraft.net"
+            lobbyBoard.setLine(10, ChatColor.YELLOW +
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_lobby_scoreboard_rank"
+                    )
             );
-            lobbyBoard.setLine(2, "");
 
-            int players = this.cloudManager.getOnlinePlayers();
-            if (players > 1) {
-                lobbyBoard.setLine(3, ChatColor.YELLOW + "\u00BB "
-                        + ChatColor.WHITE + players
-                );
-            } else {
-                lobbyBoard.setLine(3, ChatColor.YELLOW + "\u00BB "
-                        + ChatColor.WHITE + "1"
-                );
-            }
+            lobbyBoard.setLine(9, ChatColor.YELLOW + "\u00BB "
+                    + ChatColor.valueOf(primaryFlair.getColor().toUpperCase()) + user.getPrimaryGroup().getName()
+            );
+
+            lobbyBoard.setLine(8, ChatColor.YELLOW +
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_lobby_scoreboard_level"
+                    )
+            );
+
+            lobbyBoard.setLine(11, " ");
+
+            lobbyBoard.setLine(7, ChatColor.ITALIC + "" + ChatColor.YELLOW + "\u00BB "
+                    + ChatColor.WHITE + user.getLevel()
+            );
+
+            lobbyBoard.setLine(6, ChatColor.YELLOW +
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_lobby_scoreboard_lobby"
+                    )
+            );
+
+            lobbyBoard.setLine(5, ChatColor.RED + "" + ChatColor.YELLOW + "\u00BB "
+                    + ChatColor.WHITE + "#" + Bukkit.getServerName().split("-")[1]
+            );
 
             lobbyBoard.setLine(4, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(
@@ -72,37 +92,12 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     )
             );
 
-            lobbyBoard.setLine(5, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + "#" + Bukkit.getServerName().split("-")[1]
-            );
-            lobbyBoard.setLine(6, ChatColor.YELLOW +
-                    this.translatableField.getUnspacedField(
-                            user.getLanguage(),
-                            "commons_lobby_scoreboard_lobby"
-                    )
+            lobbyBoard.setLine(3, ChatColor.MAGIC + "" + ChatColor.YELLOW + "\u00BB "
+                    + ChatColor.WHITE + this.cloudManager.getOnlinePlayers()
             );
 
-            lobbyBoard.setLine(7, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + user.getLevel()
-            );
-            lobbyBoard.setLine(8, ChatColor.YELLOW +
-                    this.translatableField.getUnspacedField(
-                            user.getLanguage(),
-                            "commons_lobby_scoreboard_level"
-                    )
-            );
-
-            lobbyBoard.setLine(9, ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.valueOf(primaryFlair.getColor().toUpperCase()) + user.getPrimaryGroup().getName()
-            );
-            lobbyBoard.setLine(10, ChatColor.YELLOW +
-                    this.translatableField.getUnspacedField(
-                            user.getLanguage(),
-                            "commons_lobby_scoreboard_rank"
-                    )
-            );
-
-            lobbyBoard.setLine(11, " ");
+            lobbyBoard.setLine(2, ChatColor.BOLD + "");
+            lobbyBoard.setLine(1, ChatColor.YELLOW + "www.seocraft.net");
             lobbyBoard.apply(scoreboardPlayer);
         } else {
             this.cancel();

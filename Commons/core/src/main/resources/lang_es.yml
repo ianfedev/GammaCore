@@ -43,6 +43,8 @@ authentication_try_again_delay: Puedes volver a ingresar en
 authentication_welcome_new: Te haz registrado correctamente. ¡Bienvenido a %%server%%!
 authentication_logged_main: Haz iniciado sesión correctamente. ¡Serás redirigido al %%lobby%%!
 authentication_language_menu: Elegir lenguaje
+authentication_register_actionbar: "Registrate con"
+authentication_login_actionbar: "Inicia sesión con"
 authentication_language_update_error: ¡Ha ocurrido un error al actualizar tu idioma!
 authentication_language_update_success: ¡Tu lenguaje ha sido actualizado a %%language%%!
 authentication_language_update_same: Ya has seleccionado este idioma antes
