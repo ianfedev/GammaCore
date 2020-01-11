@@ -25,5 +25,3 @@ selector:
     perk: false
 board:
   default: true
-  gamemode: ""
-  subGamemode: ""
