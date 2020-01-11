@@ -1,5 +1,6 @@
 package net.seocraft.api.bukkit.game.match;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.util.concurrent.ListenableFuture;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
@@ -46,6 +47,6 @@ public interface MatchProvider {
 
     @NotNull Match updateMatch(@NotNull Match match) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
 
+    @NotNull Set<Match> getUserWonMatches(@NotNull User user, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
 
-    @NotNull Match getUserWonMatches(@NotNull User user, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode);
 }

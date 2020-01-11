@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit.game.match;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,12 +21,10 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.ServerTokenQuery;
+import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.utils.TimeUtils;
 import net.seocraft.commons.core.backend.map.MapGetRequest;
-import net.seocraft.commons.core.backend.match.MatchCreateRequest;
-import net.seocraft.commons.core.backend.match.MatchFindRequest;
-import net.seocraft.commons.core.backend.match.MatchGetRequest;
-import net.seocraft.commons.core.backend.match.MatchUpdateRequest;
+import net.seocraft.commons.core.backend.match.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,6 +41,7 @@ public class GameMatchProvider implements MatchProvider {
     @Inject private MatchUpdateRequest matchUpdateRequest;
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private MatchCreateRequest matchCreateRequest;
+    @Inject private MatchUserWonRequest matchUserWonRequest;
     @Inject private ObjectMapper objectMapper;
 
     @Override
@@ -177,5 +177,24 @@ public class GameMatchProvider implements MatchProvider {
         );
 
         return this.objectMapper.readValue(response, Match.class);
+    }
+
+    @Override
+    public @NotNull Set<Match> getUserWonMatches(@NotNull User user, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError {
+        ObjectNode node = this.objectMapper.createObjectNode();
+        node.put("user", user.getId());
+        node.put("gamemode", gamemode.getId());
+        node.put("subGamemode", subGamemode.getId());
+
+        String response = this.matchUserWonRequest.executeRequest(
+                this.objectMapper.writeValueAsString(node),
+                this.serverTokenQuery.getToken()
+        );
+
+        return this.objectMapper.readValue(
+                response,
+                new TypeReference<Set<Match>>(){}
+        );
+
     }
 }
