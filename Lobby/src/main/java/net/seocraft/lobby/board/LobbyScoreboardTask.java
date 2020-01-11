@@ -81,9 +81,17 @@ public class LobbyScoreboardTask extends BukkitRunnable {
                     )
             );
 
-            lobbyBoard.setLine(5, ChatColor.RED + "" + ChatColor.YELLOW + "\u00BB "
-                    + ChatColor.WHITE + "#" + Bukkit.getServerName().split("-")[1]
-            );
+            String[] name = Bukkit.getServerName().split("-");
+            if (name.length == 2) {
+                lobbyBoard.setLine(5, ChatColor.RED + "" + ChatColor.YELLOW + "\u00BB "
+                        + ChatColor.WHITE + "#" + name[1]
+                );
+            } else {
+                lobbyBoard.setLine(5, ChatColor.RED + "" + ChatColor.YELLOW + "\u00BB "
+                        + ChatColor.WHITE + "#" + "1"
+                );
+            }
+
 
             lobbyBoard.setLine(4, ChatColor.YELLOW +
                     this.translatableField.getUnspacedField(

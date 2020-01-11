@@ -72,6 +72,7 @@ public class UserJoinListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void userAccessResponse(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        this.packetManager.injectPlayer(event.getPlayer());
         try {
 
             String request = generateRequestJSON(
@@ -118,8 +119,6 @@ public class UserJoinListener implements Listener {
                 updateServerRecord(playerIdentifier);
 
             }
-
-            this.packetManager.injectPlayer(event.getPlayer());
 
         } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
@@ -180,8 +179,8 @@ public class UserJoinListener implements Listener {
 
     private void executeGameCheck(@NotNull User user, @NotNull Player player) throws IOException {
         if (this.instance.pairedGame) {
-            String pairing = this.redisClient.getString("pairing:" + user.getId());
-            if (!pairing.equals("")) {
+            if (this.redisClient.existsKey("pairing:" + user.getId())) {
+                String pairing = this.redisClient.getString("pairing:" + user.getId());
                 FinderResult result = this.mapper.readValue(
                         pairing,
                         FinderResult.class

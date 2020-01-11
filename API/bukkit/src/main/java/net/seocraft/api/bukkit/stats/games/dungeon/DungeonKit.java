@@ -1,21 +1,19 @@
 package net.seocraft.api.bukkit.stats.games.dungeon;
 
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
 public interface DungeonKit {
 
-    @NotNull ItemStack getItem();
+    @NotNull String getItem();
 
-    void setItem(@NotNull ItemStack item);
+    void setItem(@NotNull String item);
 
-    @NotNull Set<Material> getUpgrades();
+    @NotNull Set<String> getUpgrades();
 
-    void setUpgrades(Set<Material> upgrades);
+    void setUpgrades(Set<String> upgrades);
 
     int getCurrentMaterial();
 
