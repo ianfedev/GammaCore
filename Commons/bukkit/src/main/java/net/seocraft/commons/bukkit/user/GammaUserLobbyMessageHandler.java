@@ -29,6 +29,16 @@ public class GammaUserLobbyMessageHandler implements UserLobbyMessageHandler {
         Bukkit.getOnlinePlayers().forEach((player) -> CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User playerRecord = userAsyncResponse.getResponse();
+                String personalField = this.translatableField.getUnspacedField(playerRecord.getLanguage(), "joinalert_" + user.getId());
+                if (!personalField.equalsIgnoreCase("joinalert_" + user.getId())) {
+                    player.sendMessage(
+                            ChatAlertLibrary.transformChat(
+                                    personalField.replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")))
+                            )
+                    );
+                    return;
+                }
+
                 String translatedField = this.translatableField.getUnspacedField(playerRecord.getLanguage(), "joinalert_" + mainGroup);
                 if (!translatedField.equalsIgnoreCase("joinalert_" + mainGroup)) {
                     player.sendMessage(
@@ -37,6 +47,7 @@ public class GammaUserLobbyMessageHandler implements UserLobbyMessageHandler {
                             )
                     );
                 }
+
             } else {
                 Bukkit.getLogger().log(Level.WARNING, "[Commons] Error sending join message to player {0}.", player.getName());
             }

@@ -206,8 +206,12 @@ announcement_idea: "%%aqua%%¿Tienes una idea?, ¡Postéala en el foro y podrá 
 # How to:
 # Every group has an ID (_id from MongoDB Schema).
 # Place a key with the format "joinalert_GROUPID" or keep empty to remove the message
+# You can also set a personal display for an specific user (Place user ID instead of the group one).
+# It will override the group default message.
 # Remember to keep the %%player%% placeholder in order to show who joined
 # Remember: You can use colors and space from above to style the message
+
+joinalert_5e1934617f8d5205a88a331b: "%%gold%%¡El caremondá de %%player%% %%gold%%ha entrado al lobby!"
 joinalert_5deaca21e2b2efe25f5281e1: "%%yellow%%¡El majestuoso %%player%% %%yellow%%ha llegado!"
 
 
