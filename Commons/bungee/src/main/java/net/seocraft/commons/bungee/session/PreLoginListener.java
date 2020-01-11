@@ -10,10 +10,12 @@ import net.md_5.bungee.event.EventHandler;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.commons.bungee.CommonsBungee;
 
 public class PreLoginListener implements Listener {
 
     @Inject private UserStorageProvider userStorageProvider;
+    @Inject private CommonsBungee commonsBungee;
 
     @EventHandler
     public void onPreLogin(PreLoginEvent event) {
@@ -23,6 +25,7 @@ public class PreLoginListener implements Listener {
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(connection.getName()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 if (!userAsyncResponse.getResponse().isPremium()) connection.setOnlineMode(false);
+                event.completeIntent(this.commonsBungee);
             } else {
                 if (userAsyncResponse.getStatusCode() != 404) {
                     connection.disconnect(
@@ -30,6 +33,7 @@ public class PreLoginListener implements Listener {
                     );
                 } else {
                     connection.setOnlineMode(false);
+                    event.completeIntent(this.commonsBungee);
                 }
             }
         });
