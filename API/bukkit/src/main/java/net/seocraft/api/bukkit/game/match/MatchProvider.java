@@ -1,6 +1,8 @@
 package net.seocraft.api.bukkit.game.match;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -8,6 +10,7 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,4 +45,7 @@ public interface MatchProvider {
     ) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
 
     @NotNull Match updateMatch(@NotNull Match match) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
+
+
+    @NotNull Match getUserWonMatches(@NotNull User user, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode);
 }
