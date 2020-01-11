@@ -23,3 +23,7 @@ selector:
     yaw: 0
     pitch: 0
     perk: false
+board:
+  default: true
+  gamemode: ""
+  subGamemode: ""

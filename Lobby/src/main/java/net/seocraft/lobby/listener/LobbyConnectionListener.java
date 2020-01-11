@@ -99,12 +99,12 @@ public class LobbyConnectionListener implements Listener {
             });
         }
 
-
-        new LobbyScoreboardTask(
-                scoreboardManager, cloudManager, translator, bukkitAPI,
-                player.getName(),
-                playerRecord
-        ).runTaskTimer(this.instance, 0, 20*60);
+        if (this.instance.getConfig().getBoolean("board.default"))
+            new LobbyScoreboardTask(
+                    scoreboardManager, cloudManager, translator, bukkitAPI,
+                    player.getName(),
+                    playerRecord
+            ).runTaskTimer(this.instance, 0, 20*60);
     }
 
 }
