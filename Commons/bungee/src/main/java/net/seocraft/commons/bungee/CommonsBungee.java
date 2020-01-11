@@ -24,6 +24,7 @@ import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bungee.punishment.PunishmentListener;
 import net.seocraft.commons.bungee.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bungee.server.ServerModule;
+import net.seocraft.commons.bungee.session.PreLoginListener;
 import net.seocraft.commons.bungee.user.PlayerDisconnectListener;
 import net.seocraft.commons.bungee.user.PlayerJoinListener;
 import net.seocraft.commons.core.CoreModule;
@@ -39,12 +40,12 @@ public class CommonsBungee extends Plugin {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private TranslatableField translatableField;
+    @Inject private PreLoginListener preLoginListener;
     @Inject private Messager messager;
 
     @Inject private ServerLoad serverLoad;
     private Server serverRecord;
     private Channel<UserExpulsion> punishmentChannel;
-
 
     @Override
     public void onEnable() {
