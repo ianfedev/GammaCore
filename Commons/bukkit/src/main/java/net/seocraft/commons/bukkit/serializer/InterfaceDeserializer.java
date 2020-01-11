@@ -22,6 +22,7 @@ import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.stats.Stats;
 import net.seocraft.api.bukkit.stats.games.SkyWarsStats;
 import net.seocraft.api.bukkit.stats.games.TNTGamesStats;
+import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
 import net.seocraft.api.core.friend.Friendship;
 import net.seocraft.commons.bukkit.friend.UserFriendship;
 import net.seocraft.commons.bukkit.game.gamemode.CoreGamemode;
@@ -38,6 +39,7 @@ import net.seocraft.commons.bukkit.punishment.UserPunishment;
 import net.seocraft.commons.bukkit.stats.GameStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
 import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
+import net.seocraft.commons.bukkit.stats.games.dungeon.partial.GameDungeonEnchantment;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class InterfaceDeserializer {
@@ -59,6 +61,7 @@ public class InterfaceDeserializer {
                 .addMapping(Match.class, GameMatch.class)
                 .addMapping(Party.class, GameParty.class)
                 .addMapping(Stats.class, GameStats.class)
+                .addMapping(DungeonEnchantment.class, GameDungeonEnchantment.class)
                 .addMapping(SkyWarsStats.class, GameSkyWarsStats.class)
                 .addMapping(TNTGamesStats.class, GameTNTGamesStats.class)
                 .addMapping(Punishment.class, UserPunishment.class);

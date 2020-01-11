@@ -43,6 +43,10 @@ public interface User extends Model {
 
     boolean isVerified();
 
+    boolean isPremium();
+
+    void setPremium(boolean premium);
+
     void setVerified(boolean verified);
 
     int getLevel();
