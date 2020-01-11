@@ -55,6 +55,7 @@ public class CommonsBungee extends Plugin {
             this.registerBanListener();
 
             getProxy().getPluginManager().registerListener(this, playerJoinListener);
+            getProxy().getPluginManager().registerListener(this, preLoginListener);
             getProxy().getPluginManager().registerListener(this, playerDisconnectListener);
 
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
