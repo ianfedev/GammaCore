@@ -13,10 +13,12 @@ public class ACModule extends ProtectedModule {
         bind(ACParticipantsProvider.class).to(GammaACParticipantsProvider.class).in(Scopes.SINGLETON);
         bind(ACBroadcaster.class).to(GammaACBroadcaster.class).in(Scopes.SINGLETON);
         bind(ACPunishmentBroadcaster.class).to(GammaACPunishmentBroadcaster.class).in(Scopes.SINGLETON);
+        bind(ACLoginBroadcaster.class).to(GammaACLoginBroadcaster.class).in(Scopes.SINGLETON);
         expose(ACMentionParser.class);
         expose(ACMessageManager.class);
         expose(ACParticipantsProvider.class);
         expose(ACBroadcaster.class);
+        expose(ACLoginBroadcaster.class);
     }
 
 }
