@@ -216,6 +216,8 @@ joinalert_5deaca21e2b2efe25f5281e1: "%%yellow%%¡El majestuoso %%player%% %%yell
 
 # Administrative chat translations
 commons_ac_prefix: "Staff"
+commons_ac_login: "Ha ingresado"
+commons_ac_logout: "Se ha desconectado"
 commons_ac_error: "¡Ha ocurrido un error al enviar el mensaje!"
 commons_ac_permission: "¡No tienes permiso para enviar un mensaje importante!"
 commons_ac_punishment_has: "Ha"

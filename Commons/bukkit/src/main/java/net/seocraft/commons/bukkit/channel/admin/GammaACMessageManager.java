@@ -1,15 +1,17 @@
 package net.seocraft.commons.bukkit.channel.admin;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.channel.admin.*;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
-import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.user.User;
+import net.seocraft.api.core.user.UserPermissionChecker;
+import net.seocraft.commons.bukkit.channel.admin.listener.ACLoginListener;
+import net.seocraft.commons.bukkit.channel.admin.listener.ACLogoutListener;
+import net.seocraft.commons.bukkit.channel.admin.listener.ACMessageListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -26,13 +28,18 @@ public class GammaACMessageManager implements ACMessageManager {
     @Inject
     GammaACMessageManager(
             ACMentionParser mentionParser, Messager messager,
-            ACParticipantsProvider participantsProvider, ACBroadcaster broadcaster
+            ACParticipantsProvider participantsProvider, ACBroadcaster broadcaster,
+            ACLoginBroadcaster loginBroadcaster, UserPermissionChecker permissionChecker
     ) {
         this.mentionParser = mentionParser;
         this.participantsProvider = participantsProvider;
         this.broadcaster = broadcaster;
         this.messageChannel = messager.getChannel("ac_messages", ACMessage.class);
+        Channel<User> loginChannel = messager.getChannel("ac_login", User.class);
+        Channel<User> logoutChannel = messager.getChannel("ac_logout", User.class);
         this.messageChannel.registerListener(new ACMessageListener(broadcaster));
+        loginChannel.registerListener(new ACLoginListener(loginBroadcaster, permissionChecker));
+        logoutChannel.registerListener(new ACLogoutListener(loginBroadcaster, permissionChecker));
     }
 
     @Override

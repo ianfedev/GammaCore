@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.channel.admin;
+package net.seocraft.commons.bukkit.channel.admin.listener;
 
 import net.seocraft.api.bukkit.channel.admin.ACBroadcaster;
 import net.seocraft.api.bukkit.channel.admin.ACMessage;
@@ -9,7 +9,7 @@ public class ACMessageListener implements ChannelListener<ACMessage> {
 
     @NotNull private ACBroadcaster broadcaster;
 
-    ACMessageListener(@NotNull ACBroadcaster broadcaster) {
+    public ACMessageListener(@NotNull ACBroadcaster broadcaster) {
         this.broadcaster = broadcaster;
     }
 

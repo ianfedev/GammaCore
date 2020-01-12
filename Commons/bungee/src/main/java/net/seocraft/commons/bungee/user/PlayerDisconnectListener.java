@@ -10,18 +10,24 @@ import net.md_5.bungee.event.EventHandler;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.online.OnlineStatusManager;
+import net.seocraft.api.core.redis.messager.Channel;
+import net.seocraft.api.core.redis.messager.Messager;
+import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 
 public class PlayerDisconnectListener implements Listener {
 
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private UserStorageProvider userStorageProvider;
+    @Inject private Messager messager;
 
     @EventHandler
     public void playerDisconnectEvent(PlayerDisconnectEvent event) {
         ProxiedPlayer player = event.getPlayer();
         CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(player.getName()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                Channel<User> userChannel = this.messager.getChannel("ac_logout", User.class);
+                userChannel.sendMessage(userAsyncResponse.getResponse());
                 this.onlineStatusManager.setPlayerOnlineStatus(userAsyncResponse.getResponse().getId(), false);
             } else {
                 player.disconnect(
@@ -29,7 +35,6 @@ public class PlayerDisconnectListener implements Listener {
                 );
             }
         });
-
 
     }
 }

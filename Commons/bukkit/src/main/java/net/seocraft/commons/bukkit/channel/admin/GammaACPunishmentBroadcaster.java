@@ -62,15 +62,15 @@ public class GammaACPunishmentBroadcaster implements ACPunishmentBroadcaster {
                                 message = message + this.userFormatter.getUserFormat(
                                         punished,
                                         r
-                                ) + ChatColor.GRAY;
+                                ) + " " + ChatColor.GRAY;
 
                                 // Checks reason and expiration time
                                 if (!punishment.getReason().equalsIgnoreCase(""))
-                                    message = message + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_due") + punishment.getReason();
+                                    message = message + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_due").toLowerCase() + punishment.getReason();
                                 if (punishment.getExpiration() != -1)
-                                    message = message + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_during") + TimeUtils.formatAgoTimeInt((int) punishment.getExpiration(), user.getLanguage()).toLowerCase();
+                                    message = message + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_during").toLowerCase() + TimeUtils.formatAgoTimeInt((int) punishment.getExpiration(), user.getLanguage()).toLowerCase();
 
-                                player.sendMessage(message);
+                                player.sendMessage(message + ".");
                                 player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 2f);
                             }
 
