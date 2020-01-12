@@ -89,14 +89,18 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
 
     @Override
     public List<String> getSuggestions(Namespace namespace, ArgumentArray arguments) {
-        for (int i = 0; arguments.getSize() > i; i++) {
-            System.out.println(arguments.get(i));
+        if (arguments.getSize() > 0) {
+            for (int i = 0; arguments.getSize() > i; i++) {
+                System.out.println(arguments.get(i));
+                System.out.println(i);
+                System.out.println(arguments.getPosition());
+            }
+            String getLastArgument = arguments.get(arguments.getPosition() - 1);
+
+            if(getLastArgument.startsWith("@"))
+                return this.participantsProvider.getChannelParticipants().stream().map(User::getUsername).collect(Collectors.toList());
+
         }
-        String getLastArgument = arguments.get(arguments.getPosition());
-
-        if(getLastArgument.startsWith("@"))
-            return this.participantsProvider.getChannelParticipants().stream().map(User::getUsername).collect(Collectors.toList());
-
         return new ArrayList<>();
     }
 
