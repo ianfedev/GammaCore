@@ -37,7 +37,7 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
 
                     player.sendMessage(
                             ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
-                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_login") + "."
+                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_login").toLowerCase() + "."
                     );
                     return;
                 }
@@ -45,9 +45,9 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
                 if (important) {
                     player.sendMessage(
                             ChatColor.RED + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
-                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_login") + "."
+                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_login").toLowerCase() + "."
                     );
-                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
+                    if (!player.getDatabaseIdentifier().equalsIgnoreCase(session.getId())) player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
                 }
             }
         });
@@ -67,7 +67,7 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
 
                     player.sendMessage(
                             ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
-                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_logout") + "."
+                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_logout").toLowerCase() + "."
                     );
                     return;
                 }
@@ -75,9 +75,9 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
                 if (important) {
                     player.sendMessage(
                             ChatColor.RED + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
-                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_logout") + "."
+                                    " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_logout").toLowerCase() + "."
                     );
-                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
+                    if (!player.getDatabaseIdentifier().equalsIgnoreCase(session.getId())) player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 2f);
                 }
 
             }
