@@ -48,7 +48,7 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
     @Override
     public boolean execute(CommandContext commandContext) {
         Player sender = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        String message = commandContext.getJoinedArgs(0);
+        String message = commandContext.getJoinedArgs(0).replace("-", "");
         boolean important = commandContext.getFlagValue('i');
 
         CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(sender.getDatabaseIdentifier()), userResponse -> {
@@ -92,7 +92,7 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
         if (arguments.getSize() > 0) {
             String getLastArgument = arguments.get(arguments.getPosition() + 1);
             if(getLastArgument.startsWith("@"))
-                return this.participantsProvider.getChannelParticipants().stream().map(User::getUsername).collect(Collectors.toList());
+                return this.participantsProvider.getChannelParticipants().stream().map(u -> "@" + u.getUsername()).collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
