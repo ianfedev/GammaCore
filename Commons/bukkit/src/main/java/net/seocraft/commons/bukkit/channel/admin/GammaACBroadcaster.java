@@ -34,22 +34,30 @@ public class GammaACBroadcaster implements ACBroadcaster {
             if (player != null) {
 
                 if (user.hasAdminChatActive() && !message.isImportant()) {
+
                     player.sendMessage(
-                            ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix") + "]" +
+                            ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
                                     " " + this.userFormatter.getUserFormat(message.getSender(), this.bukkitAPI.getConfig().getString("realm")) + ChatColor.WHITE + ": " +
                                     getMessage(message.getMessage(), message.getMentionUsers())
                     );
+
+                    message.getMentionUsers().forEach((mentioned) -> {
+                        if (mentioned.getId().equalsIgnoreCase(user.getId())) player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 1f);
+                    });
+
                     return;
                 }
 
                 if (message.isImportant()) {
                     player.sendMessage(
-                            ChatColor.RED + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix") + "]" +
+                            ChatColor.RED + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
                                     " " + this.userFormatter.getUserFormat(message.getSender(), this.bukkitAPI.getConfig().getString("realm")) + ChatColor.WHITE + ": " +
                                     getMessage(message.getMessage(), message.getMentionUsers())
                     );
-                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 2f, 1f);
+                    player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
                 }
+
+
 
             }
 
