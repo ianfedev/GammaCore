@@ -140,11 +140,10 @@ public class CommonsBukkit extends JavaPlugin {
             Bukkit.shutdown();
         }
 
-        parametricCommandHandler.registerCommand(adminChatCommand);
-
         this.packetManager.addPacketListener(this.npcSpawnListener);
         this.packetManager.addPacketListener(this.npcUseListener);
 
+        dispatcher.registerCommand(adminChatCommand);
         dispatcher.registerCommandClass(whisperCommand);
         dispatcher.registerCommandClass(punishmentCommand);
         dispatcher.registerCommandClass(friendCommand);

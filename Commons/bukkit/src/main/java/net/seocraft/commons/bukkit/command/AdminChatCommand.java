@@ -38,9 +38,10 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
 
     public AdminChatCommand() {
         super(new String[]{"adminchat"});
+        setDescription("Command user to communicate in the admin channel");
+        setPermission("commons.staff.chat");
         setExpectedFlags(Lists.newArrayList('i'));
         setUsage("/<command> <message...> [-i]");
-        setPermission("commons.staff.chat");
         setMinArguments(1);
     }
 
