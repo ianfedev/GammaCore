@@ -36,7 +36,7 @@ public class GammaACMessageManager implements ACMessageManager {
     }
 
     @Override
-    public void sendMessage(@NotNull String message, @NotNull User sender, boolean important) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
+    public void sendMessage(@NotNull String message, @NotNull User sender, boolean important) throws Unauthorized, InternalServerError, BadRequest, IOException {
         Set<User> mentionedUsers = this.mentionParser.getMentionedUsers(message)
                 .stream()
                 .filter((user) -> {

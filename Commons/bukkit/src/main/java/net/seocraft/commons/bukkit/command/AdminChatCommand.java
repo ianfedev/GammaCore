@@ -89,7 +89,9 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
 
     @Override
     public List<String> getSuggestions(Namespace namespace, ArgumentArray arguments) {
-        System.out.println(arguments.getSize());
+        for (int i = 0; arguments.getSize() > i; i++) {
+            System.out.println(arguments.get(i));
+        }
         String getLastArgument = arguments.get(arguments.getPosition());
 
         if(getLastArgument.startsWith("@"))

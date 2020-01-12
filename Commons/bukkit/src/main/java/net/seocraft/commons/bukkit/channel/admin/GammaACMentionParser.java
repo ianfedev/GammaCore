@@ -21,14 +21,16 @@ public class GammaACMentionParser implements ACMentionParser {
     @Inject private UserStorageProvider userStorageProvider;
 
     @Override
-    public @NotNull Set<User> getMentionedUsers(@NotNull String rawMessage) throws Unauthorized, IOException, BadRequest, NotFound, InternalServerError {
+    public @NotNull Set<User> getMentionedUsers(@NotNull String rawMessage) throws Unauthorized, IOException, BadRequest, InternalServerError {
 
         Pattern mentionedPattern = Pattern.compile("@(\\S+)");
         Matcher matchedMentions = mentionedPattern.matcher(rawMessage);
         Set<User> users = new HashSet<>();
         while (matchedMentions.find()) {
-            User user = this.userStorageProvider.findUserByNameSync(matchedMentions.group(1));
-            users.add(user);
+            try {
+                User user = this.userStorageProvider.findUserByNameSync(matchedMentions.group(1));
+                users.add(user);
+            } catch (NotFound ignore) {}
         }
 
         return users;
