@@ -32,6 +32,7 @@ public class PunishmentListener implements ChannelListener<Punishment> {
             if (target != null && targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 switch (punishment.getPunishmentType()) {
                     case BAN: {
+                        this.punishmentActions.broadcastBan(punishment);
                         BridgedUserBan.banPlayer(expulsionChannel, punishment, targetData);
                         break;
                     }

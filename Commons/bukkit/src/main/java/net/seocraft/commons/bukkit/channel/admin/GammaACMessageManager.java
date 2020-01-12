@@ -41,7 +41,10 @@ public class GammaACMessageManager implements ACMessageManager {
                 .stream()
                 .filter((user) -> {
                     for (User participant : this.participantsProvider.getChannelParticipants())
-                        if (participant.getId().equalsIgnoreCase(user.getId())) return true;
+                        if (
+                                participant.getId().equalsIgnoreCase(user.getId()) &&
+                                !participant.getId().equalsIgnoreCase(sender.getId()) // Comment this line to allow own-mention
+                        ) return true;
                     return false;
                 }).collect(Collectors.toSet());
         ACMessage formattedMessage = new GammaACMessage(message, sender, mentionedUsers, important);

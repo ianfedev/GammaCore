@@ -218,6 +218,13 @@ joinalert_5deaca21e2b2efe25f5281e1: "%%yellow%%¡El majestuoso %%player%% %%yell
 commons_ac_prefix: "Staff"
 commons_ac_error: "¡Ha ocurrido un error al enviar el mensaje!"
 commons_ac_permission: "¡No tienes permiso para enviar un mensaje importante!"
+commons_ac_punishment_has: "Ha"
+commons_ac_punishment_warned: "Advertido"
+commons_ac_punishment_kicked: "Expulsado"
+commons_ac_punishment_banned: "Suspendido"
+commons_ac_punishment_to: "Al jugador"
+commons_ac_punishment_due: "Por"
+commons_ac_punishment_during: "Durante"
 
 
 # Game API related translations

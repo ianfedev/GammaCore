@@ -1,6 +1,7 @@
 package net.seocraft.commons.bukkit.punishment;
 
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.channel.admin.ACPunishmentBroadcaster;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
@@ -27,11 +28,13 @@ import java.util.Date;
 public class PunishmentActions {
 
     @Inject private TranslatableField translator;
+    @Inject private ACPunishmentBroadcaster punishmentBroadcaster;
     @Inject private CommonsBukkit instance;
     @Inject private Messager messager;
     @Inject private PunishmentProvider punishmentProvider;
 
     public void kickPlayer(Player target, User targetData, Punishment punishment) {
+        this.punishmentBroadcaster.broadcastPunishment(punishment);
         if (target == null) return;
         Bukkit.getScheduler().runTask(this.instance, () -> target.kickPlayer(ChatColor.RED +
                 this.translator.getField(
@@ -47,10 +50,10 @@ public class PunishmentActions {
                                 + ChatColor.YELLOW
                 )
         ));
-
     }
 
     public void warnPlayer(Player target, User targetData, Punishment punishment) {
+        this.punishmentBroadcaster.broadcastPunishment(punishment);
         if (target == null) return;
         Bukkit.getScheduler().runTask(this.instance, () -> {
             PlayerTitleHandler.sendTitle(
@@ -66,6 +69,10 @@ public class PunishmentActions {
             target.playSound(target.getLocation(), Sound.ENDERDRAGON_GROWL, 1f, 1f);
         });
 
+    }
+
+    public void broadcastBan(Punishment punishment) {
+        this.punishmentBroadcaster.broadcastPunishment(punishment);
     }
 
     public void checkBan(User targetData) throws InternalServerError {
