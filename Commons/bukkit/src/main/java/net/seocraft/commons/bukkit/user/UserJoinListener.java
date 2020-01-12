@@ -20,6 +20,7 @@ import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.api.core.user.User;
+import net.seocraft.api.core.user.UserPermissionChecker;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
@@ -51,6 +52,7 @@ public class UserJoinListener implements Listener {
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
     @Inject private AuthenticationLoginListener authenticationLoginListener;
     @Inject private GameLoginManager gameLoginManager;
+    @Inject private UserPermissionChecker userPermissionChecker;
     @Inject private ServerManager serverManager;
     @Inject private TranslatableField translatableField;
     @Inject private OnlineStatusManager onlineStatusManager;
@@ -99,7 +101,7 @@ public class UserJoinListener implements Listener {
 
                 this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
 
-                playerField.set(player, new UserPermissions(player, user, userStorageProvider, translatableField));
+                playerField.set(player, new UserPermissions(player, user, userPermissionChecker, translatableField));
 
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     executeAuthenticationProcess(

@@ -9,6 +9,8 @@ public interface ACMessage {
 
     @NotNull String getMessage();
 
+    @NotNull User getSender();
+
     @NotNull Set<User> getMentionUsers();
 
     boolean isImportant();

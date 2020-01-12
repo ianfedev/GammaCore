@@ -30,6 +30,7 @@ import net.seocraft.api.core.server.ServerLoad;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.announcement.GammaAnnouncementHandler;
 import net.seocraft.commons.bukkit.authentication.*;
+import net.seocraft.commons.bukkit.channel.admin.ACModule;
 import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.creator.board.ScoreboardModule;
@@ -79,6 +80,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Inject private LoginCommand loginCommand;
     @Inject private RegisterCommand registerCommand;
+    @Inject private AdminChatCommand adminChatCommand;
 
     @Inject private VerificationCommand verificationCommand;
     @Inject private WhisperCommand whisperCommand;
@@ -137,6 +139,8 @@ public class CommonsBukkit extends JavaPlugin {
             Bukkit.getLogger().log(Level.SEVERE, "[Bukkit-API] Error when authorizing server load.");
             Bukkit.shutdown();
         }
+
+        parametricCommandHandler.registerCommand(adminChatCommand);
 
         this.packetManager.addPacketListener(this.npcSpawnListener);
         this.packetManager.addPacketListener(this.npcUseListener);
@@ -212,6 +216,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.install(new UserModule());
         binder.install(new CloudModule(this.cloudDeploy));
         binder.install(new ScoreboardModule());
+        binder.install(new ACModule());
         binder.expose(FriendshipProvider.class);
         binder.expose(PunishmentProvider.class);
         binder.expose(WhisperManager.class);

@@ -214,6 +214,11 @@ announcement_idea: "%%aqua%%¿Tienes una idea?, ¡Postéala en el foro y podrá 
 joinalert_5e1934617f8d5205a88a331b: "%%gold%%¡El caremondá de %%player%% %%gold%%ha entrado al lobby!"
 joinalert_5deaca21e2b2efe25f5281e1: "%%yellow%%¡El majestuoso %%player%% %%yellow%%ha llegado!"
 
+# Administrative chat translations
+commons_ac_prefix: "Staff"
+commons_ac_error: "¡Ha ocurrido un error al enviar el mensaje!"
+commons_ac_permission: "¡No tienes permiso para enviar un mensaje importante!"
+
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas

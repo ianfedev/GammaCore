@@ -9,7 +9,7 @@ public class ACMessageListener implements ChannelListener<ACMessage> {
 
     @NotNull private ACBroadcaster broadcaster;
 
-    public ACMessageListener(@NotNull ACBroadcaster broadcaster) {
+    ACMessageListener(@NotNull ACBroadcaster broadcaster) {
         this.broadcaster = broadcaster;
     }
 
