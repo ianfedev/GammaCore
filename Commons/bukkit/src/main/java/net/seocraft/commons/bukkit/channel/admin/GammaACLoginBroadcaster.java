@@ -47,7 +47,7 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
                             ChatColor.RED + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
                                     " " + this.userFormatter.getUserFormat(session, r) + " " + ChatColor.YELLOW +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_login").toLowerCase() + "."
                     );
-                    if (!player.getDatabaseIdentifier().equalsIgnoreCase(session.getId())) player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
+                    if (!player.getDatabaseIdentifier().equalsIgnoreCase(session.getId())) player.playSound(player.getLocation(), Sound.NOTE_STICKS, 1f, 2f);
                 }
             }
         });
