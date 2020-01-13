@@ -1,7 +1,5 @@
 package net.seocraft.lobby.command;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.parametric.CommandClass;
@@ -10,16 +8,12 @@ import me.fixeddev.bcm.parametric.annotation.Flag;
 import me.fixeddev.bcm.parametric.annotation.Optional;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
-
 public class TeleportCommand implements CommandClass {
 
-    @Inject private ObjectMapper mapper;
 
     @Inject private TeleportManager teleportManager;
 
@@ -62,21 +56,6 @@ public class TeleportCommand implements CommandClass {
                 this.teleportManager.spawnTeleport(player, null, silent);
             }
         }
-        return true;
-    }
-
-    @Command(names = {"test"})
-    public boolean testCommand(CommandSender commandSender, CommandContext context) {
-        try {
-            String mapper = this.mapper.writeValueAsString(Material.GRASS);
-            System.out.println(mapper);
-
-            Material material = this.mapper.readValue(mapper, Material.class);
-            System.out.println(material);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         return true;
     }
 
