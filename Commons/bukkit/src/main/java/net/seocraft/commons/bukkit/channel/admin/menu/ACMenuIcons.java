@@ -33,7 +33,7 @@ class ACMenuIcons {
                 ChatColor.GRAY
         );
         loreArray.add(" ");
-        String status = field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
+        String status = ChatColor.GRAY + field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
         if (!user.hasAdminChatActive()) status = status + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
         if (user.hasAdminChatActive()) status = status + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         loreArray.add(status);
@@ -62,7 +62,7 @@ class ACMenuIcons {
                 ChatColor.GRAY
         );
         logArray.add(" ");
-        String statusLog = field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
+        String statusLog = ChatColor.GRAY + field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
         if (!user.hasAdminLogsActive()) statusLog = statusLog + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
         if (user.hasAdminLogsActive()) statusLog = statusLog + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         logArray.add(statusLog);
@@ -91,7 +91,7 @@ class ACMenuIcons {
                 ChatColor.GRAY
         );
         punishmentLore.add(" ");
-        String statusPunishment = field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
+        String statusPunishment = ChatColor.GRAY + field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
         if (!user.hasAdminPunishmentsActive()) statusPunishment =statusPunishment + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
         if (user.hasAdminPunishmentsActive()) statusPunishment = statusPunishment + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         punishmentLore.add(statusPunishment);
@@ -101,10 +101,14 @@ class ACMenuIcons {
     }
 
     static @NotNull ItemStack getDivider() {
-        return NBTTagHandler.addString(
+        ItemStack pane = NBTTagHandler.addString(
                 new ItemStack(Material.STAINED_GLASS_PANE, 1, (short) 15),
                 "ac_icon",
                 "divider"
         );
+        ItemMeta paneMeta = pane.getItemMeta();
+        paneMeta.setDisplayName(" ");
+        pane.setItemMeta(paneMeta);
+        return pane;
     }
 }

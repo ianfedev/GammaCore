@@ -44,7 +44,7 @@ public class GammaACMenuDisplay implements ACMenuDisplay {
                 items.put(23, ACMenuIcons.getPunishmentIcon(translatableField, user));
                 items.put(32, ACMenuOptions.getPunishmentOption(translatableField, user));
 
-                items.put(40, ACMenuOptions.getChatOption(translatableField, user));
+                items.put(40, ACMenuOptions.getCloseOption(translatableField, user));
 
                 player.openInventory(
                         InventoryUtils.createInventory(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_menu_title"), 54, items)

@@ -235,11 +235,12 @@ commons_ac_menu_chat: "Canal Administrativo"
 commons_ac_menu_chat_lore: "Recibe y envía mensajes al%n%resto del equipo"
 commons_ac_menu_title: "Ajústes AdminChat"
 commons_ac_menu_logs: "Avisos de Conexión"
-commons_ac_menu_logs_lore: "Recibe quien del equipo entró%n%o salió del servidor."
+commons_ac_menu_logs_lore: "Recibe quien del equipo entró%n%o salió del servidor"
 commons_ac_menu_punishment: "Avisos de Sanción"
-commons_ac_menu_punishment_lore: "Recibe quien del equipo ha%n%sancionado usuarios."
+commons_ac_menu_punishment_lore: "Recibe quien del equipo ha%n%sancionado usuarios"
 commons_ac_menu_activate: "¡Has clic para activar esta función!"
 commons_ac_menu_deactivate: "¡Has clic para desactivar esta función!"
+commons_ac_menu_updated: "¡Has actualizado exitosamente esta opción!"
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas
