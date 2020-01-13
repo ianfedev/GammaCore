@@ -6,6 +6,11 @@ import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
 import me.fixeddev.bcm.basic.ArgumentArray;
 import me.fixeddev.bcm.basic.Namespace;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.channel.admin.ACMessageManager;
 import net.seocraft.api.bukkit.channel.admin.ACParticipantsProvider;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -64,6 +69,29 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
                                         "commons_ac_permission"
                                 )
                         );
+                        return;
+                    }
+
+                    if (!user.hasAdminChatActive()) {
+                        TextComponent disabled = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_disabled") + ". ");
+                        disabled.setColor(ChatColor.RED);
+                        TextComponent hover = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_reminder_click"));
+                        hover.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+                        hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/acs"));
+                        hover.setHoverEvent(
+                                new HoverEvent(
+                                        HoverEvent.Action.SHOW_TEXT,
+                                        new ComponentBuilder(
+                                                net.md_5.bungee.api.ChatColor.YELLOW +
+                                                        this.translatableField.getUnspacedField(
+                                                                user.getLanguage(),
+                                                                "commons_ac_reminder_click"
+                                                        )
+                                        ).create()
+                                )
+                        );
+                        disabled.addExtra(hover);
+                        sender.sendMessage(disabled);
                         return;
                     }
 

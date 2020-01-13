@@ -78,7 +78,7 @@ public class LobbyConnectionListener implements Listener {
                 );
                 message.addExtra(hover);
                 player.sendMessage(message);
-            }, 30 * 20L);
+            },  30 * 20L);
         }
 
         // Detect when player has hiding gadget enabled

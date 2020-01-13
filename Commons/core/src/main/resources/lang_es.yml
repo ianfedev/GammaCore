@@ -241,6 +241,7 @@ commons_ac_menu_punishment_lore: "Recibe quien del equipo ha%n%sancionado usuari
 commons_ac_menu_activate: "¡Has clic para activar esta función!"
 commons_ac_menu_deactivate: "¡Has clic para desactivar esta función!"
 commons_ac_reminder: "Recuerda que tienes el AdminChat desactivado"
+commons_ac_disabled: "Tienes el AdminChat desactivado"
 commons_ac_reminder_click: "¡Haz click en este mensaje para activarlo!"
 commons_ac_menu_updated: "¡Has actualizado exitosamente esta opción!"
 
