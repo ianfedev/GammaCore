@@ -63,9 +63,8 @@ class ACMenuIcons {
         );
         logArray.add(" ");
         String statusLog = field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
-        //TODO: Change for real option
-        if (!user.hasAdminChatActive()) statusLog = statusLog + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
-        if (user.hasAdminChatActive()) statusLog = statusLog + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
+        if (!user.hasAdminLogsActive()) statusLog = statusLog + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
+        if (user.hasAdminLogsActive()) statusLog = statusLog + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         logArray.add(statusLog);
         logMeta.setLore(logArray);
         log.setItemMeta(logMeta);
@@ -73,6 +72,8 @@ class ACMenuIcons {
     }
 
     static @NotNull ItemStack getPunishmentIcon(@NotNull TranslatableField field, @NotNull User user) {
+
+        // --- Creation and display --- //
         ItemStack punishment = NBTTagHandler.addString(
                 new ItemStack(Material.WOOD_SWORD, 1),
                 "ac_icon",
@@ -83,6 +84,7 @@ class ACMenuIcons {
         if (!user.hasAdminChatActive())
             punishmentMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_punishment"));
 
+        // --- Lore concatenation --- //
         LoreDisplayArray<String> punishmentLore = new LoreDisplayArray<>();
         punishmentLore.add(
                 field.getUnspacedField(user.getLanguage(), "commons_ac_menu_punishment_lore") + ".",
@@ -90,9 +92,8 @@ class ACMenuIcons {
         );
         punishmentLore.add(" ");
         String statusPunishment = field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
-        //TODO: Change for real option
-        if (!user.hasAdminChatActive()) statusPunishment =statusPunishment + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
-        if (user.hasAdminChatActive()) statusPunishment = statusPunishment + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
+        if (!user.hasAdminPunishmentsActive()) statusPunishment =statusPunishment + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
+        if (user.hasAdminPunishmentsActive()) statusPunishment = statusPunishment + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         punishmentLore.add(statusPunishment);
         punishmentMeta.setLore(punishmentLore);
         punishment.setItemMeta(punishmentMeta);

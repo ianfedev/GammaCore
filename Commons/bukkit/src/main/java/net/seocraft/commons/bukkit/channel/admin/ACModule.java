@@ -17,6 +17,7 @@ public class ACModule extends ProtectedModule {
         bind(ACPunishmentBroadcaster.class).to(GammaACPunishmentBroadcaster.class).in(Scopes.SINGLETON);
         bind(ACLoginBroadcaster.class).to(GammaACLoginBroadcaster.class).in(Scopes.SINGLETON);
         bind(ACMenuDisplay.class).to(GammaACMenuDisplay.class).in(Scopes.SINGLETON);
+        expose(ACMenuDisplay.class);
         expose(ACMentionParser.class);
         expose(ACMessageManager.class);
         expose(ACParticipantsProvider.class);

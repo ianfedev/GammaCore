@@ -26,7 +26,11 @@ class ACMenuOptions {
                     "chat"
             );
         }
-        return getSelectorMeta(field, user, chatSelector);
+        ItemMeta selectorMeta = chatSelector.getItemMeta();
+        selectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
+        if (!user.hasAdminChatActive()) selectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
+        chatSelector.setItemMeta(selectorMeta);
+        return chatSelector;
     }
 
     static @NotNull ItemStack getLogsOption(@NotNull TranslatableField field, @NotNull User user) {
@@ -44,7 +48,11 @@ class ACMenuOptions {
                     "logs"
             );
         }
-        return getSelectorMeta(field, user, logsSelector);
+        ItemMeta logsSelectorMeta = logsSelector.getItemMeta();
+        logsSelectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
+        if (!user.hasAdminLogsActive()) logsSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
+        logsSelector.setItemMeta(logsSelectorMeta);
+        return logsSelector;
     }
 
     static @NotNull ItemStack getPunishmentOption(@NotNull TranslatableField field, @NotNull User user) {
@@ -62,7 +70,11 @@ class ACMenuOptions {
                     "punishment"
             );
         }
-        return getSelectorMeta(field, user, punishmentSelector);
+        ItemMeta punishmentSelectorMeta = punishmentSelector.getItemMeta();
+        punishmentSelectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
+        if (!user.hasAdminPunishmentsActive()) punishmentSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
+        punishmentSelector.setItemMeta(punishmentSelectorMeta);
+        return punishmentSelector;
     }
 
     static @NotNull ItemStack getCloseOption(@NotNull TranslatableField field, @NotNull User user) {
@@ -75,13 +87,5 @@ class ACMenuOptions {
         closeMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_close"));
         close.setItemMeta(closeMeta);
         return close;
-    }
-
-    private @NotNull static ItemStack getSelectorMeta(@NotNull TranslatableField field, @NotNull User user, ItemStack punishmentSelector) {
-        ItemMeta punishmentSelectorMeta = punishmentSelector.getItemMeta();
-        punishmentSelectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
-        if (!user.hasAdminChatActive()) punishmentSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
-        punishmentSelector.setItemMeta(punishmentSelectorMeta);
-        return punishmentSelector;
     }
 }

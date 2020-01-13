@@ -87,8 +87,20 @@ public interface User extends Model {
     @JsonProperty("ac_active")
     boolean hasAdminChatActive();
 
+    @JsonProperty("ac_logs")
+    boolean hasAdminLogsActive();
+
+    @JsonProperty("ac_punishments")
+    boolean hasAdminPunishmentsActive();
+
     @JsonProperty("ac_active")
-    void setActiveChatActive(boolean accept);
+    void setAdminChatActive(boolean accept);
+
+    @JsonProperty("ac_logs")
+    void setAdminLogsActive(boolean accept);
+
+    @JsonProperty("ac_punishments")
+    void setAdminPunishmentsActive(boolean accept);
 
     @JsonProperty("accept_friends")
     boolean isAcceptingFriends();
