@@ -20,6 +20,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -103,11 +104,8 @@ public class WhisperCommand implements CommandClass {
     @Command(names = {"test"})
     public boolean testCommand(CommandSender commandSender, CommandContext context) {
         try {
-            String mapper = this.mapper.writeValueAsString(Material.GRASS);
-            System.out.println(mapper);
-
-            Material material = this.mapper.readValue(mapper, Material.class);
-            System.out.println(material);
+            ItemStack stack = new ItemStack(Material.GRASS, 1);
+            System.out.println(this.mapper.writeValueAsString(stack));
         } catch (IOException e) {
             e.printStackTrace();
         }
