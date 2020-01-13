@@ -228,6 +228,18 @@ commons_ac_punishment_to: "Al jugador"
 commons_ac_punishment_due: "Por"
 commons_ac_punishment_during: "Durante"
 
+# Administrative chat menu
+# Remember to keep the %%player%% placeholder in order to show who joined
+# Remember: You can use colors and space from above to style item lore
+commons_ac_menu_chat: "Canal Administrativo"
+commons_ac_menu_chat_lore: "Recibe y envía mensajes al%n%resto del equipo"
+commons_ac_menu_title: "Ajústes AdminChat"
+commons_ac_menu_logs: "Avisos de Conexión"
+commons_ac_menu_logs_lore: "Recibe quien del equipo entró%n%o salió del servidor."
+commons_ac_menu_punishment: "Avisos de Sanción"
+commons_ac_menu_punishment_lore: "Recibe quien del equipo ha%n%sancionado usuarios."
+commons_ac_menu_activate: "¡Has clic para activar esta función!"
+commons_ac_menu_deactivate: "¡Has clic para desactivar esta función!"
 
 # Game API related translations
 commons_pairing_error: Ha ocurrido un error al emparejarte con una de las partidas
@@ -281,3 +293,6 @@ commons_pagination_click: "Click para ver la página %%page%%"
 commons_pagination_next: "Página siguiente (%%page%%)"
 commons_pagination_of: "(Página %%first%% de %%last%%)"
 commons_close: "Cerrar"
+commons_status: "Estado"
+commons_enabled: "Activado"
+commons_disabled: "Desactivado"

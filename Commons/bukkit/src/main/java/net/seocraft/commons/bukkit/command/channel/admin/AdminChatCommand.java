@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.command;
+package net.seocraft.commons.bukkit.command.channel.admin;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;

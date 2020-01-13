@@ -33,6 +33,8 @@ import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.channel.admin.ACModule;
 import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
+import net.seocraft.commons.bukkit.command.channel.admin.AdminChatCommand;
+import net.seocraft.commons.bukkit.command.channel.admin.AdminChatSettings;
 import net.seocraft.commons.bukkit.creator.board.ScoreboardModule;
 import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
@@ -81,6 +83,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private LoginCommand loginCommand;
     @Inject private RegisterCommand registerCommand;
     @Inject private AdminChatCommand adminChatCommand;
+    @Inject private AdminChatSettings adminChatSettings;
 
     @Inject private VerificationCommand verificationCommand;
     @Inject private WhisperCommand whisperCommand;
@@ -144,6 +147,7 @@ public class CommonsBukkit extends JavaPlugin {
         this.packetManager.addPacketListener(this.npcUseListener);
 
         dispatcher.registerCommand(adminChatCommand);
+        dispatcher.registerCommandClass(adminChatSettings);
         dispatcher.registerCommandClass(whisperCommand);
         dispatcher.registerCommandClass(punishmentCommand);
         dispatcher.registerCommandClass(friendCommand);
