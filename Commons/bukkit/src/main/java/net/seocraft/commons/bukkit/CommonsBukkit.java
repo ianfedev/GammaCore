@@ -31,6 +31,7 @@ import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.announcement.GammaAnnouncementHandler;
 import net.seocraft.commons.bukkit.authentication.*;
 import net.seocraft.commons.bukkit.channel.admin.ACModule;
+import net.seocraft.commons.bukkit.channel.admin.menu.ACClickInventoryListener;
 import net.seocraft.commons.bukkit.cloud.CloudModule;
 import net.seocraft.commons.bukkit.command.*;
 import net.seocraft.commons.bukkit.command.channel.admin.AdminChatCommand;
@@ -76,6 +77,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private GameStartedListener gameStartedListener;
     @Inject private DisabledPluginsCommandListener disabledPluginsCommandListener;
     @Inject private UserDisconnectListener userDisconnectListener;
+    @Inject private ACClickInventoryListener acClickInventoryListener;
 
     @Inject private UserChatListener userChatListener;
     @Inject private UserJoinListener userJoinListener;
@@ -155,6 +157,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(verificationCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
+        getServer().getPluginManager().registerEvents(acClickInventoryListener, this);
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userJoinListener, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
