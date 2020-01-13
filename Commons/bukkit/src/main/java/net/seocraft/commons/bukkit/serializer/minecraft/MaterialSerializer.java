@@ -19,8 +19,6 @@ public class MaterialSerializer extends StdSerializer<Material> {
 
     @Override
     public void serialize(Material material, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeStartObject();
         jsonGenerator.writeString(material.toString().toLowerCase());
-        jsonGenerator.writeEndArray();
     }
 }
