@@ -38,6 +38,8 @@ import net.seocraft.commons.bukkit.game.map.partial.PartialCoordinates;
 import net.seocraft.commons.bukkit.game.match.GameMatch;
 import net.seocraft.commons.bukkit.game.party.GameParty;
 import net.seocraft.commons.bukkit.punishment.UserPunishment;
+import net.seocraft.commons.bukkit.serializer.minecraft.MaterialDeserializer;
+import net.seocraft.commons.bukkit.serializer.minecraft.MaterialSerializer;
 import net.seocraft.commons.bukkit.stats.GameStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
 import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
@@ -45,11 +47,14 @@ import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonKit;
 import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonStats;
 import net.seocraft.commons.bukkit.stats.games.dungeon.partial.GameDungeonEnchantment;
 import net.seocraft.commons.core.serializer.CoreResolver;
+import org.bukkit.Material;
 
 public class InterfaceDeserializer {
 
     public static SimpleModule getAbstractTypes() {
         SimpleModule module = new SimpleModule("InterfaceDeserializerModule", Version.unknownVersion());
+        module.addSerializer(Material.class, new MaterialSerializer(Material.class));
+        module.addDeserializer(Material.class, new MaterialDeserializer(Material.class));
         SimpleAbstractTypeResolver resolver = CoreResolver.getCoreResolver();
         resolver.addMapping(Friendship.class, UserFriendship.class)
                 .addMapping(Gamemode.class, CoreGamemode.class)
