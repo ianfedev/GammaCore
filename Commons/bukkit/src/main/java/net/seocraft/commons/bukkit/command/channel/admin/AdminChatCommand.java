@@ -42,7 +42,7 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
     @Inject private TranslatableField translatableField;
 
     public AdminChatCommand() {
-        super(new String[]{"adminchat", "ac"});
+        super(new String[]{"ac"});
         setDescription("Command user to communicate in the admin channel");
         setPermission("commons.staff.chat");
         setExpectedFlags(Lists.newArrayList('i'));

@@ -13,7 +13,12 @@ import net.seocraft.api.bukkit.lobby.selector.SelectorHologramManager;
 import net.seocraft.api.bukkit.user.UserLobbyMessageHandler;
 import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.api.core.friend.FriendshipProvider;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
+import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.user.LobbyConnectionEvent;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
@@ -39,6 +44,7 @@ public class LobbyConnectionListener implements Listener {
     @Inject private CloudManager cloudManager;
     @Inject private SelectorHologramManager hologramManager;
     @Inject private BukkitAPI bukkitAPI;
+    @Inject private UserStorageProvider userStorageProvider;
     @Inject private FriendshipProvider friendshipProvider;
     @Inject private UserLobbyMessageHandler userLobbyMessageHandler;
 
@@ -59,25 +65,34 @@ public class LobbyConnectionListener implements Listener {
 
         if (!playerRecord.hasAdminChatActive()) {
             Bukkit.getScheduler().runTaskLater(this.instance, () -> {
-                TextComponent message = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder") + ". ");
-                message.setColor(net.md_5.bungee.api.ChatColor.GRAY);
-                TextComponent hover = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder_click"));
-                hover.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
-                hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/acs"));
-                hover.setHoverEvent(
-                        new HoverEvent(
-                                HoverEvent.Action.SHOW_TEXT,
-                                new ComponentBuilder(
-                                        net.md_5.bungee.api.ChatColor.YELLOW +
-                                                this.translator.getUnspacedField(
-                                                        playerRecord.getLanguage(),
-                                                        "commons_ac_reminder_click"
-                                                )
-                                ).create()
-                        )
-                );
-                message.addExtra(hover);
-                player.sendMessage(message);
+
+                try {
+                    User finalUser = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
+
+                    if (!finalUser.hasAdminChatActive()) {
+                        TextComponent message = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder") + ". ");
+                        message.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+                        TextComponent hover = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder_click"));
+                        hover.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+                        hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/acs"));
+                        hover.setHoverEvent(
+                                new HoverEvent(
+                                        HoverEvent.Action.SHOW_TEXT,
+                                        new ComponentBuilder(
+                                                net.md_5.bungee.api.ChatColor.YELLOW +
+                                                        this.translator.getUnspacedField(
+                                                                playerRecord.getLanguage(),
+                                                                "commons_ac_reminder_click"
+                                                        )
+                                        ).create()
+                                )
+                        );
+                        message.addExtra(hover);
+                        player.sendMessage(message);
+                    }
+
+                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
+
             },  30 * 20L);
         }
 
