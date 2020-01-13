@@ -57,8 +57,6 @@ public class GammaACBroadcaster implements ACBroadcaster {
                     player.playSound(player.getLocation(), Sound.NOTE_PLING, 1f, 2f);
                 }
 
-
-
             }
 
         });

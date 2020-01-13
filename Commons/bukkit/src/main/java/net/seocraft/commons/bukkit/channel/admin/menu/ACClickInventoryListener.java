@@ -42,19 +42,16 @@ public class ACClickInventoryListener implements Listener {
                         case "chat": {
                             user.setAdminChatActive(!user.hasAdminChatActive());
                             updateUser(user, player);
-                            player.updateInventory();
                             break;
                         }
                         case "logs": {
                             user.setAdminLogsActive(!user.hasAdminLogsActive());
                             updateUser(user, player);
-                            player.updateInventory();
                             break;
                         }
                         case "punishment": {
                             user.setAdminPunishmentsActive(!user.hasAdminPunishmentsActive());
                             updateUser(user, player);
-                            player.updateInventory();
                             break;
                         }
                         default: {
@@ -73,6 +70,7 @@ public class ACClickInventoryListener implements Listener {
     }
 
     private void updateUser(@NotNull User user, @NotNull Player player) throws Unauthorized, JsonProcessingException, BadRequest, NotFound, InternalServerError {
+        player.closeInventory();
         this.userStorageProvider.updateUser(user);
         acMenuDisplay.openInventory(player);
         ChatAlertLibrary.infoAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_menu_updated"));
