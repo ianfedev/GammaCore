@@ -58,7 +58,7 @@ public class LobbyConnectionListener implements Listener {
         );
 
         if (!playerRecord.hasAdminChatActive()) {
-            Bukkit.getScheduler().runTaskTimer(this.instance, () -> {
+            Bukkit.getScheduler().runTaskLater(this.instance, () -> {
                 TextComponent message = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder") + ". ");
                 message.setColor(net.md_5.bungee.api.ChatColor.GRAY);
                 TextComponent hover = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder_click"));
@@ -78,7 +78,7 @@ public class LobbyConnectionListener implements Listener {
                 );
                 message.addExtra(hover);
                 player.sendMessage(message);
-            }, 0, 30 * 20L);
+            }, 30 * 20L);
         }
 
         // Detect when player has hiding gadget enabled
