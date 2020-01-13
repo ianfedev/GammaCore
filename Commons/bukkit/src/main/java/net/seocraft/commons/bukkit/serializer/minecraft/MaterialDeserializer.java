@@ -1,7 +1,6 @@
 package net.seocraft.commons.bukkit.serializer.minecraft;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -20,9 +19,12 @@ public class MaterialDeserializer extends StdDeserializer<Material> {
     }
 
     @Override
-    public Material deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        System.out.println(node);
-        return Material.AIR;
+    public Material deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        try {
+            JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+            return Material.valueOf(node.asText().toUpperCase());
+        } catch (IllegalArgumentException ignore) {
+            return Material.AIR;
+        }
     }
 }
