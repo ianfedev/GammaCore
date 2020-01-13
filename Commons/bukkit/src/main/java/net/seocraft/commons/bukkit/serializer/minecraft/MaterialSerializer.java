@@ -9,6 +9,10 @@ import java.io.IOException;
 
 public class MaterialSerializer extends StdSerializer<Material> {
 
+    public MaterialSerializer() {
+        this(null);
+    }
+
     public MaterialSerializer(Class<Material> t) {
         super(t);
     }

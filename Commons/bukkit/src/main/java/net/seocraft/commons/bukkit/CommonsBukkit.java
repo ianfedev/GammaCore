@@ -42,7 +42,8 @@ import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listener.game.*;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
-import net.seocraft.commons.bukkit.serializer.InterfaceDeserializer;
+import net.seocraft.commons.bukkit.serializer.AbstractResolverModule;
+import net.seocraft.commons.bukkit.serializer.CustomSerializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
 import net.seocraft.commons.bukkit.stats.GameStatsProvider;
 import net.seocraft.commons.bukkit.user.*;
@@ -205,7 +206,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(UserLoginManagement.class).to(GammaUserLoginManagement.class).in(Scopes.SINGLETON);
         binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);
         binder.bind(ObjectMapper.class).toProvider(() -> {
-            ObjectMapper mapper = new ObjectMapper().registerModule(InterfaceDeserializer.getAbstractTypes());
+            ObjectMapper mapper = new ObjectMapper().registerModule(AbstractResolverModule.getAbstractTypes());
             mapper.setVisibility(mapper.getSerializationConfig()
                     .getDefaultVisibilityChecker()
                     .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
@@ -214,6 +215,7 @@ public class CommonsBukkit extends JavaPlugin {
                     .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
                     .withCreatorVisibility(JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC));
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            mapper.registerModule(CustomSerializer.getCustomSerializerModule());
             return mapper;
         }).in(Scopes.SINGLETON);
         binder.install(new CoreModule());

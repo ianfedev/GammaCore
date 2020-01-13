@@ -11,6 +11,10 @@ import java.io.IOException;
 
 public class MaterialDeserializer extends StdDeserializer<Material> {
 
+    public MaterialDeserializer() {
+        this(null);
+    }
+
     public MaterialDeserializer(Class<?> vc) {
         super(vc);
     }

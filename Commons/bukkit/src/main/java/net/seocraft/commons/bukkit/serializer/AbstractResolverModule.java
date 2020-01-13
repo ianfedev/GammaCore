@@ -1,6 +1,4 @@
 package net.seocraft.commons.bukkit.serializer;
-
-
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -47,14 +45,11 @@ import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonKit;
 import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonStats;
 import net.seocraft.commons.bukkit.stats.games.dungeon.partial.GameDungeonEnchantment;
 import net.seocraft.commons.core.serializer.CoreResolver;
-import org.bukkit.Material;
 
-public class InterfaceDeserializer {
+public class AbstractResolverModule {
 
     public static SimpleModule getAbstractTypes() {
-        SimpleModule module = new SimpleModule("InterfaceDeserializerModule", Version.unknownVersion());
-        module.addSerializer(Material.class, new MaterialSerializer(Material.class));
-        module.addDeserializer(Material.class, new MaterialDeserializer(Material.class));
+        SimpleModule module = new SimpleModule("AbstractResolverModule", Version.unknownVersion());
         SimpleAbstractTypeResolver resolver = CoreResolver.getCoreResolver();
         resolver.addMapping(Friendship.class, UserFriendship.class)
                 .addMapping(Gamemode.class, CoreGamemode.class)
