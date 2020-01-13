@@ -79,7 +79,7 @@ class ACMenuOptions {
 
     static @NotNull ItemStack getCloseOption(@NotNull TranslatableField field, @NotNull User user) {
         ItemStack close =  NBTTagHandler.addString(
-                new ItemStack(Material.INK_SACK, 1, (short) 8),
+                new ItemStack(Material.ARROW, 1, (short) 8),
                 "ac_selector",
                 "close"
         );

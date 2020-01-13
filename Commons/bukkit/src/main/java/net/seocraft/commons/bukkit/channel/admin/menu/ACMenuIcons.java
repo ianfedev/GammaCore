@@ -6,6 +6,7 @@ import net.seocraft.commons.bukkit.util.LoreDisplayArray;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -80,6 +81,7 @@ class ACMenuIcons {
                 "punishment"
         );
         ItemMeta punishmentMeta = punishment.getItemMeta();
+        punishmentMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         punishmentMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_punishment"));
         if (!user.hasAdminChatActive())
             punishmentMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_punishment"));
