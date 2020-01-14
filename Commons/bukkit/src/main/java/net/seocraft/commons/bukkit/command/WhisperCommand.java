@@ -116,7 +116,6 @@ public class WhisperCommand implements CommandClass {
             stack.setItemMeta(meta);
             System.out.println(this.mapper.writeValueAsString(stack));
             ItemStack readed = this.mapper.readValue(this.mapper.writeValueAsString(stack), ItemStack.class);
-            System.out.println(readed.getItemMeta().getDisplayName());
         } catch (IOException e) {
             e.printStackTrace();
         }
