@@ -11,7 +11,7 @@ public interface DungeonKit {
 
     @NotNull ItemStack getItem();
 
-    void setItem(@NotNull String item);
+    void setItem(@NotNull ItemStack item);
 
     @NotNull Set<Material> getUpgrades();
 

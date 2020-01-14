@@ -1,31 +1,32 @@
 package net.seocraft.commons.bukkit.stats.games.dungeon.partial;
 
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
+import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
 
 public class GameDungeonEnchantment implements DungeonEnchantment {
 
-    @NotNull private String enchantment;
+    @NotNull private Enchantment enchantment;
     private int level;
 
     @ConstructorProperties({
             "enchantment",
             "level"
     })
-    public GameDungeonEnchantment(@NotNull String enchantment, int level) {
+    public GameDungeonEnchantment(@NotNull Enchantment enchantment, int level) {
         this.enchantment = enchantment;
         this.level = level;
     }
 
     @Override
-    public @NotNull String getEnchantment() {
+    public @NotNull Enchantment getEnchantment() {
         return this.enchantment;
     }
 
     @Override
-    public void setEnchantment(@NotNull String enchantment) {
+    public void setEnchantment(@NotNull Enchantment enchantment) {
         this.enchantment = enchantment;
     }
 
