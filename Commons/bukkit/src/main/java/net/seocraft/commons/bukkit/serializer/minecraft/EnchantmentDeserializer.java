@@ -21,6 +21,7 @@ public class EnchantmentDeserializer extends StdDeserializer<Enchantment> {
     @Override
     public Enchantment deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        System.out.println(node.toString().toUpperCase());
         switch (node.toString().toUpperCase()) {
             case "PROTECTION_ENVIRONMENTAL":
                 return Enchantment.PROTECTION_ENVIRONMENTAL;
