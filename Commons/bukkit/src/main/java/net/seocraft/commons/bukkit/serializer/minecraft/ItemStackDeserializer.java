@@ -32,7 +32,7 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
         );
         ItemMeta meta = mapper.readValue(node.get("itemMeta").toString(), ItemMeta.class);
         System.out.println(meta.getDisplayName());
-        stack.setItemMeta();
+        stack.setItemMeta(meta);
         stack.setDurability((short) node.get("durability").asInt());
         return stack;
     }
