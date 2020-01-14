@@ -53,7 +53,6 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
             }
         }
 
-        System.out.println("From deserializer" + meta.getDisplayName());
         return meta;
     }
 

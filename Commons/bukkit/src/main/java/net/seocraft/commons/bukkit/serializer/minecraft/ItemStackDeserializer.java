@@ -25,22 +25,43 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
 
     @Override
     public ItemStack deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
-        ItemStack stack = new ItemStack(
-                mapper.readValue(node.get("material").toString(), Material.class),
-                node.get("amount").asInt(),
-                (short) node.get("materialData").asInt()
-        );
+        ItemStack stack;
 
-        /*stack.setDurability((short) node.get("durability").asInt());
+        @Nullable JsonNode material = node.get("material");
+        @Nullable JsonNode amount = node.get("amount");
+        if (material != null && amount != null) {
+            @Nullable JsonNode data = node.get("materialData");
+            if (data != null) {
+                stack = new ItemStack(
+                        mapper.readValue(node.get("material").toString(), Material.class),
+                        amount.asInt(),
+                        (short) data.asInt()
+                );
+            } else {
+                stack = new ItemStack(
+                        mapper.readValue(node.get("material").toString(), Material.class),
+                        amount.asInt()
+                );
+            }
+        } else {
+            throw new IOException("There was no material specified at serialization.");
+        }
+
+        @Nullable JsonNode durability = node.get("durability");
+        if (durability != null)
+            stack.setDurability((short) durability.asInt());
+
         @Nullable JsonNode enchantmentArrayNode = node.get("enchantments");
         if (enchantmentArrayNode != null && enchantmentArrayNode.isArray()) {
-            for (JsonNode enchantmentNode : node.get("enchantments")) {
+            for (JsonNode enchantmentNode : enchantmentArrayNode) {
                 @Nullable Enchantment enchantment = mapper.readValue(
                         enchantmentNode.get("name").toString(),
                         Enchantment.class
                 );
+                System.out.println(enchantment.getName());
                 if (enchantment != null) {
                     stack.addUnsafeEnchantment(
                             enchantment,
@@ -48,10 +69,10 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
                     );
                 }
             }
-        }*/
+        }
 
+        System.out.println("Success");
         JsonNode testNode = node.get("itemMeta");
-        System.out.println(testNode.toString());
         ItemMeta meta = mapper.readValue(testNode.toString(), ItemMeta.class);
         return stack;
     }
