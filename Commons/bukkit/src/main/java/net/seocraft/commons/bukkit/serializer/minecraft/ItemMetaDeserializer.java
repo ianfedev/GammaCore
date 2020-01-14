@@ -51,7 +51,6 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
                         enchantmentNode.get("name").toString(),
                         Enchantment.class
                 );
-                System.out.println(enchantment.getName());
                 if (enchantment != null) {
                     meta.addEnchant(
                             enchantment,
@@ -70,7 +69,10 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
             }
         }
 
-        meta.getEnchants().forEach((a,b) -> System.out.println(a.getName()));
+        System.out.println("Starting enchantment parsing");
+        meta.getEnchants().forEach((enchantment, integer) -> {
+            System.out.println(enchantment.getName());
+        });
         System.out.println("From deserializer" + meta.getDisplayName());
         return meta;
     }
