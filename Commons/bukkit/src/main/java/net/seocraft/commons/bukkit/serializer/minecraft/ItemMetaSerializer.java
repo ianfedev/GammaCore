@@ -21,9 +21,11 @@ public class ItemMetaSerializer extends StdSerializer<ItemMeta> {
     public void serialize(ItemMeta meta, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeStringField("display", meta.getDisplayName());
-        jsonGenerator.writeArrayFieldStart("lore");
-        for (String loreLine : meta.getLore()) jsonGenerator.writeString(loreLine);
-        jsonGenerator.writeEndArray();
+        if (meta.getLore() != null) {
+            jsonGenerator.writeArrayFieldStart("lore");
+            for (String loreLine : meta.getLore()) jsonGenerator.writeString(loreLine);
+            jsonGenerator.writeEndArray();
+        }
         jsonGenerator.writeEndObject();
     }
 }
