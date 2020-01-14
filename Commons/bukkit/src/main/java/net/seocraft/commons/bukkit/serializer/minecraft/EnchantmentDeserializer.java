@@ -23,10 +23,9 @@ public class EnchantmentDeserializer extends StdDeserializer<Enchantment> {
     public Enchantment deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         try {
             JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+            System.out.println(node.toString());
             return Enchantment.getByName(node.toString().toUpperCase());
-        } catch (IllegalArgumentException ignore) {
-            System.out.println(ignore);
-            return null;
-        }
+        } catch (IllegalArgumentException ignore) { }
+        return null;
     }
 }
