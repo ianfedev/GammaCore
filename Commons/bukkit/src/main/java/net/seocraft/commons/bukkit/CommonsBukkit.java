@@ -229,6 +229,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.expose(PunishmentProvider.class);
         binder.expose(WhisperManager.class);
         binder.expose(StatsProvider.class);
+        binder.expose(ObjectMapper.class);
     }
 
     private void enableAuthentication() {

@@ -16,11 +16,15 @@ import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -104,7 +108,12 @@ public class WhisperCommand implements CommandClass {
     @Command(names = {"test"})
     public boolean testCommand(CommandSender commandSender, CommandContext context) {
         try {
-            ItemStack stack = new ItemStack(Material.GRASS, 1);
+            ItemStack stack = new ItemStack(Material.DIAMOND_AXE, 1);
+            ItemMeta meta = stack.getItemMeta();
+            meta.setDisplayName(ChatColor.GREEN + "Poppper");
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            meta.addEnchant(Enchantment.SILK_TOUCH, 1, true);
+            stack.setItemMeta(meta);
             System.out.println(this.mapper.writeValueAsString(stack));
         } catch (IOException e) {
             e.printStackTrace();
