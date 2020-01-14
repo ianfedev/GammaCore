@@ -56,6 +56,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
                 meta.addItemFlags(mapper.readValue(flagNode.toString(), ItemFlag.class));
             }
         }
+        System.out.println("From deserializer" + meta.getDisplayName());
         return meta;
     }
 

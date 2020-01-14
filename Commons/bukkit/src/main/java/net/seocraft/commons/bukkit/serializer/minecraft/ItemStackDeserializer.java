@@ -34,8 +34,7 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
 
         JsonNode testNode = node.get("itemMeta");
         System.out.println(testNode.toString());
-        JsonParser parser = testNode.traverse(jsonParser.getCodec());
-        ItemMeta meta = parser.readValueAs(ItemMeta.class);
+        ItemMeta meta = mapper.readValue(testNode.toString(), ItemMeta.class);
         System.out.println(meta.getDisplayName());
         return stack;
     }
