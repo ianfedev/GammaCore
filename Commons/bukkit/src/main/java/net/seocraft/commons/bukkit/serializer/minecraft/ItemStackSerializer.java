@@ -22,7 +22,7 @@ public class ItemStackSerializer extends StdSerializer<ItemStack> {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectField("material", stack.getType());
         jsonGenerator.writeNumberField("materialData", stack.getData().getData());
-        jsonGenerator.writeNumberField("amount", stack.getAmount());
+        jsonGenerator.writeNumberField("amount", 3);
         jsonGenerator.writeObjectField("itemMeta", stack.getItemMeta());
         jsonGenerator.writeEndObject();
     }
