@@ -73,9 +73,12 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
             }
         }
 
-        System.out.println("Success");
-        JsonNode testNode = node.get("itemMeta");
-        ItemMeta meta = mapper.readValue(testNode.toString(), ItemMeta.class);
+        @Nullable JsonNode metaNode = node.get("itemMeta");
+        if (metaNode != null) {
+            ItemMeta meta = mapper.readValue(metaNode.toString(), ItemMeta.class);
+            stack.setItemMeta(meta);
+        }
+
         return stack;
     }
 }
