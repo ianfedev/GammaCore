@@ -24,6 +24,7 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
     @Override
     public ItemStack deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        System.out.println("Starting deserialization");
         ItemStack stack = new ItemStack(
                 deserializationContext.readValue(
                         node.get("material").traverse(),
