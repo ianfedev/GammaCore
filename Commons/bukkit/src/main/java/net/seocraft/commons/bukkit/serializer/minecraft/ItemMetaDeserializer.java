@@ -32,7 +32,6 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
 
         ItemMeta meta = new ItemStack(Material.GRASS, 1).getItemMeta();
-        System.out.println(node.get("display").toString());
         meta.setDisplayName(node.get("display").toString());
         List<String> loreList = new ArrayList<>();
         if (node.get("lore").isArray()) {
