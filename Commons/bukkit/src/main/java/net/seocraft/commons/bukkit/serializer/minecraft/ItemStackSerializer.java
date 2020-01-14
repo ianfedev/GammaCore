@@ -25,6 +25,7 @@ public class ItemStackSerializer extends StdSerializer<ItemStack> {
         jsonGenerator.writeObjectField("material", stack.getType());
         jsonGenerator.writeNumberField("durability", stack.getDurability());
         jsonGenerator.writeNumberField("materialData", stack.getData().getData());
+
         if (stack.getEnchantments() != null) {
             jsonGenerator.writeArrayFieldStart("enchantments");
             for (Map.Entry<Enchantment, Integer> entry : stack.getEnchantments().entrySet()) {
@@ -35,6 +36,7 @@ public class ItemStackSerializer extends StdSerializer<ItemStack> {
             }
             jsonGenerator.writeEndArray();
         }
+        
         jsonGenerator.writeNumberField("amount", stack.getAmount());
         jsonGenerator.writeObjectField("itemMeta", stack.getItemMeta());
         jsonGenerator.writeEndObject();

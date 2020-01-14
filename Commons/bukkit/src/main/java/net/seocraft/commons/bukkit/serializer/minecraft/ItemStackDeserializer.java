@@ -32,7 +32,8 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
                 node.get("amount").asInt(),
                 (short) node.get("materialData").asInt()
         );
-        stack.setDurability((short) node.get("durability").asInt());
+
+        /*stack.setDurability((short) node.get("durability").asInt());
         @Nullable JsonNode enchantmentArrayNode = node.get("enchantments");
         if (enchantmentArrayNode != null && enchantmentArrayNode.isArray()) {
             for (JsonNode enchantmentNode : node.get("enchantments")) {
@@ -47,7 +48,7 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
                     );
                 }
             }
-        }
+        }*/
 
         JsonNode testNode = node.get("itemMeta");
         System.out.println(testNode.toString());
