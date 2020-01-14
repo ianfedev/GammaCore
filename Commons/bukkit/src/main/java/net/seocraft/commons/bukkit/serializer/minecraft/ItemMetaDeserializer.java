@@ -40,10 +40,9 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
 
         meta.setLore(loreList);
         if (node.get("enchantments").isArray()) {
-            for (JsonNode enchantmentNode : node.get("lore")) {
-                node.get("name").asText();
+            for (JsonNode enchantmentNode : node.get("enchantments")) {
                 meta.addEnchant(
-                        ((ObjectMapper) jsonParser.getCodec()).readValue(node.get("name").asText(), Enchantment.class),
+                        Enchantment.getByName(enchantmentNode.asText()),
                         node.get("level").asInt(),
                         true
                 );
@@ -52,7 +51,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
 
         if (node.get("flag").isArray()) {
             for (JsonNode flagNode: node.get("flag")) {
-                meta.addItemFlags(((ObjectMapper) jsonParser.getCodec()).readValue(flagNode.asText(), ItemFlag.class));
+                meta.addItemFlags(ItemFlag.valueOf(flagNode.asText()));
             }
         }
         return meta;
