@@ -21,7 +21,9 @@ public class EnchantmentDeserializer extends StdDeserializer<Enchantment> {
     @Override
     public Enchantment deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        switch (node.toString().toUpperCase()) {
+        String finalCodec = node.toString().toUpperCase();
+        System.out.println(finalCodec);
+        switch (finalCodec) {
             case "PROTECTION_ENVIRONMENTAL":
                 return Enchantment.PROTECTION_ENVIRONMENTAL;
             case "PROTECTION_FIRE":
@@ -54,10 +56,8 @@ public class EnchantmentDeserializer extends StdDeserializer<Enchantment> {
                 return Enchantment.LOOT_BONUS_MOBS;
             case "DIG_SPEED":
                 return Enchantment.DIG_SPEED;
-            case "SILK_TOUCH": {
-                System.out.println(node.toString().toUpperCase());
+            case "SILK_TOUCH":
                 return Enchantment.SILK_TOUCH;
-            }
             case "DURABILITY":
                 return Enchantment.DURABILITY;
             case "LOOT_BONUS_BLOCKS":

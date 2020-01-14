@@ -51,7 +51,6 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
                         enchantmentNode.get("name").toString(),
                         Enchantment.class
                 );
-                System.out.println(enchantment.getName());
                 if (enchantment != null) {
                     meta.addEnchant(
                             enchantment,
