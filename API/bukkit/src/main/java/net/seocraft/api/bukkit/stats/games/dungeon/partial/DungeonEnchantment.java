@@ -5,9 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface DungeonEnchantment {
 
-    @NotNull String getEnchantment();
+    @NotNull Enchantment getEnchantment();
 
-    void setEnchantment(@NotNull String enchantment);
+    void setEnchantment(@NotNull Enchantment enchantment);
 
     int getLevel();
 

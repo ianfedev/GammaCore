@@ -14,10 +14,12 @@ public class CustomSerializer {
         SimpleModule module = new SimpleModule("CustomSerializerModule", Version.unknownVersion());
         module.addSerializer(Material.class, new MaterialSerializer());
         module.addDeserializer(Material.class, new MaterialDeserializer());
-        module.addSerializer(ItemStack.class, new ItemStackSerializer());
-        module.addSerializer(ItemMeta.class, new ItemMetaSerializer());
         module.addSerializer(Enchantment.class, new EnchantmentSerializer());
         module.addDeserializer(Enchantment.class, new EnchantmentDeserializer());
+        module.addSerializer(ItemMeta.class, new ItemMetaSerializer());
+        module.addDeserializer(ItemMeta.class, new ItemMetaDeserializer());
+        module.addSerializer(ItemStack.class, new ItemStackSerializer());
+        module.addDeserializer(ItemStack.class, new ItemStackDeserializer());
         return module;
     }
 }

@@ -13,7 +13,7 @@ public class ItemStackSerializer extends StdSerializer<ItemStack> {
         this(null);
     }
 
-    public ItemStackSerializer(Class<ItemStack> t) {
+    private ItemStackSerializer(Class<ItemStack> t) {
         super(t);
     }
 
@@ -21,6 +21,7 @@ public class ItemStackSerializer extends StdSerializer<ItemStack> {
     public void serialize(ItemStack stack, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeObjectField("material", stack.getType());
+        jsonGenerator.writeNumberField("durability", stack.getDurability());
         jsonGenerator.writeNumberField("materialData", stack.getData().getData());
         jsonGenerator.writeNumberField("amount", stack.getAmount());
         jsonGenerator.writeObjectField("itemMeta", stack.getItemMeta());
