@@ -25,13 +25,12 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
     public ItemStack deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
-        System.out.println(mapper.readValue(node.get("material").toString(), Material.class));
         ItemStack stack = new ItemStack(
-                Material.getMaterial(node.get("material").asText()),
+                mapper.readValue(node.get("material").toString(), Material.class),
                 node.get("amount").asInt(),
                 (short) node.get("materialData").asInt()
         );
-        stack.setItemMeta(mapper.readValue(node.get("itemMeta").asText(), ItemMeta.class));
+        stack.setItemMeta(mapper.readValue(node.get("itemMeta").toString(), ItemMeta.class));
         stack.setDurability((short) node.get("durability").asInt());
         return null;
     }

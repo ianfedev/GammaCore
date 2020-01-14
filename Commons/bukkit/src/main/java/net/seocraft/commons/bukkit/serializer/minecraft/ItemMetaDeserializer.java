@@ -29,6 +29,8 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
     @Override
     public ItemMeta deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
+
         ItemMeta meta = new ItemStack(Material.GRASS, 1).getItemMeta();
         meta.setDisplayName(node.get("display").asText());
         List<String> loreList = new ArrayList<>();
@@ -42,7 +44,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
         if (node.get("enchantments").isArray()) {
             for (JsonNode enchantmentNode : node.get("enchantments")) {
                 meta.addEnchant(
-                        Enchantment.getByName(enchantmentNode.asText()),
+                        mapper.readValue(enchantmentNode.toString(), Enchantment.class),
                         node.get("level").asInt(),
                         true
                 );
@@ -51,7 +53,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
 
         if (node.get("flag").isArray()) {
             for (JsonNode flagNode: node.get("flag")) {
-                meta.addItemFlags(ItemFlag.valueOf(flagNode.asText()));
+                meta.addItemFlags(mapper.readValue(flagNode.toString(), ItemFlag.class));
             }
         }
         return meta;
