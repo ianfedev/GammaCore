@@ -32,10 +32,8 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
         try {
             node = jsonParser.getCodec().readTree(jsonParser);
             ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
-            System.out.println(node.get("display").toString());
 
             meta.setDisplayName(node.get("display").toString());
-            System.out.println(meta.getDisplayName());
             List<String> loreList = new ArrayList<>();
             if (node.get("lore").isArray()) {
                 for (JsonNode loreNode : node.get("lore")) {
@@ -44,11 +42,12 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
                 }
             }
 
-
             meta.setLore(loreList);
             if (node.get("enchantments").isArray()) {
+                System.out.println("Is array");
                 for (JsonNode enchantmentNode : node.get("enchantments")) {
-                    System.out.println(enchantmentNode);
+                    System.out.println("Array node");
+                    System.out.println(enchantmentNode.toString());
                     meta.addEnchant(
                             mapper.readValue(enchantmentNode.toString(), Enchantment.class),
                             node.get("level").asInt(),
