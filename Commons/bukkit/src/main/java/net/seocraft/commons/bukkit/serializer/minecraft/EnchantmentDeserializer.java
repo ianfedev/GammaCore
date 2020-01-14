@@ -21,10 +21,6 @@ public class EnchantmentDeserializer extends StdDeserializer<Enchantment> {
     @Override
     public Enchantment deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        Enchantment enchantment = Enchantment.getByName(node.toString());
-        System.out.println(enchantment);
-        Enchantment enchantment1 = Enchantment.getByName(node.toString().toUpperCase());
-        System.out.println(enchantment1);
-        return Enchantment.getByName(node.toString().toUpperCase());
+        return Enchantment.getById(node.asInt());
     }
 }

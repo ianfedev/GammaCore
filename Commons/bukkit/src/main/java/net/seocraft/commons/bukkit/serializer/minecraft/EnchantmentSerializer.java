@@ -19,7 +19,7 @@ public class EnchantmentSerializer extends StdSerializer<Enchantment> {
 
     @Override
     public void serialize(Enchantment enchantment, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        jsonGenerator.writeString(enchantment.getName().toLowerCase());
+        jsonGenerator.writeNumber(enchantment.getId());
     }
     
 }
