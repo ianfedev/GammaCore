@@ -48,7 +48,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
         if (enchantmentArrayNode != null && enchantmentArrayNode.isArray()) {
             for (JsonNode enchantmentNode : node.get("enchantments")) {
                 @Nullable Enchantment enchantment = mapper.readValue(
-                        enchantmentNode.get("name").toString(),
+                        enchantmentNode.get("name").asInt(),
                         Enchantment.class
                 );
                 if (enchantment != null) {
