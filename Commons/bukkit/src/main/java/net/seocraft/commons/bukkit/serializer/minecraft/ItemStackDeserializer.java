@@ -57,15 +57,17 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
         @Nullable JsonNode enchantmentArrayNode = node.get("enchantments");
         if (enchantmentArrayNode != null && enchantmentArrayNode.isArray()) {
             for (JsonNode enchantmentNode : enchantmentArrayNode) {
+                int level = 1;
                 @Nullable Enchantment enchantment = mapper.readValue(
                         enchantmentNode.get("name").toString(),
                         Enchantment.class
                 );
-                System.out.println(enchantment.getName());
+                @Nullable JsonNode levelNode = enchantmentNode.get("level");
+                if (levelNode != null && levelNode.isInt()) level = levelNode.asInt();
                 if (enchantment != null) {
                     stack.addUnsafeEnchantment(
                             enchantment,
-                            node.get("level").asInt()
+                            level
                     );
                 }
             }
