@@ -29,7 +29,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
     @Override
     public ItemMeta deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-        ItemMeta meta = new ItemStack(Material.GRASS, 1).getItemMeta();
+        ItemMeta meta = new ItemStack(Material.DIAMOND_PICKAXE, 1).getItemMeta();
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
 
         meta.setDisplayName(node.get("display").toString());
