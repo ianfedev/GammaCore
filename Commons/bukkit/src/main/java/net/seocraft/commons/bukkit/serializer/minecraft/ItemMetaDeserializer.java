@@ -27,50 +27,45 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
     }
 
     @Override
-    public ItemMeta deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
-        JsonNode node;
+    public ItemMeta deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         ItemMeta meta = new ItemStack(Material.GRASS, 1).getItemMeta();
-        try {
-            node = jsonParser.getCodec().readTree(jsonParser);
-            ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
+        ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
 
-            meta.setDisplayName(node.get("display").toString());
-            List<String> loreList = new ArrayList<>();
+        meta.setDisplayName(node.get("display").toString());
+        List<String> loreList = new ArrayList<>();
 
-            @Nullable JsonNode loreArrayNode = node.get("lore");
-            System.out.println(loreArrayNode);
-            if (node.get("lore").isArray()) {
-                for (JsonNode loreNode : node.get("lore")) {
-                    System.out.println(loreList.toString());
-                    loreList.add(loreNode.toString());
-                }
+        @Nullable JsonNode loreArrayNode = node.get("lore");
+        if (loreArrayNode != null && loreArrayNode.isArray()) {
+            for (JsonNode loreNode : node.get("lore")) {
+                loreList.add(loreNode.toString());
             }
-
-            meta.setLore(loreList);
-            if (node.get("enchantments").isArray()) {
-                System.out.println("Is array");
-                for (JsonNode enchantmentNode : node.get("enchantments")) {
-                    System.out.println("Array node");
-                    System.out.println(enchantmentNode.toString());
-                    meta.addEnchant(
-                            mapper.readValue(enchantmentNode.toString(), Enchantment.class),
-                            node.get("level").asInt(),
-                            true
-                    );
-                }
-            }
-
-            if (node.get("flag").isArray()) {
-                for (JsonNode flagNode: node.get("flag")) {
-                    System.out.println(flagNode);
-                    meta.addItemFlags(mapper.readValue(flagNode.toString(), ItemFlag.class));
-                }
-            }
-            System.out.println("From deserializer" + meta.getDisplayName());
-            return meta;
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        meta.setLore(loreList);
+
+
+        @Nullable JsonNode enchantmentArrayNode = node.get("enchantments");
+        if (enchantmentArrayNode != null && enchantmentArrayNode.isArray()) {
+            System.out.println("Is array");
+            for (JsonNode enchantmentNode : node.get("enchantments")) {
+                System.out.println("Array node");
+                System.out.println(enchantmentNode.toString());
+                meta.addEnchant(
+                        mapper.readValue(enchantmentNode.toString(), Enchantment.class),
+                        node.get("level").asInt(),
+                        true
+                );
+            }
+        }
+
+        @Nullable JsonNode flagArrayNode = node.get("flag");
+        if (flagArrayNode != null && flagArrayNode.isArray()) {
+            for (JsonNode flagNode: node.get("flag")) {
+                System.out.println(flagNode);
+                meta.addItemFlags(mapper.readValue(flagNode.toString(), ItemFlag.class));
+            }
+        }
+        System.out.println("From deserializer" + meta.getDisplayName());
         return meta;
     }
 
