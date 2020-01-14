@@ -25,6 +25,12 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
     public ItemStack deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         System.out.println("Starting deserialization");
+        JsonNode materialNode = node.get("material");
+        System.out.println(materialNode);
+        JsonParser parser = materialNode.traverse(jsonParser.getCodec());
+        System.out.println(
+                parser.readValuesAs(Material.class)
+        );
         ItemStack stack = new ItemStack(
                 deserializationContext.readValue(
                         node.get("material").traverse(),
@@ -33,10 +39,6 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
                 node.get("amount").asInt(),
                 (short) node.get("materialData").asInt()
         );
-        System.out.println(deserializationContext.readValue(
-                node.get("material").traverse(),
-                Material.class
-        ).toString());
         stack.setItemMeta(((ObjectMapper) jsonParser.getCodec()).readValue(node.get("itemMeta").asText(), ItemMeta.class));
         stack.setDurability((short) node.get("durability").asInt());
         return stack;
