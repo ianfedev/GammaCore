@@ -64,10 +64,11 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
         @Nullable JsonNode flagArrayNode = node.get("flag");
         if (flagArrayNode != null && flagArrayNode.isArray()) {
             for (JsonNode flagNode: node.get("flag")) {
-                meta.addItemFlags(mapper.readValue(flagNode.toString(), ItemFlag.class));
+                @Nullable ItemFlag flag = mapper.readValue(flagNode.toString(), ItemFlag.class);
+                if (flag != null) meta.addItemFlags(flag);
             }
         }
-        meta.getItemFlags().forEach(System.out::println);
+
         System.out.println("From deserializer" + meta.getDisplayName());
         return meta;
     }

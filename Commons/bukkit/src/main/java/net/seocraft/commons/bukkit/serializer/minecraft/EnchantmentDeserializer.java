@@ -1,7 +1,6 @@
 package net.seocraft.commons.bukkit.serializer.minecraft;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -20,12 +19,12 @@ public class EnchantmentDeserializer extends StdDeserializer<Enchantment> {
     }
 
     @Override
-    public Enchantment deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        try {
-            JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-            System.out.println(node.toString());
-            return Enchantment.getByName(node.toString().toUpperCase());
-        } catch (IllegalArgumentException ignore) { }
-        return null;
+    public Enchantment deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+        JsonNode node = jsonParser.getCodec().readTree(jsonParser);
+        Enchantment enchantment = Enchantment.getByName(node.toString());
+        System.out.println(enchantment);
+        Enchantment enchantment1 = Enchantment.getByName(node.toString().toUpperCase());
+        System.out.println(enchantment1);
+        return Enchantment.getByName(node.toString().toUpperCase());
     }
 }
