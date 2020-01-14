@@ -30,6 +30,7 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
     public ItemMeta deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
+        System.out.println(node.get("display").toString());
 
         ItemMeta meta = new ItemStack(Material.GRASS, 1).getItemMeta();
         meta.setDisplayName(node.get("display").toString());

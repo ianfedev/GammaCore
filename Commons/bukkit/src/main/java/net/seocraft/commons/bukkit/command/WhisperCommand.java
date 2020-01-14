@@ -114,7 +114,6 @@ public class WhisperCommand implements CommandClass {
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             meta.addEnchant(Enchantment.SILK_TOUCH, 1, true);
             stack.setItemMeta(meta);
-            System.out.println(this.mapper.writeValueAsString(stack));
             ItemStack readed = this.mapper.readValue(this.mapper.writeValueAsString(stack), ItemStack.class);
         } catch (IOException e) {
             e.printStackTrace();
