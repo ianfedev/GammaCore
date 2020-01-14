@@ -26,10 +26,12 @@ public class ItemStackDeserializer extends StdDeserializer<ItemStack> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
         System.out.println("Starting deserialization");
         JsonNode materialNode = node.get("material");
-        System.out.println(materialNode);
-        JsonParser parser = materialNode.traverse(jsonParser.getCodec());
+        ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
         System.out.println(
-                parser.readValuesAs(Material.class)
+            mapper.readValue(
+                    materialNode.asText(),
+                    Material.class
+            )
         );
         ItemStack stack = new ItemStack(
                 deserializationContext.readValue(
