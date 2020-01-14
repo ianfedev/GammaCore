@@ -11,7 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class CustomSerializer {
 
     public static SimpleModule getCustomSerializerModule() {
-        SimpleModule module = new SimpleModule("CustomSerializerModule", Version.unknownVersion());
+        /*SimpleModule module = new SimpleModule("CustomSerializerModule", Version.unknownVersion());*/
+        /*
         module.addSerializer(Material.class, new MaterialSerializer());
         module.addDeserializer(Material.class, new MaterialDeserializer());
         module.addSerializer(Enchantment.class, new EnchantmentSerializer());
@@ -20,6 +21,8 @@ public class CustomSerializer {
         module.addDeserializer(ItemMeta.class, new ItemMetaDeserializer());
         module.addSerializer(ItemStack.class, new ItemStackSerializer());
         module.addDeserializer(ItemStack.class, new ItemStackDeserializer());
-        return module;
+         */
+
+        return new BukkitJacksonModule();
     }
 }
