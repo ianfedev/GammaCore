@@ -10,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class ItemMetaDeserializer extends StdDeserializer<ItemMeta> {
 
             meta.setDisplayName(node.get("display").toString());
             List<String> loreList = new ArrayList<>();
+
+            @Nullable JsonNode loreArrayNode = node.get("lore");
+            System.out.println(loreArrayNode);
             if (node.get("lore").isArray()) {
                 for (JsonNode loreNode : node.get("lore")) {
                     System.out.println(loreList.toString());
