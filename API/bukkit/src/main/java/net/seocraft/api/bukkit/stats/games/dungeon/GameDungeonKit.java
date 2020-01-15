@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.stats.games.dungeon;
+package net.seocraft.api.bukkit.stats.games.dungeon;
 
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonKit;
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;

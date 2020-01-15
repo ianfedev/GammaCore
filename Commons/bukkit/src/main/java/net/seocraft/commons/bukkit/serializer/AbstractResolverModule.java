@@ -40,8 +40,8 @@ import net.seocraft.commons.bukkit.punishment.UserPunishment;
 import net.seocraft.commons.bukkit.stats.GameStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
 import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
-import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonKit;
-import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonStats;
+import net.seocraft.api.bukkit.stats.games.dungeon.GameDungeonKit;
+import net.seocraft.commons.bukkit.stats.games.GameDungeonStats;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class AbstractResolverModule {
