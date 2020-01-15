@@ -1,4 +1,5 @@
 package net.seocraft.commons.bukkit.serializer;
+
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleAbstractTypeResolver;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -36,14 +37,11 @@ import net.seocraft.commons.bukkit.game.map.partial.PartialCoordinates;
 import net.seocraft.commons.bukkit.game.match.GameMatch;
 import net.seocraft.commons.bukkit.game.party.GameParty;
 import net.seocraft.commons.bukkit.punishment.UserPunishment;
-import net.seocraft.commons.bukkit.serializer.minecraft.MaterialDeserializer;
-import net.seocraft.commons.bukkit.serializer.minecraft.MaterialSerializer;
 import net.seocraft.commons.bukkit.stats.GameStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
 import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
 import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonKit;
 import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonStats;
-import net.seocraft.commons.bukkit.stats.games.dungeon.partial.GameDungeonEnchantment;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class AbstractResolverModule {
@@ -65,7 +63,7 @@ public class AbstractResolverModule {
                 .addMapping(Match.class, GameMatch.class)
                 .addMapping(Party.class, GameParty.class)
                 .addMapping(Stats.class, GameStats.class)
-                .addMapping(DungeonEnchantment.class, GameDungeonEnchantment.class)
+                .addMapping(DungeonEnchantment.class, DungeonEnchantment.class)
                 .addMapping(DungeonKit.class, GameDungeonKit.class)
                 .addMapping(DungeonStats.class, GameDungeonStats.class)
                 .addMapping(SkyWarsStats.class, GameSkyWarsStats.class)

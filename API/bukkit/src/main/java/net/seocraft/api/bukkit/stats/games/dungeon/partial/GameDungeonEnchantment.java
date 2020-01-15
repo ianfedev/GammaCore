@@ -1,6 +1,5 @@
-package net.seocraft.commons.bukkit.stats.games.dungeon.partial;
+package net.seocraft.api.bukkit.stats.games.dungeon.partial;
 
-import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,8 +35,7 @@ public class GameDungeonEnchantment implements DungeonEnchantment {
     }
 
     @Override
-    public void setLevel(int level) {
-        this.level = level;
+    public void setLevel(int i) {
+        this.level = i;
     }
-
 }

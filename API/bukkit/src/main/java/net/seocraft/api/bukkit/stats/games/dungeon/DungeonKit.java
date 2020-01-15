@@ -1,5 +1,6 @@
 package net.seocraft.api.bukkit.stats.games.dungeon;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -9,20 +10,10 @@ import java.util.Set;
 
 public interface DungeonKit {
 
-    @NotNull ItemStack getItem();
-
-    void setItem(@NotNull ItemStack item);
-
-    @NotNull Set<Material> getUpgrades();
-
-    void setUpgrades(Set<Material> upgrades);
-
+    @JsonProperty("material")
     int getCurrentMaterial();
 
-    void setCurrentMaterial(int material);
-
+    @JsonProperty("pe")
     @NotNull Set<DungeonEnchantment> getPermanentEnchantments();
-
-    void setPermanentEnchantments(@NotNull Set<DungeonEnchantment> enchantments);
 
 }

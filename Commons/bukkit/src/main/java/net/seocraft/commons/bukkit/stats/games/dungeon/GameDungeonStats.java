@@ -3,6 +3,7 @@ package net.seocraft.commons.bukkit.stats.games.dungeon;
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonKit;
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonStats;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
 
@@ -10,7 +11,7 @@ public class GameDungeonStats implements DungeonStats {
 
     private int squamas;
     private int crowns;
-    private int experience;
+    private double experience;
     @NotNull private DungeonKit helmet;
     @NotNull private DungeonKit chestplate;
     @NotNull private DungeonKit leggings;
@@ -29,7 +30,7 @@ public class GameDungeonStats implements DungeonStats {
             "sword",
             "bow"
     })
-    public GameDungeonStats(int squamas, int crowns, int experience, @NotNull DungeonKit helmet, @NotNull DungeonKit chestplate, @NotNull DungeonKit leggings, @NotNull DungeonKit boots, @NotNull DungeonKit sword, @NotNull DungeonKit bow) {
+    public GameDungeonStats(int squamas, int crowns, double experience, @NotNull DungeonKit helmet, @NotNull DungeonKit chestplate, @NotNull DungeonKit leggings, @NotNull DungeonKit boots, @NotNull DungeonKit sword, @NotNull DungeonKit bow) {
         this.squamas = squamas;
         this.crowns = crowns;
         this.experience = experience;
@@ -73,13 +74,38 @@ public class GameDungeonStats implements DungeonStats {
     }
 
     @Override
-    public int getExperience() {
+    public double getExperience() {
         return this.experience;
     }
 
     @Override
-    public void addExperience(int experience) {
+    public void addExperience(double experience) {
         this.experience += experience;
+    }
+
+    @Override
+    public int getLevel() {
+
+        if(experience < 100) return 0;
+
+        int xp = 100;
+        int level = 0;
+
+        for(int i = 1; i < 101; i++) {
+            xp += (xp/10);
+            if(experience < xp) {
+                return i;
+            }
+        }
+
+        for(int i = 100; i < 201; i++) {
+            xp += (xp/20);
+            if(experience < xp) {
+                return i;
+            }
+        }
+
+        return level;
     }
 
     @Override
@@ -102,7 +128,6 @@ public class GameDungeonStats implements DungeonStats {
     public void setChestplate(@NotNull DungeonKit kit) {
         this.chestplate = kit;
     }
-
 
     @Override
     public @NotNull DungeonKit getLeggings() {

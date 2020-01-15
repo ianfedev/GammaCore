@@ -1,6 +1,7 @@
 package net.seocraft.api.bukkit.stats.games.dungeon;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface DungeonStats {
 
@@ -16,9 +17,11 @@ public interface DungeonStats {
 
     void removeCrowns(int crowns);
 
-    int getExperience();
+    double getExperience();
 
-    void addExperience(int experience);
+    void addExperience(double experience);
+
+    int getLevel();
 
     @NotNull DungeonKit getHelmet();
 
