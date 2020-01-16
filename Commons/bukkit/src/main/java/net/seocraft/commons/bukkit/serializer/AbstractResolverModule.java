@@ -24,6 +24,7 @@ import net.seocraft.api.bukkit.stats.games.TNTGamesStats;
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonKit;
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonStats;
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
+import net.seocraft.api.bukkit.stats.games.dungeon.partial.GameDungeonEnchantment;
 import net.seocraft.api.core.friend.Friendship;
 import net.seocraft.commons.bukkit.friend.UserFriendship;
 import net.seocraft.commons.bukkit.game.gamemode.CoreGamemode;
@@ -40,8 +41,8 @@ import net.seocraft.commons.bukkit.punishment.UserPunishment;
 import net.seocraft.commons.bukkit.stats.GameStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
 import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
-import net.seocraft.api.bukkit.stats.games.dungeon.GameDungeonKit;
-import net.seocraft.commons.bukkit.stats.games.GameDungeonStats;
+import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonKit;
+import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonStats;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class AbstractResolverModule {
@@ -63,7 +64,7 @@ public class AbstractResolverModule {
                 .addMapping(Match.class, GameMatch.class)
                 .addMapping(Party.class, GameParty.class)
                 .addMapping(Stats.class, GameStats.class)
-                .addMapping(DungeonEnchantment.class, DungeonEnchantment.class)
+                .addMapping(DungeonEnchantment.class, GameDungeonEnchantment.class)
                 .addMapping(DungeonKit.class, GameDungeonKit.class)
                 .addMapping(DungeonStats.class, GameDungeonStats.class)
                 .addMapping(SkyWarsStats.class, GameSkyWarsStats.class)
