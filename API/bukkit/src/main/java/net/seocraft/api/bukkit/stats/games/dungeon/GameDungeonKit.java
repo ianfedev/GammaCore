@@ -1,6 +1,5 @@
 package net.seocraft.api.bukkit.stats.games.dungeon;
 
-import net.seocraft.api.bukkit.stats.games.dungeon.DungeonKit;
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
 import org.jetbrains.annotations.NotNull;
 

@@ -23,6 +23,7 @@ import net.seocraft.api.bukkit.stats.games.SkyWarsStats;
 import net.seocraft.api.bukkit.stats.games.TNTGamesStats;
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonKit;
 import net.seocraft.api.bukkit.stats.games.dungeon.DungeonStats;
+import net.seocraft.api.bukkit.stats.games.dungeon.GameDungeonKit;
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.DungeonEnchantment;
 import net.seocraft.api.bukkit.stats.games.dungeon.partial.GameDungeonEnchantment;
 import net.seocraft.api.core.friend.Friendship;
@@ -39,10 +40,9 @@ import net.seocraft.commons.bukkit.game.match.GameMatch;
 import net.seocraft.commons.bukkit.game.party.GameParty;
 import net.seocraft.commons.bukkit.punishment.UserPunishment;
 import net.seocraft.commons.bukkit.stats.GameStats;
+import net.seocraft.commons.bukkit.stats.games.GameDungeonStats;
 import net.seocraft.commons.bukkit.stats.games.GameSkyWarsStats;
 import net.seocraft.commons.bukkit.stats.games.GameTNTGamesStats;
-import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonKit;
-import net.seocraft.commons.bukkit.stats.games.dungeon.GameDungeonStats;
 import net.seocraft.commons.core.serializer.CoreResolver;
 
 public class AbstractResolverModule {
