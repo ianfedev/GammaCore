@@ -24,6 +24,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>de.dytanic.cloudnet</groupId>
+            <artifactId>cloudnet</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>net.seocraft</groupId>
             <artifactId>waterfall-api</artifactId>
             <scope>provided</scope>

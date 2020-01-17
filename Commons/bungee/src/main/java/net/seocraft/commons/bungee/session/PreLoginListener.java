@@ -9,8 +9,17 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bungee.CommonsBungee;
+import net.seocraft.commons.bungee.server.BungeeCloudManager;
+
+import java.io.IOException;
+import java.util.logging.Level;
 
 public class PreLoginListener implements Listener {
 
@@ -22,25 +31,23 @@ public class PreLoginListener implements Listener {
 
         PendingConnection connection = event.getConnection();
         event.registerIntent(commonsBungee);
-        connection.setOnlineMode(false);
+        User user = null;
+        try {
+            user = this.userStorageProvider.findUserByNameSync(connection.getName());
+            if (!user.isPremium()) connection.setOnlineMode(false);
+        } catch (Unauthorized | BadRequest | InternalServerError | IOException e) {
+            this.commonsBungee.getLogger().log(Level.WARNING, "[Commons] There was an error logging a player.", e);
+            connection.disconnect(
+                    new TextComponent(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + e.getClass().getSimpleName())
+            );
+        } catch (NotFound e) {
+            connection.setOnlineMode(false);
+        }
         event.completeIntent(commonsBungee);
 
-        /*CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(connection.getName()), userAsyncResponse -> {
-            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                if (!userAsyncResponse.getResponse().isPremium()) connection.setOnlineMode(false);
-                event.completeIntent(this.commonsBungee);
-            } else {
-                if (userAsyncResponse.getStatusCode() != 404) {
-                    connection.disconnect(
-                            new TextComponent(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + userAsyncResponse.getThrowedException().getClass().getSimpleName())
-                    );
-                } else {
-                    connection.setOnlineMode(false);
-                    event.completeIntent(this.commonsBungee);
-                }
-            }
-        });*/
-
+        if (user != null && user.isPremium()) {
+            BungeeCloudManager.sendPlayerToGroup(connection.getName(), connection.getUniqueId().toString(), "main_lobby");
+        }
 
     }
 }
