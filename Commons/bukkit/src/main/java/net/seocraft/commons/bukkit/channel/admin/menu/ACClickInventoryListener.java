@@ -37,7 +37,7 @@ public class ACClickInventoryListener implements Listener {
             try {
                 User user = userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
                 ItemStack clicked = event.getCurrentItem();
-                if (NBTTagHandler.hasString(clicked, "ac_selector")) {
+                if (clicked != null && NBTTagHandler.hasString(clicked, "ac_selector")) {
                     switch (NBTTagHandler.getString(clicked, "ac_selector")) {
                         case "chat": {
                             user.setAdminChatActive(!user.hasAdminChatActive());
