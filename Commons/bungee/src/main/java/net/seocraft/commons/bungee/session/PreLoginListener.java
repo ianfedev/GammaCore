@@ -21,6 +21,7 @@ public class PreLoginListener implements Listener {
     public void onPreLogin(PreLoginEvent event) {
 
         PendingConnection connection = event.getConnection();
+        event.registerIntent(commonsBungee);
         connection.setOnlineMode(false);
         event.completeIntent(commonsBungee);
 
