@@ -22,6 +22,7 @@ public class PreLoginListener implements Listener {
 
         PendingConnection connection = event.getConnection();
         connection.setOnlineMode(false);
+        event.completeIntent(commonsBungee);
 
         /*CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(connection.getName()), userAsyncResponse -> {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
