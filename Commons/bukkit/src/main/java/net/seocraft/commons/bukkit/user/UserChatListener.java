@@ -33,7 +33,7 @@ public class UserChatListener implements Listener {
             event.setCancelled(true);
             Bukkit.getOnlinePlayers().forEach( player ->
                     player.spigot().sendMessage(
-                            new TextComponent(
+                            TextComponent.fromLegacyText(
                                     this.chatManager.getUserFormat(
                                             userData,
                                             this.bukkitAPI.getConfig().getString("realm")
