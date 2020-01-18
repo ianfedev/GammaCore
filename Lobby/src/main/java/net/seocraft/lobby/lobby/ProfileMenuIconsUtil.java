@@ -35,7 +35,7 @@ public class ProfileMenuIconsUtil {
     }
 
     public @NotNull ItemStack getProfileInfo(@NotNull User user) {
-        ItemStack profileInfo = new ItemStack(Material.SKULL, 1, (short) 3);
+        ItemStack profileInfo = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta profileMeta = (SkullMeta) profileInfo.getItemMeta();
         profileMeta.setOwner(user.getSkin());
         profileMeta.setDisplayName(this.userFormatter.getUserFormat(user, realm));
