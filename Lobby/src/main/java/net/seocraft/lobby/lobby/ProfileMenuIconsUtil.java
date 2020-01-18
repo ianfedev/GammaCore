@@ -34,9 +34,8 @@ public class ProfileMenuIconsUtil {
         this.realm = bukkitAPI.getConfig().getString("realm");
     }
 
-
     public @NotNull ItemStack getProfileInfo(@NotNull User user) {
-        ItemStack profileInfo = new ItemStack(Material.SKULL);
+        ItemStack profileInfo = new ItemStack(Material.SKULL, 1, (short) 3);
         SkullMeta profileMeta = (SkullMeta) profileInfo.getItemMeta();
         profileMeta.setOwner(user.getSkin());
         profileMeta.setDisplayName(this.userFormatter.getUserFormat(user, realm));
@@ -111,7 +110,7 @@ public class ProfileMenuIconsUtil {
                 "social"
         );
         ItemMeta socialMeta = socialHead.getItemMeta();
-        socialMeta.setDisplayName(ChatColor.YELLOW + this.translatableField.getField(user.getLanguage(), "commons_profile_social:")
+        socialMeta.setDisplayName(ChatColor.YELLOW + this.translatableField.getField(user.getLanguage(), "commons_profile_social")
                 + ChatColor.GOLD + "(" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_click") + ")");
         socialHead.setItemMeta(socialMeta);
         return socialHead;

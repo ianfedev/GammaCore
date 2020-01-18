@@ -41,6 +41,10 @@ public class GammaProfileManager implements ProfileManager {
     @Override
     public void openFriendsMenu(@NotNull User user, int page) {
 
+        Map<Integer, ItemStack> items = new HashMap<>();
+
+
+
     }
 
     @Override
