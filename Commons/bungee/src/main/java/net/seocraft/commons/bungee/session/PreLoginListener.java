@@ -46,7 +46,7 @@ public class PreLoginListener implements Listener {
         event.completeIntent(commonsBungee);
 
         if (user != null && user.isPremium()) {
-            BungeeCloudManager.sendPlayerToGroup(connection.getName(), connection.getUniqueId().toString(), "main_lobby");
+           // BungeeCloudManager.sendPlayerToGroup(connection.getName(), connection.getUniqueId().toString(), "main_lobby");
         }
 
     }
