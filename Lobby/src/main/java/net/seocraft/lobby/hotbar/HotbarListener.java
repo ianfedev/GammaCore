@@ -2,6 +2,7 @@ package net.seocraft.lobby.hotbar;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.cloud.CloudManager;
+import net.seocraft.api.bukkit.profile.ProfileManager;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.user.User;
@@ -25,6 +26,7 @@ import java.util.logging.Level;
 public class HotbarListener implements Listener {
 
     @Inject private LobbySelectorMenu lobbySelectorMenu;
+    @Inject private ProfileManager profileManager;
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translatableField;
     @Inject private CommonsBukkit instance;
@@ -37,13 +39,17 @@ public class HotbarListener implements Listener {
         ItemStack clickedItem = player.getItemInHand();
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // Detect if element has designed tag
-            if (NBTTagHandler.hasString(clickedItem, "accessor")) {
+            if (clickedItem != null && NBTTagHandler.hasString(clickedItem, "accessor")) {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                     if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                         User user = userAsyncResponse.getResponse();
                         switch (NBTTagHandler.getString(clickedItem, "accessor")) {
                             case "game_menu": {
                                 this.gameMenuHandlerImp.loadGameMenu(player, user.getLanguage());
+                                return;
+                            }
+                            case "profile": {
+                                this.profileManager.openMainMenu(user);
                                 return;
                             }
                             case "lobby_selector": {

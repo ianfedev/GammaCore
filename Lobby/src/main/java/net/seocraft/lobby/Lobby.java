@@ -1,6 +1,7 @@
 package net.seocraft.lobby;
 
 import com.google.inject.Inject;
+import com.google.inject.Scopes;
 import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
 import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
 import me.fixeddev.inject.ProtectedBinder;
@@ -9,6 +10,7 @@ import net.seocraft.api.bukkit.lobby.TeleportManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorHologramManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
+import net.seocraft.api.bukkit.profile.ProfileManager;
 import net.seocraft.api.core.server.ServerType;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.lobby.command.HidingGadgetCommand;
@@ -18,6 +20,7 @@ import net.seocraft.lobby.hiding.LobbyHidingGadget;
 import net.seocraft.lobby.hotbar.GameSelectorListener;
 import net.seocraft.lobby.hotbar.HotbarListener;
 import net.seocraft.lobby.listener.*;
+import net.seocraft.lobby.lobby.GammaProfileManager;
 import net.seocraft.lobby.selector.LobbySelectorHologramManager;
 import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.selector.LobbySelectorManager;
@@ -91,6 +94,7 @@ public class Lobby extends JavaPlugin {
         binder.bind(SelectorManager.class).to(LobbySelectorManager.class);
         binder.bind(SelectorHologramManager.class).to(LobbySelectorHologramManager.class);
         binder.bind(TeleportManager.class).to(LobbyTeleportManager.class);
+        binder.bind(ProfileManager.class).to(GammaProfileManager.class).in(Scopes.SINGLETON);
         binder.bind(Lobby.class).toInstance(this);
     }
 

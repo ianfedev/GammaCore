@@ -170,6 +170,23 @@ commons_lobby_scoreboard_level: "Nivel"
 commons_lobby_scoreboard_lobby: "Lobby"
 commons_lobby_scoreboard_players: "Jugadores"
 
+# Profile translations
+commons_profile_rank: "Rango"
+commons_profile_level: "Nivel"
+commons_profile_status: "Estado"
+commons_profile_logged: "Conectado en %%server%%"
+commons_profile_youtube: "YouTube"
+commons_profile_twitter: "Twitter"
+commons_profile_instagram: "Instagram"
+commons_profile_facebook: "Facebook"
+commons_profile_stats: "Estadísticas"
+commons_profile_language: "Cambiar idioma"
+commons_profile_menu: "Mi perfil"
+commons_profile_social: "Mis redes"
+# Remember: You can use colors and space from above to style item lore
+commons_profile_language_lore: "%n%Seocraft Network está traducido en%n%los siguientes idiomas:%n%%n%- Español%n%-Inglés%n%-Francés%n%%n%%%gold%%¡Has click para cambiar el lenguaje!"
+commons_profile_friends: "Amigos"
+
 # Custom Gamemode translations
 # How to:
 # Every gamemode has an ID (_id from MongoDB Schema).
@@ -288,6 +305,7 @@ commons_reject: Rechazar
 commons_gender_him_her: Él/ella
 commons_you: Tu
 commons_right_click: Clic derecho
+commons_left_click: Click izquierdo
 commons_note: Nota
 commons_coming_soon: Muy pronto
 commons_cooldown_delay: "Debes esperar unos segundos antes de realizar esta acción"

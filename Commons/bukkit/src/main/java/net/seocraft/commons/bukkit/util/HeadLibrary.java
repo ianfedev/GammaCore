@@ -28,4 +28,33 @@ public class HeadLibrary {
     public static ItemStack rightArrowBlack() {
         return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/682ad1b9cb4dd21259c0d75aa315ff389c3cef752be3949338164bac84a96e");
     }
+
+    public static ItemStack youTubeHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/d2f6c07a326def984e72f772ed645449f5ec96c6ca256499b5d2b84a8dce");
+    }
+
+    public static ItemStack twitterHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/3685a0be743e9067de95cd8c6d1ba21ab21d37371b3d597211bb75e43279");
+    }
+
+    public static ItemStack facebookHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/deb46126904463f07ecfc972aaa37373a22359b5ba271821b689cd5367f75762");
+    }
+
+    public static ItemStack instagramHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/ac88d6163fabe7c5e62450eb37a074e2e2c88611c998536dbd8429faa0819453");
+    }
+
+    public static ItemStack statsHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/1c4297d19a1a71391147a69c825d3748218e4c5bd016c7ccaccb05fe3f4");
+    }
+
+    public static ItemStack friendsHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/76cbae7246cc2c6e888587198c7959979666b4f5a4088f24e26e075f140ae6c3");
+    }
+
+    public static ItemStack socialHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/eaa6285ab90e6ba98cfdff42f7e67537c844f33bcccbd81aa6d6c06cb281a797");
+    }
+
 }
