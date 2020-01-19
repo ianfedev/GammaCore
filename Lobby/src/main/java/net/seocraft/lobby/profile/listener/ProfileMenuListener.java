@@ -26,9 +26,13 @@ public class ProfileMenuListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem != null && NBTTagHandler.hasString(clickedItem, "lobby_accessor")) {
+            System.out.println("Clicked item not null");
             if (event.getClick() == ClickType.LEFT) {
+                System.out.println("Click left");
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                     if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                        System.out.println("Success user");
+                        System.out.println(NBTTagHandler.getString(clickedItem, "lobby_accessor"));
                         User user = userAsyncResponse.getResponse();
                         switch (NBTTagHandler.getString(clickedItem, "lobby_accessor")) {
                             case "friends": {
