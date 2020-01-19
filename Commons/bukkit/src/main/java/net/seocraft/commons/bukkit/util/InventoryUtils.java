@@ -2,8 +2,10 @@ package net.seocraft.commons.bukkit.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -17,4 +19,5 @@ public class InventoryUtils {
         items.forEach(inventory::setItem);
         return inventory;
     }
+
 }

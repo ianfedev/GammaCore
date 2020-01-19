@@ -11,6 +11,8 @@ import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.InventoryUtils;
 import net.seocraft.commons.core.model.GammaPagination;
 import net.seocraft.commons.core.translation.TranslatableField;
+import net.seocraft.lobby.profile.icon.FriendsMenuIconsUtil;
+import net.seocraft.lobby.profile.icon.ProfileMenuIconsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

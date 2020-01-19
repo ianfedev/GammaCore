@@ -1,4 +1,4 @@
-package net.seocraft.lobby.profile;
+package net.seocraft.lobby.profile.icon;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;

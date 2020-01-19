@@ -1,4 +1,4 @@
-package net.seocraft.lobby.profile;
+package net.seocraft.lobby.profile.icon;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
@@ -84,7 +84,7 @@ public class ProfileMenuIconsUtil {
         ItemMeta languageMeta = languageHead.getItemMeta();
         languageMeta.setDisplayName(ChatColor.YELLOW + this.translatableField.getField(user.getLanguage(), "commons_profile_language"));
         LoreDisplayArray<String> languageLore = new LoreDisplayArray<>();
-        languageLore.add(ChatColor.GRAY + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_language_lore"));
+        languageLore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_language_lore"), ChatColor.GRAY);
         languageMeta.setLore(languageLore);
         languageHead.setItemMeta(languageMeta);
         return languageHead;
