@@ -106,7 +106,7 @@ public class GammaProfileManager implements ProfileManager {
 
     @Override
     public void openFriendsMenu(@NotNull User user) {
-
+        openFriendsMenu(user, 1);
     }
 
     @Override
