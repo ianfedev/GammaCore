@@ -7,15 +7,20 @@ import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.friend.FriendshipProvider;
 import net.seocraft.api.core.storage.Pagination;
 import net.seocraft.api.core.user.User;
+import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.util.InventoryUtils;
 import net.seocraft.commons.core.model.GammaPagination;
 import net.seocraft.commons.core.translation.TranslatableField;
 import net.seocraft.lobby.profile.icon.FriendsMenuIconsUtil;
+import net.seocraft.lobby.profile.icon.LanguageMenuIconsUtil;
 import net.seocraft.lobby.profile.icon.ProfileMenuIconsUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +33,7 @@ public class GammaProfileManager implements ProfileManager {
     @Inject private ProfileMenuIconsUtil profileMenuIconsUtil;
     @Inject private FriendshipProvider friendshipProvider;
     @Inject private FriendsMenuIconsUtil friendsMenuIconsUtil;
+    @Inject private LanguageMenuIconsUtil languageMenuIconsUtil;
     @Inject private Plugin plugin;
     @Inject private TranslatableField translatableField;
 
@@ -76,7 +82,7 @@ public class GammaProfileManager implements ProfileManager {
 
                     items.put(0, this.friendsMenuIconsUtil.addFriendIcon(user));
                     items.put(1, this.friendsMenuIconsUtil.removeFriendIcon(user));
-                    items.put(22, this.friendsMenuIconsUtil.goBackItem(user));
+                    items.put(22, this.goBackItem(user));
 
                     if (friendPagination == null) {
                         items.put(13, this.friendsMenuIconsUtil.noFriendsItem(user));
@@ -123,11 +129,48 @@ public class GammaProfileManager implements ProfileManager {
 
     @Override
     public void openLanguageMenu(@NotNull User user) {
+        Player player = Bukkit.getPlayer(user.getUsername());
 
+        if (player != null) {
+            Map<Integer, ItemStack> items = new HashMap<>();
+
+            items.put(11, this.languageMenuIconsUtil.spanishIcon(user));
+            items.put(13, this.languageMenuIconsUtil.englishIcon(user));
+            items.put(15, this.languageMenuIconsUtil.frenchIcon(user));
+            items.put(22, this.goBackItem(user));
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                player.openInventory(
+                        InventoryUtils.createInventory(
+                                this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_language"),
+                                27,
+                                items
+                        )
+                );
+                player.updateInventory();
+            });
+        }
     }
 
     @Override
     public void openStatsMenu(@NotNull User user) {
 
+    }
+
+    @Override
+    public void openSocialMenu(@NotNull User user) {
+
+    }
+
+    private  @NotNull ItemStack goBackItem(@NotNull User user) {
+        ItemStack goBack = NBTTagHandler.addString(
+                new ItemStack(Material.ARROW),
+                "lobby_accessor",
+                "back"
+        );
+        ItemMeta backMeta = goBack.getItemMeta();
+        backMeta.setDisplayName(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_back"));
+        goBack.setItemMeta(backMeta);
+        return goBack;
     }
 }

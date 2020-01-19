@@ -35,6 +35,10 @@ public class ProfileMenuListener implements Listener {
                                 this.profileManager.openFriendsMenu(user);
                                 break;
                             }
+                            case "language": {
+                                this.profileManager.openLanguageMenu(user);
+                                break;
+                            }
                             case "social": {
                                 int i = 0;
                                 break;

@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
-import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.utils.StringUtils;
 import net.seocraft.api.core.utils.TimeUtils;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
@@ -83,18 +82,6 @@ public class FriendsMenuIconsUtil {
         );
         nextPage.setItemMeta(nextMeta);
         return nextPage;
-    }
-
-    public @NotNull ItemStack goBackItem(@NotNull User user) {
-        ItemStack goBack = NBTTagHandler.addString(
-                new ItemStack(Material.ARROW),
-                "friends_accessor",
-                "back"
-        );
-        ItemMeta backMeta = goBack.getItemMeta();
-        backMeta.setDisplayName(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_back"));
-        goBack.setItemMeta(backMeta);
-        return goBack;
     }
 
     public @NotNull ItemStack noFriendsItem(@NotNull User user) {

@@ -15,4 +15,6 @@ public interface ProfileManager {
 
     void openStatsMenu(@NotNull User user);
 
+    void openSocialMenu(@NotNull User user);
+
 }
