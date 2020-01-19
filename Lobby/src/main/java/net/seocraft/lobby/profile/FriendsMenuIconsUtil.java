@@ -25,10 +25,7 @@ public class FriendsMenuIconsUtil {
     private String realm;
 
     @Inject
-    FriendsMenuIconsUtil(
-            TranslatableField translatableField, UserStorageProvider userStorageProvider,
-            BukkitAPI bukkitAPI, UserFormatter formatter
-    ) {
+    FriendsMenuIconsUtil(TranslatableField translatableField, BukkitAPI bukkitAPI, UserFormatter formatter) {
         this.translatableField = translatableField;
         this.userFormatter = formatter;
         this.realm = bukkitAPI.getConfig().getString("realm");
@@ -96,6 +93,14 @@ public class FriendsMenuIconsUtil {
         );
         ItemMeta backMeta = goBack.getItemMeta();
         backMeta.setDisplayName(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_back"));
+        goBack.setItemMeta(backMeta);
+        return goBack;
+    }
+
+    public @NotNull ItemStack noFriendsItem(@NotNull User user) {
+        ItemStack goBack = new ItemStack(Material.REDSTONE_BLOCK);
+        ItemMeta backMeta = goBack.getItemMeta();
+        backMeta.setDisplayName(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));
         goBack.setItemMeta(backMeta);
         return goBack;
     }

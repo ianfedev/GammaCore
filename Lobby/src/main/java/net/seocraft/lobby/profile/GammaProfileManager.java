@@ -67,27 +67,33 @@ public class GammaProfileManager implements ProfileManager {
 
                     Set<User> friends = friendsResponse.getResponse();
                     Map<Integer, ItemStack> items = new HashMap<>();
-                    Pagination<User> friendPagination = new GammaPagination<>(9, friends);
+                    Pagination<User> friendPagination = null;
+                    if (friends.size() > 0) friendPagination = new GammaPagination<>(9, friends);
 
                     items.put(0, this.friendsMenuIconsUtil.addFriendIcon(user));
                     items.put(1, this.friendsMenuIconsUtil.removeFriendIcon(user));
-                    for (int i = 9; i < 18; i++)
-                        items.put(i, this.friendsMenuIconsUtil.getFriend(
-                                user,
-                                friendPagination.getPage(page).get(i))
-                        );
-
-                    if (page != 1 && friendPagination.getPageSize() != 1) {
-                        items.put(18, this.friendsMenuIconsUtil.getPreviousPage(user, page - 1));
-                    }
-
                     items.put(22, this.friendsMenuIconsUtil.goBackItem(user));
 
-                    if (page != 1 && friendPagination.getPageSize() != page) {
-                        items.put(26, this.friendsMenuIconsUtil.getNextPage(user, page + 1));
+                    if (friendPagination == null) {
+                        items.put(13, this.friendsMenuIconsUtil.noFriendsItem(user));
                     }
 
-                    System.out.println("Hola mundo");
+                    if (friendPagination != null) {
+                        for (int i = 9; i < 18; i++)
+                            items.put(i, this.friendsMenuIconsUtil.getFriend(
+                                    user,
+                                    friendPagination.getPage(page).get(i))
+                            );
+
+                        if (page != 1 && friendPagination.getPageSize() != 1) {
+                            items.put(18, this.friendsMenuIconsUtil.getPreviousPage(user, page - 1));
+                        }
+
+                        if (page != 1 && friendPagination.getPageSize() != page) {
+                            items.put(26, this.friendsMenuIconsUtil.getNextPage(user, page + 1));
+                        }
+                    }
+
                     player.openInventory(InventoryUtils.createInventory(
                             this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_friends"),
                             27,
