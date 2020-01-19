@@ -20,7 +20,7 @@ import net.seocraft.lobby.hiding.LobbyHidingGadget;
 import net.seocraft.lobby.hotbar.GameSelectorListener;
 import net.seocraft.lobby.hotbar.HotbarListener;
 import net.seocraft.lobby.listener.*;
-import net.seocraft.lobby.lobby.GammaProfileManager;
+import net.seocraft.lobby.profile.GammaProfileManager;
 import net.seocraft.lobby.selector.LobbySelectorHologramManager;
 import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.selector.LobbySelectorManager;

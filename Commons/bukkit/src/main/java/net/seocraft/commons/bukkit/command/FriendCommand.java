@@ -537,27 +537,7 @@ public class FriendCommand implements CommandClass {
                                     )
                             );
 
-                            TextComponent finalComponent = new TextComponent("");
-                            if (page != 1 && pagination.totalPages() != 1) finalComponent.addExtra(leftArrow);
-
-                            finalComponent.addExtra(actualPages);
-                            if (page != pagination.totalPages()) finalComponent.addExtra(rightArrow);
-
-                            player.spigot().sendMessage(finalComponent);
-
-                            pagination.getPage(1).forEach(friend -> {
-                                ChatColor color = ChatColor.RED;
-                                String field = "commons_friends_was";
-                                if (this.onlineStatusManager.isPlayerOnline(friend.getId())) {
-                                    field = "commons_friends_in";
-                                    color = ChatColor.YELLOW;
-                                }
-                                player.sendMessage(
-                                        this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
-                                                this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getLastGame()
-                                );
-                            });
-                            player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                            paginateType(player, page, user, pagination, leftArrow, actualPages, rightArrow);
                         } else {
                             player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                             player.sendMessage(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));
@@ -574,6 +554,30 @@ public class FriendCommand implements CommandClass {
             });
         }
         return true;
+    }
+
+    private void paginateType(Player player, int page, User user, Pagination<User> pagination, TextComponent leftArrow, TextComponent actualPages, TextComponent rightArrow) {
+        TextComponent finalComponent = new TextComponent("");
+        if (page != 1 && pagination.totalPages() != 1) finalComponent.addExtra(leftArrow);
+
+        finalComponent.addExtra(actualPages);
+        if (page != pagination.totalPages()) finalComponent.addExtra(rightArrow);
+
+        player.spigot().sendMessage(finalComponent);
+
+        pagination.getPage(1).forEach(friend -> {
+            ChatColor color = ChatColor.RED;
+            String field = "commons_friends_was";
+            if (this.onlineStatusManager.isPlayerOnline(friend.getId())) {
+                field = "commons_friends_in";
+                color = ChatColor.YELLOW;
+            }
+            player.sendMessage(
+                    this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
+                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getLastGame()
+            );
+        });
+        player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
     }
 
     @Command(names = {"friends requests", "f requests", "friend requests"}, usage = "/<command> [page]")
@@ -655,27 +659,7 @@ public class FriendCommand implements CommandClass {
                                 )
                         );
 
-                        TextComponent finalComponent = new TextComponent("");
-                        if (page != 1 && pagination.totalPages() != 1) finalComponent.addExtra(leftArrow);
-
-                        finalComponent.addExtra(actualPages);
-                        if (page != pagination.totalPages()) finalComponent.addExtra(rightArrow);
-
-                        player.spigot().sendMessage(finalComponent);
-
-                        pagination.getPage(1).forEach(friend -> {
-                            ChatColor color = ChatColor.RED;
-                            String field = "commons_friends_was";
-                            if (this.onlineStatusManager.isPlayerOnline(friend.getId())) {
-                                field = "commons_friends_in";
-                                color = ChatColor.YELLOW;
-                            }
-                            player.sendMessage(
-                                    this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
-                                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getLastGame()
-                            );
-                        });
-                        player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                        paginateType(player, page, user, pagination, leftArrow, actualPages, rightArrow);
                     } else {
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                         player.sendMessage(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));

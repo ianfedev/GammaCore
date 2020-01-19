@@ -175,6 +175,7 @@ commons_profile_rank: "Rango"
 commons_profile_level: "Nivel"
 commons_profile_status: "Estado"
 commons_profile_logged: "Conectado en %%server%%"
+commons_profile_logged_hidden: "Conectado"
 commons_profile_youtube: "YouTube"
 commons_profile_twitter: "Twitter"
 commons_profile_instagram: "Instagram"
@@ -183,11 +184,15 @@ commons_profile_stats: "Estadísticas"
 commons_profile_language: "Cambiar idioma"
 commons_profile_menu: "Mi perfil"
 commons_profile_social: "Mis redes"
+commons_profile_error: "¡Ha ocurrido un error con el menú!"
 # Remember: You can use colors and space from above to style item lore
 commons_profile_language_lore: "%n%Seocraft Network está traducido en%n%los siguientes idiomas:%n%%n%- Español%n%-Inglés%n%-Francés%n%%n%%%gold%%¡Has click para cambiar el lenguaje!"
+
 commons_profile_friends: "Amigos"
 commons_profile_friends_add: "Añadir amigo"
 commons_profile_friends_remove: "Eliminar amigo"
+commons_profile_back: "Volver a mi perfil"
+commons_profile_friend_status: "En %%game%%"
 
 # Custom Gamemode translations
 # How to:

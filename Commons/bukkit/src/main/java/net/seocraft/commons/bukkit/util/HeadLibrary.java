@@ -57,4 +57,12 @@ public class HeadLibrary {
         return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/eaa6285ab90e6ba98cfdff42f7e67537c844f33bcccbd81aa6d6c06cb281a797");
     }
 
+    public static ItemStack previousProfile() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/efce475a4384e09e32cd8e91d09c7947adf7827307fdaddbaf2998514948fb6e");
+    }
+
+    public static ItemStack nextProfile() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/c920f0d4b2e010e80153a68b45501d054c43bb248f44bb8373640e3235679ac3");
+    }
+
 }

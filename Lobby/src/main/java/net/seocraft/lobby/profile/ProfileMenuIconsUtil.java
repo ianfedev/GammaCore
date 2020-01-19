@@ -1,4 +1,4 @@
-package net.seocraft.lobby.lobby;
+package net.seocraft.lobby.profile;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
@@ -44,7 +44,7 @@ public class ProfileMenuIconsUtil {
         profileDisplay.add(" ");
         profileDisplay.add(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_rank") + ": " +
-                        this.userFormatter.getUserColor(user, realm) + user.getPrimaryGroup().getName()
+                        this.userFormatter.getUserColor(user, realm).replace(user.getUsername(), "") + user.getPrimaryGroup().getName()
         );
         profileDisplay.add(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_level") + ": " +
