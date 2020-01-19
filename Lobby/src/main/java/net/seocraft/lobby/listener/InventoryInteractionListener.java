@@ -9,6 +9,7 @@ public class InventoryInteractionListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void inventoryInteractionEvent(InventoryClickEvent event) {
+        System.out.println("Interaction full");
         event.setCancelled(true);
     }
 }

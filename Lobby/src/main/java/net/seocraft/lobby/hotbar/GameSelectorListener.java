@@ -19,16 +19,16 @@ public class GameSelectorListener implements Listener  {
 
     @EventHandler
     public void lobbySelectorListener(InventoryClickEvent event) {
+        System.out.println("Game Selector");
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
         HumanEntity entity = event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         if ((entity instanceof Player)) {
             Player player = (Player) entity;
-            if (event.getClick().equals(ClickType.LEFT)) {
-                if (NBTTagHandler.hasString(clickedItem, "game_selector_opt")) {
+            if (NBTTagHandler.hasString(clickedItem, "game_selector_opt")) {
+                if (event.getClick().equals(ClickType.LEFT)) {
                     this.cloudManager.sendPlayerToGroup(player, NBTTagHandler.getString(clickedItem, "game_selector_opt"));
                 }
-            } else {
                 event.setCancelled(true);
             }
         }

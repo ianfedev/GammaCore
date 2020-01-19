@@ -30,7 +30,6 @@ public class AuthenticationLanguageSelectListener implements Listener {
     @Inject private TranslatableField translator;
     @Inject private UserStorageProvider userStorageProvider;
 
-    @EventHandler(priority = EventPriority.HIGHEST)
     public void authenticationLanguageSelectListener(InventoryClickEvent event) {
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
         HumanEntity entity = event.getWhoClicked();

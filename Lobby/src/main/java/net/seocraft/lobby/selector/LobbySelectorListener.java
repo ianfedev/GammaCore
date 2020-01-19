@@ -34,6 +34,8 @@ public class LobbySelectorListener implements Listener {
 
     @EventHandler
     public void lobbySelectorListener(InventoryClickEvent event) {
+
+        System.out.println("Lobby selector");
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
         HumanEntity entity = event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
@@ -42,8 +44,8 @@ public class LobbySelectorListener implements Listener {
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     User user = userAsyncResponse.getResponse();
-                    if (event.getClick().equals(ClickType.LEFT)) {
-                        if (NBTTagHandler.hasString(clickedItem, "lobby_selector_opt")) {
+                    if (NBTTagHandler.hasString(clickedItem, "lobby_selector_opt")) {
+                        if (event.getClick().equals(ClickType.LEFT)) {
                             switch (NBTTagHandler.getString(clickedItem, "lobby_selector_opt")) {
                                 case "FULL": {
                                     ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_lobby_selector_full"));
@@ -64,7 +66,11 @@ public class LobbySelectorListener implements Listener {
                                     break;
                                 }
                             }
-                        } else if (NBTTagHandler.hasString(clickedItem, "lobby_pages")) {
+                        } else {
+                            event.setCancelled(true);
+                        }
+                    } else if (NBTTagHandler.hasString(clickedItem, "lobby_pages")) {
+                        if (event.getClick().equals(ClickType.LEFT)) {
                             Inventory newInventory = this.lobbySelectorMenu.getLobbyMenuSync(
                                     user.getLanguage(),
                                     this.cloudManager.getGroupLobbies(
@@ -74,9 +80,9 @@ public class LobbySelectorListener implements Listener {
                                     Integer.parseInt(NBTTagHandler.getString(clickedItem, "lobby_pages"))
                             );
                             Bukkit.getScheduler().runTask(this.instance, () -> player.openInventory(newInventory));
+                        } else {
+                            event.setCancelled(true);
                         }
-                    } else {
-                        event.setCancelled(true);
                     }
                 } else {
                     Bukkit.getLogger().log(Level.WARNING, "[Lobby] Error retrieving session of player {0}.", player.getName());

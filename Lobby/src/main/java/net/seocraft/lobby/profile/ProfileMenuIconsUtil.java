@@ -105,7 +105,7 @@ public class ProfileMenuIconsUtil {
 
     public @NotNull ItemStack getSocialInfo(@NotNull User user) {
         ItemStack socialHead = NBTTagHandler.addString(
-                HeadLibrary.friendsHead(),
+                HeadLibrary.socialHead(),
                 "lobby_accessor",
                 "social"
         );
