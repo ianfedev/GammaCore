@@ -23,7 +23,7 @@ public class LanguageMenuIconsUtil {
         ItemMeta spanishMeta = spanishIcon.getItemMeta();
         spanishMeta.setDisplayName(ChatColor.YELLOW +
                 this.translatableField.getField(user.getLanguage(), "commons_profile_language_change")
-                        .replace("%%language%%", this.translatableField.getUnspacedField(user.getLanguage(), "commons_es"))
+                        .replace("%%language%%", this.translatableField.getUnspacedField(user.getLanguage(), "commons_es").toLowerCase())
                 + ChatColor.GOLD + "(" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_click") + ")");
         spanishIcon.setItemMeta(spanishMeta);
         return spanishIcon;
@@ -38,7 +38,7 @@ public class LanguageMenuIconsUtil {
         ItemMeta englishMeta = englishIcon.getItemMeta();
         englishMeta.setDisplayName(ChatColor.YELLOW +
                 this.translatableField.getField(user.getLanguage(), "commons_profile_language_change")
-                        .replace("%%language%%", this.translatableField.getUnspacedField(user.getLanguage(), "commons_en"))
+                        .replace("%%language%%", this.translatableField.getUnspacedField(user.getLanguage(), "commons_en").toLowerCase())
                 + ChatColor.GOLD + "(" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_click") + ")");
         englishIcon.setItemMeta(englishMeta);
         return englishIcon;
@@ -46,14 +46,14 @@ public class LanguageMenuIconsUtil {
 
     public @NotNull ItemStack frenchIcon(@NotNull User user) {
         ItemStack frenchIcon = NBTTagHandler.addString(
-                HeadLibrary.englishHead(),
+                HeadLibrary.frenchHead(),
                 "language_accessor",
                 "fr"
         );
         ItemMeta frenchMeta = frenchIcon.getItemMeta();
         frenchMeta.setDisplayName(ChatColor.YELLOW +
                 this.translatableField.getField(user.getLanguage(), "commons_profile_language_change")
-                        .replace("%%language%%", this.translatableField.getUnspacedField(user.getLanguage(), "commons_fr"))
+                        .replace("%%language%%", this.translatableField.getUnspacedField(user.getLanguage(), "commons_fr").toLowerCase())
                 + ChatColor.GOLD + "(" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_click") + ")");
         frenchIcon.setItemMeta(frenchMeta);
         return frenchIcon;
