@@ -21,6 +21,7 @@ import net.seocraft.lobby.hotbar.GameSelectorListener;
 import net.seocraft.lobby.hotbar.HotbarListener;
 import net.seocraft.lobby.listener.*;
 import net.seocraft.lobby.profile.GammaProfileManager;
+import net.seocraft.lobby.profile.listener.ProfileMenuListener;
 import net.seocraft.lobby.selector.LobbySelectorHologramManager;
 import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.selector.LobbySelectorManager;
@@ -59,6 +60,9 @@ public class Lobby extends JavaPlugin {
     @Inject private InventoryInteractionListener inventoryInteractionEvent;
     @Inject private InventoryDropListener inventoryDropEvent;
 
+    // --- Profile Listeners --- //
+    @Inject private ProfileMenuListener profileMenuListener;
+
     @Override
     public void onEnable() {
 
@@ -83,6 +87,8 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.hotbarListener, this);
         getServer().getPluginManager().registerEvents(this.playerDamageListener, this);
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
+
+        getServer().getPluginManager().registerEvents(this.profileMenuListener, this);
 
         this.selectorManager.setupSelectorNPC();
 

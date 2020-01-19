@@ -41,6 +41,7 @@ public class ProfileMenuListener implements Listener {
                         switch (NBTTagHandler.getString(clickedItem, "lobby_accessor")) {
                             case "friends": {
                                 this.profileManager.openFriendsMenu(user);
+                                break;
                             }
                             case "social": {
                                 int i = 0;
