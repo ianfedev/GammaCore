@@ -25,8 +25,6 @@ public class ProfileMenuListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
-
-        System.out.println("Profile");
         if (clickedItem != null && NBTTagHandler.hasString(clickedItem, "lobby_accessor")) {
             if (event.getClick() == ClickType.LEFT) {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {

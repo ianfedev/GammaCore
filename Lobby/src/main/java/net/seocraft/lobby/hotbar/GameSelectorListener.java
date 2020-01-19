@@ -19,7 +19,6 @@ public class GameSelectorListener implements Listener  {
 
     @EventHandler
     public void lobbySelectorListener(InventoryClickEvent event) {
-        System.out.println("Game Selector");
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
         HumanEntity entity = event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();

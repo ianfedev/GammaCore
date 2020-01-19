@@ -87,12 +87,13 @@ public class GammaProfileManager implements ProfileManager {
                         items.put(26, this.friendsMenuIconsUtil.getNextPage(user, page + 1));
                     }
 
-                    player.updateInventory();
+                    System.out.println("Hola mundo");
                     player.openInventory(InventoryUtils.createInventory(
                             this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_friends"),
                             27,
                             items
                     ));
+                    player.updateInventory();
 
                 } else {
                     ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_error"));
