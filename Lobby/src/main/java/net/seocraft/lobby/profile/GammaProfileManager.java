@@ -14,6 +14,7 @@ import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class GammaProfileManager implements ProfileManager {
     @Inject private ProfileMenuIconsUtil profileMenuIconsUtil;
     @Inject private FriendshipProvider friendshipProvider;
     @Inject private FriendsMenuIconsUtil friendsMenuIconsUtil;
+    @Inject private Plugin plugin;
     @Inject private TranslatableField translatableField;
 
     @Override
@@ -45,13 +47,13 @@ public class GammaProfileManager implements ProfileManager {
             items.put(22, this.profileMenuIconsUtil.getSocialInfo(user));
             items.put(25, this.profileMenuIconsUtil.getFacbookInfo(user));
 
-            player.openInventory(
+            Bukkit.getScheduler().runTask(plugin, () -> player.openInventory(
                     InventoryUtils.createInventory(
                             this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_menu"),
                             27,
                             items
                     )
-            );
+            ));
         }
 
     }
@@ -94,12 +96,14 @@ public class GammaProfileManager implements ProfileManager {
                         }
                     }
 
-                    player.openInventory(InventoryUtils.createInventory(
-                            this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_friends"),
-                            27,
-                            items
-                    ));
-                    player.updateInventory();
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        player.openInventory(InventoryUtils.createInventory(
+                                this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_friends"),
+                                27,
+                                items
+                        ));
+                        player.updateInventory();
+                    });
 
                 } else {
                     ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_error"));
