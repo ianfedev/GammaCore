@@ -154,7 +154,7 @@ public class GammaProfileManager implements ProfileManager {
 
     @Override
     public void openStatsMenu(@NotNull User user) {
-
+        //TODO: Create social menu
     }
 
     @Override

@@ -70,7 +70,7 @@ public class ProfileMenuIconsUtil {
         );
         ItemMeta statsMeta = statsHead.getItemMeta();
         statsMeta.setDisplayName(ChatColor.YELLOW + this.translatableField.getField(user.getLanguage(), "commons_profile_stats")
-        + ChatColor.GOLD + "(" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_click") + ")");
+        + ChatColor.RED + "(" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_coming_soon") + ")");
         statsHead.setItemMeta(statsMeta);
         return statsHead;
     }
