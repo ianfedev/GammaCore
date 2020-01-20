@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.HeadLibrary;
+import net.seocraft.commons.bukkit.util.LoreDisplayArray;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
@@ -25,10 +26,13 @@ public class SocialMenuIconsUtil {
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
         if (user.getPublicEmail() != null) social = user.getPublicEmail();
 
+        LoreDisplayArray<String> lore = new LoreDisplayArray<>();
+        lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
+        emailMeta.setLore(lore);
+
         emailMeta.setDisplayName(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_mail") + ": " +
-                ChatColor.GRAY + social +
-                ChatColor.GOLD + " (" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change") + ")"
+                ChatColor.GRAY + social
         );
         publicEmail.setItemMeta(emailMeta);
         return publicEmail;
@@ -44,6 +48,10 @@ public class SocialMenuIconsUtil {
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
         if (user.getTwitter() != null) social = user.getTwitter();
+
+        LoreDisplayArray<String> lore = new LoreDisplayArray<>();
+        lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
+        twitterMeta.setLore(lore);
 
         twitterMeta.setDisplayName(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_twitter") + ": " +
@@ -65,6 +73,10 @@ public class SocialMenuIconsUtil {
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
         if (user.getReddit() != null) social = user.getReddit();
 
+        LoreDisplayArray<String> lore = new LoreDisplayArray<>();
+        lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
+        redditMeta.setLore(lore);
+
         redditMeta.setDisplayName(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_reddit") + ": " +
                         ChatColor.GRAY + social +
@@ -76,7 +88,7 @@ public class SocialMenuIconsUtil {
 
     public @NotNull ItemStack getSteam(@NotNull User user) {
         ItemStack publicSteam = NBTTagHandler.addString(
-                HeadLibrary.redditHead(),
+                HeadLibrary.steamHead(),
                 "social_accessor",
                 "steam"
         );
@@ -84,6 +96,10 @@ public class SocialMenuIconsUtil {
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
         if (user.getSteam() != null) social = user.getSteam();
+
+        LoreDisplayArray<String> lore = new LoreDisplayArray<>();
+        lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
+        steamMeta.setLore(lore);
 
         steamMeta.setDisplayName(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_steam") + ": " +
@@ -96,7 +112,7 @@ public class SocialMenuIconsUtil {
 
     public @NotNull ItemStack getTwitch(@NotNull User user) {
         ItemStack publicTwitch = NBTTagHandler.addString(
-                HeadLibrary.redditHead(),
+                HeadLibrary.twitchHead(),
                 "social_accessor",
                 "twitch"
         );
@@ -104,6 +120,10 @@ public class SocialMenuIconsUtil {
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
         if (user.getTwitch() != null) social = user.getTwitch();
+
+        LoreDisplayArray<String> lore = new LoreDisplayArray<>();
+        lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
+        twitchMeta.setLore(lore);
 
         twitchMeta.setDisplayName(
                 ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_twitch") + ": " +
