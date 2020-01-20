@@ -40,7 +40,7 @@ public class ProfileMenuListener implements Listener {
                                 break;
                             }
                             case "social": {
-                                int i = 0;
+                                this.profileManager.openSocialMenu(user);
                                 break;
                             }
                         }

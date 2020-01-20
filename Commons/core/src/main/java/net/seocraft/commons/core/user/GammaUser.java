@@ -31,6 +31,11 @@ public class GammaUser implements User {
     @Nullable private Group disguiseGroup;
     @Nullable private List<Disguise> disguiseHistory;
     @NotNull private String language;
+    @Nullable private String publicEmail;
+    @Nullable private String twitter;
+    @Nullable private String reddit;
+    @Nullable private String steam;
+    @Nullable private String twitch;
     private boolean adminChatActive;
     private boolean adminLogsActive;
     private boolean adminPunishmentsActive;
@@ -39,8 +44,26 @@ public class GammaUser implements User {
     private boolean showStatus;
     private boolean hiding;
 
-    @ConstructorProperties({"_id", "username", "email", "group", "skin", "last_seen", "last_game", "last_lobby", "member_since", "verified", "level", "experience",  "used_ips", "premium", "disguised", "disguise_actual", "disguise_group", "disguise_history", "language", "ac_active", "ac_logs", "ac_punishments", "accept_friends", "accept_parties", "show_status", "hiding_players"})
-    public GammaUser(@NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin, long lastSeen, @NotNull String lastGame, @NotNull String lastLobby, long memberSince, boolean verified, int level, long experience, List<IPRecord> ipRecord, boolean premium, boolean disguised, @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory, @NotNull String language, boolean adminChatActive, boolean adminLogsActive, boolean adminPunishmentsActive, boolean acceptFriends, boolean acceptParties, boolean showStatus, boolean hiding) {
+    @ConstructorProperties({
+            "_id", "username", "email", "group", "skin",
+            "last_seen", "last_game", "last_lobby", "member_since",
+            "verified", "level", "experience", "used_ips", "premium",
+            "disguised", "disguise_actual", "disguise_group",
+            "disguise_history", "language", "public_email",
+            "twitter", "reddit", "steam", "twitch", "ac_active",
+            "ac_logs", "ac_punishments", "accept_friends",
+            "accept_parties", "show_status", "hiding_players"
+    })
+    public GammaUser(
+            @NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin,
+            long lastSeen, @NotNull String lastGame, @NotNull String lastLobby, long memberSince, boolean verified,
+            int level, long experience, List<IPRecord> ipRecord, boolean premium, boolean disguised,
+            @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory,
+            @NotNull String language, @NotNull String publicEmail, @NotNull String twitter, @NotNull String reddit,
+            @NotNull String steam, @NotNull String twitch, boolean adminChatActive, boolean adminLogsActive,
+            boolean adminPunishmentsActive, boolean acceptFriends, boolean acceptParties, boolean showStatus,
+            boolean hiding
+    ) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -60,6 +83,11 @@ public class GammaUser implements User {
         this.disguiseGroup = disguiseGroup;
         this.disguiseHistory = disguiseHistory;
         this.language = language;
+        this.publicEmail = publicEmail;
+        this.twitch = twitter;
+        this.reddit = reddit;
+        this.steam = steam;
+        this.twitch = twitch;
         this.adminChatActive = adminChatActive;
         this.adminLogsActive = adminLogsActive;
         this.adminPunishmentsActive = adminPunishmentsActive;
@@ -225,6 +253,56 @@ public class GammaUser implements User {
     @Override
     public void setLanguage(@NotNull String language) {
         this.language = language;
+    }
+
+    @Override
+    public @Nullable String getPublicEmail() {
+        return this.publicEmail;
+    }
+
+    @Override
+    public void setPublicEmail(@NotNull String email) {
+        this.publicEmail = email;
+    }
+
+    @Override
+    public @Nullable String getTwitter() {
+        return this.twitter;
+    }
+
+    @Override
+    public void setTwitter(@NotNull String twitter) {
+        this.twitter = twitter;
+    }
+
+    @Override
+    public @Nullable String getReddit() {
+        return this.reddit;
+    }
+
+    @Override
+    public void setReddit(@NotNull String reddit) {
+        this.reddit = reddit;
+    }
+
+    @Override
+    public @Nullable String getSteam() {
+        return this.steam;
+    }
+
+    @Override
+    public void setSteam(@NotNull String steam) {
+        this.steam = steam;
+    }
+
+    @Override
+    public @Nullable String getTwitch() {
+        return this.twitch;
+    }
+
+    @Override
+    public void setTwitch(@NotNull String twitch) {
+        this.twitch = twitch;
     }
 
     @Override

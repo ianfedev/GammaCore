@@ -185,6 +185,7 @@ commons_profile_language: "Cambiar idioma"
 commons_profile_menu: "Mi perfil"
 commons_profile_social: "Mis redes"
 commons_profile_error: "¡Ha ocurrido un error con el menú!"
+
 # Remember: You can use colors and space from above to style item lore
 commons_profile_language_lore: "%n%Seocraft Network está traducido en%n%los siguientes idiomas:%n%%n%- Español%n%- Inglés%n%- Francés%n%%n%%%gold%%¡Has click para cambiar el lenguaje!"
 
@@ -194,6 +195,13 @@ commons_profile_friends_remove: "Eliminar amigo"
 commons_profile_back: "Volver a mi perfil"
 commons_profile_friend_status: "En %%game%%"
 commons_profile_language_change: "Cambiar lenguaje a %%language%%"
+commons_profile_social_mail: "Tu email público"
+commons_profile_social_twitter: "Tu Twitter"
+commons_profile_social_reddit: "Tu Reddit"
+commons_profile_social_steam: "Tu Steam"
+commons_profile_social_twitch: "Tu Twitch"
+commons_profile_social_change: "Click izquierdo para cambiarlo"
+commons_profile_social_none: "Ninguno"
 
 
 # Custom Gamemode translations

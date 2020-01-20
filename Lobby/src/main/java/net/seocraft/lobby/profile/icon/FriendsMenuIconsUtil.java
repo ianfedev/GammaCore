@@ -72,7 +72,7 @@ public class FriendsMenuIconsUtil {
 
     public @NotNull ItemStack getNextPage(@NotNull User user, int page) {
         ItemStack nextPage = NBTTagHandler.addString(
-                HeadLibrary.previousProfile(),
+                HeadLibrary.nextProfile(),
                 "friends_next",
                 page + ""
         );

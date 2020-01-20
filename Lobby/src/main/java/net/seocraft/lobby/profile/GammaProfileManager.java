@@ -15,6 +15,7 @@ import net.seocraft.commons.core.translation.TranslatableField;
 import net.seocraft.lobby.profile.icon.FriendsMenuIconsUtil;
 import net.seocraft.lobby.profile.icon.LanguageMenuIconsUtil;
 import net.seocraft.lobby.profile.icon.ProfileMenuIconsUtil;
+import net.seocraft.lobby.profile.icon.SocialMenuIconsUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,6 +35,7 @@ public class GammaProfileManager implements ProfileManager {
     @Inject private FriendshipProvider friendshipProvider;
     @Inject private FriendsMenuIconsUtil friendsMenuIconsUtil;
     @Inject private LanguageMenuIconsUtil languageMenuIconsUtil;
+    @Inject private SocialMenuIconsUtil socialMenuIconsUtil;
     @Inject private Plugin plugin;
     @Inject private TranslatableField translatableField;
 
@@ -159,7 +161,28 @@ public class GammaProfileManager implements ProfileManager {
 
     @Override
     public void openSocialMenu(@NotNull User user) {
+        Player player = Bukkit.getPlayer(user.getUsername());
 
+        if (player != null) {
+            Map<Integer, ItemStack> items = new HashMap<>();
+
+            items.put(11, this.socialMenuIconsUtil.getPublicEmail(user));
+            items.put(12, this.socialMenuIconsUtil.getTwitter(user));
+            items.put(13, this.socialMenuIconsUtil.getReddit(user));
+            items.put(14, this.socialMenuIconsUtil.getSteam(user));
+            items.put(15, this.socialMenuIconsUtil.getTwitch(user));
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                player.openInventory(
+                        InventoryUtils.createInventory(
+                                this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social"),
+                                27,
+                                items
+                        )
+                );
+                player.updateInventory();
+            });
+        }
     }
 
     private  @NotNull ItemStack goBackItem(@NotNull User user) {

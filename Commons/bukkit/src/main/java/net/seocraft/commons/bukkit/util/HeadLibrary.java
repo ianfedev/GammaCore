@@ -65,4 +65,20 @@ public class HeadLibrary {
         return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/c920f0d4b2e010e80153a68b45501d054c43bb248f44bb8373640e3235679ac3");
     }
 
+    public static ItemStack mailHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/b2034fc7985a110fe7acc873569263fb4b6b3826298dd8be3dfbdbeeddad");
+    }
+
+    public static ItemStack redditHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/4d9bd4b2fa8da8247a82c3d1fa246715f9b6d98c778374da6efc10c89cd64");
+    }
+
+    public static ItemStack twitchHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/46be65f44cd21014c8cddd0158bf75227adcb1fd179f4c1acd158c88871a13f");
+    }
+
+    public static ItemStack steamHead() {
+        return SkinSkullHandler.getSkull("http://textures.minecraft.net/texture/bebb7fb8ad2cd84461b331765c729575fea3f3e63feeae1d22ec397669f5");
+    }
+
 }

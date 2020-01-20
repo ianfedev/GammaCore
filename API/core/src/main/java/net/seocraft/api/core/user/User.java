@@ -84,6 +84,28 @@ public interface User extends Model {
 
     void setLanguage(@NotNull String language);
 
+    @JsonProperty("public_email")
+    @Nullable String getPublicEmail();
+
+    @JsonProperty("public_email")
+    void setPublicEmail(@NotNull String email);
+
+    @Nullable String getTwitter();
+
+    void setTwitter(@NotNull String twitter);
+
+    @Nullable String getReddit();
+
+    void setReddit(@NotNull String reddit);
+
+    @Nullable String getSteam();
+
+    void setSteam(@NotNull String steam);
+
+    @Nullable String getTwitch();
+
+    void setTwitch(@NotNull String twitch);
+
     @JsonProperty("ac_active")
     boolean hasAdminChatActive();
 
