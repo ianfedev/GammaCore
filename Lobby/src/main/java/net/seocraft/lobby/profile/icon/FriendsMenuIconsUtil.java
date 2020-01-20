@@ -59,7 +59,7 @@ public class FriendsMenuIconsUtil {
     public @NotNull ItemStack getPreviousPage(@NotNull User user, int page) {
         ItemStack previousPage = NBTTagHandler.addString(
                 HeadLibrary.previousProfile(),
-                "friends_previous",
+                "friends_page",
                 page + ""
         );
         ItemMeta previousMeta = previousPage.getItemMeta();
@@ -73,7 +73,7 @@ public class FriendsMenuIconsUtil {
     public @NotNull ItemStack getNextPage(@NotNull User user, int page) {
         ItemStack nextPage = NBTTagHandler.addString(
                 HeadLibrary.nextProfile(),
-                "friends_next",
+                "friends_page",
                 page + ""
         );
         ItemMeta nextMeta = nextPage.getItemMeta();

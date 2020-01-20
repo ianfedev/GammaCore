@@ -123,6 +123,7 @@ commons_friends_forced_success: "¡Haz forzado la amistad entre %%firstUser%% y 
 commons_friends_already_forced: "¡Ya se ha forzado la amistad entre estos dos usuarios (O contigo)!"
 commons_friends_no_friends: "No tienes amigos. Ve a hacer unos :("
 commons_friends_error: "Ha ocurrido un error al buscar tu lista de amigos."
+commons_friends_transaction_error: "¡Ha ocurrido un error al añadir a tu amigo!"
 commons_friends_in: "Está en"
 commons_friends_was: "Estuvo en"
 
@@ -192,6 +193,9 @@ commons_profile_language_lore: "%n%Seocraft Network está traducido en%n%los sig
 commons_profile_friends: "Amigos"
 commons_profile_friends_add: "Añadir amigo"
 commons_profile_friends_remove: "Eliminar amigo"
+commons_profile_friends_not_found: "Usuario inexistente"
+commons_profile_friends_relation: "No son amigos"
+commons_profile_friends_already: "Ya son amigos"
 commons_profile_back: "Volver a mi perfil"
 commons_profile_friend_status: "En %%game%%"
 commons_profile_language_change: "Cambiar lenguaje a %%language%%"

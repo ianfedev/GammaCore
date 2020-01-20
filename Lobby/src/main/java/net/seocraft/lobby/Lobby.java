@@ -21,6 +21,7 @@ import net.seocraft.lobby.hotbar.GameSelectorListener;
 import net.seocraft.lobby.hotbar.HotbarListener;
 import net.seocraft.lobby.listener.*;
 import net.seocraft.lobby.profile.GammaProfileManager;
+import net.seocraft.lobby.profile.listener.FriendsMenuListener;
 import net.seocraft.lobby.profile.listener.ProfileMenuListener;
 import net.seocraft.lobby.selector.LobbySelectorHologramManager;
 import net.seocraft.lobby.selector.LobbySelectorListener;
@@ -62,6 +63,7 @@ public class Lobby extends JavaPlugin {
 
     // --- Profile Listeners --- //
     @Inject private ProfileMenuListener profileMenuListener;
+    @Inject private FriendsMenuListener friendsMenuListener;
 
     @Override
     public void onEnable() {
@@ -72,6 +74,7 @@ public class Lobby extends JavaPlugin {
         }
 
         saveDefaultConfig();
+        setupLobbyWorld();
         BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), null, ParameterProviderRegistry.createRegistry());
 
         dispatcher.registerCommandClass(this.hidingGadgetCommand);
@@ -89,6 +92,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.inventoryDropEvent, this);
 
         getServer().getPluginManager().registerEvents(this.profileMenuListener, this);
+        getServer().getPluginManager().registerEvents(this.friendsMenuListener, this);
 
         this.selectorManager.setupSelectorNPC();
 

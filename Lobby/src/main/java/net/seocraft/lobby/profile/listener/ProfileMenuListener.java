@@ -25,7 +25,8 @@ public class ProfileMenuListener implements Listener {
 
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
-        if (clickedItem != null && NBTTagHandler.hasString(clickedItem, "lobby_accessor")) {
+        if (clickedItem != null &&
+                (NBTTagHandler.hasString(clickedItem, "lobby_accessor") || NBTTagHandler.hasString(clickedItem, "lobby_accessor"))) {
             if (event.getClick() == ClickType.LEFT) {
                 CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                     if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
@@ -43,6 +44,8 @@ public class ProfileMenuListener implements Listener {
                                 this.profileManager.openSocialMenu(user);
                                 break;
                             }
+                            default:
+                                break;
                         }
                     } else {
                         ChatAlertLibrary.errorChatAlert(player);
