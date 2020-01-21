@@ -2,10 +2,9 @@ package net.seocraft.commons.bukkit.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.CommandContext;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
-import me.fixeddev.bcm.parametric.annotation.Optional;
+import me.fixeddev.ebcm.CommandContext;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -47,7 +46,7 @@ public class FriendCommand implements CommandClass {
     @Inject private UserFormatter userFormatter;
     @Inject private UserStorageProvider userStorageProvider;
 
-    @Command(names = {"friends", "friends help", "friend"})
+    @ACommand(names = {"friends", "friends help", "friend"})
     public boolean mainCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -80,7 +79,7 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends add", "friend add", "f add"}, min = 1, usage = "/<command> <target>")
+    @ACommand(names = {"friends add", "friend add", "f add"})
     public boolean addCommand(CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -148,7 +147,7 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends accept", "friend accept", "f accept"}, min = 1, usage = "/<command> <target>")
+    @ACommand(names = {"friends accept", "friend accept", "f accept"})
     public boolean acceptCommand(CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -198,7 +197,7 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends reject", "friend reject", "f reject"}, min = 1, usage = "/<command> <target>")
+    @ACommand(names = {"friends reject", "friend reject", "f reject"})
     public boolean rejectCommand(CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -268,7 +267,7 @@ public class FriendCommand implements CommandClass {
         return false;
     }
 
-    @Command(names = {"friends remove", "friend remove", "f remove"}, min = 1, usage = "/<command> <target>")
+    @ACommand(names = {"friends remove", "friend remove", "f remove"})
     public boolean removeCommand(CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -338,7 +337,7 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends removeall", "friend removeall"})
+    @ACommand(names = {"friends removeall", "friend removeall"})
     public boolean removeAllCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -373,7 +372,7 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends force", "friend force", "f force"}, min = 1, usage = "/<command> <target> [second]", permission = "commons.staff.friends.force")
+    @ACommand(names = {"friends force", "friend force", "f force"},  permission = "commons.staff.friends.force")
     public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Optional("a") OfflinePlayer second) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -403,7 +402,7 @@ public class FriendCommand implements CommandClass {
                             }
 
                             // Force between sender and first if not first argument
-                            if (context.getArgumentsLength() == 1 || (second != null && second.getName().equalsIgnoreCase(player.getName()))) {
+                            if (context.getArguments().size() == 1 || (second != null && second.getName().equalsIgnoreCase(player.getName()))) {
                                 // Check if player has higher permissions
                                 if (hasLowerPermissions(user, firstRecord, player)) return;
 
@@ -456,7 +455,7 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends list", "friend list", "f list", "f l"}, usage = "/<command> [page]")
+    @ACommand(names = {"friends list", "friend list", "f list", "f l"})
     public boolean friendsList(CommandSender commandSender, CommandContext context) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -465,8 +464,8 @@ public class FriendCommand implements CommandClass {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
 
                     int page = 1;
-                    if (context.getArgumentsLength() > 1) {
-                        page = Integer.parseInt(context.getArgument(0));
+                    if (context.getArguments().size() > 1) {
+                        page = Integer.parseInt(context.getArguments().get(0));
                     }
 
                     User user = userAsyncResponse.getResponse();
@@ -580,7 +579,7 @@ public class FriendCommand implements CommandClass {
         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
     }
 
-    @Command(names = {"friends requests", "f requests", "friend requests"}, usage = "/<command> [page]")
+    @ACommand(names = {"friends requests", "f requests", "friend requests"})
     public boolean friendsRequests(CommandSender commandSender, CommandContext context) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -588,8 +587,8 @@ public class FriendCommand implements CommandClass {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
 
                     int page = 1;
-                    if (context.getArgumentsLength() > 1) {
-                        page = Integer.parseInt(context.getArgument(0));
+                    if (context.getArguments().size() > 1) {
+                        page = Integer.parseInt(context.getArguments().get(0));
                     }
 
                     User user = userAsyncResponse.getResponse();

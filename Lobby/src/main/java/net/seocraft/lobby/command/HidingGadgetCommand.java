@@ -1,8 +1,6 @@
 package net.seocraft.lobby.command;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
@@ -17,7 +15,7 @@ public class HidingGadgetCommand implements CommandClass {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private HidingGadgetManager hidingGadgetManager;
 
-    @Command(names = {"hideplayers", "hidep", "hp"})
+    @ACommand(names = {"hideplayers", "hidep", "hp"})
     public boolean mainCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;

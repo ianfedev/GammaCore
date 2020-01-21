@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -30,7 +30,7 @@ public class VerificationCommand implements CommandClass {
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ObjectMapper mapper;
 
-    @Command(names = {"verify", "linkaccount", "verificar", "link"}, usage = "/<command> <mail>")
+    @ACommand(names = {"verify", "linkaccount", "verificar", "link"})
     public boolean mainCommand(CommandSender commandSender, String mail) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;

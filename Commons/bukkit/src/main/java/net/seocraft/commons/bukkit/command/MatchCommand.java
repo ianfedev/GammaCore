@@ -1,9 +1,9 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
-import me.fixeddev.bcm.parametric.annotation.Flag;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.Flag;
 import net.md_5.bungee.api.ChatColor;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
@@ -38,7 +38,7 @@ public class MatchCommand implements CommandClass {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translatableField;
 
-    @Command(names = {"match help"}, permission = "commons.staff.match.help")
+    @ACommand(names = {"match help"}, permission = "commons.staff.match.help")
     public boolean mainCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -55,7 +55,7 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"match start"}, permission = "commons.staff.match.start", min = 1, usage = "/<command> <time> [-s]")
+    @ACommand(names = {"match start"}, permission = "commons.staff.match.start")
     public boolean startCommand(CommandSender commandSender, int time, @Flag(value = 's') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -114,7 +114,7 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"match debug"}, permission = "commons.staff.match.debug")
+    @ACommand(names = {"match debug"}, permission = "commons.staff.match.debug")
     public boolean debugCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
 
@@ -148,7 +148,7 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"match assignation"}, permission = "commons.staff.match.debug")
+    @ACommand(names = {"match assignation"}, permission = "commons.staff.match.debug")
     public boolean assignationCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
 
@@ -169,7 +169,7 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"match cancel"}, permission = "commons.staff.match.cancel", usage = "/<command> [-s]")
+    @ACommand(names = {"match cancel"}, permission = "commons.staff.match.cancel")
     public boolean cancelCommand(CommandSender commandSender, @Flag(value = 's') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -217,7 +217,7 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"match invalidate"}, permission = "commons.staff.match.invalidate")
+    @ACommand(names = {"match invalidate"}, permission = "commons.staff.match.invalidate")
     public boolean invalidateCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;

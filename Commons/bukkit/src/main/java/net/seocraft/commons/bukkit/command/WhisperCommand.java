@@ -2,10 +2,9 @@ package net.seocraft.commons.bukkit.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.CommandContext;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
-import me.fixeddev.bcm.parametric.annotation.JoinedString;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.ConsumedArgs;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.bukkit.whisper.WhisperResponse;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -16,18 +15,11 @@ import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.logging.Level;
 
 public class WhisperCommand implements CommandClass {
@@ -39,8 +31,8 @@ public class WhisperCommand implements CommandClass {
 
     private Channel<String> messager;
 
-    @Command(names = {"msg", "whisper", "tell", "w", "m", "t"}, min = 2, usage = "/<command> <target> <message>")
-    public boolean whisperCommand(CommandSender commandSender, OfflinePlayer target, @JoinedString String message) {
+    @ACommand(names = {"msg", "whisper", "tell", "w", "m", "t"})
+    public boolean whisperCommand(CommandSender commandSender, OfflinePlayer target, @ConsumedArgs(0) String message) {
 
         if (commandSender instanceof Player) {
             Player sender = (Player) commandSender;
@@ -98,7 +90,7 @@ public class WhisperCommand implements CommandClass {
         return player.getAddress().toString().split(":")[0].replace("/", "");
     }
 
-    @Command(names = {"testMessager"}, max = 0)
+    @ACommand(names = {"testMessager"})
     public boolean testMessager() {
         messager.sendMessage("test");
         Bukkit.broadcastMessage("Send message test");
