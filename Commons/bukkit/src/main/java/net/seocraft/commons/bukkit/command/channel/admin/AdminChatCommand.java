@@ -1,15 +1,15 @@
 package net.seocraft.commons.bukkit.command.channel.admin;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import me.fixeddev.ebcm.internal.namespace.Namespace;
+import me.fixeddev.ebcm.*;
+import me.fixeddev.ebcm.part.ArgumentPart;
+import me.fixeddev.ebcm.part.FlagPart;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.channel.admin.ACMessageManager;
-import net.seocraft.api.bukkit.channel.admin.ACParticipantsProvider;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -23,41 +23,40 @@ import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
-public class AdminChatCommand extends AbstractAdvancedCommand {
+public class AdminChatCommand implements CommandAction {
 
     @Inject private ACMessageManager messageManager;
-    @Inject private ACParticipantsProvider participantsProvider;
+    //@Inject private ACParticipantsProvider participantsProvider;
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translatableField;
 
-    public AdminChatCommand() {
-        super(new String[]{"ac"});
-        setDescription("Command user to communicate in the admin channel");
-        setPermission("commons.staff.chat");
-        setExpectedFlags(Lists.newArrayList('i'));
-        setUsage("/<command> <message...> [-i]");
-        setMinArguments(1);
+    public @NotNull Command getCommand() {
+        return ImmutableCommand.builder(CommandData.builder("ac"))
+                .addPart(ArgumentPart.builder("message", String.class).setConsumedArguments(-1).build())
+                .addPart(FlagPart.builder("important", 'i').build())
+                .setPermission("commons.staff.chat")
+                .setAction(this)
+                .build();
     }
 
     @Override
     public boolean execute(CommandContext commandContext) {
-        Player sender = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        String message = commandContext.getJoinedArgs(0).replace("-", "");
-        boolean important = commandContext.getFlagValue('i');
+        Player sender = (Player) commandContext.getObject(CommandSender.class, "SENDER");
+        Optional<String> message = commandContext.getValue(commandContext.getParts("password").get(0));
+        Optional<Boolean> important = commandContext.getValue(commandContext.getParts("important").get(0));
 
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(sender.getDatabaseIdentifier()), userResponse -> {
+        message.ifPresent(s -> CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(sender.getDatabaseIdentifier()), userResponse -> {
             if (userResponse.getStatus().equals(AsyncResponse.Status.SUCCESS)) {
                 User user = userResponse.getResponse();
                 try {
 
-                    if (important && !sender.hasPermission("commons.staff.chat.important")) {
+                    if (important.isPresent() && important.get() && !sender.hasPermission("commons.staff.chat.important")) {
                         ChatAlertLibrary.errorChatAlert(
                                 sender,
                                 this.translatableField.getUnspacedField(
@@ -72,13 +71,13 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
                         TextComponent disabled = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_disabled") + ". ");
                         disabled.setColor(ChatColor.RED);
                         TextComponent hover = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_reminder_click"));
-                        hover.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
+                        hover.setColor(ChatColor.YELLOW);
                         hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/acs"));
                         hover.setHoverEvent(
                                 new HoverEvent(
                                         HoverEvent.Action.SHOW_TEXT,
                                         new ComponentBuilder(
-                                                net.md_5.bungee.api.ChatColor.YELLOW +
+                                                ChatColor.YELLOW +
                                                         this.translatableField.getUnspacedField(
                                                                 user.getLanguage(),
                                                                 "commons_ac_reminder_click"
@@ -91,7 +90,7 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
                         return;
                     }
 
-                    this.messageManager.sendMessage(message, userResponse.getResponse(), important);
+                    this.messageManager.sendMessage(s, userResponse.getResponse(), (important.isPresent() && important.get()));
                 } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException e) {
                     Bukkit.getLogger().log(Level.WARNING, "[Commons] There was an error with an admin message.", e);
                     ChatAlertLibrary.errorChatAlert(
@@ -106,20 +105,21 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
                 Bukkit.getLogger().log(Level.WARNING, "[Commons] There was an error with an admin message.", userResponse.getThrowedException());
                 ChatAlertLibrary.errorChatAlert(sender);
             }
-        });
+        }));
 
         return true;
     }
 
-    @Override
-    public List<String> getSuggestions(Namespace namespace, ArgumentArray arguments) {
+    // TODO: Implement when implemented at EBCM
+
+    /*public List<String> getSuggestions(Namespace namespace, ArgumentArray arguments) {
         if (arguments.getSize() > 0) {
             String getLastArgument = arguments.get(arguments.getPosition() + 1);
             if(getLastArgument.startsWith("@"))
                 return this.participantsProvider.getChannelParticipants().stream().map(u -> "@" + u.getUsername()).collect(Collectors.toList());
         }
         return new ArrayList<>();
-    }
+    }*/
 
 
 }

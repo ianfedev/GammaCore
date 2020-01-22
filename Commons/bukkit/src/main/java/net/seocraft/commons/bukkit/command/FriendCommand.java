@@ -2,9 +2,11 @@ package net.seocraft.commons.bukkit.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
-import me.fixeddev.ebcm.CommandContext;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.Default;
+import me.fixeddev.ebcm.parametric.annotation.Injected;
+import me.fixeddev.ebcm.parametric.annotation.Named;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -36,6 +38,7 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.Set;
 
+@ACommand(names = {"friends", "f", "friend"})
 public class FriendCommand implements CommandClass {
 
     @Inject private BukkitAPI bukkitAPI;
@@ -46,8 +49,8 @@ public class FriendCommand implements CommandClass {
     @Inject private UserFormatter userFormatter;
     @Inject private UserStorageProvider userStorageProvider;
 
-    @ACommand(names = {"friends", "friends help", "friend"})
-    public boolean mainCommand(CommandSender commandSender) {
+    @ACommand(names = {"", "help"})
+    public boolean mainCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -79,8 +82,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"friends add", "friend add", "f add"})
-    public boolean addCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = {"add", "a"})
+    public boolean addCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Named("target") OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -147,8 +150,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"friends accept", "friend accept", "f accept"})
-    public boolean acceptCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = {"accept", "ac"})
+    public boolean acceptCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Named("target") OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -197,8 +200,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"friends reject", "friend reject", "f reject"})
-    public boolean rejectCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = {"reject", "r"})
+    public boolean rejectCommand(@Injected(true) @Named("SENDER") CommandSender commandSender,  @Named("target") OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -267,8 +270,8 @@ public class FriendCommand implements CommandClass {
         return false;
     }
 
-    @ACommand(names = {"friends remove", "friend remove", "f remove"})
-    public boolean removeCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = {"remove", "rem"})
+    public boolean removeCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Named("target") OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -337,8 +340,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"friends removeall", "friend removeall"})
-    public boolean removeAllCommand(CommandSender commandSender) {
+    @ACommand(names = {"removeall", "ra"})
+    public boolean removeAllCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -346,9 +349,7 @@ public class FriendCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     try {
-                        System.out.println("Erasing players");
                         this.friendshipProvider.removeAllFriends(user.getId());
-                        System.out.println("Erased players");
                     } catch (Unauthorized | BadRequest | NotFound | InternalServerError unauthorized) {
                         ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_system_error") + ".");
                         return;
@@ -373,7 +374,7 @@ public class FriendCommand implements CommandClass {
     }
 
     @ACommand(names = {"friends force", "friend force", "f force"},  permission = "commons.staff.friends.force")
-    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Optional("a") OfflinePlayer second) {
+    public boolean forceCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Named("target") OfflinePlayer target, @Default @Named("second") OfflinePlayer second) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -402,7 +403,7 @@ public class FriendCommand implements CommandClass {
                             }
 
                             // Force between sender and first if not first argument
-                            if (context.getArguments().size() == 1 || (second != null && second.getName().equalsIgnoreCase(player.getName()))) {
+                            if (second == null || second.getName().equalsIgnoreCase(player.getName())) {
                                 // Check if player has higher permissions
                                 if (hasLowerPermissions(user, firstRecord, player)) return;
 
@@ -415,34 +416,30 @@ public class FriendCommand implements CommandClass {
                                 return;
                             }
 
-                            if (second != null) {
-                                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(second.getName()), secondAsyncResponse  -> {
-                                    if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                                        User secondRecord = secondAsyncResponse.getResponse();
+                            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(second.getName()), secondAsyncResponse  -> {
+                                if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    User secondRecord = secondAsyncResponse.getResponse();
 
-                                        if (
-                                                user.getPrimaryGroup().getPriority() > firstRecord.getPrimaryGroup().getPriority() ||
-                                                        user.getPrimaryGroup().getPriority() > secondRecord.getPrimaryGroup().getPriority()
-                                        ) {
-                                            ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
-                                                    user.getLanguage(),
-                                                    "commons_friends_force_lower_permissions")  + ".");
-                                            return;
-                                        }
-
-                                        // Detect if players are already friends
-                                        if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
-                                            return;
-                                        }
-
-                                        forcedActions(player, user, firstRecord, secondRecord);
-                                    } else {
-                                        sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
+                                    if (
+                                            user.getPrimaryGroup().getPriority() > firstRecord.getPrimaryGroup().getPriority() ||
+                                                    user.getPrimaryGroup().getPriority() > secondRecord.getPrimaryGroup().getPriority()
+                                    ) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_friends_force_lower_permissions")  + ".");
+                                        return;
                                     }
-                                });
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player);
-                            }
+
+                                    // Detect if players are already friends
+                                    if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
+                                        return;
+                                    }
+
+                                    forcedActions(player, user, firstRecord, secondRecord);
+                                } else {
+                                    sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
+                                }
+                            });
                         } else {
                             sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                         }
@@ -455,18 +452,13 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"friends list", "friend list", "f list", "f l"})
-    public boolean friendsList(CommandSender commandSender, CommandContext context) {
+    @ACommand(names = {"list", "l"})
+    public boolean friendsList(@Injected(true) @Named("SENDER") CommandSender commandSender, @Default("1") @Named("page") Integer page) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             // Get base user
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-
-                    int page = 1;
-                    if (context.getArguments().size() > 1) {
-                        page = Integer.parseInt(context.getArguments().get(0));
-                    }
 
                     User user = userAsyncResponse.getResponse();
                     try {
@@ -579,17 +571,12 @@ public class FriendCommand implements CommandClass {
         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
     }
 
-    @ACommand(names = {"friends requests", "f requests", "friend requests"})
-    public boolean friendsRequests(CommandSender commandSender, CommandContext context) {
+    @ACommand(names = {"requests", "req"})
+    public boolean friendsRequests(@Injected(true) @Named("SENDER") CommandSender commandSender, @Default("1") @Named("page") Integer page) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-
-                    int page = 1;
-                    if (context.getArguments().size() > 1) {
-                        page = Integer.parseInt(context.getArguments().get(0));
-                    }
 
                     User user = userAsyncResponse.getResponse();
                     Set<User> playerList = this.friendshipProvider.getRequestsSync(user.getId());

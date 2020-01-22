@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import me.fixeddev.ebcm.parametric.annotation.Flag;
+import me.fixeddev.ebcm.parametric.annotation.Injected;
+import me.fixeddev.ebcm.parametric.annotation.Named;
 import net.md_5.bungee.api.ChatColor;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Level;
 
+@ACommand(names = {"match help"}, permission = "commons.staff.match.help")
 public class MatchCommand implements CommandClass {
 
     @Inject private GameStartManager gameStartManager;
@@ -38,8 +41,8 @@ public class MatchCommand implements CommandClass {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translatableField;
 
-    @ACommand(names = {"match help"}, permission = "commons.staff.match.help")
-    public boolean mainCommand(CommandSender commandSender) {
+    @ACommand(names = {"", "help"})
+    public boolean mainCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -55,8 +58,8 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"match start"}, permission = "commons.staff.match.start")
-    public boolean startCommand(CommandSender commandSender, int time, @Flag(value = 's') boolean silent) {
+    @ACommand(names = {"start"}, permission = "commons.staff.match.start")
+    public boolean startCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Named("time") Integer time, @Flag(value = 's') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -114,8 +117,8 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"match debug"}, permission = "commons.staff.match.debug")
-    public boolean debugCommand(CommandSender commandSender) {
+    @ACommand(names = {"debug"}, permission = "commons.staff.match.debug")
+    public boolean debugCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
 
             Player player = (Player) commandSender;
@@ -148,8 +151,8 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"match assignation"}, permission = "commons.staff.match.debug")
-    public boolean assignationCommand(CommandSender commandSender) {
+    @ACommand(names = {"assignation"}, permission = "commons.staff.match.debug")
+    public boolean assignationCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
 
             Player player = (Player) commandSender;
@@ -169,8 +172,8 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"match cancel"}, permission = "commons.staff.match.cancel")
-    public boolean cancelCommand(CommandSender commandSender, @Flag(value = 's') boolean silent) {
+    @ACommand(names = {"cancel"}, permission = "commons.staff.match.cancel")
+    public boolean cancelCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Flag(value = 's') boolean silent) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -217,8 +220,8 @@ public class MatchCommand implements CommandClass {
         return true;
     }
 
-    @ACommand(names = {"match invalidate"}, permission = "commons.staff.match.invalidate")
-    public boolean invalidateCommand(CommandSender commandSender) {
+    @ACommand(names = {"invalidate"}, permission = "commons.staff.match.invalidate")
+    public boolean invalidateCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
