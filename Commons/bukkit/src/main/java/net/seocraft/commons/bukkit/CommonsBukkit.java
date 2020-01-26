@@ -147,7 +147,7 @@ public class CommonsBukkit extends JavaPlugin {
         this.packetManager.addPacketListener(this.npcSpawnListener);
         this.packetManager.addPacketListener(this.npcUseListener);
 
-        this.dispatcher.registerCommand(loginCommand.getCommand());
+        this.dispatcher.registerCommand(adminChatCommand.getCommand());
         commandBuilder.fromClass(adminChatSettings);
         commandBuilder.fromClass(whisperCommand);
         commandBuilder.fromClass(punishmentCommand);
@@ -260,4 +260,7 @@ public class CommonsBukkit extends JavaPlugin {
         return this.cloudDeploy;
     }
 
+    public BukkitCommandManager getDispatcher() {
+        return dispatcher;
+    }
 }

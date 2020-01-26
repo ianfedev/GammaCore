@@ -1,10 +1,9 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.basic.Namespace;
-import me.fixeddev.bcm.basic.exceptions.CommandException;
-import me.fixeddev.bcm.basic.exceptions.CommandUsageException;
-import me.fixeddev.bcm.basic.exceptions.NoPermissionsException;
+import me.fixeddev.ebcm.exception.CommandException;
+import me.fixeddev.ebcm.exception.CommandUsageException;
+import me.fixeddev.ebcm.internal.namespace.Namespace;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -54,7 +53,7 @@ public class AuthenticationCommandsListener implements Listener {
             namespace.setObject(CommandSender.class, "sender", event.getPlayer());
 
             try {
-                if (this.instance.parametricCommandHandler.dispatchCommand(namespace, event.getMessage().substring(1))) {
+                if (this.instance.getDispatcher().execute(namespace, event.getMessage().substring(1))) {
                     event.setCancelled(true);
                 }
 
