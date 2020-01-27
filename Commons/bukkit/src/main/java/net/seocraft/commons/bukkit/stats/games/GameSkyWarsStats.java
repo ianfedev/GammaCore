@@ -86,8 +86,18 @@ public class GameSkyWarsStats implements SkyWarsStats {
     }
 
     @Override
+    public void setCurrentCage(@NotNull String cage) {
+        this.currentCage = cage;
+    }
+
+    @Override
     public @NotNull String getCurrentKit() {
         return this.currentKit;
+    }
+
+    @Override
+    public void setCurrentKit(@NotNull String kit) {
+        this.currentKit = kit;
     }
 
     @Override

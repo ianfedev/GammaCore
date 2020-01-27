@@ -29,12 +29,16 @@ public interface SkyWarsStats {
 
     @NotNull String getCurrentKit();
 
+    void setCurrentKit(@NotNull String kit);
+
     @JsonIgnore
     void addKit(@NotNull String kit);
 
     @NotNull Set<String> getCages();
 
     @NotNull String getCurrentCage();
+
+    void setCurrentCage(@NotNull String cage);
 
     @JsonIgnore
     void addCage(@NotNull String cage);
