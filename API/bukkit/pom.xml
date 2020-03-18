@@ -39,6 +39,7 @@
     </dependencies>
 
     <build>
+        <finalName>API-Bukkit</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>

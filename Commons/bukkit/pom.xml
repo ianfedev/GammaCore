@@ -59,6 +59,7 @@
     </dependencies>
 
     <build>
+        <finalName>Commons-Bukkit</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>

@@ -33,6 +33,7 @@
     </dependencies>
 
     <build>
+        <finalName>Lobby</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
