@@ -29,12 +29,12 @@
             <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
         </repository>
         <repository>
-            <id>seocraft-releases</id>
-            <url>https://repo.seocraft.net/repository/seocraft-releases</url>
+            <id>maven-releases</id>
+            <url>https://repo.seocraft.net/repository/maven-releases</url>
         </repository>
         <repository>
-            <id>seocraft-snapshots</id>
-            <url>https://repo.seocraft.net/repository/seocraft-snapshots</url>
+            <id>maven-snapshots</id>
+            <url>https://repo.seocraft.net/repository/maven-snapshots</url>
         </repository>
     </repositories>
 
@@ -137,7 +137,7 @@
             <dependency>
                 <groupId>net.seocraft</groupId>
                 <artifactId>paperspigot</artifactId>
-                <version>1.8-20200106.170526-2</version>
+                <version>1.8-20200318.190200-1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

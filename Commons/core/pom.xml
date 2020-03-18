@@ -15,7 +15,7 @@
         <dependency>
             <groupId>me.fixeddev</groupId>
             <artifactId>Spigot-BungeeBridge</artifactId>
-            <version>1.8</version>
+            <version>1.8-20200318.190928-1</version>
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
