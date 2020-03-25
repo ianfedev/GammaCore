@@ -24,7 +24,7 @@ public class SocialMenuIconsUtil {
         ItemMeta emailMeta = publicEmail.getItemMeta();
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
-        if (user.getPublicEmail() != null) social = user.getPublicEmail();
+        if (user.getPublicInfo().getEmail() != null) social = user.getPublicInfo().getEmail();
 
         LoreDisplayArray<String> lore = new LoreDisplayArray<>();
         lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
@@ -47,7 +47,7 @@ public class SocialMenuIconsUtil {
         ItemMeta twitterMeta = publicTwitter.getItemMeta();
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
-        if (user.getTwitter() != null) social = user.getTwitter();
+        if (user.getPublicInfo().getTwitter() != null) social = user.getPublicInfo().getTwitter();
 
         LoreDisplayArray<String> lore = new LoreDisplayArray<>();
         lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
@@ -71,7 +71,7 @@ public class SocialMenuIconsUtil {
         ItemMeta redditMeta = publicReddit.getItemMeta();
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
-        if (user.getReddit() != null) social = user.getReddit();
+        if (user.getPublicInfo().getReddit() != null) social = user.getPublicInfo().getReddit();
 
         LoreDisplayArray<String> lore = new LoreDisplayArray<>();
         lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
@@ -95,7 +95,7 @@ public class SocialMenuIconsUtil {
         ItemMeta steamMeta = publicSteam.getItemMeta();
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
-        if (user.getSteam() != null) social = user.getSteam();
+        if (user.getPublicInfo().getSteam() != null) social = user.getPublicInfo().getSteam();
 
         LoreDisplayArray<String> lore = new LoreDisplayArray<>();
         lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);
@@ -119,7 +119,7 @@ public class SocialMenuIconsUtil {
         ItemMeta twitchMeta = publicTwitch.getItemMeta();
 
         String social = this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_none");
-        if (user.getTwitch() != null) social = user.getTwitch();
+        if (user.getPublicInfo().getTwitch() != null) social = user.getPublicInfo().getTwitch();
 
         LoreDisplayArray<String> lore = new LoreDisplayArray<>();
         lore.add(this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_social_change"), ChatColor.GOLD);

@@ -217,7 +217,7 @@ public class HotbarItemCollection {
         String l = user.getLanguage();
         player.getInventory().clear();
         player.getInventory().setItem(0, getGameMenu(l));
-        player.getInventory().setItem(1, getHidingGadget(l, user.isHiding()));
+        player.getInventory().setItem(1, getHidingGadget(l, user.getGameSettings().getGeneral().isHidingPlayers()));
         player.getInventory().setItem(4, getElementalLoot(l));
         player.getInventory().setItem(7, getProfileMenu(user));
         player.getInventory().setItem(8, getLobbySelector(l));

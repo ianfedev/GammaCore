@@ -40,17 +40,17 @@ public class ACClickInventoryListener implements Listener {
                 if (clicked != null && NBTTagHandler.hasString(clicked, "ac_selector")) {
                     switch (NBTTagHandler.getString(clicked, "ac_selector")) {
                         case "chat": {
-                            user.setAdminChatActive(!user.hasAdminChatActive());
+                            user.getGameSettings().getAdminChat().setActive(!user.getGameSettings().getAdminChat().isActive());
                             updateUser(user, player);
                             break;
                         }
                         case "logs": {
-                            user.setAdminLogsActive(!user.hasAdminLogsActive());
+                            user.getGameSettings().getAdminChat().setActiveLogs(!user.getGameSettings().getAdminChat().hasActiveLogs());
                             updateUser(user, player);
                             break;
                         }
                         case "punishment": {
-                            user.setAdminPunishmentsActive(!user.hasAdminPunishmentsActive());
+                            user.getGameSettings().getAdminChat().setActivePunishments(!user.getGameSettings().getAdminChat().hasActivePunishments());
                             updateUser(user, player);
                             break;
                         }

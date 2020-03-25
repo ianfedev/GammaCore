@@ -189,7 +189,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
     }
 
     private void movePlayerToLobby(@NotNull Player player, @NotNull User user) {
-        if (user.getLastGame().equalsIgnoreCase("registrandose")) {
+        if (user.getSessionInfo().getLastGame().equalsIgnoreCase("registrandose")) {
             ChatAlertLibrary.infoAlert(
                     player,
                     this.translatableField.getUnspacedField(
@@ -215,11 +215,11 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                     ).replace(
                             "%%game%%",
                             ChatColor.YELLOW +
-                            user.getLastLobby()
+                            user.getSessionInfo().getLastGame()
                             + ChatColor.AQUA
                     )
             );
-            this.cloudManager.sendPlayerToGroup(player, user.getLastLobby());
+            this.cloudManager.sendPlayerToGroup(player, user.getSessionInfo().getLastLobby());
         }
     }
 

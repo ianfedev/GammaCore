@@ -23,7 +23,7 @@ class ACMenuIcons {
         );
         ItemMeta chatMeta = chat.getItemMeta();
         chatMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_chat"));
-        if (!user.hasAdminChatActive())
+        if (!user.getGameSettings().getAdminChat().isActive())
             chatMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_chat"));
 
 
@@ -35,8 +35,8 @@ class ACMenuIcons {
         );
         loreArray.add(" ");
         String status = ChatColor.GRAY + field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
-        if (!user.hasAdminChatActive()) status = status + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
-        if (user.hasAdminChatActive()) status = status + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
+        if (!user.getGameSettings().getAdminChat().isActive()) status = status + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
+        if (user.getGameSettings().getAdminChat().isActive()) status = status + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         loreArray.add(status);
         chatMeta.setLore(loreArray);
         chat.setItemMeta(chatMeta);
@@ -53,7 +53,7 @@ class ACMenuIcons {
         );
         ItemMeta logMeta = log.getItemMeta();
         logMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_logs"));
-        if (!user.hasAdminChatActive())
+        if (!user.getGameSettings().getAdminChat().isActive())
             logMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_logs"));
 
         // --- Lore concatenation --- //
@@ -64,8 +64,8 @@ class ACMenuIcons {
         );
         logArray.add(" ");
         String statusLog = ChatColor.GRAY + field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
-        if (!user.hasAdminLogsActive()) statusLog = statusLog + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
-        if (user.hasAdminLogsActive()) statusLog = statusLog + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
+        if (!user.getGameSettings().getAdminChat().hasActiveLogs()) statusLog = statusLog + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
+        if (user.getGameSettings().getAdminChat().hasActiveLogs()) statusLog = statusLog + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         logArray.add(statusLog);
         logMeta.setLore(logArray);
         log.setItemMeta(logMeta);
@@ -83,7 +83,7 @@ class ACMenuIcons {
         ItemMeta punishmentMeta = punishment.getItemMeta();
         punishmentMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         punishmentMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_punishment"));
-        if (!user.hasAdminChatActive())
+        if (!user.getGameSettings().getAdminChat().isActive())
             punishmentMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_punishment"));
 
         // --- Lore concatenation --- //
@@ -94,8 +94,8 @@ class ACMenuIcons {
         );
         punishmentLore.add(" ");
         String statusPunishment = ChatColor.GRAY + field.getUnspacedField(user.getLanguage(), "commons_status") + ": ";
-        if (!user.hasAdminPunishmentsActive()) statusPunishment =statusPunishment + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
-        if (user.hasAdminPunishmentsActive()) statusPunishment = statusPunishment + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
+        if (!user.getGameSettings().getAdminChat().hasActivePunishments()) statusPunishment =statusPunishment + ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_disabled").toUpperCase();
+        if (user.getGameSettings().getAdminChat().hasActivePunishments()) statusPunishment = statusPunishment + ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_enabled").toUpperCase();
         punishmentLore.add(statusPunishment);
         punishmentMeta.setLore(punishmentLore);
         punishment.setItemMeta(punishmentMeta);

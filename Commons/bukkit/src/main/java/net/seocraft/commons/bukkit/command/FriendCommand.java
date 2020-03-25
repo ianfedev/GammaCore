@@ -104,7 +104,7 @@ public class FriendCommand implements CommandClass {
                             }
 
                             // Detect adding status or permission bypassing
-                            if (!targetRecord.isAcceptingFriends() && !player.hasPermission("commons.staff.friends.bypass")) {
+                            if (!targetRecord.getGameSettings().getGeneral().isAcceptingFriends() && !player.hasPermission("commons.staff.friends.bypass")) {
                                 ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_disabled_requests") + ".");
                                 return;
                             }
@@ -574,7 +574,7 @@ public class FriendCommand implements CommandClass {
             }
             player.sendMessage(
                     this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
-                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getLastGame()
+                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getSessionInfo().getLastSeen()
             );
         });
         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());

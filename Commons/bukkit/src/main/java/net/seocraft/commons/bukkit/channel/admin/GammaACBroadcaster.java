@@ -33,7 +33,7 @@ public class GammaACBroadcaster implements ACBroadcaster {
 
             if (player != null) {
 
-                if (user.hasAdminChatActive() && !message.isImportant()) {
+                if (user.getGameSettings().getAdminChat().isActive() && !message.isImportant()) {
 
                     player.sendMessage(
                             ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +

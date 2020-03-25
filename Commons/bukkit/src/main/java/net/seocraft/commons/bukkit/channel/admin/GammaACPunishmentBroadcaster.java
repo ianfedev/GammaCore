@@ -40,7 +40,7 @@ public class GammaACPunishmentBroadcaster implements ACPunishmentBroadcaster {
                         this.participantsProvider.getChannelParticipants().forEach((user) -> {
                             Player player = Bukkit.getPlayer(user.getUsername());
 
-                            if (player != null && user.hasAdminPunishmentsActive()) {
+                            if (player != null && user.getGameSettings().getAdminChat().hasActivePunishments()) {
 
                                 String message = "";
                                 message = message + ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "] " + ChatColor.RESET;

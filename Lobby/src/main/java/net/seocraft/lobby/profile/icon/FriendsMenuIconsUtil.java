@@ -112,12 +112,12 @@ public class FriendsMenuIconsUtil {
                         ChatColor.GOLD + friend.getLevel()
         );
 
-        if (friend.getLastSeen() == 0) {
-            if (friend.isShowingStatus()) {
+        if (friend.getSessionInfo().getLastSeen() == 0) {
+            if (friend.getGameSettings().getGeneral().isShowingStatus()) {
                 profileDisplay.add(
                         ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_status") + ": " +
                                 ChatColor.GREEN + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_logged")
-                                .replace("%%server%%", StringUtils.capitalizeString(friend.getLastGame().replace("_", " ")))
+                                .replace("%%server%%", StringUtils.capitalizeString(friend.getSessionInfo().getLastGame().replace("_", " ")))
                 );
             } else {
                 profileDisplay.add(
@@ -127,14 +127,14 @@ public class FriendsMenuIconsUtil {
             }
         } else {
             String base = ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_status") + ": " +
-                    ChatColor.RED + TimeUtils.formatAgoTimeInt((int) friend.getLastSeen(), user.getLanguage());
-            if (friend.isShowingStatus()) base = " "
+                    ChatColor.RED + TimeUtils.formatAgoTimeInt(friend.getSessionInfo().getLastSeen(), user.getLanguage());
+            if (friend.getGameSettings().getGeneral().isShowingStatus()) base = " "
                     + this.translatableField.getUnspacedField(
                             user.getLanguage(),
                     "commons_profile_friend_status"
             ).replace(
                     "%%game%%",
-                    friend.getLastGame().replace("_", " ")
+                    friend.getSessionInfo().getLastGame().replace("_", " ")
             ).toLowerCase();
             profileDisplay.add(base);
         }

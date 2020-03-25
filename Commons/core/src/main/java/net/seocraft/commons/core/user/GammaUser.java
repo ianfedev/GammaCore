@@ -2,99 +2,62 @@ package net.seocraft.commons.core.user;
 
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.user.User;
-import net.seocraft.api.core.user.partial.Disguise;
-import net.seocraft.api.core.user.partial.IPRecord;
+import net.seocraft.api.core.user.partial.*;
+import net.seocraft.api.core.user.partial.settings.GameSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GammaUser implements User {
 
     @NotNull private String id;
     @NotNull private String username;
+    @NotNull private String display;
     @Nullable private String email;
-    private List<Group> groups;
+    @NotNull private Set<GroupAssignation> groupAssignation;
     private String skin;
-    private long lastSeen;
-    private @NotNull String lastGame;
-    private @NotNull String lastLobby;
-    private long memberSince;
+    @NotNull private SessionInfo sessionInfo;
     private boolean verified;
     private int level;
     private long experience;
     private List<IPRecord> ipRecord;
-    private boolean premium;
-    private boolean disguised;
-    @Nullable private String disguiseName;
-    @Nullable private Group disguiseGroup;
-    @Nullable private List<Disguise> disguiseHistory;
     @NotNull private String language;
-    @Nullable private String publicEmail;
-    @Nullable private String twitter;
-    @Nullable private String reddit;
-    @Nullable private String steam;
-    @Nullable private String twitch;
-    private boolean adminChatActive;
-    private boolean adminLogsActive;
-    private boolean adminPunishmentsActive;
-    private boolean acceptFriends;
-    private boolean acceptParties;
-    private boolean showStatus;
-    private boolean hiding;
+    @NotNull private PublicInfo publicInfo;
+    @NotNull private GameSettings gameSettings;
+    private long memberSince;
 
     @ConstructorProperties({
-            "_id", "username", "email", "group", "skin",
-            "last_seen", "last_game", "last_lobby", "member_since",
-            "verified", "level", "experience", "used_ips", "premium",
-            "disguised", "disguise_actual", "disguise_group",
-            "disguise_history", "language", "public_email",
-            "twitter", "reddit", "steam", "twitch", "ac_active",
-            "ac_logs", "ac_punishments", "accept_friends",
-            "accept_parties", "show_status", "hiding_players"
+            "_id", "username", "display", "email",
+            "groups", "skin", "session",
+            "verified", "level", "experience", "address", "language",
+            "publicInfo", "settings", "createdAt"
     })
     public GammaUser(
-            @NotNull String id, @NotNull String username, @Nullable String email, List<Group> groups, String skin,
-            long lastSeen, @NotNull String lastGame, @NotNull String lastLobby, long memberSince, boolean verified,
-            int level, long experience, List<IPRecord> ipRecord, boolean premium, boolean disguised,
-            @Nullable String disguiseName, @Nullable Group disguiseGroup, @Nullable List<Disguise> disguiseHistory,
-            @NotNull String language, @NotNull String publicEmail, @NotNull String twitter, @NotNull String reddit,
-            @NotNull String steam, @NotNull String twitch, boolean adminChatActive, boolean adminLogsActive,
-            boolean adminPunishmentsActive, boolean acceptFriends, boolean acceptParties, boolean showStatus,
-            boolean hiding
+            @NotNull String id, @NotNull String username, @NotNull String display, @Nullable String email,
+            @NotNull Set<GroupAssignation> groupAssignation, String skin, @NotNull SessionInfo sessionInfo,
+            boolean verified, int level, long experience, List<IPRecord> ipRecord, @NotNull String language,
+            @NotNull PublicInfo publicInfo, @NotNull GameSettings gameSettings, long memberSince
     ) {
         this.id = id;
         this.username = username;
+        this.display = display;
         this.email = email;
-        this.groups = groups;
+        this.groupAssignation = groupAssignation;
         this.skin = skin;
-        this.lastSeen = lastSeen;
-        this.lastGame = lastGame;
-        this.lastLobby = lastLobby;
-        this.memberSince = memberSince;
+        this.sessionInfo = sessionInfo;
         this.verified = verified;
         this.level = level;
         this.experience = experience;
-        this.premium = premium;
         this.ipRecord = ipRecord;
-        this.disguised = disguised;
-        this.disguiseName = disguiseName;
-        this.disguiseGroup = disguiseGroup;
-        this.disguiseHistory = disguiseHistory;
         this.language = language;
-        this.publicEmail = publicEmail;
-        this.twitch = twitter;
-        this.reddit = reddit;
-        this.steam = steam;
-        this.twitch = twitch;
-        this.adminChatActive = adminChatActive;
-        this.adminLogsActive = adminLogsActive;
-        this.adminPunishmentsActive = adminPunishmentsActive;
-        this.acceptFriends = acceptFriends;
-        this.acceptParties = acceptParties;
-        this.showStatus = showStatus;
-        this.hiding = hiding;
+        this.publicInfo = publicInfo;
+        this.gameSettings = gameSettings;
+        this.memberSince = memberSince;
     }
 
     @NotNull
@@ -108,30 +71,27 @@ public class GammaUser implements User {
     }
 
     @Override
+    public @NotNull String getDisplay() {
+        return this.display;
+    }
+
+    @Override
     public @Nullable String getEmail() {
         return this.email;
     }
 
     @Override
-    public @NotNull List<Group> getGroups() {
-        return this.groups;
-    }
-
-    @Override
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
+    public @NotNull Set<GroupAssignation> getGroupAssignation() {
+        return this.groupAssignation;
     }
 
     @Override
     public @NotNull Group getPrimaryGroup() {
-        Group primaryGroup = null;
-        for (Group group: getGroups()) {
-            if (
-                    (primaryGroup != null && group.getPriority() < primaryGroup.getPriority()) ||
-                    (group.getPriority() < 99999999)
-            ) primaryGroup = group;
+        List<Group> groups = this.groupAssignation.stream().map(GroupAssignation::getGroup).collect(Collectors.toList());
+        Group primaryGroup = groups.get(0);
+        for (Group group: groups) {
+            if ((group.getPriority() < primaryGroup.getPriority())) primaryGroup = group;
         }
-        if (primaryGroup == null) primaryGroup = getGroups().get(0);
         return primaryGroup;
     }
 
@@ -146,18 +106,8 @@ public class GammaUser implements User {
     }
 
     @Override
-    public long getLastSeen() {
-        return this.lastSeen;
-    }
-
-    @Override
-    public @NotNull String getLastGame() {
-        return this.lastGame;
-    }
-
-    @Override
-    public @NotNull String getLastLobby() {
-        return this.lastLobby;
+    public @NotNull SessionInfo getSessionInfo() {
+        return this.sessionInfo;
     }
 
     @Override
@@ -168,16 +118,6 @@ public class GammaUser implements User {
     @Override
     public boolean isVerified() {
         return this.verified;
-    }
-
-    @Override
-    public boolean isPremium() {
-        return this.premium;
-    }
-
-    @Override
-    public void setPremium(boolean premium) {
-        this.premium = premium;
     }
 
     @Override
@@ -211,41 +151,6 @@ public class GammaUser implements User {
     }
 
     @Override
-    public boolean isDisguised() {
-        return this.disguised;
-    }
-
-    @Override
-    public void setDisguised(boolean disguised) {
-        this.disguised = disguised;
-    }
-
-    @Override
-    public @Nullable String getDisguiseName() {
-        return this.disguiseName;
-    }
-
-    @Override
-    public void setDisguiseName(@NotNull String name) {
-        this.disguiseName = name;
-    }
-
-    @Override
-    public @Nullable Group getDisguiseGroup() {
-        return disguiseGroup;
-    }
-
-    @Override
-    public void setDisguiseGroup(@NotNull Group group) {
-        this.disguiseGroup = group;
-    }
-
-    @Override
-    public @Nullable List<Disguise> getDisguiseHistory() {
-        return this.disguiseHistory;
-    }
-
-    @Override
     public @NotNull String getLanguage() {
         return this.language;
     }
@@ -256,114 +161,13 @@ public class GammaUser implements User {
     }
 
     @Override
-    public @Nullable String getPublicEmail() {
-        return this.publicEmail;
+    public @NotNull PublicInfo getPublicInfo() {
+        return this.publicInfo;
     }
 
     @Override
-    public void setPublicEmail(@NotNull String email) {
-        this.publicEmail = email;
-    }
-
-    @Override
-    public @Nullable String getTwitter() {
-        return this.twitter;
-    }
-
-    @Override
-    public void setTwitter(@NotNull String twitter) {
-        this.twitter = twitter;
-    }
-
-    @Override
-    public @Nullable String getReddit() {
-        return this.reddit;
-    }
-
-    @Override
-    public void setReddit(@NotNull String reddit) {
-        this.reddit = reddit;
-    }
-
-    @Override
-    public @Nullable String getSteam() {
-        return this.steam;
-    }
-
-    @Override
-    public void setSteam(@NotNull String steam) {
-        this.steam = steam;
-    }
-
-    @Override
-    public @Nullable String getTwitch() {
-        return this.twitch;
-    }
-
-    @Override
-    public void setTwitch(@NotNull String twitch) {
-        this.twitch = twitch;
-    }
-
-    @Override
-    public boolean hasAdminChatActive() {
-        return this.adminChatActive;
-    }
-
-    @Override
-    public boolean hasAdminLogsActive() {
-        return this.adminLogsActive;
-    }
-
-    @Override
-    public boolean hasAdminPunishmentsActive() {
-        return this.adminPunishmentsActive;
-    }
-
-    @Override
-    public void setAdminChatActive(boolean accept) {
-        this.adminChatActive = accept;
-    }
-
-    @Override
-    public void setAdminLogsActive(boolean accept) {
-        this.adminLogsActive = accept;
-    }
-
-    @Override
-    public void setAdminPunishmentsActive(boolean accept) {
-        this.adminPunishmentsActive = accept;
-    }
-
-
-    @Override
-    public boolean isAcceptingFriends() {
-        return this.acceptFriends;
-    }
-
-    @Override
-    public void setAcceptingFriends(boolean accept) {
-        this.acceptFriends = accept;
-    }
-
-    @Override
-    public boolean isAcceptingParties() {
-        return acceptParties;
-    }
-
-    @Override
-    public boolean isShowingStatus() {
-        return showStatus;
-    }
-
-    @Override
-    public boolean isHiding() {
-        return this.hiding;
-    }
-
-    @Override
-    public void setHiding(boolean hiding) {
-        this.hiding = hiding;
+    public @NotNull GameSettings getGameSettings() {
+        return this.gameSettings;
     }
 
 }

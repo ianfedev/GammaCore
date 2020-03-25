@@ -33,7 +33,7 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
             Player player = Bukkit.getPlayer(user.getUsername());
 
             if (player != null) {
-                if (user.hasAdminChatActive() && !important) {
+                if (user.getGameSettings().getAdminChat().isActive() && !important) {
 
                     player.sendMessage(
                             ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +
@@ -63,7 +63,7 @@ public class GammaACLoginBroadcaster implements ACLoginBroadcaster {
             Player player = Bukkit.getPlayer(user.getUsername());
 
             if (player != null) {
-                if (user.hasAdminLogsActive() && !important) {
+                if (user.getGameSettings().getAdminChat().hasActiveLogs() && !important) {
 
                     player.sendMessage(
                             ChatColor.AQUA + "[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_prefix").toUpperCase() + "]" +

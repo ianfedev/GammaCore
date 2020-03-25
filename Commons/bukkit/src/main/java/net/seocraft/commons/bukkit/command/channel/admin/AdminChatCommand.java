@@ -72,7 +72,7 @@ public class AdminChatCommand extends AbstractAdvancedCommand {
                         return;
                     }
 
-                    if (!user.hasAdminChatActive()) {
+                    if (!user.getGameSettings().getAdminChat().isActive()) {
                         TextComponent disabled = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_disabled") + ". ");
                         disabled.setColor(ChatColor.RED);
                         TextComponent hover = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_ac_reminder_click"));

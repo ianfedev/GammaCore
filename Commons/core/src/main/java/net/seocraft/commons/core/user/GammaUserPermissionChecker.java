@@ -8,6 +8,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserPermissionChecker;
 import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.api.core.user.partial.GroupAssignation;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class GammaUserPermissionChecker implements UserPermissionChecker {
     }
 
     private Set<String> getFlattenPermissions(User user) {
-        return user.getGroups().stream().flatMap(group -> group.getPermissions().stream()).collect(Collectors.toSet());
+        return user.getGroupAssignation().stream().map(GroupAssignation::getGroup).flatMap(group -> group.getPermissions().stream()).collect(Collectors.toSet());
     }
 
 }

@@ -13,7 +13,7 @@ class ACMenuOptions {
 
     static @NotNull ItemStack getChatOption(@NotNull TranslatableField field, @NotNull User user) {
         ItemStack chatSelector;
-        if (!user.hasAdminChatActive()) {
+        if (!user.getGameSettings().getAdminChat().isActive()) {
             chatSelector =  NBTTagHandler.addString(
                     new ItemStack(Material.INK_SACK, 1, (short) 8),
                     "ac_selector",
@@ -28,14 +28,14 @@ class ACMenuOptions {
         }
         ItemMeta selectorMeta = chatSelector.getItemMeta();
         selectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
-        if (!user.hasAdminChatActive()) selectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
+        if (!user.getGameSettings().getAdminChat().isActive()) selectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
         chatSelector.setItemMeta(selectorMeta);
         return chatSelector;
     }
 
     static @NotNull ItemStack getLogsOption(@NotNull TranslatableField field, @NotNull User user) {
         ItemStack logsSelector;
-        if (!user.hasAdminLogsActive()) {
+        if (!user.getGameSettings().getAdminChat().hasActiveLogs()) {
             logsSelector =  NBTTagHandler.addString(
                     new ItemStack(Material.INK_SACK, 1, (short) 8),
                     "ac_selector",
@@ -50,14 +50,14 @@ class ACMenuOptions {
         }
         ItemMeta logsSelectorMeta = logsSelector.getItemMeta();
         logsSelectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
-        if (!user.hasAdminLogsActive()) logsSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
+        if (!user.getGameSettings().getAdminChat().hasActiveLogs()) logsSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
         logsSelector.setItemMeta(logsSelectorMeta);
         return logsSelector;
     }
 
     static @NotNull ItemStack getPunishmentOption(@NotNull TranslatableField field, @NotNull User user) {
         ItemStack punishmentSelector;
-        if (!user.hasAdminPunishmentsActive()) {
+        if (!user.getGameSettings().getAdminChat().hasActivePunishments()) {
             punishmentSelector =  NBTTagHandler.addString(
                     new ItemStack(Material.INK_SACK, 1, (short) 8),
                     "ac_selector",
@@ -72,7 +72,7 @@ class ACMenuOptions {
         }
         ItemMeta punishmentSelectorMeta = punishmentSelector.getItemMeta();
         punishmentSelectorMeta.setDisplayName(ChatColor.RED + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_deactivate"));
-        if (!user.hasAdminPunishmentsActive()) punishmentSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
+        if (!user.getGameSettings().getAdminChat().hasActivePunishments()) punishmentSelectorMeta.setDisplayName(ChatColor.GREEN + field.getUnspacedField(user.getLanguage(), "commons_ac_menu_activate"));
         punishmentSelector.setItemMeta(punishmentSelectorMeta);
         return punishmentSelector;
     }

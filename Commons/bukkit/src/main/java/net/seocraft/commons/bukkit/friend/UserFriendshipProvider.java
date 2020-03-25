@@ -171,7 +171,7 @@ public class UserFriendshipProvider implements FriendshipProvider {
 
     @Override
     public void toggleFriendRequests(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError, JsonProcessingException {
-        user.setAcceptingFriends(!user.isAcceptingFriends());
+        user.getGameSettings().getGeneral().setAcceptingFriends(!user.getGameSettings().getGeneral().isAcceptingFriends());
         this.userStorageProvider.updateUser(user);
     }
 

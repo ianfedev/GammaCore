@@ -24,7 +24,7 @@ public class HidingGadgetCommand implements CommandClass {
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
                 if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                     User user = userAsyncResponse.getResponse();
-                    if (user.isHiding()) {
+                    if (user.getGameSettings().getGeneral().isHidingPlayers()) {
                         this.hidingGadgetManager.disableHiding(player);
                     } else {
                         this.hidingGadgetManager.enableHiding(player);

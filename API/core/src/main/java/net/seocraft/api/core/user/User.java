@@ -4,23 +4,24 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.group.Group;
 import net.seocraft.api.core.storage.Model;
-import net.seocraft.api.core.user.partial.Disguise;
-import net.seocraft.api.core.user.partial.IPRecord;
+import net.seocraft.api.core.user.partial.*;
+import net.seocraft.api.core.user.partial.settings.GameSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 public interface User extends Model {
 
     @NotNull String getUsername();
 
+    @NotNull String getDisplay();
+
     @Nullable String getEmail();
 
-    @JsonProperty("group")
-    @NotNull List<Group> getGroups();
-
-    void setGroups(List<Group> groups);
+    @JsonProperty("groups")
+    @NotNull Set<GroupAssignation> getGroupAssignation();
 
     @JsonIgnore
     @NotNull Group getPrimaryGroup();
@@ -29,23 +30,9 @@ public interface User extends Model {
 
     void setSkin(@NotNull String skin);
 
-    @JsonProperty("last_seen")
-    long getLastSeen();
-
-    @JsonProperty("last_game")
-    @NotNull String getLastGame();
-
-    @JsonProperty("last_lobby")
-    @NotNull String getLastLobby();
-
-    @JsonProperty("member_since")
-    long getMemberSince();
+    @NotNull SessionInfo getSessionInfo();
 
     boolean isVerified();
-
-    boolean isPremium();
-
-    void setPremium(boolean premium);
 
     void setVerified(boolean verified);
 
@@ -59,87 +46,18 @@ public interface User extends Model {
     @JsonIgnore
     void removeExperience(long experience);
 
-    @JsonProperty("used_ips")
+    @JsonProperty("address")
     @NotNull List<IPRecord> getUsedIp();
-
-    boolean isDisguised();
-
-    void setDisguised(boolean disguised);
-
-    @JsonProperty("disguise_actual")
-    @Nullable String getDisguiseName();
-
-    void setDisguiseName(@NotNull String name);
-
-    @JsonProperty("disguise_group")
-    @Nullable Group getDisguiseGroup();
-
-    @JsonProperty("disguise_group")
-    void setDisguiseGroup(@NotNull Group group);
-
-    @JsonProperty("disguise_history")
-    @Nullable List<Disguise> getDisguiseHistory();
 
     @NotNull String getLanguage();
 
     void setLanguage(@NotNull String language);
 
-    @JsonProperty("public_email")
-    @Nullable String getPublicEmail();
+    @NotNull PublicInfo getPublicInfo();
 
-    @JsonProperty("public_email")
-    void setPublicEmail(@NotNull String email);
+    @NotNull GameSettings getGameSettings();
 
-    @Nullable String getTwitter();
-
-    void setTwitter(@NotNull String twitter);
-
-    @Nullable String getReddit();
-
-    void setReddit(@NotNull String reddit);
-
-    @Nullable String getSteam();
-
-    void setSteam(@NotNull String steam);
-
-    @Nullable String getTwitch();
-
-    void setTwitch(@NotNull String twitch);
-
-    @JsonProperty("ac_active")
-    boolean hasAdminChatActive();
-
-    @JsonProperty("ac_logs")
-    boolean hasAdminLogsActive();
-
-    @JsonProperty("ac_punishments")
-    boolean hasAdminPunishmentsActive();
-
-    @JsonProperty("ac_active")
-    void setAdminChatActive(boolean accept);
-
-    @JsonProperty("ac_logs")
-    void setAdminLogsActive(boolean accept);
-
-    @JsonProperty("ac_punishments")
-    void setAdminPunishmentsActive(boolean accept);
-
-    @JsonProperty("accept_friends")
-    boolean isAcceptingFriends();
-
-    @JsonProperty("accept_friends")
-    void setAcceptingFriends(boolean accept);
-
-    @JsonProperty("accept_parties")
-    boolean isAcceptingParties();
-
-    @JsonProperty("show_status")
-    boolean isShowingStatus();
-
-    @JsonProperty("hiding_players")
-    boolean isHiding();
-
-    @JsonProperty("hiding_players")
-    void setHiding(boolean hiding);
+    @JsonProperty("createdAt")
+    long getMemberSince();
 
 }

@@ -36,7 +36,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
                 if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
-                user.setHiding(true);
+                user.getGameSettings().getGeneral().setHidingPlayers(true);
                 try {
                     this.userStorageProvider.updateUser(user);
                     Bukkit.getOnlinePlayers().forEach(onlinePlayer ->  {
@@ -84,7 +84,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                 User user = userAsyncResponse.getResponse();
                 if (checkCooldownStatus(user.getLanguage(), user.getId(), player)) return;
-                user.setHiding(false);
+                user.getGameSettings().getGeneral().setHidingPlayers(false);
                 try {
                     this.userStorageProvider.updateUser(user);
                     Bukkit.getOnlinePlayers().forEach(playerQuery -> {
@@ -126,7 +126,7 @@ public class LobbyHidingGadget implements HidingGadgetManager {
                 1,
                 this.hotbarItemCollection.getHidingGadget(
                         user.getLanguage(),
-                        user.isHiding()
+                        user.getGameSettings().getGeneral().isHidingPlayers()
                 )
         );
     }
