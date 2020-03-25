@@ -55,6 +55,7 @@ public interface User extends Model {
 
     @NotNull PublicInfo getPublicInfo();
 
+    @JsonProperty("settings")
     @NotNull GameSettings getGameSettings();
 
     @JsonProperty("createdAt")
