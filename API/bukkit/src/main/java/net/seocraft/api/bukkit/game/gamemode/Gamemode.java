@@ -43,7 +43,7 @@ public interface Gamemode extends Model {
      * @see SubGamemode
      * @return Set of SubGamemodes which can be played.
      **/
-    @JsonProperty("sub_types")
+    @JsonProperty("subTypes")
     @NotNull Set<SubGamemode> getSubGamemodes();
 
     /**

@@ -19,7 +19,7 @@ public class CoreGamemode implements Gamemode {
     private int navigatorSlot;
     @NotNull private Set<SubGamemode> subGamemodes;
 
-    @ConstructorProperties({"_id", "name", "scoreboard", "lobby", "navigator", "slot", "sub_types"})
+    @ConstructorProperties({"_id", "name", "scoreboard", "lobby", "navigator", "slot", "subTypes"})
     public CoreGamemode(@NotNull String id, @NotNull String name, @NotNull String scoreboard, @NotNull String lobbyGroup, @NotNull String navigatorIcon, int navigatorSlot, @NotNull Set<SubGamemode> subGamemodes) {
         this.id = id;
         this.name = name;

@@ -18,7 +18,7 @@ public class CoreSubGamemode implements SubGamemode {
     @NotNull private String permission;
     @NotNull private String serverGroup;
 
-    @ConstructorProperties({"_id", "name", "scoreboard", "selectable_map", "min_players", "max_players", "permission", "group"})
+    @ConstructorProperties({"_id", "name", "scoreboard", "selectableMap", "minPlayers", "maxPlayers", "permission", "group"})
     public CoreSubGamemode(@NotNull String id, @NotNull String name, @NotNull String scoreboard, boolean selectMap, int minPlayers, int maxPlayers, @NotNull String permission, @NotNull String serverGroup) {
         this.id = id;
         this.name = name;
