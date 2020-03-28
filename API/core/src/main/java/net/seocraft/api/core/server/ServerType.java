@@ -3,12 +3,12 @@ package net.seocraft.api.core.server;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum ServerType {
-    @JsonProperty("lobby")
+    @JsonProperty("Lobby")
     LOBBY,
-    @JsonProperty("game")
+    @JsonProperty("Game")
     GAME,
-    @JsonProperty("special")
+    @JsonProperty("Special")
     SPECIAL,
-    @JsonProperty("bungee")
+    @JsonProperty("Bungee")
     BUNGEE
 }

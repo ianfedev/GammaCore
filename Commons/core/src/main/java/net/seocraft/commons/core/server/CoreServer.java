@@ -24,7 +24,7 @@ public class CoreServer implements Server {
     @NotNull private String cluster;
     @NotNull private Set<String> matches;
 
-    @ConstructorProperties({"_id", "slug", "type", "gamemode", "sub_gamemode", "max_running", "max_total", "started_at", "players", "cluster", "matches"})
+    @ConstructorProperties({"_id", "slug", "type", "gamemode", "subGamemode", "maxRunning", "maxTotal", "createdAt", "players", "cluster", "matches"})
     public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull Set<String> onlinePlayers, @NotNull String cluster, @NotNull Set<String> matches) {
         this.id = id;
         this.slug = slug;

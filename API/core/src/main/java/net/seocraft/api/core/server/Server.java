@@ -17,19 +17,19 @@ public interface Server extends Model {
 
     @Nullable String getGamemode();
 
-    @JsonProperty("sub_gamemode")
+    @JsonProperty("subGamemode")
     @Nullable String getSubGamemode();
 
-    @JsonProperty("max_running")
+    @JsonProperty("maxRunning")
     int getMaxRunning();
 
-    @JsonProperty("max_total")
+    @JsonProperty("maxTotal")
     int getMaxTotal();
 
     @JsonIgnore
     int getPlayedMatches();
 
-    @JsonProperty("started_at")
+    @JsonProperty("startedAt")
     long getStartedAt();
 
     @JsonProperty("players")
