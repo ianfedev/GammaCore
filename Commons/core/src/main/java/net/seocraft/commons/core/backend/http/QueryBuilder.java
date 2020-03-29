@@ -15,13 +15,14 @@ public class QueryBuilder {
         this.config = config;
     }
 
-    URI getURI(String url, Map<String, String> params) {
+    URI getURI(String url, Map<String, String> params, boolean epsilon) {
         try {
             URIBuilder uri = new URIBuilder()
                     .setScheme("https")
                     .setHost(this.config.getHost())
                     //.setPort(this.config.getPort())
                     .setPath(this.config.getSuffix() + "/" + url);
+            if (epsilon) uri.setHost(this.config.getEpsilon());
             for (Map.Entry<String, String> entry: params.entrySet()) {
                 uri.setParameter(entry.getKey(), entry.getValue());
             }

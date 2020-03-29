@@ -14,6 +14,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.server.ServerType;
+import net.seocraft.api.core.session.MinecraftSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
@@ -45,57 +46,26 @@ public class UserDisconnectListener implements Listener {
         Set<Hologram> playerHolograms = new HashSet<>(player.getLinkedHolograms());
         playerHolograms.forEach(Hologram::destroy);
         this.packetManager.uninjectPlayer(event.getPlayer());
-        CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(event.getPlayer().getName()), userAsyncResponse -> {
-            boolean disconnection = false;
-            while (!disconnection) {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                    Server updatableRecord = this.commonsBukkit.getServerRecord();
-                    User user = userAsyncResponse.getResponse();
-
-                    updatableRecord.getOnlinePlayers().remove(user.getId());
-                    try {
-                        this.serverManager.updateServer(updatableRecord);
-                        this.commonsBukkit.setServerRecord(updatableRecord);
-
-                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
-                            Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
-
-                            if (playerMatch != null) {
-                                this.gameLoginManager.matchPlayerLeave(
-                                        playerMatch,
-                                        user,
-                                        player
-                                );
-                            }
-                        }
-                        disconnection = true;
-                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException error) {
-                        Bukkit.getLogger().log(Level.SEVERE, "[Commons] Error logging out player from server. ({0})", error.getMessage());
-                    }
-                } else {
-                    try {
-                        User user = this.userStorageProvider.findUserByNameSync(event.getPlayer().getName());
-                        Server updatableRecord = this.commonsBukkit.getServerRecord();
-                        updatableRecord.getOnlinePlayers().remove(user.getId());
-                        this.serverManager.updateServer(updatableRecord);
-                        this.commonsBukkit.setServerRecord(updatableRecord);
-
-                        if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
-                            Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
-
-                            if (playerMatch != null) {
-                                this.gameLoginManager.matchPlayerLeave(
-                                        playerMatch,
-                                        user,
-                                        player
-                                );
-                            }
-                        }
-                        disconnection = true;
-                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ignore) {}
+        try {
+            User user = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
+            Server updatableRecord = this.commonsBukkit.getServerRecord();
+            updatableRecord.getOnlinePlayers().remove(user.getId());
+            this.serverManager.updateServer(updatableRecord);
+            if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
+                Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
+                if (playerMatch != null) {
+                    this.gameLoginManager.matchPlayerLeave(
+                            playerMatch,
+                            user,
+                            player
+                    );
                 }
             }
-        });
+
+        } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
+            unauthorized.printStackTrace();
+        }
+
     }
 
 }

@@ -15,7 +15,7 @@ public class BungeeTokenQuery implements ServerTokenQuery {
 
     @Override
     public @NotNull String getToken() {
-        return this.redis.getHashFields("authorization").get(this.instance.getServerRecord().getId());
+        return "Bearer " + this.redis.getHashFields("authorization").get(this.instance.getServerRecord().getId());
     }
 
 }

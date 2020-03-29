@@ -10,7 +10,7 @@ import net.seocraft.commons.core.backend.http.HttpType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserAccessRequest extends HttpRequest {
+public class UserSwitchRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
     private String body;
@@ -24,19 +24,19 @@ public class UserAccessRequest extends HttpRequest {
         return HttpType.POST;
     }
 
-    public String getURL() {
-        return "user/access";
-    }
-
     @Override
     public String getJSONParams() {
-        return body;
+        return this.body;
+    }
+
+    public String getURL() {
+        return "session/server-switch";
     }
 
     public String executeRequest(String request, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = request;
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 
 }

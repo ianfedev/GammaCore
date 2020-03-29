@@ -26,7 +26,7 @@ public class UserUpdateRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "user/update-server/" + this.id;
+        return "users/update-game/" + this.id;
     }
 
     @Override
@@ -38,6 +38,6 @@ public class UserUpdateRequest extends HttpRequest {
         this.headers.put("authorization", token);
         this.id = id;
         this.body = user;
-        return getResponse();
+        return getEpsilonResponse();
     }
 }

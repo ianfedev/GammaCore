@@ -52,7 +52,6 @@ public class LobbyConnectionListener implements Listener {
     public void lobbyConnectionListener(LobbyConnectionEvent event) {
         Player player = event.getPlayer();
         User playerRecord = event.getPlayerRecord();
-
         this.teleportManager.spawnTeleport(player, null, true);
         this.hologramManager.showSelectorHologram(playerRecord);
 

@@ -42,7 +42,7 @@ public abstract class HttpRequest implements IHttpRequest {
         return "";
     }
 
-    protected String getResponse() throws BadRequest, Unauthorized, NotFound, InternalServerError {
+    private String getFinalResponse(boolean epsilon) throws BadRequest, Unauthorized, NotFound, InternalServerError {
         String response = "";
 
         TrustStrategy trustStrategy = (chain, authType) -> {
@@ -52,7 +52,9 @@ public abstract class HttpRequest implements IHttpRequest {
             return false;
         };
 
-        URI url = this.builder.getURI(getURL(), getQueryStrings());
+
+
+        URI url = this.builder.getURI(getURL(), getQueryStrings(), epsilon);
         ResponseHandler<String> handler = handleResponse();
         HttpResponse http_response = null;
         try {
@@ -98,6 +100,14 @@ public abstract class HttpRequest implements IHttpRequest {
             case 500: throw new InternalServerError(response);
         }
         return response;
+    }
+
+    protected String getResponse() throws BadRequest, Unauthorized, NotFound, InternalServerError {
+        return getFinalResponse(false);
+    }
+
+    protected String getEpsilonResponse() throws BadRequest, Unauthorized, NotFound, InternalServerError {
+        return getFinalResponse(true);
     }
 
     private ResponseHandler<String> handleResponse() {

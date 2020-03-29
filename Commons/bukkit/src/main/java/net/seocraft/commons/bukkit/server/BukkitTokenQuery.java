@@ -14,6 +14,6 @@ public class BukkitTokenQuery implements ServerTokenQuery {
     @Inject private RedisClient redis;
 
     public @NotNull String getToken() {
-        return this.redis.getHashFields("authorization").get(this.instance.getServerRecord().getId());
+        return "Bearer " + this.redis.getHashFields("authorization").get(this.instance.getServerRecord().getId());
     }
 }

@@ -6,18 +6,18 @@ import com.google.inject.Singleton;
 class HttpConfig {
 
     private final String host = "api.seocraft.net";
-    private final Integer port = 3800;
+    private final String epsilon = "epsilon.seocraft.net";
     private final String suffix = "api";
 
     public String getHost() {
         return host;
     }
 
-    public Integer getPort() {
-        return port;
-    }
-
     public String getSuffix() {
         return suffix;
+    }
+
+    public String getEpsilon() {
+        return epsilon;
     }
 }

@@ -10,10 +10,11 @@ import net.seocraft.commons.core.backend.http.HttpType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserGetRequest extends HttpRequest {
+public class UserDisconnectRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
-    private String username;
+    private String body;
+    private String id;
 
     @Override
     public Map<String, String> getHeaders() {
@@ -25,11 +26,11 @@ public class UserGetRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "users/view-game/" + this.username;
+        return "session/user-disconnect/" + this.id;
     }
 
-    public String executeRequest(String username, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.username = username;
+    public String executeRequest(String id, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.id = id;
         this.headers.put("authorization", token);
         return getEpsilonResponse();
     }

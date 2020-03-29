@@ -29,6 +29,7 @@ public class UserPermissions extends PermissibleBase {
     UserPermissions(Player player, User user, UserPermissionChecker userPermissionChecker, TranslatableField translatableField) {
         super(player);
         this.player = player;
+        this.user = user;
         this.userPermissionChecker = userPermissionChecker;
         this.translatableField = translatableField;
     }

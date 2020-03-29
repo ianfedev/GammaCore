@@ -1,9 +1,6 @@
 package net.seocraft.commons.bukkit.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.event.GamePlayerJoinEvent;
@@ -17,16 +14,15 @@ import net.seocraft.api.core.online.OnlineStatusManager;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerManager;
-import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.api.core.server.ServerType;
+import net.seocraft.api.core.session.AuthValidation;
+import net.seocraft.api.core.session.MinecraftSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserPermissionChecker;
-import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLoginListener;
 import net.seocraft.commons.bukkit.punishment.PunishmentActions;
-import net.seocraft.commons.core.backend.user.UserAccessRequest;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -45,8 +41,6 @@ import java.util.logging.Level;
 public class UserJoinListener implements Listener {
 
     @Inject private ObjectMapper mapper;
-    @Inject private ServerTokenQuery serverTokenQuery;
-    @Inject private UserStorageProvider userStorageProvider;
     @Inject private PunishmentActions punishmentActions;
     @Inject private RedisClient redisClient;
     @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
@@ -56,9 +50,8 @@ public class UserJoinListener implements Listener {
     @Inject private ServerManager serverManager;
     @Inject private TranslatableField translatableField;
     @Inject private OnlineStatusManager onlineStatusManager;
+    @Inject private MinecraftSessionManager minecraftSessionManager;
     @Inject private CommonsBukkit instance;
-
-    @Inject private UserAccessRequest userAccessRequest;
     @Inject private PacketManager packetManager;
     private static Field playerField;
 
@@ -77,49 +70,38 @@ public class UserJoinListener implements Listener {
         this.packetManager.injectPlayer(event.getPlayer());
         try {
 
-            String request = generateRequestJSON(
+            AuthValidation validation = this.minecraftSessionManager.verifyAuthenticationSession(
                     player.getName(),
-                    player.getAddress().toString().split(":")[0].replace("/", ""),
-                    Bukkit.getServerName().split("-")[0]
+                    player.getAddress().toString().split(":")[0].replace("/", "")
             );
 
-            JsonNode response = this.mapper.readTree(
-                    this.userAccessRequest.executeRequest(
-                            request,
-                            this.serverTokenQuery.getToken()
-                    )
-            );
-
-            if (response.get("multi").asBoolean()) {
-                player.kickPlayer("multi");
+            if (validation.hasMultipleAccounts()) {
+                //TODO: Create multiaccount translation
+                player.kickPlayer(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
             } else {
 
-                String playerIdentifier = response.get("user").asText();
-                player.setDatabaseIdentifier(playerIdentifier);
-                User user = this.userStorageProvider.getCachedUserSync(playerIdentifier);
-                this.punishmentActions.checkBan(user);
-
-                this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), true);
-
-                playerField.set(player, new UserPermissions(player, user, userPermissionChecker, translatableField));
+                User validatedUser = validation.getValidatedUser();
+                player.setDatabaseIdentifier(validatedUser.getId());
+                this.punishmentActions.checkBan(validatedUser);
+                this.onlineStatusManager.setPlayerOnlineStatus(validatedUser.getId(), true);
+                playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
 
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     executeAuthenticationProcess(
                             player,
-                            user.getLanguage(),
-                            response.get("registered").asBoolean()
+                            validatedUser.getLanguage(),
+                            validation.isRegistered()
                     );
                     event.setJoinMessage("");
                 }
 
-                executeLobbyCheck(user, player, event);
-
+                executeLobbyCheck(validatedUser, player, event);
                 if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
-                    executeGameCheck(user, player);
+                    executeGameCheck(validatedUser, player);
                     event.setJoinMessage("");
                 }
-                updateServerRecord(playerIdentifier);
-
+                updateServerRecord(validatedUser.getId());
+                this.minecraftSessionManager.serverSwitch(validatedUser.getId(), Bukkit.getServerName().split("-")[0]);
             }
 
         } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest | IllegalAccessException error) {
@@ -128,14 +110,6 @@ public class UserJoinListener implements Listener {
                     new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
             error.printStackTrace();
         }
-    }
-
-    private @NotNull String generateRequestJSON(@NotNull String user, @NotNull String ip, @NotNull String game) throws JsonProcessingException {
-        ObjectNode node = mapper.createObjectNode();
-        node.put("username", user);
-        node.put("ip", ip);
-        node.put("game", game);
-        return mapper.writeValueAsString(node);
     }
 
     private void executeAuthenticationProcess(@NotNull Player player, @NotNull String language, boolean registered) {
@@ -160,12 +134,13 @@ public class UserJoinListener implements Listener {
         }
     }
 
-    private void executeLobbyCheck(@NotNull User user, @NotNull Player player, @NotNull PlayerJoinEvent event) {
+    private void executeLobbyCheck(@NotNull User user, @NotNull Player player, @NotNull PlayerJoinEvent event) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
         if (
                 this.instance.getServerRecord().getServerType() == ServerType.LOBBY &&
                         Bukkit.getPluginManager().getPlugin("Lobby") != null
         ) {
             event.setJoinMessage("");
+            this.minecraftSessionManager.serverSwitch(user.getId(), Bukkit.getServerName().split("-")[0]);
             Bukkit.getPluginManager().callEvent(new LobbyConnectionEvent(user, player));
         }
     }

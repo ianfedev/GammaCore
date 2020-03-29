@@ -13,6 +13,7 @@ import net.seocraft.commons.core.cooldown.CoreCooldownManager;
 import net.seocraft.commons.core.online.CraftOnlineStatusManager;
 import net.seocraft.commons.core.redis.RedisModule;
 import net.seocraft.commons.core.server.CoreServerManager;
+import net.seocraft.commons.core.session.SessionModule;
 import net.seocraft.commons.core.user.GammaUserPermissionChecker;
 import net.seocraft.commons.core.user.GammaUserStorageProvider;
 
@@ -24,6 +25,7 @@ public class CoreModule extends ProtectedModule {
     @Override
     protected void configure() {
         install(new RedisModule());
+        install(new SessionModule());
         bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8)));
         bind(ExecutorService.class).to(ListeningExecutorService.class);
         bind(CooldownManager.class).to(CoreCooldownManager.class);
