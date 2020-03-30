@@ -7,7 +7,7 @@ import java.beans.ConstructorProperties;
 
 public class UserSessionInfo implements SessionInfo {
 
-    private int lastSeen;
+    private long lastSeen;
     @NotNull private String lastGame;
     @NotNull private String lastLobby;
     private boolean premium;
@@ -18,7 +18,7 @@ public class UserSessionInfo implements SessionInfo {
             "lastLobby",
             "premium"
     })
-    public UserSessionInfo(int lastSeen, @NotNull String lastGame, @NotNull String lastLobby, boolean premium) {
+    public UserSessionInfo(long lastSeen, @NotNull String lastGame, @NotNull String lastLobby, boolean premium) {
         this.lastSeen = lastSeen;
         this.lastGame = lastGame;
         this.lastLobby = lastLobby;
@@ -26,12 +26,12 @@ public class UserSessionInfo implements SessionInfo {
     }
 
     @Override
-    public int getLastSeen() {
+    public long getLastSeen() {
         return this.lastSeen;
     }
 
     @Override
-    public void setLastSeen(int lastSeen) {
+    public void setLastSeen(long lastSeen) {
         this.lastSeen = lastSeen;
     }
 

@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface SessionInfo {
 
-    int getLastSeen();
+    long getLastSeen();
 
-    void setLastSeen(int lastSeen);
+    void setLastSeen(long lastSeen);
 
     @NotNull String getLastGame();
 
