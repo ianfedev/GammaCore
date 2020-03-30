@@ -25,11 +25,11 @@ public class ServerDisconnectRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "server/disconnect";
+        return "servers/disconnect";
     }
 
     public String executeRequest(@NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 }
