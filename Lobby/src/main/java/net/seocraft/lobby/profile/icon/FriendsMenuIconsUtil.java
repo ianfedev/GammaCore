@@ -127,7 +127,7 @@ public class FriendsMenuIconsUtil {
             }
         } else {
             String base = ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_status") + ": " +
-                    ChatColor.RED + TimeUtils.formatAgoTimeInt(friend.getSessionInfo().getLastSeen(), user.getLanguage());
+                    ChatColor.RED + "NaN";
             if (friend.getGameSettings().getGeneral().isShowingStatus()) base = " "
                     + this.translatableField.getUnspacedField(
                             user.getLanguage(),
