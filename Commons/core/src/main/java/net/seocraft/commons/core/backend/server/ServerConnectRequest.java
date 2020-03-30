@@ -25,7 +25,7 @@ public class ServerConnectRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "server/connect";
+        return "servers/connect";
     }
 
     @Override
@@ -35,6 +35,6 @@ public class ServerConnectRequest extends HttpRequest {
 
     public String executeRequest(String server) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = server;
-        return getResponse();
+        return getEpsilonResponse();
     }
 }
