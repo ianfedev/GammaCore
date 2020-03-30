@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -53,7 +54,7 @@ public class CoreServerManager implements ServerManager {
                     subGamemode,
                     maxRunning,
                     maxTotal,
-                    0,
+                    new Date(),
                     new HashSet<>(),
                     cluster,
                     new HashSet<>()
@@ -67,7 +68,7 @@ public class CoreServerManager implements ServerManager {
                     null,
                     maxRunning,
                     maxTotal,
-                    0,
+                    new Date(),
                     new HashSet<>(),
                     cluster,
                     new HashSet<>()
@@ -81,7 +82,7 @@ public class CoreServerManager implements ServerManager {
                     null,
                     maxRunning,
                     maxTotal,
-                    0,
+                    new Date(),
                     new HashSet<>(),
                     cluster,
                     new HashSet<>()
