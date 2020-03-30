@@ -3,10 +3,14 @@ package net.seocraft.commons.bukkit.serializer;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import net.seocraft.commons.bukkit.serializer.minecraft.*;
+import net.seocraft.commons.core.serializer.date.DateDeserializer;
+import net.seocraft.commons.core.serializer.date.DateSerializer;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Date;
 
 public class CustomSerializer {
 
@@ -20,6 +24,10 @@ public class CustomSerializer {
         module.addDeserializer(ItemMeta.class, new ItemMetaDeserializer());
         module.addSerializer(ItemStack.class, new ItemStackSerializer());
         module.addDeserializer(ItemStack.class, new ItemStackDeserializer());
+
+        module.addSerializer(Date.class, new DateSerializer());
+        module.addDeserializer(Date.class, new DateDeserializer());
+
         return module;
     }
 }

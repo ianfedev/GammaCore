@@ -1,17 +1,16 @@
 package net.seocraft.commons.core.server;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.server.ServerType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.beans.ConstructorProperties;
+import java.util.Date;
 import java.util.Set;
 
 public class CoreServer implements Server {
 
-    @JsonProperty("_id")
     @NotNull private String id;
     @NotNull private String slug;
     @NotNull private ServerType serverType;
@@ -19,13 +18,13 @@ public class CoreServer implements Server {
     @Nullable private String subGamemode;
     private int maxRunning;
     private int maxTotal;
-    private long startedAt;
+    @NotNull private Date startedAt;
     @NotNull private Set<String> onlinePlayers;
     @NotNull private String cluster;
     @NotNull private Set<String> matches;
 
     @ConstructorProperties({"_id", "slug", "type", "gamemode", "subGamemode", "maxRunning", "maxTotal", "createdAt", "players", "cluster", "matches"})
-    public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, long startedAt, @NotNull Set<String> onlinePlayers, @NotNull String cluster, @NotNull Set<String> matches) {
+    public CoreServer(@NotNull String id, @NotNull String slug, @NotNull ServerType serverType, @Nullable String gamemode, @Nullable String subGamemode, int maxRunning, int maxTotal, @NotNull Date startedAt, @NotNull Set<String> onlinePlayers, @NotNull String cluster, @NotNull Set<String> matches) {
         this.id = id;
         this.slug = slug;
         this.serverType = serverType;
@@ -80,7 +79,7 @@ public class CoreServer implements Server {
     }
 
     @Override
-    public long getStartedAt() {
+    public @NotNull Date getStartedAt() {
         return this.startedAt;
     }
 

@@ -29,7 +29,7 @@ public class GammaUser implements User {
     @NotNull private String language;
     @NotNull private PublicInfo publicInfo;
     @NotNull private GameSettings gameSettings;
-    private long memberSince;
+    @NotNull private Date memberSince;
 
     @ConstructorProperties({
             "_id", "username", "display", "email",
@@ -41,7 +41,7 @@ public class GammaUser implements User {
             @NotNull String id, @NotNull String username, @NotNull String display, @Nullable String email,
             @NotNull Set<GroupAssignation> groupAssignation, String skin, @NotNull SessionInfo sessionInfo,
             boolean verified, int level, long experience, List<IPRecord> ipRecord, @NotNull String language,
-            @NotNull PublicInfo publicInfo, @NotNull GameSettings gameSettings, long memberSince
+            @NotNull PublicInfo publicInfo, @NotNull GameSettings gameSettings, @NotNull Date memberSince
     ) {
         this.id = id;
         this.username = username;
@@ -111,7 +111,7 @@ public class GammaUser implements User {
     }
 
     @Override
-    public long getMemberSince() {
+    public @NotNull Date getMemberSince() {
         return this.memberSince;
     }
 
