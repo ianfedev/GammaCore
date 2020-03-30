@@ -574,7 +574,7 @@ public class FriendCommand implements CommandClass {
             }
             player.sendMessage(
                     this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
-                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getSessionInfo().getLastSeen()
+                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getSessionInfo().getLastGame()
             );
         });
         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());

@@ -112,7 +112,7 @@ public class FriendsMenuIconsUtil {
                         ChatColor.GOLD + friend.getLevel()
         );
 
-        if (friend.getSessionInfo().getLastSeen() == 0) {
+        if (friend.getSessionInfo().isOnline()) {
             if (friend.getGameSettings().getGeneral().isShowingStatus()) {
                 profileDisplay.add(
                         ChatColor.YELLOW + this.translatableField.getUnspacedField(user.getLanguage(), "commons_profile_status") + ": " +

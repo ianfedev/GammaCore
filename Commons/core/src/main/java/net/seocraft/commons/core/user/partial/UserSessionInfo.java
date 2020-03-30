@@ -4,10 +4,11 @@ import net.seocraft.api.core.user.partial.SessionInfo;
 import org.jetbrains.annotations.NotNull;
 
 import java.beans.ConstructorProperties;
+import java.util.Date;
 
 public class UserSessionInfo implements SessionInfo {
 
-    private long lastSeen;
+    @NotNull private Date lastSeen;
     private boolean online;
     @NotNull private String lastGame;
     @NotNull private String lastLobby;
@@ -20,7 +21,7 @@ public class UserSessionInfo implements SessionInfo {
             "lastLobby",
             "premium"
     })
-    public UserSessionInfo(long lastSeen, boolean online, @NotNull String lastGame, @NotNull String lastLobby, boolean premium) {
+    public UserSessionInfo(@NotNull Date lastSeen, boolean online, @NotNull String lastGame, @NotNull String lastLobby, boolean premium) {
         this.lastSeen = lastSeen;
         this.online = online;
         this.lastGame = lastGame;
@@ -29,12 +30,12 @@ public class UserSessionInfo implements SessionInfo {
     }
 
     @Override
-    public long getLastSeen() {
+    public @NotNull Date getLastSeen() {
         return this.lastSeen;
     }
 
     @Override
-    public void setLastSeen(long lastSeen) {
+    public void setLastSeen(@NotNull Date lastSeen) {
         this.lastSeen = lastSeen;
     }
 

@@ -2,11 +2,13 @@ package net.seocraft.api.core.user.partial;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Date;
+
 public interface SessionInfo {
 
-    long getLastSeen();
+    @NotNull Date getLastSeen();
 
-    void setLastSeen(long lastSeen);
+    void setLastSeen(@NotNull Date lastSeen);
 
     boolean isOnline();
 
