@@ -14,6 +14,7 @@ import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.server.ServerTokenQuery;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.commons.core.backend.user.UserFindByNameRequest;
 import net.seocraft.commons.core.backend.user.UserGetRequest;
 import net.seocraft.commons.core.backend.user.UserUpdateRequest;
 import org.jetbrains.annotations.NotNull;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class GammaUserStorageProvider implements UserStorageProvider {
 
     @Inject private UserGetRequest userGetRequest;
+    @Inject private UserFindByNameRequest userFindByNameRequest;
     @Inject private UserUpdateRequest userUpdateRequest;
     @Inject private ListeningExecutorService executorService;
     @Inject private ObjectMapper objectMapper;
@@ -70,7 +72,7 @@ public class GammaUserStorageProvider implements UserStorageProvider {
     @Override
     public @NotNull User findUserByNameSync(@NotNull String username) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         return this.objectMapper.readValue(
-                this.userGetRequest.executeRequest(username, this.tokenHandler.getToken()),
+                this.userFindByNameRequest.executeRequest(username, this.tokenHandler.getToken()),
                 User.class
         );
     }
