@@ -31,6 +31,7 @@ public class UserGetRequest extends HttpRequest {
     public String executeRequest(String username, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.username = username;
         this.headers.put("authorization", token);
+
         return getEpsilonResponse();
     }
 
