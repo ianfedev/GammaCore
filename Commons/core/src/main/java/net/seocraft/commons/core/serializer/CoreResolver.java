@@ -7,10 +7,7 @@ import net.seocraft.api.core.server.Server;
 import net.seocraft.api.core.session.AuthValidation;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserExpulsion;
-import net.seocraft.api.core.user.partial.Disguise;
-import net.seocraft.api.core.user.partial.GroupAssignation;
-import net.seocraft.api.core.user.partial.IPRecord;
-import net.seocraft.api.core.user.partial.SessionInfo;
+import net.seocraft.api.core.user.partial.*;
 import net.seocraft.api.core.user.partial.settings.GameSettings;
 import net.seocraft.api.core.user.partial.settings.partial.ACSettings;
 import net.seocraft.api.core.user.partial.settings.partial.GeneralSettings;
@@ -36,7 +33,7 @@ public class CoreResolver {
                 .addMapping(IPRecord.class, PlayerIP.class)
                 .addMapping(GroupAssignation.class, UserGroupAssignation.class)
                 .addMapping(SessionInfo.class, UserSessionInfo.class)
-                .addMapping(UserPublicInfo.class, UserPublicInfo.class)
+                .addMapping(PublicInfo.class, UserPublicInfo.class)
                 .addMapping(UserExpulsion.class, PlayerExpulsion.class)
                 .addMapping(ACSettings.class, UserACSettings.class)
                 .addMapping(GeneralSettings.class, UserGeneralSettings.class)
