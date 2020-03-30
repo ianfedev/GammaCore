@@ -8,18 +8,21 @@ import java.beans.ConstructorProperties;
 public class UserSessionInfo implements SessionInfo {
 
     private long lastSeen;
+    private boolean online;
     @NotNull private String lastGame;
     @NotNull private String lastLobby;
     private boolean premium;
 
     @ConstructorProperties({
             "lastSeen",
+            "online",
             "lastGame",
             "lastLobby",
             "premium"
     })
-    public UserSessionInfo(long lastSeen, @NotNull String lastGame, @NotNull String lastLobby, boolean premium) {
+    public UserSessionInfo(long lastSeen, boolean online, @NotNull String lastGame, @NotNull String lastLobby, boolean premium) {
         this.lastSeen = lastSeen;
+        this.online = online;
         this.lastGame = lastGame;
         this.lastLobby = lastLobby;
         this.premium = premium;
@@ -33,6 +36,11 @@ public class UserSessionInfo implements SessionInfo {
     @Override
     public void setLastSeen(long lastSeen) {
         this.lastSeen = lastSeen;
+    }
+
+    @Override
+    public boolean isOnline() {
+        return this.online;
     }
 
     @Override

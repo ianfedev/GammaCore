@@ -8,6 +8,8 @@ public interface SessionInfo {
 
     void setLastSeen(long lastSeen);
 
+    boolean isOnline();
+
     @NotNull String getLastGame();
 
     void setLastGame(@NotNull String lastGame);
