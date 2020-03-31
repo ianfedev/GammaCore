@@ -21,7 +21,7 @@ public class ServerDisconnectRequest extends HttpRequest {
     }
 
     public HttpType getType() {
-        return HttpType.DELETE;
+        return HttpType.GET;
     }
 
     public String getURL() {
