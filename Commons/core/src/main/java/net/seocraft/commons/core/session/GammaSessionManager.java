@@ -30,11 +30,12 @@ public class GammaSessionManager implements MinecraftSessionManager {
         ObjectNode mapper = this.mapper.createObjectNode();
         mapper.put("username", username);
         mapper.put("address", address);
+        String authSession = this.authenticationSessionRequest.executeRequest(
+                this.mapper.writeValueAsString(mapper),
+                this.serverTokenQuery.getToken()
+        );
         return this.mapper.readValue(
-                this.authenticationSessionRequest.executeRequest(
-                        this.mapper.writeValueAsString(mapper),
-                        this.serverTokenQuery.getToken()
-                ),
+                authSession,
                 AuthValidation.class
         );
     }
