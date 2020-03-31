@@ -10,7 +10,6 @@ public class ObjectWrapper<O> {
 
     @JsonCreator
     public ObjectWrapper(@JsonProperty("object") O object, @JsonProperty("serverSenderId") String serverSenderId) {
-        System.out.println(object.toString());
         this.object = object;
         this.serverSenderId = serverSenderId;
     }

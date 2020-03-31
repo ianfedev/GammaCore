@@ -17,9 +17,7 @@ import org.redisson.client.protocol.Decoder;
 import org.redisson.client.protocol.Encoder;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class RedissonJacksonCodec extends BaseCodec {
 
@@ -57,6 +55,15 @@ public class RedissonJacksonCodec extends BaseCodec {
     private final Decoder<Object> decoder = new Decoder<Object>() {
         @Override
         public Object decode(ByteBuf buf, State state) throws IOException {
+            InputStream stream = new ByteBufInputStream(buf);
+            InputStreamReader isReader = new InputStreamReader(stream);
+            BufferedReader reader = new BufferedReader(isReader);
+            StringBuffer sb = new StringBuffer();
+            String str;
+            while((str = reader.readLine())!= null){
+                sb.append(str);
+            }
+            System.out.println(sb.toString());
             return mapObjectMapper.readValue((InputStream) new ByteBufInputStream(buf), Object.class);
         }
     };
