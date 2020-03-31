@@ -70,14 +70,19 @@ public class UserJoinListener implements Listener {
         this.packetManager.injectPlayer(event.getPlayer());
         try {
 
+            System.out.println("Auth validation starting");
+
             AuthValidation validation = this.minecraftSessionManager.verifyAuthenticationSession(
                     player.getName(),
                     player.getAddress().toString().split(":")[0].replace("/", "")
             );
 
+            System.out.println("Auth validation finishing");
+
             if (validation.hasMultipleAccounts()) {
                 //TODO: Create multiaccount translation
                 player.kickPlayer(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
+                System.out.println("Multiiaccount test");
             } else {
 
                 User validatedUser = validation.getValidatedUser();
@@ -85,6 +90,8 @@ public class UserJoinListener implements Listener {
                 this.punishmentActions.checkBan(validatedUser);
                 this.onlineStatusManager.setPlayerOnlineStatus(validatedUser.getId(), true);
                 playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
+
+                System.out.println("Base test finished");
 
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
                     executeAuthenticationProcess(
@@ -94,14 +101,23 @@ public class UserJoinListener implements Listener {
                     );
                     event.setJoinMessage("");
                 }
+                System.out.println("Authentication finished");
+
 
                 executeLobbyCheck(validatedUser, player, event);
+
+                System.out.println("Lobbycheck finished");
                 if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
                     executeGameCheck(validatedUser, player);
                     event.setJoinMessage("");
                 }
+
+
+                System.out.println("Game finished");
                 updateServerRecord(validatedUser.getId());
                 this.minecraftSessionManager.serverSwitch(validatedUser.getId(), Bukkit.getServerName().split("-")[0]);
+
+                System.out.println("Switch finished");
             }
 
         } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest | IllegalAccessException error) {

@@ -81,7 +81,6 @@ public class GammaUserStorageProvider implements UserStorageProvider {
     public @NotNull User findUserByIdSync(@NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         try {
             String response = this.userGetRequest.executeRequest(id, this.tokenHandler.getToken());
-            System.out.println(response);
             User deserializeUser = this.objectMapper.readValue(
                     response,
                     User.class
