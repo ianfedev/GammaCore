@@ -30,12 +30,12 @@ public class UserLoginRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "user/login-server";
+        return "authentication/login-server";
     }
 
     public String executeRequest(String query, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = query;
         headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 }

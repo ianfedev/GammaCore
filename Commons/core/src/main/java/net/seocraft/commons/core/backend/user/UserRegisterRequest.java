@@ -30,12 +30,12 @@ public class UserRegisterRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "user/register";
+        return "authentication/register-server";
     }
 
     public String executeRequest(String query, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         headers.put("authorization", token);
         this.body = query;
-        return getResponse();
+        return getEpsilonResponse();
     }
 }

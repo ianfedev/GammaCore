@@ -45,7 +45,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
     @Inject private UserRegisterRequest userRegisterRequest;
 
     @Override
-    public void loginUser(@NotNull Player player, @NotNull String password) throws IOException {
+    public void loginUser(@NotNull Player player, @NotNull String password) {
         CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
@@ -87,7 +87,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
     }
 
     @Override
-    public void registerUser(@NotNull Player player, @NotNull String password) throws IOException {
+    public void registerUser(@NotNull Player player, @NotNull String password) {
         CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
 
             if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
@@ -180,7 +180,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
         ObjectNode node = mapper.createObjectNode();
         node.put("username", user);
         node.put("password", password);
-        node.put("ip", ip);
+        node.put("address", ip);
         return mapper.writeValueAsString(node);
     }
 
