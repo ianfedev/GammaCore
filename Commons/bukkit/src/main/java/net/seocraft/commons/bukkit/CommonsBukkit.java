@@ -180,8 +180,8 @@ public class CommonsBukkit extends JavaPlugin {
     public void onDisable() {
         try {
             this.serverLoad.disconnectServer();
-        } catch (Unauthorized | InternalServerError | NotFound | BadRequest unauthorized) {
-            Bukkit.getLogger().log(Level.SEVERE, "[Bukkit API] Error while shutting down server.");
+        } catch (Unauthorized | InternalServerError | NotFound | BadRequest ex) {
+            Bukkit.getLogger().log(Level.SEVERE, "[Bukkit API] Error while shutting down server.", ex);
         }
     }
 
