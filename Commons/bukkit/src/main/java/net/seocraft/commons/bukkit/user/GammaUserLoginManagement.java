@@ -27,7 +27,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -65,7 +64,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
 
                 try {
                     this.userLoginRequest.executeRequest(
-                            generateRequestJSON(user.getUsername(), password, getPlayerIP(player)),
+                            generateRequestJSON(user.getId(), password, getPlayerIP(player)),
                             this.serverTokenQuery.getToken()
                     );
                     this.movePlayerToLobby(player, user);
@@ -108,7 +107,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
                     try {
 
                         this.userRegisterRequest.executeRequest(
-                                generateRequestJSON(user.getUsername(), password, getPlayerIP(player)),
+                                generateRequestJSON(user.getId(), password, getPlayerIP(player)),
                                 this.serverTokenQuery.getToken()
                         );
 
@@ -178,7 +177,7 @@ public class GammaUserLoginManagement implements UserLoginManagement {
 
     private @NotNull String generateRequestJSON(@NotNull String user, @NotNull String password, @NotNull String ip) throws JsonProcessingException {
         ObjectNode node = mapper.createObjectNode();
-        node.put("username", user);
+        node.put("user", user);
         node.put("password", password);
         node.put("address", ip);
         return mapper.writeValueAsString(node);
