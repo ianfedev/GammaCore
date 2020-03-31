@@ -34,6 +34,7 @@ public class GammaSessionManager implements MinecraftSessionManager {
                 this.mapper.writeValueAsString(mapper),
                 this.serverTokenQuery.getToken()
         );
+        System.out.println(authSession);
         return this.mapper.readValue(
                 authSession,
                 AuthValidation.class
