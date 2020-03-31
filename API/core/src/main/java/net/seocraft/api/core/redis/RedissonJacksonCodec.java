@@ -55,15 +55,7 @@ public class RedissonJacksonCodec extends BaseCodec {
     private final Decoder<Object> decoder = new Decoder<Object>() {
         @Override
         public Object decode(ByteBuf buf, State state) throws IOException {
-            InputStream stream = new ByteBufInputStream(buf);
-            InputStreamReader isReader = new InputStreamReader(stream);
-            BufferedReader reader = new BufferedReader(isReader);
-            StringBuffer sb = new StringBuffer();
-            String str;
-            while((str = reader.readLine())!= null){
-                sb.append(str);
-            }
-            System.out.println(sb.toString());
+            System.out.println(new String(buf.array()));
             return mapObjectMapper.readValue((InputStream) new ByteBufInputStream(buf), Object.class);
         }
     };
