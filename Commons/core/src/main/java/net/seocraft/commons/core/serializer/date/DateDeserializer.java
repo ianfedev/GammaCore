@@ -13,7 +13,6 @@ public class DateDeserializer extends JsonDeserializer<Date> {
 
     @Override
     public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        System.out.println(jsonParser.getText());
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         String date = jsonParser.getText();
         try {

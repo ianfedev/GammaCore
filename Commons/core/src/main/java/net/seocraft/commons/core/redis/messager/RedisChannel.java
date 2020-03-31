@@ -62,6 +62,8 @@ public class RedisChannel<T> implements Channel<T> {
     public void sendMessage(T data) {
         executorService.submit(() -> {
             RTopic rTopic = redisson.getTopic(name);
+            System.out.println(name);
+            System.out.println(data);
             rTopic.publish(new ObjectWrapper<>(data, uniqueId));
         });
 
