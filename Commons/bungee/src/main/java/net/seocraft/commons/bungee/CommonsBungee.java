@@ -22,6 +22,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bungee.punishment.PunishmentListener;
+import net.seocraft.commons.bungee.serializer.CustomSerializer;
 import net.seocraft.commons.bungee.serializer.InterfaceDeserializer;
 import net.seocraft.commons.bungee.server.ServerModule;
 import net.seocraft.commons.bungee.session.PreLoginListener;
@@ -112,6 +113,7 @@ public class CommonsBungee extends Plugin {
                     .withSetterVisibility(JsonAutoDetect.Visibility.ANY)
                     .withCreatorVisibility(JsonAutoDetect.Visibility.PROTECTED_AND_PUBLIC));
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            mapper.registerModule(CustomSerializer.getCustomSerializerModule());
             return mapper;
         }).in(Scopes.SINGLETON);
         binder.install(new CoreModule());
