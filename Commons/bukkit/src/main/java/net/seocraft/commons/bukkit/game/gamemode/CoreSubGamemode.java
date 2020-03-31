@@ -11,18 +11,16 @@ public class CoreSubGamemode implements SubGamemode {
 
     @NotNull private String id;
     @NotNull private String name;
-    @NotNull private String scoreboard;
     private boolean selectMap;
     private int minPlayers;
     private int maxPlayers;
     @NotNull private String permission;
     @NotNull private String serverGroup;
 
-    @ConstructorProperties({"_id", "name", "scoreboard", "selectableMap", "minPlayers", "maxPlayers", "permission", "group"})
-    public CoreSubGamemode(@NotNull String id, @NotNull String name, @NotNull String scoreboard, boolean selectMap, int minPlayers, int maxPlayers, @NotNull String permission, @NotNull String serverGroup) {
+    @ConstructorProperties({"_id", "name", "selectableMap", "minPlayers", "maxPlayers", "permission", "group"})
+    public CoreSubGamemode(@NotNull String id, @NotNull String name, boolean selectMap, int minPlayers, int maxPlayers, @NotNull String permission, @NotNull String serverGroup) {
         this.id = id;
         this.name = name;
-        this.scoreboard = scoreboard;
         this.selectMap = selectMap;
         this.minPlayers = minPlayers;
         this.maxPlayers = maxPlayers;
@@ -30,6 +28,7 @@ public class CoreSubGamemode implements SubGamemode {
         this.serverGroup = serverGroup;
     }
 
+    @NotNull
     @Override
     public String getId() {
         return this.id;
@@ -38,11 +37,6 @@ public class CoreSubGamemode implements SubGamemode {
     @Override
     public @NotNull String getName() {
         return this.name;
-    }
-
-    @Override
-    public @NotNull String getScoreboard() {
-        return this.scoreboard;
     }
 
     @Override

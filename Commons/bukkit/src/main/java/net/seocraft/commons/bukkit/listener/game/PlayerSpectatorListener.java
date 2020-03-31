@@ -83,7 +83,7 @@ public class PlayerSpectatorListener implements Listener {
                 // TODO: Create spectator tools and create implementations
             }
 
-            player.getInventory().setItem(7, SpectatorToolbar.getPlayAgainItem(user.getLanguage(), translatableField, this.coreGameManagement.getSubGamemode().getScoreboard(), event.isManual()));
+            player.getInventory().setItem(7, SpectatorToolbar.getPlayAgainItem(user.getLanguage(), translatableField, this.coreGameManagement.getSubGamemode().getName(), event.isManual()));
             player.getInventory().setItem(8, SpectatorToolbar.getLobbyReturnItem(user.getLanguage(), translatableField, this.coreGameManagement.getGamemode().getLobbyGroup()));
 
         } catch (IOException e) {

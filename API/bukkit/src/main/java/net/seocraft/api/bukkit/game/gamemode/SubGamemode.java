@@ -7,8 +7,6 @@ public interface SubGamemode extends Model {
 
     @NotNull String getName();
 
-    @NotNull String getScoreboard();
-
     boolean canSelectMap();
 
     int getMinPlayers();

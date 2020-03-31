@@ -16,11 +16,6 @@ public interface Gamemode extends Model {
     @NotNull String getName();
 
     /**
-     * @return Scoreboard lobby title of the Gamemode.
-     */
-    @NotNull String getScoreboard();
-
-    /**
      * @return Get Cloud lobby group to be teleported.
      */
     @JsonProperty("lobby")

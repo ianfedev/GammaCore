@@ -13,17 +13,15 @@ public class CoreGamemode implements Gamemode {
 
     @NotNull private String id;
     @NotNull private String name;
-    @NotNull private String scoreboard;
     @NotNull private String lobbyGroup;
     @NotNull private String navigatorIcon;
     private int navigatorSlot;
     @NotNull private Set<SubGamemode> subGamemodes;
 
-    @ConstructorProperties({"_id", "name", "scoreboard", "lobby", "navigator", "slot", "subTypes"})
-    public CoreGamemode(@NotNull String id, @NotNull String name, @NotNull String scoreboard, @NotNull String lobbyGroup, @NotNull String navigatorIcon, int navigatorSlot, @NotNull Set<SubGamemode> subGamemodes) {
+    @ConstructorProperties({"_id", "name", "lobby", "navigator", "slot", "subTypes"})
+    public CoreGamemode(@NotNull String id, @NotNull String name, @NotNull String lobbyGroup, @NotNull String navigatorIcon, int navigatorSlot, @NotNull Set<SubGamemode> subGamemodes) {
         this.id = id;
         this.name = name;
-        this.scoreboard = scoreboard;
         this.lobbyGroup = lobbyGroup;
         this.navigatorIcon = navigatorIcon;
         this.navigatorSlot = navigatorSlot;
@@ -38,11 +36,6 @@ public class CoreGamemode implements Gamemode {
     @Override
     public @NotNull String getName() {
         return this.name;
-    }
-
-    @Override
-    public @NotNull String getScoreboard() {
-        return this.scoreboard;
     }
 
     @Override
