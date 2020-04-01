@@ -37,9 +37,11 @@ public class ACClickInventoryListener implements Listener {
             Player player = (Player) event.getWhoClicked();
 
             try {
+                System.out.println("Inside try");
                 User user = userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
                 ItemStack clicked = event.getCurrentItem();
                 if ((clicked != null && clicked.getType() != Material.AIR) && NBTTagHandler.hasString(clicked, "ac_selector")) {
+                    System.out.println("Inside IF");
                     switch (NBTTagHandler.getString(clicked, "ac_selector")) {
                         case "chat": {
                             user.getGameSettings().getAdminChat().setActive(!user.getGameSettings().getAdminChat().isActive());
@@ -61,6 +63,7 @@ public class ACClickInventoryListener implements Listener {
                             break;
                         }
                     }
+                    System.out.println("TBC");
                     event.setCancelled(true);
                 }
             } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException e) {
