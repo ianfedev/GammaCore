@@ -46,7 +46,7 @@ public class FriendsMenuListener implements Listener {
 
     @EventHandler
     public void profileMenuListener(InventoryClickEvent event) {
-
+        System.out.println("Profile menu triggered");
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem != null && (NBTTagHandler.hasString(clickedItem, "friends_accessor") || NBTTagHandler.hasString(clickedItem, "friends_page"))) {

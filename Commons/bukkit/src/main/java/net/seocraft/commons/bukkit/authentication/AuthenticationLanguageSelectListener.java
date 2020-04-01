@@ -15,8 +15,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -31,7 +29,7 @@ public class AuthenticationLanguageSelectListener implements Listener {
     @Inject private UserStorageProvider userStorageProvider;
 
     public void authenticationLanguageSelectListener(InventoryClickEvent event) {
-        System.out.println("Event fired");
+        System.out.println("Triggered authenticatino listener");
         if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
         HumanEntity entity = event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
