@@ -32,8 +32,7 @@ public class ACClickInventoryListener implements Listener {
 
     @EventHandler
     public void playerClickInventoryEvent(InventoryClickEvent event) {
-        System.out.println("Happy AC event");
-        /*if (event.isLeftClick()) {
+        if (event.isLeftClick()) {
             Player player = (Player) event.getWhoClicked();
             try {
                 User user = userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
@@ -67,7 +66,7 @@ public class ACClickInventoryListener implements Listener {
                 ChatAlertLibrary.errorChatAlert(player);
                 player.closeInventory();
             }
-        }*/
+        }
     }
 
     private void updateUser(@NotNull User user, @NotNull Player player) throws Unauthorized, JsonProcessingException, BadRequest, NotFound, InternalServerError {
