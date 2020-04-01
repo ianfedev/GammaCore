@@ -53,6 +53,7 @@ public class AuthenticationLanguageSelectListener implements Listener {
                     if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {
                         user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
                         try {
+                            System.out.println("Nibba things");
                             this.userStorageProvider.updateUser(user);
                             ChatAlertLibrary.infoAlert(player,
                                     this.translator.getUnspacedField(
