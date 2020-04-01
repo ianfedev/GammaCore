@@ -158,7 +158,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(verificationCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
-        //getServer().getPluginManager().registerEvents(acClickInventoryListener, this);
+        getServer().getPluginManager().registerEvents(acClickInventoryListener, this);
         getServer().getPluginManager().registerEvents(userChatListener, this);
         getServer().getPluginManager().registerEvents(userJoinListener, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);

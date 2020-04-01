@@ -22,7 +22,6 @@ public class ProfileMenuListener implements Listener {
 
     @EventHandler
     public void profileMenuListener(InventoryClickEvent event) {
-        System.out.println("Triggered profile menu");
         Player player = (Player) event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem != null &&
