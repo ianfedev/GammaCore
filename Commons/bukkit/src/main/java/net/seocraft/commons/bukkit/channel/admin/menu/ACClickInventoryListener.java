@@ -13,6 +13,7 @@ import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,8 +38,7 @@ public class ACClickInventoryListener implements Listener {
             try {
                 User user = userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
                 ItemStack clicked = event.getCurrentItem();
-                System.out.println(clicked);
-                if (clicked != null && NBTTagHandler.hasString(clicked, "ac_selector")) {
+                if ((clicked != null && clicked.getType() != Material.AIR) && NBTTagHandler.hasString(clicked, "ac_selector")) {
                     switch (NBTTagHandler.getString(clicked, "ac_selector")) {
                         case "chat": {
                             user.getGameSettings().getAdminChat().setActive(!user.getGameSettings().getAdminChat().isActive());
