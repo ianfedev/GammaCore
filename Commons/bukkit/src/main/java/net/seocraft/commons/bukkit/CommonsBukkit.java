@@ -255,7 +255,7 @@ public class CommonsBukkit extends JavaPlugin {
         return this.serverRecord;
     }
 
-    public void setServerRecord(Server server) {
+    public void setServerRecord(@NotNull Server server) {
         this.serverRecord = server;
     }
 
