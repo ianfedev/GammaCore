@@ -24,7 +24,7 @@ public class GammaUserFormatter implements UserFormatter {
                         break;
                     }
                 }
-                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + symbol + " " + user.getUsername() + ChatColor.WHITE;
+                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + symbol + " " + user.getDisplay() + ChatColor.WHITE;
                 break;
             }
         }
@@ -47,7 +47,7 @@ public class GammaUserFormatter implements UserFormatter {
                         break;
                     }
                 }
-                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + user.getUsername() + ChatColor.WHITE;
+                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + user.getDisplay() + ChatColor.WHITE;
                 break;
             }
         }

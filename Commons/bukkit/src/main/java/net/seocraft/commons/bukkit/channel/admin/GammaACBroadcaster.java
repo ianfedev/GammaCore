@@ -65,7 +65,7 @@ public class GammaACBroadcaster implements ACBroadcaster {
 
     private @NotNull String getMessage(@NotNull String message, @NotNull Set<User> users) {
         for (User user : users)
-            message = message.replace("@" + user.getUsername(), ChatColor.YELLOW + "@" + user.getUsername() + ChatColor.WHITE);
+            message = message.replace("@" + user.getDisplay(), ChatColor.YELLOW + "@" + user.getDisplay() + ChatColor.WHITE);
         return message;
     }
 

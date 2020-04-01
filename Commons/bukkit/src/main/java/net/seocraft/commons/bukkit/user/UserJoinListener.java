@@ -105,11 +105,6 @@ public class UserJoinListener implements Listener {
                     event.setJoinMessage("");
                 }
 
-                ArrayList<RegisteredListener> rls = HandlerList.getRegisteredListeners(this.instance);
-                rls.forEach(registeredListener -> {
-                    System.out.println(registeredListener.getListener().getClass().getName());
-                });
-
                 updateServerRecord(validatedUser.getId());
                 this.minecraftSessionManager.serverSwitch(validatedUser.getId(), Bukkit.getServerName().split("-")[0]);
             }

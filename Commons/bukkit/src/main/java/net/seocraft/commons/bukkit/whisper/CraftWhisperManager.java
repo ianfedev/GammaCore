@@ -63,7 +63,7 @@ public class CraftWhisperManager implements WhisperManager {
                 Player playerFrom = Bukkit.getPlayer(from.getUsername());
                 playerFrom.sendMessage(
                         ChatColor.AQUA + this.translator.getField(from.getLanguage(), "commons_message_to") +
-                                ChatColor.GRAY + to.getUsername() + ": " + content
+                                ChatColor.GRAY + to.getDisplay() + ": " + content
                 );
                 whisperChannel.sendMessage(whisper);
 

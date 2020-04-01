@@ -42,6 +42,7 @@ authentication_too_many_attempts: ¡Has fallado el ingreso de tu contraseña muc
 authentication_try_again_delay: Puedes volver a ingresar en
 authentication_welcome_new: Te haz registrado correctamente. ¡Bienvenido a %%server%%!
 authentication_logged_main: Haz iniciado sesión correctamente. ¡Serás redirigido al %%lobby%%!
+authentication_logged_secondary: Haz iniciado sesión correctamente. ¡Serás redirigido a %%game%%! # Last game variable
 authentication_language_menu: Elegir lenguaje
 authentication_register_actionbar: "Registrate con"
 authentication_login_actionbar: "Inicia sesión con"
