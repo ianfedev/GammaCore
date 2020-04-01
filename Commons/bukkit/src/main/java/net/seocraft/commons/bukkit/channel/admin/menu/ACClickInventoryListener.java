@@ -32,6 +32,7 @@ public class ACClickInventoryListener implements Listener {
 
     @EventHandler
     public void playerClickInventoryEvent(InventoryClickEvent event) {
+        System.out.println("Happy AC event");
         /*if (event.isLeftClick()) {
             Player player = (Player) event.getWhoClicked();
             try {

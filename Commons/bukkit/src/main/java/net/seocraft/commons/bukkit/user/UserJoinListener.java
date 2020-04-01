@@ -30,12 +30,15 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.RegisteredListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class UserJoinListener implements Listener {
@@ -101,6 +104,9 @@ public class UserJoinListener implements Listener {
                     executeGameCheck(validatedUser, player);
                     event.setJoinMessage("");
                 }
+
+                ArrayList<RegisteredListener> rls = HandlerList.getRegisteredListeners(this.instance);
+                rls.forEach(System.out::println);
 
                 updateServerRecord(validatedUser.getId());
                 this.minecraftSessionManager.serverSwitch(validatedUser.getId(), Bukkit.getServerName().split("-")[0]);
