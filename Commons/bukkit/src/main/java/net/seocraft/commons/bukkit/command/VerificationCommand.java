@@ -54,7 +54,7 @@ public class VerificationCommand implements CommandClass {
                     if (mail.matches(regex)) {
                         try {
                             ObjectNode node = mapper.createObjectNode();
-                            node.put("user", user.getUsername());
+                            node.put("user", user.getId());
                             node.put("email", mail);
 
                             String test = this.userMailVerification.executeRequest(
