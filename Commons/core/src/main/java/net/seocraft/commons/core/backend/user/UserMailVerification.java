@@ -25,7 +25,7 @@ public class UserMailVerification extends HttpRequest {
     }
 
     public String getURL() {
-        return "user/email-register";
+        return "users/verify-mail";
     }
 
     @Override
@@ -36,7 +36,7 @@ public class UserMailVerification extends HttpRequest {
     public String executeRequest(String request, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = request;
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 
 }
