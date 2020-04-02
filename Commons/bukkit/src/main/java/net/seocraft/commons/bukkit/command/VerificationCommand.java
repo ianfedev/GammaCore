@@ -57,10 +57,11 @@ public class VerificationCommand implements CommandClass {
                             node.put("username", user.getUsername());
                             node.put("email", mail);
 
-                            this.userMailVerification.executeRequest(
+                            String test = this.userMailVerification.executeRequest(
                                     this.mapper.writeValueAsString(node),
                                     this.serverTokenQuery.getToken()
                             );
+                            System.out.println(test);
                             ChatAlertLibrary.infoAlert(
                                     player,
                                     this.translatableField.getUnspacedField(
@@ -78,7 +79,7 @@ public class VerificationCommand implements CommandClass {
                                     )
                             );
                             unauthorized.printStackTrace();
-                        } catch (Unauthorized badRequest) {
+                        } catch (Unauthorized ex) {
                             ChatAlertLibrary.errorChatAlert(
                                     player,
                                     this.translatableField.getUnspacedField(
