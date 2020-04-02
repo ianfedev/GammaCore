@@ -61,7 +61,6 @@ public class VerificationCommand implements CommandClass {
                                     this.mapper.writeValueAsString(node),
                                     this.serverTokenQuery.getToken()
                             );
-                            System.out.println(test);
                             ChatAlertLibrary.infoAlert(
                                     player,
                                     this.translatableField.getUnspacedField(
