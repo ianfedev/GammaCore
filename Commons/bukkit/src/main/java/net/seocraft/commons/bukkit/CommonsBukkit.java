@@ -89,6 +89,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private AdminChatSettings adminChatSettings;
 
     @Inject private VerificationCommand verificationCommand;
+    @Inject private LobbyCommand lobbyCommand;
     @Inject private WhisperCommand whisperCommand;
     @Inject private PunishmentCommand punishmentCommand;
     @Inject private FriendCommand friendCommand;
@@ -163,6 +164,8 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(userJoinListener, this);
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
         getServer().getPluginManager().registerEvents(userDisconnectListener, this);
+        if (!getConfig().getBoolean("authentication.enabled", false))
+            dispatcher.registerCommandClass(lobbyCommand);
 
         if (getConfig().getBoolean("announcement.enabled")) announcementHandler.startAnnouncementDisplaying();
 
