@@ -68,7 +68,7 @@ public class LobbyConnectionListener implements Listener {
                 try {
                     User finalUser = this.userStorageProvider.getCachedUserSync(player.getDatabaseIdentifier());
 
-                    if (!finalUser.getGameSettings().getAdminChat().isActive()) {
+                    if (!finalUser.getGameSettings().getAdminChat().isActive() && player.hasPermission("commons.staff.chat")) {
                         TextComponent message = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder") + ". ");
                         message.setColor(net.md_5.bungee.api.ChatColor.GRAY);
                         TextComponent hover = new TextComponent(this.translator.getUnspacedField(playerRecord.getLanguage(), "commons_ac_reminder_click"));

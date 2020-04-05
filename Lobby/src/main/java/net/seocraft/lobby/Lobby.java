@@ -116,6 +116,7 @@ public class Lobby extends JavaPlugin {
         World world = Bukkit.getWorld(getConfig().getString("spawn.world"));
         if (world != null) {
             world.setGameRuleValue("doWeatherCycle", "false");
+            world.setStorm(false);
         }
     }
 

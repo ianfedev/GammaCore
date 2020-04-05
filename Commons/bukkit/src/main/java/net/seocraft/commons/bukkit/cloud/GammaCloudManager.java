@@ -18,6 +18,7 @@ import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -58,9 +59,16 @@ public class GammaCloudManager implements CloudManager {
                     }
                     Bukkit.getScheduler().runTaskLater(
                             instance,
-                            () -> {
-                                Player taskPlayer = Bukkit.getPlayer(player.getName());
-                                if (taskPlayer != null) sendPlayerToGroupSecured(player, group, finalTimer);
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    Player taskPlayer = Bukkit.getPlayer(player.getName());
+                                    if (taskPlayer != null)  {
+                                        sendPlayerToGroupSecured(player, group, finalTimer);
+                                    } else {
+                                        this.cancel();
+                                    }
+                                }
                             },
                             60
                     );
