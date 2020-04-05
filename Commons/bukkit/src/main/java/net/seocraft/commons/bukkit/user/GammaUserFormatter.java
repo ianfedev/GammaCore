@@ -11,7 +11,7 @@ public class GammaUserFormatter implements UserFormatter {
 
     @Override
     public @NotNull String getUserFormat(@NotNull User user, @NotNull String realm) {
-        String userFormat = ChatColor.GRAY + user.getUsername();
+        String userFormat = ChatColor.GRAY + user.getDisplay();
         Group primaryGroup = user.getPrimaryGroup();
         for (Flair flair: primaryGroup.getMinecraftFlairs()) {
             if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {
@@ -34,7 +34,7 @@ public class GammaUserFormatter implements UserFormatter {
 
     @Override
     public @NotNull String getUserColor(@NotNull User user, @NotNull String realm) {
-        String userFormat = ChatColor.GRAY + user.getUsername();
+        String userFormat = ChatColor.GRAY + user.getDisplay();
         Group primaryGroup = user.getPrimaryGroup();
         for (Flair flair: primaryGroup.getMinecraftFlairs()) {
             if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {

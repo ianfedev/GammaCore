@@ -31,9 +31,8 @@ public class PreLoginListener implements Listener {
 
         PendingConnection connection = event.getConnection();
         event.registerIntent(commonsBungee);
-        User user = null;
         try {
-            user = this.userStorageProvider.findUserByNameSync(connection.getName());
+            User user = this.userStorageProvider.findUserByNameSync(connection.getName());
             if (!user.getSessionInfo().isPremium()) connection.setOnlineMode(false);
         } catch (Unauthorized | BadRequest | InternalServerError | IOException e) {
             this.commonsBungee.getLogger().log(Level.WARNING, "[Commons] There was an error logging a player.", e);
@@ -44,10 +43,6 @@ public class PreLoginListener implements Listener {
             connection.setOnlineMode(false);
         }
         event.completeIntent(commonsBungee);
-
-        if (user != null && user.getSessionInfo().isPremium()) {
-           // BungeeCloudManager.sendPlayerToGroup(connection.getName(), connection.getUniqueId().toString(), "main_lobby");
-        }
 
     }
 }

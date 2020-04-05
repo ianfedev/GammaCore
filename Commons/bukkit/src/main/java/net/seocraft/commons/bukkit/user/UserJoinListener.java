@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
+import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.event.GamePlayerJoinEvent;
 import net.seocraft.api.bukkit.game.management.FinderResult;
@@ -51,6 +52,7 @@ public class UserJoinListener implements Listener {
     @Inject private GameLoginManager gameLoginManager;
     @Inject private UserPermissionChecker userPermissionChecker;
     @Inject private ServerManager serverManager;
+    @Inject private CloudManager cloudManager;
     @Inject private TranslatableField translatableField;
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private MinecraftSessionManager minecraftSessionManager;
@@ -90,6 +92,12 @@ public class UserJoinListener implements Listener {
                 playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
 
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
+
+                    if (validatedUser.getSessionInfo().isPremium()) {
+                        this.cloudManager.sendPlayerToGroup(player, validatedUser.getSessionInfo().getLastLobby());
+                        return;
+                    }
+
                     executeAuthenticationProcess(
                             player,
                             validatedUser.getLanguage(),
