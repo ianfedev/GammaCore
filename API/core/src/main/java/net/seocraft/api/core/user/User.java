@@ -31,8 +31,10 @@ public interface User extends Model {
 
     void setSkin(@NotNull String skin);
 
+    @JsonProperty("session")
     @NotNull SessionInfo getSessionInfo();
 
+    @JsonProperty("session")
     void setSessionInfo(@NotNull SessionInfo info);
 
     boolean isVerified();
