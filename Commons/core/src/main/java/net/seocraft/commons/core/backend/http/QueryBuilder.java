@@ -15,11 +15,15 @@ public class QueryBuilder {
         this.config = config;
     }
 
-    URI getURI(String url, Map<String, String> params, boolean epsilon) {
+    URI getDefaultURI(String url, Map<String, String> params, boolean epsilon) {
+        return getURI(url, params, epsilon, this.config.getHost());
+    }
+
+    URI getURI(String url, Map<String, String> params, boolean epsilon, String host) {
         try {
             URIBuilder uri = new URIBuilder()
                     .setScheme("https")
-                    .setHost(this.config.getHost())
+                    .setHost(host)
                     //.setPort(this.config.getPort())
                     .setPath(this.config.getSuffix() + "/" + url);
             if (epsilon) uri.setHost(this.config.getEpsilon());
