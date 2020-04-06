@@ -94,6 +94,7 @@ public class UserJoinListener implements Listener {
                 if (instance.getConfig().getBoolean("authentication.enabled")) {
 
                     if (validatedUser.getSessionInfo().isPremium()) {
+                        System.out.println(validatedUser.getSessionInfo().getLastLobby());
                         this.cloudManager.sendPlayerToGroup(player, validatedUser.getSessionInfo().getLastLobby());
                         return;
                     }
