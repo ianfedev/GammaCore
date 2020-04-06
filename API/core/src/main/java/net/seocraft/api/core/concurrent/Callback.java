@@ -1,5 +1,6 @@
 package net.seocraft.api.core.concurrent;
 
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

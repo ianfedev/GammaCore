@@ -14,6 +14,7 @@ import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.online.OnlineStatusManager;
+import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
 import net.seocraft.api.core.session.MinecraftSessionManager;
@@ -28,6 +29,7 @@ public class PlayerDisconnectListener implements Listener {
 
     @Inject private OnlineStatusManager onlineStatusManager;
     @Inject private UserStorageProvider userStorageProvider;
+    @Inject private RedisClient redisClient;
     @Inject private MinecraftSessionManager minecraftSessionManager;
     @Inject private CommonsBungee commonsBungee;
     @Inject private Messager messager;
@@ -41,6 +43,7 @@ public class PlayerDisconnectListener implements Listener {
             userChannel.sendMessage(user);
             this.onlineStatusManager.setPlayerOnlineStatus(user.getId(), false);
             this.minecraftSessionManager.disconnectSession(user.getId());
+            this.redisClient.removeFromSet("premium_connect", user.getId());
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException ex) {
             this.commonsBungee.getLogger().log(Level.SEVERE, "[CommonsBungee] There was an error disconnecting a player.", ex);
             player.disconnect(

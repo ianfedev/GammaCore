@@ -18,6 +18,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URI;
@@ -42,19 +44,13 @@ public abstract class HttpRequest implements IHttpRequest {
         return "";
     }
 
-    private String getFinalResponse(boolean epsilon) throws BadRequest, Unauthorized, NotFound, InternalServerError {
+    private String getFinalResponse(boolean epsilon, @Nullable String custom) throws BadRequest, Unauthorized, NotFound, InternalServerError {
         String response = "";
 
-        TrustStrategy trustStrategy = (chain, authType) -> {
-            for (X509Certificate cert: chain) {
-                System.err.println(cert);
-            }
-            return false;
-        };
 
-
-
-        URI url = this.builder.getURI(getURL(), getQueryStrings(), epsilon);
+        URI url = this.builder.getDefaultURI(getURL(), getQueryStrings(), epsilon);
+        if (custom != null)
+            url = this.builder.getURI(getURL(), getQueryStrings(), epsilon, custom);
         ResponseHandler<String> handler = handleResponse();
         HttpResponse http_response = null;
         try {
@@ -103,11 +99,15 @@ public abstract class HttpRequest implements IHttpRequest {
     }
 
     protected String getResponse() throws BadRequest, Unauthorized, NotFound, InternalServerError {
-        return getFinalResponse(false);
+        return getFinalResponse(false, null);
     }
 
     protected String getEpsilonResponse() throws BadRequest, Unauthorized, NotFound, InternalServerError {
-        return getFinalResponse(true);
+        return getFinalResponse(true, null);
+    }
+
+    protected String getCustomResponse(@NotNull String url) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        return getFinalResponse(false, url);
     }
 
     private ResponseHandler<String> handleResponse() {

@@ -100,4 +100,9 @@ public class GammaUserStorageProvider implements UserStorageProvider {
         return user;
     }
 
+    @Override
+    public void invalidateUserCache(@NotNull User user) {
+        this.client.deleteString("user:" + user.getId());
+    }
+
 }

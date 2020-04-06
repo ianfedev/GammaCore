@@ -17,6 +17,7 @@ import net.seocraft.api.bukkit.creator.npc.listener.NPCUseListener;
 import net.seocraft.api.bukkit.event.GameProcessingReadyEvent;
 import net.seocraft.api.bukkit.game.management.MapFileManager;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
+import net.seocraft.api.bukkit.session.PremiumStatusManager;
 import net.seocraft.api.bukkit.stats.StatsProvider;
 import net.seocraft.api.bukkit.user.UserLoginManagement;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
@@ -45,6 +46,7 @@ import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.AbstractResolverModule;
 import net.seocraft.commons.bukkit.serializer.CustomSerializer;
 import net.seocraft.commons.bukkit.server.ServerModule;
+import net.seocraft.commons.bukkit.session.GammaPremiumStatusManager;
 import net.seocraft.commons.bukkit.stats.GameStatsProvider;
 import net.seocraft.commons.bukkit.user.*;
 import net.seocraft.commons.bukkit.whisper.CraftWhisperManager;
@@ -88,6 +90,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private AdminChatCommand adminChatCommand;
     @Inject private AdminChatSettings adminChatSettings;
 
+    @Inject private PremiumCommand premiumCommand;
     @Inject private VerificationCommand verificationCommand;
     @Inject private LobbyCommand lobbyCommand;
     @Inject private WhisperCommand whisperCommand;
@@ -157,6 +160,7 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(friendCommand);
         dispatcher.registerCommandClass(matchCommand);
         dispatcher.registerCommandClass(verificationCommand);
+        dispatcher.registerCommandClass(premiumCommand);
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
         getServer().getPluginManager().registerEvents(acClickInventoryListener, this);
@@ -205,6 +209,7 @@ public class CommonsBukkit extends JavaPlugin {
         binder.bind(PunishmentProvider.class).to(UserPunishmentProvider.class).in(Scopes.SINGLETON);
         binder.bind(WhisperManager.class).to(CraftWhisperManager.class).in(Scopes.SINGLETON);
         binder.bind(StatsProvider.class).to(GameStatsProvider.class).in(Scopes.SINGLETON);
+        binder.bind(PremiumStatusManager.class).to(GammaPremiumStatusManager.class).in(Scopes.SINGLETON);
         binder.bind(AnnouncementHandler.class).to(GammaAnnouncementHandler.class).in(Scopes.SINGLETON);
         binder.bind(UserLoginManagement.class).to(GammaUserLoginManagement.class).in(Scopes.SINGLETON);
         binder.publicBinder().bind(CommonsBukkit.class).toInstance(this);

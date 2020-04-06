@@ -13,6 +13,8 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.redis.RedisClient;
+import net.seocraft.api.core.session.MojangSessionValidation;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bungee.CommonsBungee;
@@ -24,7 +26,9 @@ import java.util.logging.Level;
 public class PreLoginListener implements Listener {
 
     @Inject private UserStorageProvider userStorageProvider;
+    @Inject private RedisClient redisClient;
     @Inject private CommonsBungee commonsBungee;
+    @Inject private MojangSessionValidation mojangSessionValidation;
 
     @EventHandler
     public void onPreLogin(PreLoginEvent event) {
@@ -33,7 +37,15 @@ public class PreLoginListener implements Listener {
         event.registerIntent(commonsBungee);
         try {
             User user = this.userStorageProvider.findUserByNameSync(connection.getName());
-            if (!user.getSessionInfo().isPremium()) connection.setOnlineMode(false);
+
+            if (connection.getUniqueId() != null && this.mojangSessionValidation.hasValidUUID(user.getUsername(), connection.getUniqueId().toString()))
+                this.redisClient.addToSet("premium_connected", user.getId());
+
+            if (!user.getSessionInfo().isPremium()) {
+                connection.setOnlineMode(false);
+                connection.setUniqueId(this.mojangSessionValidation.generateOfflineUUID(user.getUsername()));
+            }
+
         } catch (Unauthorized | BadRequest | InternalServerError | IOException e) {
             this.commonsBungee.getLogger().log(Level.WARNING, "[Commons] There was an error logging a player.", e);
             connection.disconnect(
