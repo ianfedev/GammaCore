@@ -10,6 +10,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
+import net.seocraft.api.core.user.partial.SessionInfo;
 import org.jetbrains.annotations.NotNull;
 
 public class GammaPremiumStatusManager implements PremiumStatusManager {
@@ -19,7 +20,9 @@ public class GammaPremiumStatusManager implements PremiumStatusManager {
 
     @Override
     public boolean togglePremiumStatus(@NotNull User user) throws Unauthorized, JsonProcessingException, BadRequest, NotFound, InternalServerError {
-        user.getSessionInfo().setPremium(!user.getSessionInfo().isPremium());
+        SessionInfo info = user.getSessionInfo();
+        info.setPremium(!info.isPremium());
+        user.setSessionInfo(info);
         this.userStorageProvider.updateUser(user);
         return user.getSessionInfo().isPremium();
     }

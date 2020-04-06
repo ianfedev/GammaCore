@@ -33,6 +33,8 @@ public interface User extends Model {
 
     @NotNull SessionInfo getSessionInfo();
 
+    void setSessionInfo(@NotNull SessionInfo info);
+
     boolean isVerified();
 
     void setVerified(boolean verified);

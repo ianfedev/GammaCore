@@ -79,4 +79,6 @@ public interface UserStorageProvider {
      */
     @NotNull User updateUser(@NotNull User user) throws Unauthorized, BadRequest, NotFound, InternalServerError, JsonProcessingException;
 
+    void invalidateUserCache(@NotNull User user);
+
 }

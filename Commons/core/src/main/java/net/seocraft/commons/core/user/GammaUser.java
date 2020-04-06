@@ -111,6 +111,11 @@ public class GammaUser implements User {
     }
 
     @Override
+    public void setSessionInfo(@NotNull SessionInfo info) {
+        this.sessionInfo = info;
+    }
+
+    @Override
     public @NotNull Date getMemberSince() {
         return this.memberSince;
     }
