@@ -54,8 +54,9 @@ public class PremiumCommand implements CommandClass {
                         baseComponent.setColor(net.md_5.bungee.api.ChatColor.YELLOW);
 
                         // Accept button
-                        TextComponent acceptButton = new TextComponent(this.translatableField.getUnspacedField(user.getLanguage(), "commons_premium_validate_holder"));
+                        TextComponent acceptButton = new TextComponent("[" + this.translatableField.getUnspacedField(user.getLanguage(), "commons_premium_validate_holder") + "]");
                         acceptButton.setColor(net.md_5.bungee.api.ChatColor.GREEN);
+                        acceptButton.setBold(true);
                         acceptButton.setHoverEvent(new HoverEvent(
                                 HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder(
@@ -66,8 +67,8 @@ public class PremiumCommand implements CommandClass {
                                 ClickEvent.Action.RUN_COMMAND,
                                 "/premiumswitch"
                         ));
-                        baseComponent.addExtra(acceptButton);
                         player.spigot().sendMessage(baseComponent);
+                        player.spigot().sendMessage(acceptButton);
 
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                     } else {
