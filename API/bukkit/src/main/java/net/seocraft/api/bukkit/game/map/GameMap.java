@@ -60,7 +60,7 @@ public interface GameMap extends Model {
      * @see SubGamemode
      * @return ID of the map's SubGamemode.
      */
-    @NotNull String getSubGamemode();
+    @NotNull Set<String> getSubGamemode();
 
     /**
      * @return Description of the map.

@@ -19,13 +19,13 @@ public class CoreMap implements GameMap {
     @NotNull private String version;
     @NotNull private Set<Contribution> contributors;
     @NotNull private String gamemode;
-    @NotNull private String subGamemode;
+    @NotNull private Set<String> subGamemode;
     @NotNull private String description;
     @NotNull private Set<Rating> rating;
     private long registeredDate;
 
     @ConstructorProperties({"_id", "name", "file", "configuration", "image", "author", "version", "contributors", "gamemode", "subGamemode", "description", "rating", "registeredDate"})
-    public CoreMap(@NotNull String id, @NotNull String name, @NotNull String file, @NotNull String configuration, @NotNull String image, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description, @NotNull Set<Rating> rating, long registeredDate) {
+    public CoreMap(@NotNull String id, @NotNull String name, @NotNull String file, @NotNull String configuration, @NotNull String image, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull Set<String> subGamemode, @NotNull String description, @NotNull Set<Rating> rating, long registeredDate) {
         this.id = id;
         this.name = name;
         this.file = file;
@@ -87,7 +87,7 @@ public class CoreMap implements GameMap {
     }
 
     @Override
-    public @NotNull String getSubGamemode() {
+    public @NotNull Set<String> getSubGamemode() {
         return this.subGamemode;
     }
 
