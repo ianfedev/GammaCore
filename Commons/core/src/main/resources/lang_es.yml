@@ -166,8 +166,11 @@ commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
 commons_lobby_click_play: "Clic para jugar"
 commons_lobby_play_along: "¡Juega junto a %%players%% más!"
 
+# Premium command
 commons_premium_validation_error: "Tu cuenta actual no es una cuenta premium, por lo tanto no puedes establecer este modo."
 commons_premium_validation_success: "Se ha actualizado tu estado premium. Debes reiniciar para que surja efecto."
+commons_premium_validation_warning: "Activarás el modo premium en tu cuenta, esto significa que no podrás ingresar a menos que tengas la cuenta original"
+commons_premium_validation_holder: "Cambiar"
 commons_premium_validation_disabled: "Se ha desactivado tu estado premium. Debes reiniciar para que surja efecto."
 
 # Lobby Scoreboard
