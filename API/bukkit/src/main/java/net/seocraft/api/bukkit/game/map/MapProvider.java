@@ -23,7 +23,7 @@ public interface MapProvider {
                                                               @NotNull String version,
                                                               @NotNull Set<Contribution> contributors,
                                                               @NotNull String gamemode,
-                                                              @NotNull String subGamemode,
+                                                              @NotNull Set<String> subGamemode,
                                                               @NotNull String description
     );
 
@@ -36,7 +36,7 @@ public interface MapProvider {
             @NotNull String version,
             @NotNull Set<Contribution> contributors,
             @NotNull String gamemode,
-            @NotNull String subGamemode,
+            @NotNull Set<String> subGamemode,
             @NotNull String description
     ) throws InternalServerError, IOException, Unauthorized, NotFound, BadRequest;
 

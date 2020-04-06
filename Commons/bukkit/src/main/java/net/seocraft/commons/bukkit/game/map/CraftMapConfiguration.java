@@ -15,13 +15,13 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
     @NotNull private String version;
     @NotNull private Set<Contribution> contributors;
     @NotNull private String gamemode;
-    @NotNull private String subGamemode;
+    @NotNull private Set<String> subGamemode;
     @NotNull private String description;
     @NotNull private MapCoordinates lobbyCoordinates;
     @NotNull private MapCoordinates spectatorSpawn;
 
     @ConstructorProperties({"name", "author", "version", "contributors", "gamemode", "subGamemode", "description", "lobbyCoordinates", "spectatorSpawn"})
-    public CraftMapConfiguration(@NotNull String name, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description, @NotNull MapCoordinates lobbyCoordinates, @NotNull MapCoordinates spectatorSpawn) {
+    public CraftMapConfiguration(@NotNull String name, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull Set<String> subGamemode, @NotNull String description, @NotNull MapCoordinates lobbyCoordinates, @NotNull MapCoordinates spectatorSpawn) {
         this.name = name;
         this.author = author;
         this.version = version;
@@ -59,7 +59,7 @@ public class CraftMapConfiguration implements BaseMapConfiguration {
     }
 
     @Override
-    public @NotNull String getSubGamemode() {
+    public @NotNull Set<String> getSubGamemode() {
         return this.subGamemode;
     }
 

@@ -18,7 +18,7 @@ public interface BaseMapConfiguration {
 
     @NotNull String getGamemode();
 
-    @NotNull String getSubGamemode();
+    @NotNull Set<String> getSubGamemode();
 
     @NotNull String getDescription();
 

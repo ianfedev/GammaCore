@@ -43,7 +43,7 @@ public class CoreMapProvider implements MapProvider {
     @Inject private ObjectMapper mapper;
 
     @Override
-    public @NotNull ListenableFuture<AsyncResponse<GameMap>> loadMap(@NotNull String name, @NotNull String file, @NotNull String configuration, @NotNull String image, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description) {
+    public @NotNull ListenableFuture<AsyncResponse<GameMap>> loadMap(@NotNull String name, @NotNull String file, @NotNull String configuration, @NotNull String image, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull Set<String> subGamemode, @NotNull String description) {
         return this.executorService.submit(() -> {
             try {
                 return new AsyncResponse<>(null, AsyncResponse.Status.SUCCESS, this.loadMapSync(name, file, configuration, image, author, version, contributors, gamemode, subGamemode, description));
@@ -54,7 +54,7 @@ public class CoreMapProvider implements MapProvider {
     }
 
     @Override
-    public @NotNull GameMap loadMapSync(@NotNull String name, @NotNull String file, @NotNull String configuration, @NotNull String image, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull String subGamemode, @NotNull String description) throws InternalServerError, IOException, Unauthorized, NotFound, BadRequest {
+    public @NotNull GameMap loadMapSync(@NotNull String name, @NotNull String file, @NotNull String configuration, @NotNull String image, @NotNull String author, @NotNull String version, @NotNull Set<Contribution> contributors, @NotNull String gamemode, @NotNull Set<String> subGamemode, @NotNull String description) throws InternalServerError, IOException, Unauthorized, NotFound, BadRequest {
 
         // Check if author is registered
 
@@ -95,12 +95,11 @@ public class CoreMapProvider implements MapProvider {
             throw new InternalServerError("Error finding author record.");
         }
 
-        Optional<SubGamemode> subGamemodeRecord = gamemodeRecord.getSubGamemodes()
+        Set<SubGamemode> subGamemodeRecord = gamemodeRecord.getSubGamemodes()
                 .stream()
-                .filter(record -> record.getId().equalsIgnoreCase(subGamemode))
-                .findFirst();
+                .filter(record -> subGamemode.contains(record.getId())).collect(Collectors.toSet());
 
-        if (!subGamemodeRecord.isPresent()) throw new InternalServerError("Sub Gamemode not found");
+        if (subGamemode.size() == 0) throw new InternalServerError("There was not a gamemode to pair successfully");
 
         GameMap rawMap = new CoreMap(
                 UUID.randomUUID().toString(),
@@ -112,7 +111,7 @@ public class CoreMapProvider implements MapProvider {
                 version,
                 fixedContributors,
                 gamemodeRecord.getId(),
-                subGamemodeRecord.get().getId(),
+                subGamemode,
                 description,
                 new HashSet<>(),
                 TimeUtils.getUnixStamp(new Date())
