@@ -41,10 +41,7 @@ public class PreLoginListener implements Listener {
             if (this.mojangSessionValidation.hasValidUUID(user.getUsername(), connection.getUniqueId().toString()))
                 this.redisClient.addToSet("premium_connected", user.getId());
 
-            if (!user.getSessionInfo().isPremium()) {
-                connection.setOnlineMode(false);
-                connection.setUniqueId(this.mojangSessionValidation.generateOfflineUUID(user.getUsername()));
-            }
+            if (!user.getSessionInfo().isPremium()) connection.setOnlineMode(false);
 
         } catch (Unauthorized | BadRequest | InternalServerError | IOException e) {
             this.commonsBungee.getLogger().log(Level.WARNING, "[Commons] There was an error logging a player.", e);
