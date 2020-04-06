@@ -168,6 +168,9 @@ commons_lobby_play_along: "¡Juega junto a %%players%% más!"
 
 commons_premium_validation_error: "Tu cuenta actual no es una cuenta premium, por lo tanto no puedes establecer este modo."
 commons_premium_validation_success: "Se ha actualizado tu estado premium. Debes reiniciar para que surja efecto."
+commons_premium_validate_warning: "Al activar el modo premium en tu cuenta solo podrás ingresar con la cuenta original de minecraft. ¿Estás seguro?"
+commons_premium_validate_hover: "¡Activaras el modo premium al dar click!"
+commons_premium_validate_holder: "Activar Premium"
 commons_premium_validation_disabled: "Se ha desactivado tu estado premium. Debes reiniciar para que surja efecto."
 
 # Lobby Scoreboard

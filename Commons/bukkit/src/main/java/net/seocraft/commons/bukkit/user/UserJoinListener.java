@@ -95,6 +95,7 @@ public class UserJoinListener implements Listener {
 
                     if (validatedUser.getSessionInfo().isPremium()) {
                         this.cloudManager.sendPlayerToGroup(player, validatedUser.getSessionInfo().getLastLobby());
+                        event.setJoinMessage("");
                         return;
                     }
 
