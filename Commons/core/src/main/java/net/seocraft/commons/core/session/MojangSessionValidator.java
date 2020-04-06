@@ -27,4 +27,9 @@ public class MojangSessionValidator implements MojangSessionValidation {
         return node.get("name").toString().equalsIgnoreCase(username) &&
                 node.get("status").toString().equalsIgnoreCase("OK");
     }
+
+    @Override
+    public @NotNull UUID generateOfflineUUID(@NotNull String username) {
+        return UUID.nameUUIDFromBytes(("OfflinePlayer:" + username).getBytes(Charsets.UTF_8));
+    }
 }
