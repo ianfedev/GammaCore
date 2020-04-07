@@ -6,7 +6,7 @@
         <artifactId>GammaCore</artifactId>
         <groupId>net.seocraft</groupId>
         <relativePath>../pom.xml</relativePath>
-        <version>0.1.0</version>
+        <version>0.3.0</version>
     </parent>
 
     <artifactId>lobby</artifactId>
@@ -21,13 +21,13 @@
         <dependency>
             <groupId>net.seocraft</groupId>
             <artifactId>api-bukkit</artifactId>
-            <version>${project.version}</version>
+            <version>${global.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.seocraft</groupId>
             <artifactId>commons-bukkit</artifactId>
-            <version>${project.version}</version>
+            <version>${global.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

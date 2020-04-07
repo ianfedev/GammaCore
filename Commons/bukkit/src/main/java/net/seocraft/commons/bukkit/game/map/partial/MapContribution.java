@@ -3,11 +3,17 @@ package net.seocraft.commons.bukkit.game.map.partial;
 import net.seocraft.api.bukkit.game.map.partial.Contribution;
 import org.jetbrains.annotations.NotNull;
 
+import java.beans.ConstructorProperties;
+
 public class MapContribution implements Contribution {
 
     @NotNull private String contributor;
     @NotNull private String contribution;
 
+    @ConstructorProperties({
+            "contributor",
+            "contribution"
+    })
     public MapContribution(@NotNull String contributor, @NotNull String contribution) {
         this.contributor = contributor;
         this.contribution = contribution;

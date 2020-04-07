@@ -6,7 +6,7 @@
         <artifactId>api-parent</artifactId>
         <groupId>net.seocraft</groupId>
         <relativePath>../pom.xml</relativePath>
-        <version>0.1.0</version>
+        <version>0.3.0</version>
     </parent>
 
     <artifactId>api-bungee</artifactId>
@@ -23,7 +23,7 @@
         <dependency>
             <groupId>net.seocraft</groupId>
             <artifactId>api-core</artifactId>
-            <version>${project.version}</version>
+            <version>${global.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
