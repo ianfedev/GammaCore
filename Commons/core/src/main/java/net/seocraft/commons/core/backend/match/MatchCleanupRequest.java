@@ -14,6 +14,7 @@ import java.util.Map;
 public class MatchCleanupRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
+    private String id;
 
     @Override
     public Map<String, String> getHeaders() {
@@ -27,11 +28,12 @@ public class MatchCleanupRequest extends HttpRequest {
 
     @Override
     public String getURL() {
-        return "match/clean";
+        return "match/clean/" + this.id;
     }
 
-    public void executeRequest(@NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public void executeRequest(@NotNull String token, @NotNull String id) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.headers.put("authorization", token);
+        this.id = id;
         getResponse();
     }
 

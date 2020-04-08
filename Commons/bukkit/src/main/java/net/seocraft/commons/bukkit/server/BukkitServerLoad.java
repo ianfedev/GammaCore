@@ -117,7 +117,7 @@ public class BukkitServerLoad implements ServerLoad {
         String token = this.serverTokenQuery.getToken();
         this.redisClient.deleteHash("authorization", this.instance.getServerRecord().getId());
         this.redisClient.clearHash("scheduledStarts:" + this.instance.getServerRecord().getId());
-        if (this.instance.getServerRecord().getServerType() == ServerType.GAME) this.matchCleanupRequest.executeRequest(token);
+        if (this.instance.getServerRecord().getServerType() == ServerType.GAME) this.matchCleanupRequest.executeRequest(token, this.instance.getServerRecord().getId());
         this.serverDisconnectRequest.executeRequest(token);
     }
 }
