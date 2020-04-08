@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.minecraft;
+package net.seocraft.api.bukkit.minecraft;
 
 import org.bukkit.entity.Player;
 

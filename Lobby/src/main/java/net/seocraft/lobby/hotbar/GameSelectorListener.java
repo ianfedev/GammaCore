@@ -2,7 +2,7 @@ package net.seocraft.lobby.hotbar;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.cloud.CloudManager;
-import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
+import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;

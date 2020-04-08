@@ -1,15 +1,11 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.minecraft.PlayerTitleHandler;
+import net.seocraft.api.bukkit.minecraft.PlayerTitleHandler;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-
-import java.awt.*;
 
 public class AuthenticationLoginListener {
 

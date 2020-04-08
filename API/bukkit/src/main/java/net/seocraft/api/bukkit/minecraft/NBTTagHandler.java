@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.minecraft;
+package net.seocraft.api.bukkit.minecraft;
 
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.NBTTagCompound;

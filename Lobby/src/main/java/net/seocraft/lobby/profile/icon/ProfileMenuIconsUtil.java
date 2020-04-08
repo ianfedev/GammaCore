@@ -6,7 +6,7 @@ import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.utils.StringUtils;
-import net.seocraft.commons.bukkit.minecraft.NBTTagHandler;
+import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
 import net.seocraft.commons.bukkit.util.HeadLibrary;
 import net.seocraft.commons.bukkit.util.LoreDisplayArray;
 import net.seocraft.commons.core.translation.TranslatableField;

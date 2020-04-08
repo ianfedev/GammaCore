@@ -14,7 +14,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.utils.TimeUtils;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.minecraft.PlayerTitleHandler;
+import net.seocraft.api.bukkit.minecraft.PlayerTitleHandler;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

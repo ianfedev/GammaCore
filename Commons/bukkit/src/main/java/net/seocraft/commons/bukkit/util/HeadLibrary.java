@@ -1,6 +1,6 @@
 package net.seocraft.commons.bukkit.util;
 
-import net.seocraft.commons.bukkit.minecraft.SkinSkullHandler;
+import net.seocraft.api.bukkit.minecraft.SkinSkullHandler;
 import org.bukkit.inventory.ItemStack;
 
 public class HeadLibrary {
