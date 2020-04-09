@@ -20,7 +20,7 @@ import net.seocraft.api.core.server.ServerType;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

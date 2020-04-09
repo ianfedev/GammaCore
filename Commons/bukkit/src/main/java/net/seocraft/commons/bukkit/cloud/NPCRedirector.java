@@ -15,7 +15,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.RedisClient;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.event.CustomSelectionEvent;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

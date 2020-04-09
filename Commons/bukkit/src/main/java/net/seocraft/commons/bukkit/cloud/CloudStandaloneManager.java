@@ -3,7 +3,7 @@ package net.seocraft.commons.bukkit.cloud;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.lobby.LobbyIcon;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

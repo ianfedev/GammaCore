@@ -9,7 +9,7 @@ import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.game.management.menu.SpectatorToolbar;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

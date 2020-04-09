@@ -22,7 +22,7 @@ import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.utils.TimeUtils;
 import net.seocraft.commons.bukkit.punishment.BridgedUserBan;
 import net.seocraft.commons.bukkit.punishment.PunishmentActions;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

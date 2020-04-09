@@ -9,7 +9,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -53,7 +53,6 @@ public class AuthenticationLanguageSelectListener implements Listener {
                     if (!NBTTagHandler.getString(clickedItem, "language_accessor").equalsIgnoreCase(user.getLanguage())) {
                         user.setLanguage(NBTTagHandler.getString(clickedItem, "language_accessor"));
                         try {
-                            System.out.println("Nibba things");
                             this.userStorageProvider.updateUser(user);
                             ChatAlertLibrary.infoAlert(player,
                                     this.translator.getUnspacedField(

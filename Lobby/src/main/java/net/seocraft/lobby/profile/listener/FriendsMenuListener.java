@@ -19,7 +19,7 @@ import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.friend.FriendshipUserActions;
 import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

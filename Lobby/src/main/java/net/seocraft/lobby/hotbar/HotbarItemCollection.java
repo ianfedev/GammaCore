@@ -3,7 +3,7 @@ package net.seocraft.lobby.hotbar;
 import com.google.inject.Inject;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.bukkit.minecraft.NBTTagHandler;
-import net.seocraft.commons.bukkit.util.LoreDisplayArray;
+import net.seocraft.api.bukkit.utils.LoreDisplayArray;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

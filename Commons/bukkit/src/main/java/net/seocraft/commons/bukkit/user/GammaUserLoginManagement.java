@@ -18,7 +18,7 @@ import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.api.core.utils.TimeUtils;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.backend.user.UserLoginRequest;
 import net.seocraft.commons.core.backend.user.UserRegisterRequest;
 import net.seocraft.commons.core.translation.TranslatableField;

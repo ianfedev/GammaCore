@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import me.fixeddev.bcm.AbstractAdvancedCommand;
 import me.fixeddev.bcm.CommandContext;
 import net.seocraft.api.bukkit.user.UserLoginManagement;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

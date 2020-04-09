@@ -6,17 +6,14 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserPermissionChecker;
-import net.seocraft.api.core.user.UserStorageProvider;
-import net.seocraft.commons.bukkit.util.ChatAlertLibrary;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissibleBase;
 
 import java.io.IOException;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 
 public class UserPermissions extends PermissibleBase {

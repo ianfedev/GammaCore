@@ -1,4 +1,4 @@
-package net.seocraft.commons.bukkit.util;
+package net.seocraft.api.bukkit.utils;
 
 import net.seocraft.api.bukkit.minecraft.SkinSkullHandler;
 import org.bukkit.inventory.ItemStack;
