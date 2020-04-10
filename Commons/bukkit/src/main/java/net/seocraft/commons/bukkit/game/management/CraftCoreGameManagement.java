@@ -400,6 +400,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     }
 
     @Override
+    public boolean hasRemainingTime(@NotNull String match) {
+        return this.remainingTime.containsKey(match);
+    }
+
+    @Override
     public void removeMatchTime(@NotNull String match) {
         this.remainingTime.remove(match);
     }

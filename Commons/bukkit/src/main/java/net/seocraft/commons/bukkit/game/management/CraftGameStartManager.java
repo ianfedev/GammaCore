@@ -8,6 +8,7 @@ import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
+import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.bukkit.utils.CountdownTimer;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -36,6 +37,7 @@ public class CraftGameStartManager implements GameStartManager {
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private UserFormatter userFormatter;
     @Inject private TranslatableField translatableField;
+    @Inject private LobbyScoreboardManager lobbyScoreboardManager;
     @Inject private CommonsBukkit instance;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private RedisClient client;
@@ -53,6 +55,7 @@ public class CraftGameStartManager implements GameStartManager {
                     30,
                     (time) -> {
                         this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
+                        this.lobbyScoreboardManager.setLobbyScoreboard(match);
                         if (time.isImportantSecond()) involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> startMatch(match)
@@ -97,6 +100,7 @@ public class CraftGameStartManager implements GameStartManager {
                     }),
                     (time) -> {
                         this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
+                        this.lobbyScoreboardManager.setLobbyScoreboard(match);
                         if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> startMatch(match)
@@ -124,6 +128,8 @@ public class CraftGameStartManager implements GameStartManager {
             int taskId = Integer.parseInt(temporalCountdown.get(match.getId()));
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
+            this.coreGameManagement.removeMatchTime(match.getId());
+            this.lobbyScoreboardManager.setLobbyScoreboard(match);
             this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
             involvedUsers.forEach(user -> {
                 Player player = Bukkit.getPlayer(user.getUsername());
@@ -148,6 +154,8 @@ public class CraftGameStartManager implements GameStartManager {
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
             this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
+            this.coreGameManagement.removeMatchTime(match.getId());
+            this.lobbyScoreboardManager.setLobbyScoreboard(match);
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
                 Player player = Bukkit.getPlayer(matchUser.getUsername());
                 if (player != null) {
@@ -192,6 +200,7 @@ public class CraftGameStartManager implements GameStartManager {
             this.coreGameManagement.updateMatch(match);
             Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
             this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
+            this.coreGameManagement.removeMatchTime(match.getId());
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException ex) {
             this.kickErrorPlayers(match);
         }

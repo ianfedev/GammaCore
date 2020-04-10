@@ -25,15 +25,7 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
     @Inject private TranslatableField translatableField;
 
     private Map<String, Scoreboard> scoreboardMap = new ConcurrentHashMap<>();
-    private Map<String, Integer> taskMap = new ConcurrentHashMap<>();
 
-    public void clearScoreboard(@NotNull String userName) {
-        taskMap.remove(userName);
-    }
-
-    public void setScoreboardTask(@NotNull String userName, int task) {
-        taskMap.put(userName, task);
-    }
 
     public void setLobbyScoreboard(@NotNull Match match) {
 
@@ -46,7 +38,7 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
             if (player != null) {
 
                 Scoreboard scoreboard = scoreboardMap.get(user.getId());
-                if (!taskMap.containsKey(user.getId())) {
+                if (!scoreboardMap.containsKey(user.getId())) {
                     scoreboard = this.scoreboardManager.createScoreboard(
                             ChatColor.GOLD + "" + ChatColor.BOLD + this.translatableField.getUnspacedField(
                                     user.getLanguage(),
@@ -55,12 +47,10 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                     );
                     scoreboard.apply(player);
                     scoreboardMap.put(user.getId(), scoreboard);
-                } else {
-                    this.scoreboardManager.getDefaultRemover().remove(scoreboardMap.get(player.getName()), player);
-                    this.scoreboardMap.remove(player.getName());
                 }
 
                 if (scoreboard != null) {
+                    scoreboard.setLine(10,ChatColor.UNDERLINE + " ");
                     scoreboard.setLine(
                             9,
                             ChatColor.YELLOW + this.translatableField.getUnspacedField(
@@ -80,11 +70,19 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                                     "commons_scoreboard_starting"
                             )
                     );
-                    scoreboard.setLine(
-                            6,
-                            ChatColor.YELLOW + "\u00BB " + ChatColor.GREEN + ChatColor.WHITE +
-                                    this.translatableField.getUnspacedField(user.getLanguage(), "commons_scoreboard_insufficent")
-                    );
+                    if (this.coreGameManagement.hasRemainingTime(match.getId())) {
+                        scoreboard.setLine(
+                                6,
+                                ChatColor.YELLOW + "\u00BB " + ChatColor.GREEN + ChatColor.WHITE +
+                                        this.coreGameManagement.getRemainingTime(match.getId()) + "s"
+                        );
+                    } else {
+                        scoreboard.setLine(
+                                6,
+                                ChatColor.YELLOW + "\u00BB " + ChatColor.GREEN + ChatColor.WHITE +
+                                        this.translatableField.getUnspacedField(user.getLanguage(), "commons_scoreboard_insufficent")
+                        );
+                    }
                     scoreboard.setLine(
                             5,
                             ChatColor.YELLOW + this.translatableField.getUnspacedField(

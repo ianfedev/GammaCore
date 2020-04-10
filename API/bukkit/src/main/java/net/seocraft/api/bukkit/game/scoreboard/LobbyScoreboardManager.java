@@ -7,8 +7,4 @@ public interface LobbyScoreboardManager {
 
     void setLobbyScoreboard(@NotNull Match match);
 
-    void clearScoreboard(@NotNull String userName);
-
-    void setScoreboardTask(@NotNull String userName, int task);
-
 }

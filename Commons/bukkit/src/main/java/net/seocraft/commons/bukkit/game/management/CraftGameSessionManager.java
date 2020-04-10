@@ -86,14 +86,6 @@ public class CraftGameSessionManager implements GameLoginManager {
                     );
 
                     this.lobbyScoreboardManager.setLobbyScoreboard(match.getMatch());
-                    int task = Bukkit.getScheduler().scheduleSyncRepeatingTask(
-                            instance,
-                            () -> this.lobbyScoreboardManager.setLobbyScoreboard(match.getMatch()),
-                            0,
-                            20L
-                    );
-                    this.lobbyScoreboardManager.setScoreboardTask(user.getUsername(), task);
-
 
                     if (actualPlayers >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                         this.gameStartManager.startMatchCountdown(match.getMatch());
@@ -172,7 +164,6 @@ public class CraftGameSessionManager implements GameLoginManager {
 
         this.coreGameManagement.removeWaitingPlayer(player);
         this.coreGameManagement.removeMatchPlayer(match.getId(), user);
-        this.lobbyScoreboardManager.clearScoreboard(user.getUsername());
         Bukkit.getPluginManager().callEvent(new GamePlayerLeaveEvent(user));
 
     }

@@ -76,6 +76,8 @@ public interface CoreGameManagement {
 
     int getRemainingTime(@NotNull String match);
 
+    boolean hasRemainingTime(@NotNull String match);
+
     void removeMatchTime(@NotNull String match);
 
     @NotNull Multimap<String, User> getMatchAssignations();
