@@ -9,6 +9,7 @@ import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
@@ -17,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -28,6 +30,8 @@ public class CraftGameSessionManager implements GameLoginManager {
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private GameStartManager gameStartManager;
     @Inject private TranslatableField translatableField;
+    @Inject private LobbyScoreboardManager lobbyScoreboardManager;
+    @Inject private Plugin instance;
     @Inject private UserFormatter userFormatter;
     @Inject private BukkitAPI bukkitAPI;
 
@@ -80,6 +84,16 @@ public class CraftGameSessionManager implements GameLoginManager {
                                             )
 
                     );
+
+                    this.lobbyScoreboardManager.setLobbyScoreboard(match.getMatch());
+                    int task = Bukkit.getScheduler().scheduleSyncRepeatingTask(
+                            instance,
+                            () -> this.lobbyScoreboardManager.setLobbyScoreboard(match.getMatch()),
+                            0,
+                            20L
+                    );
+                    this.lobbyScoreboardManager.setScoreboardTask(user.getUsername(), task);
+
 
                     if (actualPlayers >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                         this.gameStartManager.startMatchCountdown(match.getMatch());
@@ -158,6 +172,7 @@ public class CraftGameSessionManager implements GameLoginManager {
 
         this.coreGameManagement.removeWaitingPlayer(player);
         this.coreGameManagement.removeMatchPlayer(match.getId(), user);
+        this.lobbyScoreboardManager.clearScoreboard(user.getUsername());
         Bukkit.getPluginManager().callEvent(new GamePlayerLeaveEvent(user));
 
     }

@@ -321,6 +321,11 @@ commons_invalidation_error: "¡Ha ocurrido un error al invalidar la partida!"
 commons_invalidation_success: "Un administrador ha invalidado la partida, eso significa que no contará dentro de las estadísticas. Ahora estás en modo espectador, tienes dos minutos para salir antes de que la partida se cierre"
 commons_invalidation_expulse: "¡La partida cerrará en %%seconds%% segundos!"
 commons_invalidation_notingame: "¡La partida que quieres invalidar no ha iniciado!"
+commons_scoreboard_mode: "Modo"
+commons_scoreboard_map: "Mapa"
+commons_scoreboard_insufficent: "Esperando jugadores"
+commons_scoreboard_starting: "Empieza en"
+commons_scoreboard_players: "Jugadores"
 
 # Languages
 commons_es: "Español"
