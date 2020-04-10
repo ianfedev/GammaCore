@@ -50,7 +50,7 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                 }
 
                 if (scoreboard != null) {
-                    scoreboard.setLine(10,ChatColor.UNDERLINE + " ");
+                    scoreboard.setLine(10,ChatColor.RED + " ");
                     scoreboard.setLine(
                             9,
                             ChatColor.YELLOW + this.translatableField.getUnspacedField(
@@ -70,7 +70,7 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                                     "commons_scoreboard_starting"
                             )
                     );
-                    if (this.coreGameManagement.hasRemainingTime(match.getId())) {
+                    if (this.coreGameManagement.hasRemainingTime(match.getId()) && this.coreGameManagement.getRemainingTime(match.getId()) != -1) {
                         scoreboard.setLine(
                                 6,
                                 ChatColor.YELLOW + "\u00BB " + ChatColor.GREEN + ChatColor.WHITE +
