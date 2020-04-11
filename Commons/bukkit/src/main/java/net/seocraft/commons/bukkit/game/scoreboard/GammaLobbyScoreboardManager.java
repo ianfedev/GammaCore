@@ -3,6 +3,7 @@ package net.seocraft.commons.bukkit.game.scoreboard;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.creator.board.Scoreboard;
 import net.seocraft.api.bukkit.creator.board.ScoreboardManager;
+import net.seocraft.api.bukkit.creator.board.line.ScoreboardLine;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -70,6 +72,8 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                                 "commons_scoreboard_starting"
                         )
                 );
+                Optional<ScoreboardLine> line = scoreboard.getLine(6);
+                if (line.isPresent()) scoreboard.getLineRemover().remove(scoreboard, line.get());
                 if (this.coreGameManagement.hasRemainingTime(match.getId()) && this.coreGameManagement.getRemainingTime(match.getId()) != -1) {
                     scoreboard.setLine(
                             6,
