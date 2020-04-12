@@ -13,6 +13,7 @@ import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
+import net.seocraft.commons.bukkit.game.management.menu.SpectatorToolbar;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,7 +32,6 @@ public class CraftGameSessionManager implements GameLoginManager {
     @Inject private GameStartManager gameStartManager;
     @Inject private TranslatableField translatableField;
     @Inject private LobbyScoreboardManager lobbyScoreboardManager;
-    @Inject private Plugin instance;
     @Inject private UserFormatter userFormatter;
     @Inject private BukkitAPI bukkitAPI;
 
@@ -86,6 +86,14 @@ public class CraftGameSessionManager implements GameLoginManager {
                     );
 
                     this.lobbyScoreboardManager.setLobbyScoreboard(match.getMatch());
+                    player.getInventory().setItem(
+                            8,
+                            SpectatorToolbar.getLobbyReturnItem(
+                                    user.getLanguage(),
+                                    translatableField,
+                                    this.coreGameManagement.getGamemode().getLobbyGroup()
+                            )
+                    );
 
                     if (actualPlayers >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                         this.gameStartManager.startMatchCountdown(match.getMatch());
@@ -164,6 +172,7 @@ public class CraftGameSessionManager implements GameLoginManager {
 
         this.coreGameManagement.removeWaitingPlayer(player);
         this.coreGameManagement.removeMatchPlayer(match.getId(), user);
+        player.getInventory().clear();
         Bukkit.getPluginManager().callEvent(new GamePlayerLeaveEvent(user));
 
     }
