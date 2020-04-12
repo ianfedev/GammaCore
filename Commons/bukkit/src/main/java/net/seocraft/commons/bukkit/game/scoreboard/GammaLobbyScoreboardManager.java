@@ -28,6 +28,7 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
 
     private Map<String, Scoreboard> scoreboardMap = new ConcurrentHashMap<>();
 
+
     public void setLobbyScoreboard(@NotNull Match match) {
 
         Set<User> matchUsers = this.coreGameManagement.getMatchUsers(match.getId());
@@ -39,17 +40,17 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
             if (player != null) {
 
                 Scoreboard scoreboard = scoreboardMap.get(user.getId());
-                if (!scoreboardMap.containsKey(user.getId())) {
-                    scoreboard = this.scoreboardManager.createScoreboard(
-                            ChatColor.GOLD + "" + ChatColor.BOLD + this.translatableField.getUnspacedField(
-                                    user.getLanguage(),
-                                    this.coreGameManagement.getGamemode().getName().toUpperCase()
-                            )
-                    );
-                    scoreboard.apply(player);
-                    scoreboardMap.put(user.getId(), scoreboard);
+                if (scoreboardMap.containsKey(user.getId())) {
+                    scoreboard.getRemover().remove(scoreboard, player);
                 }
-
+                scoreboard = this.scoreboardManager.createScoreboard(
+                        ChatColor.GOLD + "" + ChatColor.BOLD + this.translatableField.getUnspacedField(
+                                user.getLanguage(),
+                                this.coreGameManagement.getGamemode().getName().toUpperCase()
+                        )
+                );
+                scoreboard.apply(player);
+                scoreboardMap.put(user.getId(), scoreboard);
 
                 scoreboard.setLine(10,ChatColor.RED + " ");
                 scoreboard.setLine(
@@ -71,7 +72,6 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                                 "commons_scoreboard_starting"
                         )
                 );
-
                 Optional<ScoreboardLine> line = scoreboard.getLine(6);
                 if (line.isPresent()) scoreboard.getLineRemover().remove(scoreboard, line.get());
                 if (this.coreGameManagement.hasRemainingTime(match.getId()) && this.coreGameManagement.getRemainingTime(match.getId()) != -1) {
@@ -87,7 +87,6 @@ public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
                                     this.translatableField.getUnspacedField(user.getLanguage(), "commons_scoreboard_insufficent")
                     );
                 }
-
                 scoreboard.setLine(
                         5,
                         ChatColor.YELLOW + this.translatableField.getUnspacedField(
