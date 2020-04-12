@@ -42,6 +42,7 @@ import net.seocraft.commons.bukkit.friend.UserFriendshipProvider;
 import net.seocraft.commons.bukkit.game.GameModule;
 import net.seocraft.commons.bukkit.listener.DisabledPluginsCommandListener;
 import net.seocraft.commons.bukkit.listener.game.*;
+import net.seocraft.commons.bukkit.listener.game.toolbar.GameLobbyToolbarListener;
 import net.seocraft.commons.bukkit.punishment.UserPunishmentProvider;
 import net.seocraft.commons.bukkit.serializer.AbstractResolverModule;
 import net.seocraft.commons.bukkit.serializer.CustomSerializer;
@@ -73,6 +74,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     // --- Game API related listeners --- //
     @Inject private PlayerDamageListener playerDamageListener;
+    @Inject private GameLobbyToolbarListener gameLobbyToolbarListener;
     @Inject private PlayerSpectatorListener playerSpectatorListener;
 
     @Inject private GamePairingListener gamePairingListener;
@@ -254,6 +256,7 @@ public class CommonsBukkit extends JavaPlugin {
 
     private void enableGameEvents() {
         getServer().getPluginManager().registerEvents(playerDamageListener, this);
+        getServer().getPluginManager().registerEvents(gameLobbyToolbarListener, this);
         getServer().getPluginManager().registerEvents(playerSpectatorListener, this);
         getServer().getPluginManager().registerEvents(gameFinishedListener, this);
         getServer().getPluginManager().registerEvents(gameStartedListener, this);
