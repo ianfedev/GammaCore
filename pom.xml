@@ -125,7 +125,7 @@
             <dependency>
                 <groupId>net.seocraft</groupId>
                 <artifactId>paperspigot</artifactId>
-                <version>1.8-20200318.190200-1</version>
+                <version>1.8-20200414.174829-3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

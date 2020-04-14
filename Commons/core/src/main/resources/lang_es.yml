@@ -323,7 +323,7 @@ commons_invalidation_expulse: "¡La partida cerrará en %%seconds%% segundos!"
 commons_invalidation_notingame: "¡La partida que quieres invalidar no ha iniciado!"
 commons_scoreboard_mode: "Modo"
 commons_scoreboard_map: "Mapa"
-commons_scoreboard_insufficent: "Esperando jugadores"
+commons_scoreboard_insufficent: "Esperando"
 commons_scoreboard_starting: "Empieza en"
 commons_scoreboard_players: "Jugadores"
 

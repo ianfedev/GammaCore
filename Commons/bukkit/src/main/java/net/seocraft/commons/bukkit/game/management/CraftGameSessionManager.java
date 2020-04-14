@@ -85,7 +85,7 @@ public class CraftGameSessionManager implements GameLoginManager {
 
                     );
 
-                    this.lobbyScoreboardManager.setLobbyScoreboard(match.getMatch());
+                    this.lobbyScoreboardManager.retrieveGameBoard(match.getMatch(), player, user);
                     player.getInventory().setItem(
                             8,
                             SpectatorToolbar.getLobbyReturnItem(

@@ -55,7 +55,7 @@ public class CraftGameStartManager implements GameStartManager {
                     30,
                     (time) -> {
                         this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
-                        this.lobbyScoreboardManager.setLobbyScoreboard(match);
+                        this.lobbyScoreboardManager.updateBoardCountDown(match, time.getSecondsLeft());
                         if (time.isImportantSecond()) involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> startMatch(match)
@@ -100,7 +100,7 @@ public class CraftGameStartManager implements GameStartManager {
                     }),
                     (time) -> {
                         this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
-                        this.lobbyScoreboardManager.setLobbyScoreboard(match);
+                        this.lobbyScoreboardManager.updateBoardCountDown(match, time.getSecondsLeft());
                         if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
                     () -> startMatch(match)
@@ -129,7 +129,7 @@ public class CraftGameStartManager implements GameStartManager {
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
             this.coreGameManagement.removeMatchTime(match.getId());
-            this.lobbyScoreboardManager.setLobbyScoreboard(match);
+            this.lobbyScoreboardManager.updateBoardCountDown(match, -1);
             this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
             involvedUsers.forEach(user -> {
                 Player player = Bukkit.getPlayer(user.getUsername());
@@ -155,7 +155,7 @@ public class CraftGameStartManager implements GameStartManager {
             this.client.deleteHash(getScheduledString(), match.getId());
             this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
             this.coreGameManagement.removeMatchTime(match.getId());
-            this.lobbyScoreboardManager.setLobbyScoreboard(match);
+            this.lobbyScoreboardManager.updateBoardCountDown(match, -1);
             this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
                 Player player = Bukkit.getPlayer(matchUser.getUsername());
                 if (player != null) {
