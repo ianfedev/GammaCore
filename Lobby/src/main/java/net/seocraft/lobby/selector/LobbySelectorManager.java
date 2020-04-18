@@ -77,12 +77,14 @@ public class LobbySelectorManager implements SelectorManager {
                                     if (npcEvent instanceof NPCInteractEvent) {
                                         NPCInteractEvent interactEvent = (NPCInteractEvent) npcEvent;
                                         if (interactEvent.getClickType() == ClickType.RIGHT_CLICK) {
-                                            this.npcRedirector.redirectPlayer(
-                                                    gamemode,
-                                                    finalSubGamemode,
-                                                    interactEvent.getPlayer(),
-                                                    selectorNPC.isPerk()
-                                            );
+                                            Bukkit.getScheduler().runTaskAsynchronously(this.lobby, () -> {
+                                                this.npcRedirector.redirectPlayer(
+                                                        gamemode,
+                                                        finalSubGamemode,
+                                                        interactEvent.getPlayer(),
+                                                        selectorNPC.isPerk()
+                                                );
+                                            });
                                         }
                                     }
                                 });
