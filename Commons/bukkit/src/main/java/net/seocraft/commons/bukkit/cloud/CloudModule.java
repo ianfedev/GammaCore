@@ -20,6 +20,7 @@ public class CloudModule extends ProtectedModule {
             bind(CloudManager.class).to(CloudStandaloneManager.class);
         }
         bind(ServerRedirector.class).to(NPCRedirector.class);
+        expose(ServerRedirector.class);
         expose(CloudManager.class);
     }
 
