@@ -10,11 +10,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class SpectatorToolbar {
 
-    public static ItemStack getLobbyReturnItem(String l, TranslatableField field, String lobby) {
+    public static ItemStack getLobbyReturnItem(String l, TranslatableField field) {
         ItemStack returnBase = NBTTagHandler.addString(
                 new ItemStack(Material.NETHER_STAR, 1),
-                "LOBBY_RETURN",
-                lobby
+                "hotbar_accessor",
+                "back_lobby"
         );
 
         ItemMeta meta = returnBase.getItemMeta();
@@ -37,11 +37,11 @@ public class SpectatorToolbar {
         return returnBase;
     }
 
-    public static ItemStack getPlayAgainItem(String l, TranslatableField field, String game, boolean manual) {
+    public static ItemStack getPlayAgainItem(String l, TranslatableField field, boolean manual) {
         ItemStack playBase = NBTTagHandler.addString(
                 new ItemStack(Material.BOOK, 1),
-                "PLAY_AGAIN",
-                game
+                "hotbar_accessor",
+                "replay"
         );
 
         ItemMeta meta = playBase.getItemMeta();

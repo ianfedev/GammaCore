@@ -90,8 +90,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                             8,
                             SpectatorToolbar.getLobbyReturnItem(
                                     user.getLanguage(),
-                                    translatableField,
-                                    this.coreGameManagement.getGamemode().getLobbyGroup()
+                                    translatableField
                             )
                     );
 

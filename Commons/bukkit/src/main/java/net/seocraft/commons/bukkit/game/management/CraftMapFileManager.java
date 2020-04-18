@@ -160,6 +160,8 @@ public class CraftMapFileManager implements MapFileManager {
             if ((entity instanceof LivingEntity) && !(entity instanceof Player)) entity.remove();
         });
         world.setTime(1000);
+        world.setStorm(false);
+        world.setGameRuleValue("doWeatherCycle", "false");
         world.setGameRuleValue("doMobSpawning", "false");
         world.setGameRuleValue("doDaylightCycle", "false");
         return world;

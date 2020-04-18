@@ -25,7 +25,8 @@ public class GameLobbyToolbarListener implements Listener {
                 (event.getAction() == Action.RIGHT_CLICK_AIR ||  event.getAction() == Action.RIGHT_CLICK_BLOCK) &&
                  handItem != null && handItem.getType() != Material.AIR && NBTTagHandler.hasString(handItem, "hotbar_accessor")
         ) {
-            this.cloudManager.sendPlayerToGroup(player, this.coreGameManagement.getGamemode().getLobbyGroup());
+            if (NBTTagHandler.getString(handItem, "hotbar_accessor").equalsIgnoreCase("back_lobby"))
+                this.cloudManager.sendPlayerToGroup(player, this.coreGameManagement.getGamemode().getLobbyGroup());
         }
     }
 
