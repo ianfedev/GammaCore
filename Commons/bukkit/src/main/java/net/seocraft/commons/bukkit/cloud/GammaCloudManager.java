@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 public class GammaCloudManager implements CloudManager {
@@ -111,7 +112,16 @@ public class GammaCloudManager implements CloudManager {
 
     @Override
     public int getOnlinePlayers() {
-        return BridgePlayerManager.getInstance().getOnlinePlayers().size();
+        ExecutorService executor = Executors.newCachedThreadPool();
+        Callable<Integer> task = () -> BridgePlayerManager.getInstance().getOnlinePlayers().size();
+        Future<Integer> future = executor.submit(task);
+        try {
+            return future.get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+
+            future.cancel(true);
+            return 0;
+        }
     }
 
     @NotNull
