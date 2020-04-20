@@ -58,21 +58,7 @@ public class GammaCloudManager implements CloudManager {
                     if (!serviceInfoSnapshots.isEmpty()) {
                         serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
                     }
-                    Bukkit.getScheduler().runTaskLater(
-                            instance,
-                            new BukkitRunnable() {
-                                @Override
-                                public void run() {
-                                    Player taskPlayer = Bukkit.getPlayer(player.getName());
-                                    if (taskPlayer != null)  {
-                                        sendPlayerToGroupSecured(player, group, finalTimer);
-                                    } else {
-                                        this.cancel();
-                                    }
-                                }
-                            },
-                            60
-                    );
+                    Bukkit.getScheduler().runTaskAsynchronously(instance, () -> sendPlayerToGroupSecured(player, group, finalTimer));
                 }
             });
         } else {
