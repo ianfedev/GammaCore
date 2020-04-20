@@ -50,6 +50,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Inject private ServerManager serverManager;
     @Inject private CloudManager cloudManager;
     @Inject private CommonsBukkit instance;
+    @Inject private Random random;
 
     private Gamemode gamemode;
     private SubGamemode subGamemode;
@@ -115,12 +116,11 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void initializeMatch() throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
 
-        Map<GameMap, File> playableMaps = this.mapFileManager.getPlayableMaps();
+        List<GameMap> playableMaps = new ArrayList<>(this.mapFileManager.getPlayableMaps().keySet());
+        int index = this.random.nextInt(playableMaps.size());
 
-        Optional<GameMap> firstMap = playableMaps
-                .keySet()
-                .stream()
-                .findAny();
+        Optional<GameMap> firstMap = Optional.empty();
+        if (index <= playableMaps.size()) firstMap = Optional.of(playableMaps.get(index));
 
         if (firstMap.isPresent()) {
             Match createdMatch = this.matchProvider.createMatch(
