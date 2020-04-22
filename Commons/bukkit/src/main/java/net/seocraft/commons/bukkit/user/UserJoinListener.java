@@ -1,5 +1,6 @@
 package net.seocraft.commons.bukkit.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -22,6 +23,7 @@ import net.seocraft.api.core.session.AuthValidation;
 import net.seocraft.api.core.session.MinecraftSessionManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserPermissionChecker;
+import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import net.seocraft.commons.bukkit.authentication.AuthenticationAttemptsHandler;
 import net.seocraft.commons.bukkit.authentication.AuthenticationLoginListener;
@@ -75,6 +77,8 @@ public class UserJoinListener implements Listener {
     private CommonsBukkit instance;
     @Inject
     private PacketManager packetManager;
+    @Inject
+    private UserStorageProvider userStorageProvider;
     private static Field playerField;
 
     static {
@@ -101,6 +105,16 @@ public class UserJoinListener implements Listener {
                     event.getAddress().getHostAddress()
             );
 
+            if (validation.hasMultipleAccounts()) {
+                event.setKickMessage(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
+                event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+
+                return;
+            }
+
+            User user = validation.getValidatedUser();
+            this.punishmentActions.checkBan(user);
+
             usersBeingValidated.put(event.getUniqueId(), validation);
         } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest error) {
             event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
@@ -112,19 +126,12 @@ public class UserJoinListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onLogin(PlayerLoginEvent event){
+    public void onLogin(PlayerLoginEvent event) {
         // should be loaded
         AuthValidation validation = usersBeingValidated.getIfPresent(event.getPlayer().getUniqueId());
 
-        if(validation == null){
+        if (validation == null) {
             event.setKickMessage(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Data could not be loaded on the login");
-            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
-
-            return;
-        }
-
-        if(validation.hasMultipleAccounts()){
-            event.setKickMessage(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
             event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
 
             return;
@@ -134,6 +141,17 @@ public class UserJoinListener implements Listener {
 
         User validatedUser = validation.getValidatedUser();
         player.setDatabaseIdentifier(validatedUser.getId());
+
+        // Cache the user for 2 minutes after it was initially validated
+        try {
+            userStorageProvider.cacheStoreUser(validatedUser);
+        } catch (JsonProcessingException error) {
+            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
+            Bukkit.getLogger().log(Level.SEVERE, "[Commons] Something went wrong when logging player {0} ({1}): {2}",
+                    new Object[]{player.getName(), error.getClass().getSimpleName(), error.getMessage()});
+            error.printStackTrace();
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -144,7 +162,7 @@ public class UserJoinListener implements Listener {
             // should be loaded
             AuthValidation validation = usersBeingValidated.getIfPresent(event.getPlayer().getUniqueId());
 
-            if(validation == null){
+            if (validation == null) {
                 player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Data could not be loaded on the login");
                 return;
             }
@@ -155,7 +173,6 @@ public class UserJoinListener implements Listener {
             } else {
                 User validatedUser = validation.getValidatedUser();
 
-                this.punishmentActions.checkBan(validatedUser);
                 this.onlineStatusManager.setPlayerOnlineStatus(validatedUser.getId(), true);
                 playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
 
