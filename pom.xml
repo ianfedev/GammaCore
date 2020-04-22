@@ -21,8 +21,16 @@
             <url>https://cloudnetservice.eu/repositories/</url>
         </repository>
         <repository>
-            <id>master-repository</id>
-            <url>https://repo.seocraft.net/repository/master-repository</url>
+            <id>gamma-releases</id>
+            <url>https://repo.seocraft.net/repository/gamma-releases</url>
+        </repository>
+        <repository>
+            <id>gamma-snapshots</id>
+            <url>https://repo.seocraft.net/repository/gamma-snapshots</url>
+        </repository>
+        <repository>
+            <id>maven-public</id>
+            <url>https://repo.seocraft.net/repository/maven-public</url>
         </repository>
     </repositories>
 
