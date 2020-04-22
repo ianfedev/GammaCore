@@ -1,6 +1,8 @@
 package net.seocraft.commons.bukkit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.creator.intercept.PacketManager;
@@ -31,33 +33,48 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.RegisteredListener;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class UserJoinListener implements Listener {
 
-    @Inject private ObjectMapper mapper;
-    @Inject private PunishmentActions punishmentActions;
-    @Inject private RedisClient redisClient;
-    @Inject private AuthenticationAttemptsHandler authenticationAttemptsHandler;
-    @Inject private AuthenticationLoginListener authenticationLoginListener;
-    @Inject private GameLoginManager gameLoginManager;
-    @Inject private UserPermissionChecker userPermissionChecker;
-    @Inject private ServerManager serverManager;
-    @Inject private CloudManager cloudManager;
-    @Inject private TranslatableField translatableField;
-    @Inject private OnlineStatusManager onlineStatusManager;
-    @Inject private MinecraftSessionManager minecraftSessionManager;
-    @Inject private CommonsBukkit instance;
-    @Inject private PacketManager packetManager;
+    @Inject
+    private ObjectMapper mapper;
+    @Inject
+    private PunishmentActions punishmentActions;
+    @Inject
+    private RedisClient redisClient;
+    @Inject
+    private AuthenticationAttemptsHandler authenticationAttemptsHandler;
+    @Inject
+    private AuthenticationLoginListener authenticationLoginListener;
+    @Inject
+    private GameLoginManager gameLoginManager;
+    @Inject
+    private UserPermissionChecker userPermissionChecker;
+    @Inject
+    private ServerManager serverManager;
+    @Inject
+    private CloudManager cloudManager;
+    @Inject
+    private TranslatableField translatableField;
+    @Inject
+    private OnlineStatusManager onlineStatusManager;
+    @Inject
+    private MinecraftSessionManager minecraftSessionManager;
+    @Inject
+    private CommonsBukkit instance;
+    @Inject
+    private PacketManager packetManager;
     private static Field playerField;
 
     static {
@@ -69,24 +86,75 @@ public class UserJoinListener implements Listener {
         }
     }
 
+    private Cache<UUID, AuthValidation> usersBeingValidated = CacheBuilder
+            .newBuilder()
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .maximumSize(50)
+            .weakValues()
+            .build();
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPreLogin(AsyncPlayerPreLoginEvent event) {
+        try {
+            AuthValidation validation = this.minecraftSessionManager.verifyAuthenticationSession(
+                    event.getName(),
+                    event.getAddress().getHostAddress()
+            );
+
+            usersBeingValidated.put(event.getUniqueId(), validation);
+        } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest error) {
+            event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            event.setKickMessage(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
+            Bukkit.getLogger().log(Level.SEVERE, "[Commons] Something went wrong when logging player {0} ({1}): {2}",
+                    new Object[]{event.getName(), error.getClass().getSimpleName(), error.getMessage()});
+            error.printStackTrace();
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onLogin(PlayerLoginEvent event){
+        // should be loaded
+        AuthValidation validation = usersBeingValidated.getIfPresent(event.getPlayer().getUniqueId());
+
+        if(validation == null){
+            event.setKickMessage(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Data could not be loaded on the login");
+            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+
+            return;
+        }
+
+        if(validation.hasMultipleAccounts()){
+            event.setKickMessage(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
+            event.setResult(PlayerLoginEvent.Result.KICK_OTHER);
+
+            return;
+        }
+
+        Player player = event.getPlayer();
+
+        User validatedUser = validation.getValidatedUser();
+        player.setDatabaseIdentifier(validatedUser.getId());
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void userAccessResponse(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         this.packetManager.injectPlayer(event.getPlayer());
         try {
+            // should be loaded
+            AuthValidation validation = usersBeingValidated.getIfPresent(event.getPlayer().getUniqueId());
 
-            AuthValidation validation = this.minecraftSessionManager.verifyAuthenticationSession(
-                    player.getName(),
-                    player.getAddress().toString().split(":")[0].replace("/", "")
-            );
+            if(validation == null){
+                player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Data could not be loaded on the login");
+                return;
+            }
 
             if (validation.hasMultipleAccounts()) {
                 //TODO: Create multiaccount translation
                 player.kickPlayer(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
             } else {
-
                 User validatedUser = validation.getValidatedUser();
-                player.setDatabaseIdentifier(validatedUser.getId());
+
                 this.punishmentActions.checkBan(validatedUser);
                 this.onlineStatusManager.setPlayerOnlineStatus(validatedUser.getId(), true);
                 playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
@@ -136,12 +204,13 @@ public class UserJoinListener implements Listener {
 
             Bukkit.getScheduler().runTaskLater(this.instance, () -> {
                 Player dp = Bukkit.getPlayer(player.getName());
-                if (dp != null) player.kickPlayer(ChatColor.RED + this.translatableField.getUnspacedField(language, "authentication_delay_exceeded"));
-            }, 20*30);
+                if (dp != null)
+                    player.kickPlayer(ChatColor.RED + this.translatableField.getUnspacedField(language, "authentication_delay_exceeded"));
+            }, 20 * 30);
 
         } else {
             player.kickPlayer(ChatColor.RED +
-                    this.translatableField.getUnspacedField(language,"authentication_too_many_attempts") + "\n\n" + ChatColor.GRAY +
+                    this.translatableField.getUnspacedField(language, "authentication_too_many_attempts") + "\n\n" + ChatColor.GRAY +
                     this.translatableField.getUnspacedField(language, "authentication_try_again_delay") +
                     ": " + this.authenticationAttemptsHandler.getAttemptLockDelay(player.getUniqueId().toString())
             );
