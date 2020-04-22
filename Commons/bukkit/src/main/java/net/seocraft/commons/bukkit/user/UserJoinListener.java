@@ -167,41 +167,37 @@ public class UserJoinListener implements Listener {
                 return;
             }
 
-            if (validation.hasMultipleAccounts()) {
-                //TODO: Create multiaccount translation
-                player.kickPlayer(ChatColor.RED + "Sorry, you can not have multiple accounts. Att: Seocraft :)");
-            } else {
-                User validatedUser = validation.getValidatedUser();
+            User validatedUser = validation.getValidatedUser();
 
-                this.onlineStatusManager.setPlayerOnlineStatus(validatedUser.getId(), true);
-                playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
+            this.onlineStatusManager.setPlayerOnlineStatus(validatedUser.getId(), true);
+            playerField.set(player, new UserPermissions(player, validatedUser, userPermissionChecker, translatableField));
 
-                if (instance.getConfig().getBoolean("authentication.enabled")) {
+            if (instance.getConfig().getBoolean("authentication.enabled")) {
 
-                    if (validatedUser.getSessionInfo().isPremium()) {
-                        this.cloudManager.sendPlayerToGroup(player, validatedUser.getSessionInfo().getLastLobby());
-                        event.setJoinMessage("");
-                        return;
-                    }
-
-                    executeAuthenticationProcess(
-                            player,
-                            validatedUser.getLanguage(),
-                            validation.isRegistered()
-                    );
+                if (validatedUser.getSessionInfo().isPremium()) {
+                    this.cloudManager.sendPlayerToGroup(player, validatedUser.getSessionInfo().getLastLobby());
                     event.setJoinMessage("");
+                    return;
                 }
 
-                executeLobbyCheck(validatedUser, player, event);
-
-                if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
-                    executeGameCheck(validatedUser, player);
-                    event.setJoinMessage("");
-                }
-
-                updateServerRecord(validatedUser.getId());
-                this.minecraftSessionManager.serverSwitch(validatedUser.getId(), Bukkit.getServerName().split("-")[0]);
+                executeAuthenticationProcess(
+                        player,
+                        validatedUser.getLanguage(),
+                        validation.isRegistered()
+                );
+                event.setJoinMessage("");
             }
+
+            executeLobbyCheck(validatedUser, player, event);
+
+            if (this.instance.getServerRecord().getServerType() == ServerType.GAME) {
+                executeGameCheck(validatedUser, player);
+                event.setJoinMessage("");
+            }
+
+            updateServerRecord(validatedUser.getId());
+            this.minecraftSessionManager.serverSwitch(validatedUser.getId(), Bukkit.getServerName().split("-")[0]);
+
 
         } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest | IllegalAccessException error) {
             player.kickPlayer(ChatColor.RED + "Error when logging in, please try again. \n\n" + ChatColor.GRAY + "Error Type: " + error.getClass().getSimpleName());
