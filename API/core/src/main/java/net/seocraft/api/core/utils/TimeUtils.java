@@ -47,6 +47,15 @@ public class TimeUtils {
         return sum;
     }
 
+    public static String getRemainingMinutes(int seconds) {
+        int hours = seconds / 3600;
+        int minutes = (seconds % 3600) / 60;
+        int fSeconds = seconds % 60;
+
+        if (hours == 0) return String.format("%02d:%02d", minutes, seconds);
+        return String.format("%02d:%02d:%02d", hours, minutes, fSeconds);
+    }
+
     public static Date addMinutes(Date date, Integer minutes) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
