@@ -135,7 +135,7 @@ public class GammaCloudManager implements CloudManager {
             JsonNode node =  this.mapper.readTree(
                     snapshot.getProperties().toJson()
             ).get("Players");
-            if (node.isArray()) size = node.size();
+            if (node != null && node.isArray()) size = node.size();
         } catch (IOException ignore) {}
         return size;
     }
