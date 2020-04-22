@@ -173,6 +173,8 @@ public class CoreServerManager implements ServerManager {
                 this.serverTokenQuery.getToken()
         );
 
+        System.out.println("Server Query response:" + rawResponse);
+
         return this.mapper.readValue(rawResponse, new TypeReference<Set<Server>>(){});
     }
 }
