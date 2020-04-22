@@ -29,7 +29,7 @@ public class UserChatListener implements Listener {
     public void userChatListener(AsyncPlayerChatEvent event) {
         if (event.isCancelled()) { return; }
         try {
-            User userData = this.userStorageProvider.findUserByNameSync(event.getPlayer().getName());
+            User userData = this.userStorageProvider.getCachedUserSync(event.getPlayer().getDatabaseIdentifier());
             event.setCancelled(true);
             Bukkit.getOnlinePlayers().forEach( player ->
                     player.spigot().sendMessage(
