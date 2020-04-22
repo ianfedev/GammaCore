@@ -38,6 +38,8 @@ public class GameMatchFinder implements MatchFinder {
         }
         if (!matchList.isEmpty()) {
             Match selectedMatch = matchList.stream().findAny().get();
+            System.out.println("Selected match: " + selectedMatch.getId());
+
             Optional<Server> server = this.serverManager.getServerByQuerySync(
                     null,
                     selectedMatch.getId(),
