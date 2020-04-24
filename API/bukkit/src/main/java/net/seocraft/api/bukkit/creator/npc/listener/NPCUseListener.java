@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.minecraft.server.v1_8_R3.PacketPlayInUseEntity;
 import net.seocraft.api.bukkit.creator.intercept.PacketAdapter;
+import net.seocraft.api.bukkit.creator.npc.NPC;
 import net.seocraft.api.bukkit.creator.npc.NPCManager;
 import net.seocraft.api.bukkit.creator.npc.action.ClickType;
 import net.seocraft.api.bukkit.creator.v_1_8_R3.npc.NPCEntityBase_v1_8_R3;
@@ -35,12 +36,11 @@ public class NPCUseListener extends PacketAdapter {
             actionField.setAccessible(true);
             PacketPlayInUseEntity.EnumEntityUseAction nmsAction = (PacketPlayInUseEntity.EnumEntityUseAction) actionField.get(usePacket);
 
-            npcManager.getNpcs().forEach(npc -> {
+            for (NPC npc : npcManager.getNpcs()) {
                 if (npc.getEntityId() == entityId && npc instanceof NPCEntityBase_v1_8_R3) {
                     ((NPCEntityBase_v1_8_R3) npc).onInteract(target, nmsAction == PacketPlayInUseEntity.EnumEntityUseAction.ATTACK ? ClickType.LEFT_CLICK : ClickType.RIGHT_CLICK);
                 }
-            });
-
+            }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
