@@ -42,6 +42,7 @@ public class CraftPacketManager implements PacketManager {
             @Override
             public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
                 for (PacketListener packetListener : packetListeners) {
+                    System.out.println("Calling packet listener with hashcode " + packetListener.hashCode());
                     packet = packetListener.onPacketPlayIn(player, channelHandlerContext.channel(), packet);
                 }
                 if (packet != null) {
