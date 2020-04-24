@@ -32,6 +32,8 @@ public class GameMatchFinder implements MatchFinder {
 
     public @NotNull FinderResult findAvailableMatch(@NotNull String gamemode, @NotNull String subGamemode, @NotNull String serverGroup, boolean spectable) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
         Set<Match> matchList = this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.WAITING);
+        matchList.addAll(this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.PREPARING));
+
         if (spectable) {
             matchList.addAll(this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.STARTING));
             matchList.addAll(this.matchProvider.findMatchSync(gamemode, subGamemode, null, MatchStatus.INGAME));
