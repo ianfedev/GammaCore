@@ -17,6 +17,7 @@ import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.api.bukkit.utils.CountdownTimer;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
@@ -25,7 +26,6 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.server.ServerManager;
 import net.seocraft.api.core.user.User;
 import net.seocraft.commons.bukkit.CommonsBukkit;
-import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,22 +35,37 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
 public class CraftCoreGameManagement implements CoreGameManagement {
 
-    @Inject private MatchProvider matchProvider;
-    @Inject private MapFileManager mapFileManager;
-    @Inject private ObjectMapper mapper;
-    @Inject private TranslatableField translatableField;
-    @Inject private ServerManager serverManager;
-    @Inject private CloudManager cloudManager;
-    @Inject private CommonsBukkit instance;
-    @Inject private Random random;
+    @Inject
+    private MatchProvider matchProvider;
+    @Inject
+    private MapFileManager mapFileManager;
+    @Inject
+    private ObjectMapper mapper;
+    @Inject
+    private TranslatableField translatableField;
+    @Inject
+    private ServerManager serverManager;
+    @Inject
+    private CloudManager cloudManager;
+    @Inject
+    private CommonsBukkit instance;
+    @Inject
+    private Random random;
 
     private Gamemode gamemode;
     private SubGamemode subGamemode;
@@ -129,6 +144,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                     this.gamemode.getId(),
                     this.subGamemode.getId()
             );
+
             this.actualMatches.add(createdMatch);
             this.mapFileManager.loadMatchWorld(createdMatch);
             this.instance.getServerRecord().addMatch(createdMatch.getId());
@@ -150,7 +166,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.spectatorAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
         this.actualMatches.removeIf((matchIterator) -> matchIterator.getId().equalsIgnoreCase(match.getId()));
 
-        this.instance.getServer().getScheduler().runTaskLaterAsynchronously(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player,this.gamemode.getLobbyGroup())), 60L);
+        this.instance.getServer().getScheduler().runTaskLaterAsynchronously(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player, this.gamemode.getLobbyGroup())), 60L);
     }
 
     @Override
@@ -193,7 +209,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         Set<Player> matchPlayer = new HashSet<>();
         if (!this.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.matchAssignation.entries()) {
-                if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
+                if (entry.getKey().equalsIgnoreCase(match))
+                    matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }
         return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
@@ -204,7 +221,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         Set<Player> matchPlayer = new HashSet<>();
         if (!this.spectatorAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entries()) {
-                if (entry.getKey().equalsIgnoreCase(match)) matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
+                if (entry.getKey().equalsIgnoreCase(match))
+                    matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
             }
         }
         return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
@@ -237,7 +255,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         if (!this.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.matchAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(player.getName())) {
-                    for (Match match: this.actualMatches) {
+                    for (Match match : this.actualMatches) {
                         if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
                     }
                 }
@@ -246,7 +264,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         if (!this.spectatorAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(player.getName())) {
-                    for (Match match: this.actualMatches) {
+                    for (Match match : this.actualMatches) {
                         if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
                     }
                 }
@@ -260,7 +278,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         if (!this.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.matchAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(user.getUsername())) {
-                    for (Match match: this.actualMatches) {
+                    for (Match match : this.actualMatches) {
                         if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
                     }
                 }
@@ -269,7 +287,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         if (!this.spectatorAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(user.getUsername())) {
-                    for (Match match: this.actualMatches) {
+                    for (Match match : this.actualMatches) {
                         if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
                     }
                 }
