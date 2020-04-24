@@ -41,8 +41,9 @@ public class CraftPacketManager implements PacketManager {
 
             @Override
             public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
+                System.out.println("Calling channel read with hashcode " + hashCode());
+
                 for (PacketListener packetListener : packetListeners) {
-                    System.out.println("Calling packet listener with hashcode " + packetListener.hashCode());
                     packet = packetListener.onPacketPlayIn(player, channelHandlerContext.channel(), packet);
                 }
                 if (packet != null) {
@@ -52,6 +53,8 @@ public class CraftPacketManager implements PacketManager {
 
             @Override
             public void write(ChannelHandlerContext channelHandlerContext, Object packet, ChannelPromise channelPromise) throws Exception {
+                System.out.println("Calling channel write with hashcode " + hashCode());
+
                 for (PacketListener packetListener : packetListeners) {
                     packet = packetListener.onPacketPlayOut(player, channelHandlerContext.channel(), packet);
                 }
