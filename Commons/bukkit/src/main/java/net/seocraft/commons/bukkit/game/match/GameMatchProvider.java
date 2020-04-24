@@ -79,7 +79,7 @@ public class GameMatchProvider implements MatchProvider {
                                 mapRecord.getId(),
                                 TimeUtils.getUnixStamp(new Date()),
                                 teams,
-                                MatchStatus.WAITING,
+                                MatchStatus.PREPARING,
                                 new HashSet<>(),
                                 gamemodeRecord.getId(),
                                 subGamemodeRecord.get().getId()
