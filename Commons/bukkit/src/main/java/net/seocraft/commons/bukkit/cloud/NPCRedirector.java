@@ -78,6 +78,12 @@ public class NPCRedirector implements ServerRedirector {
         }
 
         if (this.instance.hasCloudDeploy()) {
+            if(pendingResults.asMap().containsKey(player.getUniqueId())){
+                ChatAlertLibrary.infoAlert(player, "The match is being prepared, please wait.");
+
+                return;
+            }
+
             if (subGamemode == null) {
                 this.cloudManager.sendPlayerToGroup(
                         player,
