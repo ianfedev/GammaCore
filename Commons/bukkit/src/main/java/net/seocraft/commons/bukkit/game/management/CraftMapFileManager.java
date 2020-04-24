@@ -8,6 +8,7 @@ import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.map.MapProvider;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -164,6 +165,9 @@ public class CraftMapFileManager implements MapFileManager {
         world.setGameRuleValue("doWeatherCycle", "false");
         world.setGameRuleValue("doMobSpawning", "false");
         world.setGameRuleValue("doDaylightCycle", "false");
+
+        match.setStatus(MatchStatus.WAITING);
+
         return world;
     }
 
