@@ -151,6 +151,7 @@ public class GameMatchProvider implements MatchProvider {
             }
             case PREPARING: {
                 node.put("status", "preparing");
+                break;
             }
             default: {
                 throw new IllegalArgumentException("You can only pass INGAME/WAITING/STARTING/PREPARING status. Current status " + status.toString() + ".");
