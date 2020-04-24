@@ -15,7 +15,6 @@ public abstract class PacketAdapter implements PacketListener {
     }
     @Override
     public Object onPacketPlayIn(@NotNull Player receiver, @NotNull Channel channel, @NotNull Object packet) {
-        System.out.println("Calling packet listener with hashcode " + hashCode());
 
         if (packet.getClass().getSimpleName().equals(packetName)) return onPacketReceiving(receiver, channel, packet);
         return packet;
@@ -23,7 +22,6 @@ public abstract class PacketAdapter implements PacketListener {
 
     @Override
     public Object onPacketPlayOut(@NotNull Player sender, @NotNull Channel channel, @NotNull Object packet) {
-        System.out.println("Calling packet listener with hashcode " + hashCode());
 
         if (packet.getClass().getSimpleName().equals(packetName)) return onPacketReceiving(sender, channel, packet);
         return packet;
