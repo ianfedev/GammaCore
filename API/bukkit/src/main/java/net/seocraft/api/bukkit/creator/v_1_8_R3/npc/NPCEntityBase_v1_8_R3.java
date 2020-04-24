@@ -363,6 +363,13 @@ public abstract class NPCEntityBase_v1_8_R3 implements NPC, NPCEntity {
     }
 
     public boolean onInteract(Object entity, ClickType clickType) {
+        System.out.println("called oninteract for npc ");
+        try {
+            throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Player player = null;
         if (entity instanceof Player) player = (Player) entity;
         if (EntityHuman.class.equals(entity.getClass())) {
