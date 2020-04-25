@@ -52,7 +52,7 @@ public class TimeUtils {
         int minutes = (seconds % 3600) / 60;
         int fSeconds = seconds % 60;
 
-        if (hours == 0) return String.format("%02d:%02d", minutes, seconds);
+        if (hours == 0) return String.format("%02d:%02d", minutes, fSeconds);
         return String.format("%02d:%02d:%02d", hours, minutes, fSeconds);
     }
 
