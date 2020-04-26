@@ -18,16 +18,15 @@ import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class GammaCloudManager implements CloudManager {
 
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
     @Inject private CommonsBukkit instance;
     @Inject private ObjectMapper mapper;
 
@@ -56,7 +55,11 @@ public class GammaCloudManager implements CloudManager {
                 @Override
                 public void onComplete(ITask<Collection<ServiceInfoSnapshot>> task, Collection<ServiceInfoSnapshot> serviceInfoSnapshots) {
                     if (!serviceInfoSnapshots.isEmpty()) {
-                        serviceInfoSnapshots.stream().findAny().ifPresent(serviceInfoSnapshot -> sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName()));
+                        Iterator<ServiceInfoSnapshot> iterator = serviceInfoSnapshots.iterator();
+                        if (iterator.hasNext()) {
+                            ServiceInfoSnapshot serviceInfoSnapshot = iterator.next();
+                            sendPlayerToServer(player, serviceInfoSnapshot.getServiceId().getName());
+                        }
                     }
                     Bukkit.getScheduler().runTaskAsynchronously(instance, () -> sendPlayerToGroupSecured(player, group, finalTimer));
                 }
@@ -68,15 +71,21 @@ public class GammaCloudManager implements CloudManager {
 
     @Override
     public @NotNull Set<LobbyIcon> getGroupLobbies(@NotNull String group) {
-        return CloudNetDriver.getInstance()
-                .getCloudServiceByGroup(group)
-                .stream()
-                .map(s -> new GammaLobbyIcon(
-                        s.getServiceId().getName(),
-                        getServiceOnlinePlayers(s),
-                        Integer.parseInt(s.getServiceId().getName().split("-")[1]),
-                        s.getProperties().getInt("Max-Players")
-                )).collect(Collectors.toSet());
+        Collection<ServiceInfoSnapshot> serviceInfoSnapshots = CloudNetDriver.getInstance()
+                .getCloudServiceByGroup(group);
+        Set<LobbyIcon> groupLobbies = new HashSet<>();
+
+        for (ServiceInfoSnapshot info : serviceInfoSnapshots) {
+            String serviceName = info.getServiceId().getName();
+            groupLobbies.add(new GammaLobbyIcon(
+                    serviceName,
+                    getServiceOnlinePlayers(info),
+                    Integer.parseInt(serviceName.split("-")[1]),
+                    info.getProperties().getInt("Max-Players")
+            ));
+        }
+
+        return groupLobbies;
     }
 
     @Override
@@ -90,21 +99,20 @@ public class GammaCloudManager implements CloudManager {
 
     @Override
     public int getGamemodeOnlinePlayers(@NotNull Gamemode gamemode) {
-        int counter = 0;
-        counter += getGroupOnlinePlayers(gamemode.getLobbyGroup());
-        for (SubGamemode subGamemode : gamemode.getSubGamemodes()) counter += getGroupOnlinePlayers(subGamemode.getServerGroup());
+        int counter = getGroupOnlinePlayers(gamemode.getLobbyGroup());
+        for (SubGamemode subGamemode : gamemode.getSubGamemodes()) {
+            counter += getGroupOnlinePlayers(subGamemode.getServerGroup());
+        }
         return counter;
     }
 
     @Override
     public int getOnlinePlayers() {
-        ExecutorService executor = Executors.newCachedThreadPool();
         Callable<Integer> task = () -> BridgePlayerManager.getInstance().getOnlinePlayers().size();
-        Future<Integer> future = executor.submit(task);
+        Future<Integer> future = executorService.submit(task);
         try {
             return future.get(5, TimeUnit.SECONDS);
         } catch (TimeoutException | InterruptedException | ExecutionException ex) {
-
             future.cancel(true);
             return 0;
         }
