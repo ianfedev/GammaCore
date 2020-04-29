@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -60,13 +61,18 @@ public class GameMatchFinder implements MatchFinder {
                 UUID serviceUUID = this.cloudManager.createCloudService(serverGroup);
                 while (true) {
                     if (this.cloudManager.isConnected(serviceUUID)) {
-                        Optional<Server> server = this.serverManager.getServerByQuerySync(
+                        Optional<Server> server = Optional.empty();
+                        Iterator<Server> serverIterator = this.serverManager.getServerByQuerySync(
                                 null,
                                 null,
                                 null,
                                 null,
                                 this.cloudManager.getSlug(serviceUUID)
-                        ).stream().findAny();
+                        ).iterator();
+
+                        if (serverIterator.hasNext()) {
+                            server = Optional.of(serverIterator.next());
+                        }
 
                         if (server.isPresent()) {
                             Server foundServer = server.get();

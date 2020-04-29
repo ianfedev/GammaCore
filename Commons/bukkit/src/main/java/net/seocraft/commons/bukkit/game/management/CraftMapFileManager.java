@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import static net.seocraft.commons.core.utils.FileManagerUtils.compressFile;
 import static net.seocraft.commons.core.utils.FileManagerUtils.fileToBase64StringConversion;
@@ -34,7 +33,7 @@ import static net.seocraft.commons.core.utils.FileManagerUtils.fileToBase64Strin
 @Singleton
 public class CraftMapFileManager implements MapFileManager {
 
-    @NotNull private Map<GameMap, File> playableMaps =  new HashMap<>();
+    @NotNull private final Map<GameMap, File> playableMaps =  new HashMap<>();
     @Inject private MapProvider mapProvider;
     @Inject private ObjectMapper mapper;
 
@@ -44,13 +43,9 @@ public class CraftMapFileManager implements MapFileManager {
         File serverPath = new File("./maps");
         if (serverPath.exists() && serverPath.isDirectory()) {
 
-            Set<File> folderList = Arrays.stream(Objects.requireNonNull(serverPath.listFiles())).filter(
-                    File::isDirectory
-            ).collect(
-                    Collectors.toSet()
-            );
+            File[] folderList = serverPath.listFiles(File::isDirectory);
 
-            folderList.forEach(folder -> {
+            for (File folder : folderList) {
                 boolean level = false, region = false, image = false;
                 BaseMapConfiguration configuration = null;
                 for (File file: Objects.requireNonNull(folder.listFiles())) {
@@ -118,7 +113,7 @@ public class CraftMapFileManager implements MapFileManager {
                             folder.getName()
                     );
                 }
-            });
+            }
 
             if (this.playableMaps.isEmpty()) {
                 Bukkit.getLogger().log(Level.SEVERE, "[GameAPI] There was not maps available for load ad 'maps' folder.");
@@ -145,11 +140,11 @@ public class CraftMapFileManager implements MapFileManager {
     public @NotNull World loadMatchWorld(@NotNull Match match) throws IOException {
         File serverPath = new File("./match_" + match.getId());
         serverPath.mkdir();
-        for (Map.Entry entry : this.playableMaps.entrySet()) {
-            GameMap map = (GameMap) entry.getKey();
+        for (Map.Entry<GameMap, File> entry : this.playableMaps.entrySet()) {
+            GameMap map = entry.getKey();
             if (map.getId().equalsIgnoreCase(match.getMap())) {
                 FileUtils.copyDirectory(
-                        (File) entry.getValue(),
+                        entry.getValue(),
                         serverPath
                 );
             }

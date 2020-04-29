@@ -14,6 +14,8 @@ public class CountdownTimer implements Runnable {
 
     private int seconds;
     private int secondsLeft;
+    // prevents beforeTimer from be executed more than once
+    private boolean beforeTimerExecuted = false;
 
     @NotNull private Consumer<CountdownTimer> everySecond;
     @Nullable private Runnable beforeTimer;
@@ -63,7 +65,10 @@ public class CountdownTimer implements Runnable {
             return;
         }
 
-        if (secondsLeft == seconds && beforeTimer != null) beforeTimer.run();
+        if (!beforeTimerExecuted && secondsLeft == seconds && beforeTimer != null) {
+            beforeTimer.run();
+            beforeTimerExecuted = true;
+        }
 
         everySecond.accept(this);
 

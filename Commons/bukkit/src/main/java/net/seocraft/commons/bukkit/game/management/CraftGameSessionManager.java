@@ -19,7 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -37,74 +36,76 @@ public class CraftGameSessionManager implements GameLoginManager {
 
     @Override
     public void matchPlayerJoin(@NotNull FinderResult match, @NotNull User user, @NotNull Player player) {
+
         if (match.isSpectable()) {
             Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match.getMatch(), user, player, false, true));
-        } else {
-            player.setHealth(20);
-            player.setFoodLevel(20);
-            player.getInventory().clear();
-            try {
-                player.teleport(this.coreGameManagement.getLobbyLocation(match.getMatch()));
-                player.setGameMode(GameMode.ADVENTURE);
-                this.coreGameManagement.addMatchPlayer(
-                        match.getMatch().getId(),
-                        user
-                );
-                this.coreGameManagement.addWaitingPlayer(player);
+            return;
+        }
 
-                Bukkit.getOnlinePlayers().forEach(online -> {
-                    online.hidePlayer(player);
-                    player.hidePlayer(online);
-                });
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.getInventory().clear();
+        try {
+            player.teleport(this.coreGameManagement.getLobbyLocation(match.getMatch()));
+            player.setGameMode(GameMode.ADVENTURE);
+            this.coreGameManagement.addMatchPlayer(
+                    match.getMatch().getId(),
+                    user
+            );
+            this.coreGameManagement.addWaitingPlayer(player);
 
-                Set<Player> matchPlayers = this.coreGameManagement.getMatchPlayers(match.getMatch().getId());
-                int actualPlayers = matchPlayers.size();
-                matchPlayers.addAll(this.coreGameManagement.getMatchSpectators(match.getMatch().getId()));
+            Bukkit.getOnlinePlayers().forEach(online -> {
+                online.hidePlayer(player);
+                player.hidePlayer(online);
+            });
 
-                for (Player matchPlayer : matchPlayers) {
-                    player.showPlayer(matchPlayer);
-                    matchPlayer.showPlayer(player);
-                    matchPlayer.sendMessage(
-                            ChatColor.YELLOW +
-                                    this.translatableField.getUnspacedField(user.getLanguage(), "commons_joined_dynamic")
-                                            .replace(
-                                                    "%%player%%",
-                                                    this.userFormatter.getUserColor(
-                                                            user,
-                                                            this.bukkitAPI.getConfig().getString("realm")
-                                                    ) + ChatColor.YELLOW
-                                            )
-                                            .replace(
-                                                    "%%actual%%",
-                                                    ChatColor.AQUA + "" + actualPlayers + ChatColor.YELLOW
-                                            )
-                                            .replace(
-                                                    "%%max%%",
-                                                    ChatColor.AQUA + "" + this.coreGameManagement.getSubGamemode().getMaxPlayers() + ChatColor.YELLOW
-                                            )
+            Set<Player> matchPlayers = this.coreGameManagement.getMatchPlayers(match.getMatch().getId());
+            int actualPlayers = matchPlayers.size();
+            matchPlayers.addAll(this.coreGameManagement.getMatchSpectators(match.getMatch().getId()));
 
-                    );
-
-                    this.lobbyScoreboardManager.retrieveGameBoard(match.getMatch(), player, user);
-                    player.getInventory().setItem(
-                            8,
-                            SpectatorToolbar.getLobbyReturnItem(
-                                    user.getLanguage(),
-                                    translatableField
+            String joinMessage = ChatColor.YELLOW +
+                    this.translatableField.getUnspacedField(user.getLanguage(), "commons_joined_dynamic")
+                            .replace(
+                                    "%%player%%",
+                                    this.userFormatter.getUserColor(
+                                            user,
+                                            this.bukkitAPI.getConfig().getString("realm")
+                                    ) + ChatColor.YELLOW
                             )
-                    );
+                            .replace(
+                                    "%%actual%%",
+                                    ChatColor.AQUA + "" + actualPlayers + ChatColor.YELLOW
+                            )
+                            .replace(
+                                    "%%max%%",
+                                    ChatColor.AQUA + "" + this.coreGameManagement.getSubGamemode().getMaxPlayers() + ChatColor.YELLOW
+                            );
 
-                    if (actualPlayers >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
-                        this.gameStartManager.startMatchCountdown(match.getMatch());
-                    }
+            for (Player matchPlayer : matchPlayers) {
+                player.showPlayer(matchPlayer);
+                matchPlayer.showPlayer(player);
+                matchPlayer.sendMessage(joinMessage);
 
-                }
-            } catch (IOException e) {
-                Bukkit.getLogger().log(Level.WARNING, "[Game API] There was an error paring user {0} to a match. ({1})",
-                        new Object[]{user.getUsername(), e.getMessage()});
-                player.kickPlayer(ChatColor.RED +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_pairing_error"));
-                e.printStackTrace();
             }
+
+            this.lobbyScoreboardManager.retrieveGameBoard(match.getMatch(), player, user);
+            player.getInventory().setItem(
+                    8,
+                    SpectatorToolbar.getLobbyReturnItem(
+                            user.getLanguage(),
+                            translatableField
+                    )
+            );
+
+            if (actualPlayers >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
+                this.gameStartManager.startMatchCountdown(match.getMatch());
+            }
+
+        } catch (IOException e) {
+            Bukkit.getLogger().log(Level.WARNING, "[Game API] There was an error paring user {0} to a match. ({1})",
+                    new Object[]{user.getUsername(), e.getMessage()});
+            player.kickPlayer(ChatColor.RED +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_pairing_error"));
+            e.printStackTrace();
         }
     }
 
@@ -118,15 +119,16 @@ public class CraftGameSessionManager implements GameLoginManager {
 
             matchPlayers.forEach(onlinePlayer -> {
                 Player playerRecord = Bukkit.getPlayer(onlinePlayer.getUsername());
-                if (playerRecord != null) {
-                    ChatAlertLibrary.infoAlert(
-                            playerRecord,
-                            this.translatableField.getUnspacedField(
-                                    onlinePlayer.getLanguage(),
-                                    "commons_spectator_leave"
-                            ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.AQUA)
-                    );
+                if (playerRecord == null) {
+                    return;
                 }
+                ChatAlertLibrary.infoAlert(
+                        playerRecord,
+                        this.translatableField.getUnspacedField(
+                                onlinePlayer.getLanguage(),
+                                "commons_spectator_leave"
+                        ).replace("%%player%%", this.userFormatter.getUserColor(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.AQUA)
+                );
             });
 
             this.coreGameManagement.removeSpectatingPlayer(player);
@@ -139,31 +141,30 @@ public class CraftGameSessionManager implements GameLoginManager {
             int actualPlayers = matchPlayers.size();
             matchPlayers.addAll(this.coreGameManagement.getMatchSpectators(match.getId()));
 
+            String leaveMessage = ChatColor.YELLOW +
+                    this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_dynamic")
+                            .replace(
+                                    "%%player%%",
+                                    this.userFormatter.getUserColor(
+                                            user,
+                                            this.bukkitAPI.getConfig().getString("realm")
+                                    ) + ChatColor.YELLOW
+                            )
+                            .replace(
+                                    "%%actual%%",
+                                    ChatColor.AQUA + "" + (actualPlayers - 1) + ChatColor.YELLOW
+                            )
+                            .replace(
+                                    "%%max%%",
+                                    ChatColor.AQUA + "" + this.coreGameManagement.getSubGamemode().getMaxPlayers() + ChatColor.YELLOW
+                            );
+
             for (Player matchPlayer : matchPlayers) {
                 player.showPlayer(matchPlayer);
                 matchPlayer.showPlayer(player);
-                matchPlayer.sendMessage(
-                        ChatColor.YELLOW +
-                                this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_dynamic")
-                                        .replace(
-                                                "%%player%%",
-                                                this.userFormatter.getUserColor(
-                                                        user,
-                                                        this.bukkitAPI.getConfig().getString("realm")
-                                                ) + ChatColor.YELLOW
-                                        )
-                                        .replace(
-                                                "%%actual%%",
-                                                ChatColor.AQUA + "" + (actualPlayers - 1) + ChatColor.YELLOW
-                                        )
-                                        .replace(
-                                                "%%max%%",
-                                                ChatColor.AQUA + "" + this.coreGameManagement.getSubGamemode().getMaxPlayers() + ChatColor.YELLOW
-                                        )
-
-                );
-
+                matchPlayer.sendMessage(leaveMessage);
             }
+
             if (actualPlayers < this.coreGameManagement.getSubGamemode().getMinPlayers()) {
                 this.gameStartManager.cancelMatchCountdown(match);
             }

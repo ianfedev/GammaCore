@@ -80,33 +80,40 @@ public class CraftGameStartManager implements GameStartManager {
         }
 
         if (matchUsers >= 2) {
+
             CountdownTimer timer = new CountdownTimer(
                     this.instance,
                     seconds,
                     () -> involvedUsers.forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
-                        if (player != null) {
-                            if (silent) {
-                                player.sendMessage(
-                                        ChatColor.GREEN  + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_forced_silent")
-                                );
-                            } else {
-                                player.sendMessage(
-                                        ChatColor.GREEN  + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_forced")
-                                                .replace("%%player%%", this.userFormatter.getUserFormat(issuer, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.GREEN)
-                                );
-                            }
+                        if (player == null) {
+                            return;
+                        }
+                        if (silent) {
+                            player.sendMessage(
+                                    ChatColor.GREEN  + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_forced_silent")
+                            );
+                        } else {
+                            player.sendMessage(
+                                    ChatColor.GREEN  + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_forced")
+                                            .replace("%%player%%", this.userFormatter.getUserFormat(issuer, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.GREEN)
+                            );
                         }
                     }),
                     (time) -> {
                         this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
                         this.lobbyScoreboardManager.updateBoardCountDown(match, time.getSecondsLeft());
-                        if (time.isImportantSecond()) this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
+                        if (time.isImportantSecond()) {
+                            this.coreGameManagement.getMatchUsers(match.getId())
+                                    .forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
+                        }
                     },
                     () -> startMatch(match)
             );
             timer.scheduleTimer();
-            if (timer.getAssignedTaskId() != null) this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
+            if (timer.getAssignedTaskId() != null) {
+                this.client.setHash(getScheduledString(), match.getId(), timer.getAssignedTaskId().toString());
+            }
         } else {
             Player player = Bukkit.getPlayer(issuer.getUsername());
             ChatAlertLibrary.errorChatAlert(
@@ -161,11 +168,11 @@ public class CraftGameStartManager implements GameStartManager {
                 if (player != null) {
                     if (silent) {
                         player.sendMessage(
-                                ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_silent") + "."
+                                ChatColor.RED + this.translatableField.getUnspacedField(matchUser.getLanguage(), "commons_countdown_silent") + "."
                         );
                     } else {
                         player.sendMessage(
-                                ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_countdown_cancelled_forced")
+                                ChatColor.RED + this.translatableField.getUnspacedField(matchUser.getLanguage(), "commons_countdown_cancelled_forced")
                                         .replace("%%player%%", this.userFormatter.getUserFormat(user, this.bukkitAPI.getConfig().getString("realm")) + ChatColor.RED) + "."
                         );
                     }
