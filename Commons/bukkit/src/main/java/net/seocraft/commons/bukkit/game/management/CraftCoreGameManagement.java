@@ -50,22 +50,14 @@ import java.util.stream.Collectors;
 @Singleton
 public class CraftCoreGameManagement implements CoreGameManagement {
 
-    @Inject
-    private MatchProvider matchProvider;
-    @Inject
-    private MapFileManager mapFileManager;
-    @Inject
-    private ObjectMapper mapper;
-    @Inject
-    private TranslatableField translatableField;
-    @Inject
-    private ServerManager serverManager;
-    @Inject
-    private CloudManager cloudManager;
-    @Inject
-    private CommonsBukkit instance;
-    @Inject
-    private Random random;
+    @Inject private MatchProvider matchProvider;
+    @Inject private MapFileManager mapFileManager;
+    @Inject private ObjectMapper mapper;
+    @Inject private TranslatableField translatableField;
+    @Inject private ServerManager serverManager;
+    @Inject private CloudManager cloudManager;
+    @Inject private CommonsBukkit instance;
+    @Inject private Random random;
 
     private Gamemode gamemode;
     private SubGamemode subGamemode;
@@ -132,29 +124,29 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void initializeMatch() throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError {
 
         List<GameMap> playableMaps = new ArrayList<>(this.mapFileManager.getPlayableMaps().keySet());
-        int index = this.random.nextInt(playableMaps.size());
 
-        Optional<GameMap> firstMap = Optional.empty();
-        if (index <= playableMaps.size()) firstMap = Optional.of(playableMaps.get(index));
-
-        if (firstMap.isPresent()) {
-            Match createdMatch = this.matchProvider.createMatch(
-                    firstMap.get().getId(),
-                    new HashSet<>(),
-                    this.gamemode.getId(),
-                    this.subGamemode.getId()
-            );
-
-            this.actualMatches.add(createdMatch);
-            this.mapFileManager.loadMatchWorld(createdMatch);
-            this.instance.getServerRecord().addMatch(createdMatch.getId());
-            this.serverManager.updateServer(
-                    this.instance.getServerRecord()
-            );
-            this.remainingTime.put(createdMatch.getId(), -1);
-        } else {
+        if (playableMaps.size() <= 0) {
             throw new InternalServerError("No playable maps could be found");
         }
+
+        int index = this.random.nextInt(playableMaps.size());
+
+        GameMap map = playableMaps.get(index);
+
+        Match createdMatch = this.matchProvider.createMatch(
+                map.getId(),
+                new HashSet<>(),
+                this.gamemode.getId(),
+                this.subGamemode.getId()
+        );
+
+        this.actualMatches.add(createdMatch);
+        this.mapFileManager.loadMatchWorld(createdMatch);
+        this.instance.getServerRecord().addMatch(createdMatch.getId());
+        this.serverManager.updateServer(
+                this.instance.getServerRecord()
+        );
+        this.remainingTime.put(createdMatch.getId(), -1);
     }
 
     @Override
@@ -166,20 +158,22 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.spectatorAssignation.entries().removeIf((entry) -> entry.getKey().equalsIgnoreCase(match.getId()));
         this.actualMatches.removeIf((matchIterator) -> matchIterator.getId().equalsIgnoreCase(match.getId()));
 
-        this.instance.getServer().getScheduler().runTaskLaterAsynchronously(this.instance, () -> players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player, this.gamemode.getLobbyGroup())), 60L);
+        this.instance.getServer().getScheduler().runTaskLaterAsynchronously(this.instance, () ->
+                players.forEach((player) -> this.cloudManager.sendPlayerToGroup(player, this.gamemode.getLobbyGroup())), 60L);
     }
 
     @Override
-    public void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
+    public synchronized void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
         Match updatedMatch = this.matchProvider.updateMatch(match);
-        this.actualMatches = this.actualMatches.stream().map(m -> {
-            if (m.getId().equalsIgnoreCase(match.getId())) {
-
-                return updatedMatch;
+        Set<Match> updatedMatches = new HashSet<>();
+        for (Match actualMatch : actualMatches) {
+            if (actualMatch.getId().equalsIgnoreCase(match.getId())) {
+                updatedMatches.add(updatedMatch);
             } else {
-                return m;
+                updatedMatches.add(actualMatch);
             }
-        }).collect(Collectors.toSet());
+        }
+        this.actualMatches = updatedMatches;
     }
 
     @Override
@@ -206,26 +200,36 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull Set<Player> getMatchPlayers(@NotNull String match) {
-        Set<Player> matchPlayer = new HashSet<>();
+        Set<Player> matchPlayers = new HashSet<>();
         if (!this.matchAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.matchAssignation.entries()) {
-                if (entry.getKey().equalsIgnoreCase(match))
-                    matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
+                if (entry.getKey().equalsIgnoreCase(match)) {
+                    User user = entry.getValue();
+                    Player player = Bukkit.getPlayer(user.getUsername());
+                    if (player != null) {
+                        matchPlayers.add(player);
+                    }
+                }
             }
         }
-        return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        return matchPlayers;
     }
 
     @Override
     public @NotNull Set<Player> getMatchSpectators(@NotNull String match) {
-        Set<Player> matchPlayer = new HashSet<>();
+        Set<Player> matchPlayers = new HashSet<>();
         if (!this.spectatorAssignation.isEmpty()) {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entries()) {
-                if (entry.getKey().equalsIgnoreCase(match))
-                    matchPlayer.add(Bukkit.getPlayer(entry.getValue().getUsername()));
+                if (entry.getKey().equalsIgnoreCase(match)) {
+                    User user = entry.getValue();
+                    Player player = Bukkit.getPlayer(user.getUsername());
+                    if (player != null) {
+                        matchPlayers.add(player);
+                    }
+                }
             }
         }
-        return matchPlayer.stream().filter(Objects::nonNull).collect(Collectors.toSet());
+        return matchPlayers;
     }
 
     @Override
@@ -256,7 +260,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             for (Map.Entry<String, User> entry : this.matchAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(player.getName())) {
                     for (Match match : this.actualMatches) {
-                        if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                        if (match.getId().equalsIgnoreCase(entry.getKey())) {
+                            return match;
+                        }
                     }
                 }
             }
@@ -265,7 +271,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(player.getName())) {
                     for (Match match : this.actualMatches) {
-                        if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                        if (match.getId().equalsIgnoreCase(entry.getKey())) {
+                            return match;
+                        }
                     }
                 }
             }
@@ -279,7 +287,9 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             for (Map.Entry<String, User> entry : this.matchAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(user.getUsername())) {
                     for (Match match : this.actualMatches) {
-                        if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                        if (match.getId().equalsIgnoreCase(entry.getKey())) {
+                            return match;
+                        }
                     }
                 }
             }
@@ -288,7 +298,8 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             for (Map.Entry<String, User> entry : this.spectatorAssignation.entries()) {
                 if (entry.getValue().getUsername().equalsIgnoreCase(user.getUsername())) {
                     for (Match match : this.actualMatches) {
-                        if (match.getId().equalsIgnoreCase(entry.getKey())) return match;
+                        if (match.getId().equalsIgnoreCase(entry.getKey()))
+                            return match;
                     }
                 }
             }
@@ -298,57 +309,59 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public @NotNull GameMap getMatchMap(@NotNull Match match) {
-        Optional<GameMap> matchMap = this.mapFileManager.getPlayableMaps()
-                .keySet()
-                .stream()
-                .filter(map -> map.getId().equalsIgnoreCase(match.getMap()))
-                .findFirst();
-        if (!matchMap.isPresent()) throw new IllegalStateException("Core Management was processed without maps");
-        return matchMap.get();
+        Optional<GameMap> matchMap = Optional.empty();
+        for (GameMap map : this.mapFileManager.getPlayableMaps().keySet()) {
+            if (map.getId().equalsIgnoreCase(match.getMap())) {
+                matchMap = Optional.of(map);
+            }
+        }
+        return matchMap.orElseThrow(() -> new IllegalStateException("Core Management was processed without maps"));
     }
 
     @Override
     public @NotNull Location getLobbyLocation(@NotNull Match match) throws IOException {
         World matchWorld = Bukkit.getWorld("match_" + match.getId());
-        if (matchWorld != null) {
-            GameMap matchMap = this.getMatchMap(match);
 
-            BaseMapConfiguration mapConfiguration = this.mapper.readValue(
-                    matchMap.getConfiguration(),
-                    BaseMapConfiguration.class
-            );
-
-            return new Location(
-                    matchWorld,
-                    mapConfiguration.getLobbyCoordinates().getX(),
-                    mapConfiguration.getLobbyCoordinates().getY(),
-                    mapConfiguration.getLobbyCoordinates().getZ()
-            );
-        } else {
+        if (matchWorld == null) {
             throw new IllegalStateException("Match has not been loaded");
         }
+
+        GameMap matchMap = this.getMatchMap(match);
+
+        BaseMapConfiguration mapConfiguration = this.mapper.readValue(
+                matchMap.getConfiguration(),
+                BaseMapConfiguration.class
+        );
+
+        return new Location(
+                matchWorld,
+                mapConfiguration.getLobbyCoordinates().getX(),
+                mapConfiguration.getLobbyCoordinates().getY(),
+                mapConfiguration.getLobbyCoordinates().getZ()
+        );
     }
 
     @Override
     public @NotNull Location getSpectatorSpawnLocation(@NotNull Match match) throws IOException {
         World matchWorld = Bukkit.getWorld("match_" + match.getId());
-        if (matchWorld != null) {
-            GameMap matchMap = this.getMatchMap(match);
 
-            BaseMapConfiguration mapConfiguration = this.mapper.readValue(
-                    matchMap.getConfiguration(),
-                    BaseMapConfiguration.class
-            );
-
-            return new Location(
-                    matchWorld,
-                    mapConfiguration.getSpectatorSpawn().getX(),
-                    mapConfiguration.getSpectatorSpawn().getY(),
-                    mapConfiguration.getSpectatorSpawn().getZ()
-            );
-        } else {
+        if (matchWorld == null) {
             throw new IllegalStateException("Match has not been loaded");
         }
+
+        GameMap matchMap = this.getMatchMap(match);
+
+        BaseMapConfiguration mapConfiguration = this.mapper.readValue(
+                matchMap.getConfiguration(),
+                BaseMapConfiguration.class
+        );
+
+        return new Location(
+                matchWorld,
+                mapConfiguration.getSpectatorSpawn().getX(),
+                mapConfiguration.getSpectatorSpawn().getY(),
+                mapConfiguration.getSpectatorSpawn().getZ()
+        );
     }
 
     @Override
@@ -357,16 +370,19 @@ public class CraftCoreGameManagement implements CoreGameManagement {
         this.updateMatch(match);
         this.getMatchUsers(match.getId()).forEach(user -> {
             Player player = Bukkit.getPlayer(user.getUsername());
-            if (player != null) {
-                Bukkit.getScheduler().runTask(this.instance, () -> Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false)));
-                ChatAlertLibrary.infoAlert(
-                        player,
-                        this.translatableField.getUnspacedField(
-                                user.getLanguage(),
-                                "commons_invalidation_success"
-                        ) + "."
-                );
+            if (player == null) {
+                return;
             }
+            Bukkit.getScheduler().runTask(this.instance, () ->
+                    Bukkit.getPluginManager().callEvent(new GameSpectatorSetEvent(match, user, player, false))
+            );
+            ChatAlertLibrary.infoAlert(
+                    player,
+                    this.translatableField.getUnspacedField(
+                            user.getLanguage(),
+                            "commons_invalidation_success"
+                    ) + "."
+            );
         });
 
         CountdownTimer timer = new CountdownTimer(
@@ -377,27 +393,29 @@ public class CraftCoreGameManagement implements CoreGameManagement {
                     if (time.isImportantSecond()) {
                         this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
                             Player player = Bukkit.getPlayer(user.getUsername());
-                            if (player != null) {
-                                ChatAlertLibrary.infoAlert(
-                                        player,
-                                        this.translatableField.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_invalidation_expulse"
-                                        ).replace(
-                                                "%%seconds%%",
-                                                ChatColor.RED + "" + time.getSecondsLeft() + " " + ChatColor.AQUA
-                                        )
-                                );
+                            if (player == null) {
+                                return;
                             }
+                            ChatAlertLibrary.infoAlert(
+                                    player,
+                                    this.translatableField.getUnspacedField(
+                                            user.getLanguage(),
+                                            "commons_invalidation_expulse"
+                                    ).replace(
+                                            "%%seconds%%",
+                                            ChatColor.RED + "" + time.getSecondsLeft() + " " + ChatColor.AQUA
+                                    )
+                            );
                         });
                     }
                 },
                 () -> {
                     this.getMatchSpectatorsUsers(match.getId()).forEach(user -> {
                         Player player = Bukkit.getPlayer(user.getUsername());
-                        if (player != null) {
-                            this.cloudManager.sendPlayerToGroup(player, gamemode.getLobbyGroup());
+                        if (player == null) {
+                            return;
                         }
+                        this.cloudManager.sendPlayerToGroup(player, gamemode.getLobbyGroup());
                         this.spectatingPlayers.remove(player);
                     });
                     this.finishMatch(match);
@@ -409,6 +427,7 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     @Override
     public void updateMatchRemaingTime(@NotNull String match, @NotNull Integer time) {
+        // TODO: fix "remaing"
         this.remainingTime.put(match, time);
     }
 
