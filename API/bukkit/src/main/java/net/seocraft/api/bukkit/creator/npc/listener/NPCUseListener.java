@@ -36,10 +36,8 @@ public class NPCUseListener extends PacketAdapter {
             actionField.setAccessible(true);
             PacketPlayInUseEntity.EnumEntityUseAction nmsAction = (PacketPlayInUseEntity.EnumEntityUseAction) actionField.get(usePacket);
 
-            System.out.println("calling onInteract for all npcs");
             for (NPC npc : npcManager.getNpcs()) {
                 if (npc.getEntityId() == entityId && npc instanceof NPCEntityBase_v1_8_R3) {
-                    System.out.println("Calling onInteract for npc " + npc.getUUID().toString());
                     ((NPCEntityBase_v1_8_R3) npc).onInteract(target, nmsAction == PacketPlayInUseEntity.EnumEntityUseAction.ATTACK ? ClickType.LEFT_CLICK : ClickType.RIGHT_CLICK);
                 }
             }
