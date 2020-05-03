@@ -92,14 +92,14 @@ public class GameDungeonStats implements DungeonStats {
         int level = 0;
 
         for(int i = 1; i < 101; i++) {
-            xp += (xp/10);
+            xp += xp + (xp/10);
             if(experience < xp) {
                 return i;
             }
         }
 
         for(int i = 100; i < 201; i++) {
-            xp += (xp/20);
+            xp += xp + (xp/20);
             if(experience < xp) {
                 return i;
             }

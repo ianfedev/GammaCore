@@ -40,11 +40,11 @@ public class LobbySelectorHologramManager implements SelectorHologramManager {
                             (float) selector.getPitch()
                     );
 
-
                     Hologram selectorHologram = new CraftHologram(location, player);
                     selectorHologram.addLine(ChatColor.YELLOW + "" + this.cloudManager.getGamemodeOnlinePlayers(selector.getGamemode()) + " " + this.translatableField.getUnspacedField(user.getLanguage(), "commons_lobby_scoreboard_players"));
                     selectorHologram.addLine(ChatColor.GREEN + this.translatableField.getUnspacedField(user.getLanguage(), "game_" + selector.getGamemode().getId() + "_title"));
                     selectorHologram.addLine(ChatColor.YELLOW + "" + ChatColor.BOLD + this.translatableField.getUnspacedField(user.getLanguage(), "commons_lobby_click_play").toUpperCase());
+                    // TODO: hmm, creating per player repeating task
                     Bukkit.getScheduler().scheduleSyncRepeatingTask(lobby, () -> selectorHologram.setLine(
                             1,
                             ChatColor.YELLOW + "" + this.cloudManager.getGamemodeOnlinePlayers(selector.getGamemode()) + " " + this.translatableField.getUnspacedField(user.getLanguage(), "commons_lobby_scoreboard_players")
