@@ -98,7 +98,7 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.friendsMenuListener, this);
 
         this.selectorManager.setupSelectorNPC();
-
+        this.hologramUpdater.scheduleUpdater();
     }
 
     @Override
