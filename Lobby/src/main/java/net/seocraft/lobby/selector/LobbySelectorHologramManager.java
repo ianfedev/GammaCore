@@ -17,8 +17,6 @@ import org.bukkit.creator.hologram.Hologram;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 public class LobbySelectorHologramManager implements SelectorHologramManager {
 
     @Inject private Lobby lobby;
@@ -35,6 +33,8 @@ public class LobbySelectorHologramManager implements SelectorHologramManager {
             return;
         }
 
+        String language = user.getLanguage();
+
         lobby.getLobbyNPC().forEach(selector -> {
             World world = Bukkit.getWorld(lobby.getConfig().getString("spawn.world"));
 
@@ -43,30 +43,20 @@ public class LobbySelectorHologramManager implements SelectorHologramManager {
             }
 
             Gamemode gamemode = selector.getGamemode();
-            String language = user.getLanguage();
 
-            Optional<Hologram> optionalSelectorHologram = hologramUpdater.getHologram(gamemode.getId(), language);
-            optionalSelectorHologram.ifPresent(hologram ->
-                applySelectorHologram(gamemode, language, hologram)
+            Location location = new Location(
+                    world,
+                    selector.getX(),
+                    selector.getY() + 1.5,
+                    selector.getZ(),
+                    (float) selector.getYaw(),
+                    (float) selector.getPitch()
             );
 
-            if (!optionalSelectorHologram.isPresent()) {
+            Hologram hologram = new CraftHologram(location, player);
+            applySelectorHologram(gamemode, language, hologram);
 
-                Location location = new Location(
-                        world,
-                        selector.getX(),
-                        selector.getY() + 1.5,
-                        selector.getZ(),
-                        (float) selector.getYaw(),
-                        (float) selector.getPitch()
-                );
-
-                Hologram hologram = new CraftHologram(location, player);
-                applySelectorHologram(gamemode, language, hologram);
-
-                hologramUpdater.scheduleNewHologramUpdater(gamemode.getId(), language, hologram);
-
-            }
+            hologramUpdater.scheduleNewHologramUpdater(gamemode.getId(), language, hologram);
 
         });
     }
