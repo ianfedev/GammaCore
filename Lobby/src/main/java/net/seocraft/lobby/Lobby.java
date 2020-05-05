@@ -50,6 +50,7 @@ public class Lobby extends JavaPlugin {
 
     @Inject private HidingGadgetCommand hidingGadgetCommand;
     @Inject private SelectorManager selectorManager;
+    @Inject private SelectorHologramUpdater hologramUpdater;
     @Inject private TeleportCommand teleportCommand;
 
     @Inject private InventoryCloseListener inventoryCloseListener;

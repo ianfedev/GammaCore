@@ -13,6 +13,7 @@ import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.Bukkit;
 import org.bukkit.creator.hologram.Hologram;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class LobbySelectorHologramUpdater implements SelectorHologramUpdater {
     @Inject private TranslatableField translations;
     @Inject private CloudManager cloudManager;
     @Inject private GamemodeProvider gamemodeProvider;
+    @Inject private Plugin plugin;
 
     @Override
     public @NotNull Optional<Hologram> getHologram(@NotNull String gamemodeId, @NotNull String language) {
@@ -69,6 +71,14 @@ public class LobbySelectorHologramUpdater implements SelectorHologramUpdater {
                 );
             })
         );
+    }
+
+    @Override
+    public void scheduleUpdater() {
+
+        // updates holograms every 10 seconds (if server is running 20 tps)
+        Bukkit.getScheduler().runTaskTimer(plugin, this::updateAll, 0L, 200L);
+
     }
 
 }

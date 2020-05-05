@@ -14,4 +14,6 @@ public interface SelectorHologramUpdater {
 
     void updateAll();
 
+    void scheduleUpdater();
+
 }
