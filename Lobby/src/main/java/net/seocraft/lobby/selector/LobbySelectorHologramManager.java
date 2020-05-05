@@ -46,7 +46,9 @@ public class LobbySelectorHologramManager implements SelectorHologramManager {
             String language = user.getLanguage();
 
             Optional<Hologram> optionalSelectorHologram = hologramUpdater.getHologram(gamemode.getId(), language);
-            optionalSelectorHologram.ifPresent(player.getLinkedHolograms()::add);
+            optionalSelectorHologram.ifPresent(hologram ->
+                applySelectorHologram(gamemode, language, hologram)
+            );
 
             if (!optionalSelectorHologram.isPresent()) {
 
@@ -60,15 +62,19 @@ public class LobbySelectorHologramManager implements SelectorHologramManager {
                 );
 
                 Hologram hologram = new CraftHologram(location, player);
-                hologram.addLine(ChatColor.YELLOW + "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode) + " " + this.translatableField.getUnspacedField(language, "commons_lobby_scoreboard_players"));
-                hologram.addLine(ChatColor.GREEN + this.translatableField.getUnspacedField(language, "game_" + gamemode.getId() + "_title"));
-                hologram.addLine(ChatColor.YELLOW + "" + ChatColor.BOLD + this.translatableField.getUnspacedField(language, "commons_lobby_click_play").toUpperCase());
+                applySelectorHologram(gamemode, language, hologram);
 
                 hologramUpdater.scheduleNewHologramUpdater(gamemode.getId(), language, hologram);
 
             }
 
         });
+    }
+
+    private void applySelectorHologram(Gamemode gamemode, String language, Hologram hologram) {
+        hologram.addLine(ChatColor.YELLOW + "" + this.cloudManager.getGamemodeOnlinePlayers(gamemode) + " " + this.translatableField.getUnspacedField(language, "commons_lobby_scoreboard_players"));
+        hologram.addLine(ChatColor.GREEN + this.translatableField.getUnspacedField(language, "game_" + gamemode.getId() + "_title"));
+        hologram.addLine(ChatColor.YELLOW + "" + ChatColor.BOLD + this.translatableField.getUnspacedField(language, "commons_lobby_click_play").toUpperCase());
     }
 
 }
