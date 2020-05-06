@@ -13,7 +13,7 @@ public class GammaUserFormatter implements UserFormatter {
     public @NotNull String getUserFormat(@NotNull User user, @NotNull String realm) {
         String userFormat = ChatColor.GRAY + user.getDisplay();
         Group primaryGroup = user.getPrimaryGroup();
-        for (Flair flair: primaryGroup.getMinecraftFlairs()) {
+        for (Flair flair : primaryGroup.getMinecraftFlairs()) {
             if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {
                 String symbol = flair.getSymbol();
                 for (int i = 0; i < symbol.length(); i++) {
@@ -24,7 +24,15 @@ public class GammaUserFormatter implements UserFormatter {
                         break;
                     }
                 }
-                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + symbol + " " + user.getDisplay() + ChatColor.WHITE;
+
+                ChatColor flairColor;
+                try {
+                    flairColor = ChatColor.valueOf(flair.getColor().toUpperCase());
+                } catch (IllegalArgumentException ignored) {
+                    flairColor = ChatColor.GRAY;
+                }
+
+                userFormat = flairColor + symbol + " " + user.getDisplay() + ChatColor.WHITE;
                 break;
             }
         }
@@ -36,7 +44,7 @@ public class GammaUserFormatter implements UserFormatter {
     public @NotNull String getUserColor(@NotNull User user, @NotNull String realm) {
         String userFormat = ChatColor.GRAY + user.getDisplay();
         Group primaryGroup = user.getPrimaryGroup();
-        for (Flair flair: primaryGroup.getMinecraftFlairs()) {
+        for (Flair flair : primaryGroup.getMinecraftFlairs()) {
             if (flair.getRealm().equalsIgnoreCase(realm) && !flair.getSymbol().equalsIgnoreCase("")) {
                 String symbol = flair.getSymbol();
                 for (int i = 0; i < symbol.length(); i++) {
@@ -47,7 +55,14 @@ public class GammaUserFormatter implements UserFormatter {
                         break;
                     }
                 }
-                userFormat = ChatColor.valueOf(flair.getColor().toUpperCase()) + user.getDisplay() + ChatColor.WHITE;
+                ChatColor flairColor;
+                try {
+                    flairColor = ChatColor.valueOf(flair.getColor().toUpperCase());
+                } catch (IllegalArgumentException ignored) {
+                    flairColor = ChatColor.GRAY;
+                }
+
+                userFormat = flairColor + user.getDisplay() + ChatColor.WHITE;
                 break;
             }
         }
