@@ -137,6 +137,11 @@ public class LobbyConnectionListener implements Listener {
             });
         }
 
+        // TODO: Remove after TestDay
+        player.sendMessage(
+                ChatColor.GREEN + this.translator.getUnspacedField(event.getPlayerRecord().getLanguage(), "commons_lobby_beta")
+        );
+
         if (this.instance.getConfig().getBoolean("board.default"))
             new LobbyScoreboardTask(
                     scoreboardManager, cloudManager, translator, bukkitAPI,

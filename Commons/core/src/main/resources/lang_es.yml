@@ -165,6 +165,7 @@ commons_lobby_selector_already: "¡Ya te encuentras conectado!"
 commons_lobby_selector_full: "¡El lobby se encuentra lleno!"
 commons_lobby_click_play: "Clic para jugar"
 commons_lobby_play_along: "¡Juega junto a %%players%% más!"
+commons_lobby_beta: "Recuerda que actualmente te encuentras en el TestDay #1 de Seocraft Network. Reporta cualquier bug en Discord"
 
 # Premium command
 commons_premium_validation_error: "Tu cuenta actual no es una cuenta premium, por lo tanto no puedes establecer este modo."
