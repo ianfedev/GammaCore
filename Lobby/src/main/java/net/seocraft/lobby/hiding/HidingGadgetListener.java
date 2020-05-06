@@ -12,18 +12,24 @@ import org.bukkit.inventory.ItemStack;
 
 public class HidingGadgetListener implements Listener {
 
-    @Inject private HidingGadgetManager hidingGadgetManager;
+    @Inject
+    private HidingGadgetManager hidingGadgetManager;
 
     @EventHandler
     public void hideGadgetClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack clickedItem = player.getItemInHand();
+
+        if (clickedItem == null) {
+            return;
+        }
+
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // Detect if element has designed tag
             if (NBTTagHandler.hasString(clickedItem, "accessor") &&
                     (
                             NBTTagHandler.getString(clickedItem, "accessor").equalsIgnoreCase("show_players") ||
-                            NBTTagHandler.getString(clickedItem, "accessor").equalsIgnoreCase("hide_players")
+                                    NBTTagHandler.getString(clickedItem, "accessor").equalsIgnoreCase("hide_players")
                     )
             ) {
                 String accessor = NBTTagHandler.getString(clickedItem, "accessor");
