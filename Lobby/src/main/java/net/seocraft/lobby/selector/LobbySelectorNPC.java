@@ -17,17 +17,19 @@ import java.util.logging.Level;
 
 public class LobbySelectorNPC implements SelectorNPC {
 
-    @NotNull private Gamemode gamemode;
-    @Nullable private SubGamemode subGamemode;
-    @NotNull private SkinProperty skin;
-    private double x;
-    private double y;
-    private double z;
-    private double yaw;
-    private double pitch;
-    private boolean perk;
+    @NotNull private final Gamemode gamemode;
+    @Nullable private final SubGamemode subGamemode;
+    @NotNull private final SkinProperty skin;
+    private final double x;
+    private final double y;
+    private final double z;
+    private final double yaw;
+    private final double pitch;
+    private final boolean perk;
 
-    public LobbySelectorNPC(@NotNull Gamemode gamemode, @Nullable SubGamemode subGamemode, @NotNull SkinProperty skin, double x, double y, double z, double yaw, double pitch, boolean perk) {
+    public LobbySelectorNPC(@NotNull Gamemode gamemode, @Nullable SubGamemode subGamemode,
+                            @NotNull SkinProperty skin, double x, double y, double z, double yaw,
+                            double pitch, boolean perk) {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
         this.skin = skin;

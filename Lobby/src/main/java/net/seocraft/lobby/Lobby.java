@@ -8,6 +8,7 @@ import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorHologramManager;
+import net.seocraft.api.bukkit.lobby.selector.SelectorHologramUpdater;
 import net.seocraft.api.bukkit.lobby.selector.SelectorManager;
 import net.seocraft.api.bukkit.lobby.selector.SelectorNPC;
 import net.seocraft.api.bukkit.profile.ProfileManager;
@@ -24,6 +25,7 @@ import net.seocraft.lobby.profile.GammaProfileManager;
 import net.seocraft.lobby.profile.listener.FriendsMenuListener;
 import net.seocraft.lobby.profile.listener.ProfileMenuListener;
 import net.seocraft.lobby.selector.LobbySelectorHologramManager;
+import net.seocraft.lobby.selector.LobbySelectorHologramUpdater;
 import net.seocraft.lobby.selector.LobbySelectorListener;
 import net.seocraft.lobby.selector.LobbySelectorManager;
 import net.seocraft.lobby.teleport.LobbyTeleportManager;
@@ -41,13 +43,14 @@ import java.util.logging.Level;
 
 public class Lobby extends JavaPlugin {
 
-    @NotNull private Set<SelectorNPC> lobbyNPC = new HashSet<>();
-    @NotNull private Map<Player, Integer> lobbyMenuClose = new HashMap<>();
+    @NotNull private final Set<SelectorNPC> lobbyNPC = new HashSet<>();
+    @NotNull private final Map<Player, Integer> lobbyMenuClose = new HashMap<>();
 
     @Inject private CommonsBukkit instance;
 
     @Inject private HidingGadgetCommand hidingGadgetCommand;
     @Inject private SelectorManager selectorManager;
+    @Inject private SelectorHologramUpdater hologramUpdater;
     @Inject private TeleportCommand teleportCommand;
 
     @Inject private InventoryCloseListener inventoryCloseListener;
@@ -95,13 +98,14 @@ public class Lobby extends JavaPlugin {
         getServer().getPluginManager().registerEvents(this.friendsMenuListener, this);
 
         this.selectorManager.setupSelectorNPC();
-
+        this.hologramUpdater.scheduleUpdater();
     }
 
     @Override
     public void configure(ProtectedBinder binder) {
         binder.bind(HidingGadgetManager.class).to(LobbyHidingGadget.class);
         binder.bind(SelectorManager.class).to(LobbySelectorManager.class);
+        binder.bind(SelectorHologramUpdater.class).to(LobbySelectorHologramUpdater.class).in(Scopes.SINGLETON);
         binder.bind(SelectorHologramManager.class).to(LobbySelectorHologramManager.class);
         binder.bind(TeleportManager.class).to(LobbyTeleportManager.class);
         binder.bind(ProfileManager.class).to(GammaProfileManager.class).in(Scopes.SINGLETON);
