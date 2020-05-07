@@ -2,10 +2,11 @@ package net.seocraft.commons.bukkit.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.CommandContext;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
 import me.fixeddev.bcm.parametric.annotation.Optional;
+import me.fixeddev.ebcm.bukkit.parameter.provider.annotation.Sender;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.Injected;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -13,6 +14,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.api.bukkit.utils.ChatGlyphs;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
@@ -27,7 +29,6 @@ import net.seocraft.api.core.storage.Pagination;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.friend.FriendshipUserActions;
-import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.core.model.GammaPagination;
 import net.seocraft.commons.core.translation.TranslatableField;
 import org.bukkit.OfflinePlayer;
@@ -37,18 +38,26 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.Set;
 
+@ACommand(names = {"friends", "friend", "f"})
 public class FriendCommand implements CommandClass {
 
-    @Inject private BukkitAPI bukkitAPI;
-    @Inject private TranslatableField translatableField;
-    @Inject private FriendshipProvider friendshipProvider;
-    @Inject private FriendshipUserActions friendshipUserActions;
-    @Inject private OnlineStatusManager onlineStatusManager;
-    @Inject private UserFormatter userFormatter;
-    @Inject private UserStorageProvider userStorageProvider;
+    @Inject
+    private BukkitAPI bukkitAPI;
+    @Inject
+    private TranslatableField translatableField;
+    @Inject
+    private FriendshipProvider friendshipProvider;
+    @Inject
+    private FriendshipUserActions friendshipUserActions;
+    @Inject
+    private OnlineStatusManager onlineStatusManager;
+    @Inject
+    private UserFormatter userFormatter;
+    @Inject
+    private UserStorageProvider userStorageProvider;
 
-    @Command(names = {"friends", "friends help", "friend"})
-    public boolean mainCommand(CommandSender commandSender) {
+    @ACommand(names = "")
+    public boolean mainCommand(@Injected(true) CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -80,8 +89,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends add", "friend add", "f add"}, min = 1, usage = "/<command> <target>")
-    public boolean addCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = "add")
+    public boolean addCommand(@Injected(true) CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -94,7 +103,7 @@ public class FriendCommand implements CommandClass {
                     }
 
                     // Obtain target player
-                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse  -> {
+                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
 
@@ -148,8 +157,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends accept", "friend accept", "f accept"}, min = 1, usage = "/<command> <target>")
-    public boolean acceptCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = "accept")
+    public boolean acceptCommand(@Injected(true) CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -162,7 +171,7 @@ public class FriendCommand implements CommandClass {
                     }
 
                     // Obtain target player
-                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse  -> {
+                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
 
@@ -198,8 +207,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends reject", "friend reject", "f reject"}, min = 1, usage = "/<command> <target>")
-    public boolean rejectCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = "reject")
+    public boolean rejectCommand(@Injected(true) CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -212,7 +221,7 @@ public class FriendCommand implements CommandClass {
                     }
 
                     // Obtain target player
-                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse  -> {
+                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
 
@@ -268,8 +277,8 @@ public class FriendCommand implements CommandClass {
         return false;
     }
 
-    @Command(names = {"friends remove", "friend remove", "f remove"}, min = 1, usage = "/<command> <target>")
-    public boolean removeCommand(CommandSender commandSender, OfflinePlayer target) {
+    @ACommand(names = "remove")
+    public boolean removeCommand(@Injected(true) CommandSender commandSender, OfflinePlayer target) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -282,7 +291,7 @@ public class FriendCommand implements CommandClass {
                     }
 
                     // Obtain target player
-                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse  -> {
+                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
                         if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
                             User targetRecord = targetAsyncResponse.getResponse();
 
@@ -338,8 +347,8 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends removeall", "friend removeall"})
-    public boolean removeAllCommand(CommandSender commandSender) {
+    @ACommand(names = "removeall")
+    public boolean removeAllCommand(@Injected(true) CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -373,232 +382,100 @@ public class FriendCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"friends force", "friend force", "f force"}, min = 1, usage = "/<command> <target> [second]", permission = "commons.staff.friends.force")
-    public boolean forceCommand(CommandSender commandSender, CommandContext context, OfflinePlayer target, @Optional("a") OfflinePlayer second) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                    User user = userAsyncResponse.getResponse();
+    @ACommand(names = "force", permission = "commons.staff.friends.force")
+    public boolean forceCommand(@Injected(true)  Player player, OfflinePlayer target, @Optional OfflinePlayer second) {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
+            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                User user = userAsyncResponse.getResponse();
 
-                    //Check if target isn't same player
-                    if (alertSamePlayer(player, user, target)) {
-                        return;
-                    }
-
-                    // Obtain first player
-                    CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse  -> {
-                        if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                            User firstRecord = targetAsyncResponse.getResponse();
-
-                            // Check if first player is online
-                            if (!this.onlineStatusManager.isPlayerOnline(firstRecord.getId())) {
-                                ChatAlertLibrary.errorChatAlert(player,
-                                        this.translatableField.getUnspacedField(
-                                                user.getLanguage(),
-                                                "commons_friends_force_offline"
-                                        ) + "."
-                                );
-                                return;
-                            }
-
-                            // Force between sender and first if not first argument
-                            if (context.getArgumentsLength() == 1 || (second != null && second.getName().equalsIgnoreCase(player.getName()))) {
-                                // Check if player has higher permissions
-                                if (hasLowerPermissions(user, firstRecord, player)) return;
-
-                                // Detect if players are already friends
-                                if (alertFriendshipStatus(firstRecord, user, player, true)) {
-                                    return;
-                                }
-
-                                forcedActions(player, user, user, firstRecord);
-                                return;
-                            }
-
-                            if (second != null) {
-                                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(second.getName()), secondAsyncResponse  -> {
-                                    if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                                        User secondRecord = secondAsyncResponse.getResponse();
-
-                                        if (
-                                                user.getPrimaryGroup().getPriority() > firstRecord.getPrimaryGroup().getPriority() ||
-                                                        user.getPrimaryGroup().getPriority() > secondRecord.getPrimaryGroup().getPriority()
-                                        ) {
-                                            ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
-                                                    user.getLanguage(),
-                                                    "commons_friends_force_lower_permissions")  + ".");
-                                            return;
-                                        }
-
-                                        // Detect if players are already friends
-                                        if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
-                                            return;
-                                        }
-
-                                        forcedActions(player, user, firstRecord, secondRecord);
-                                    } else {
-                                        sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
-                                    }
-                                });
-                            } else {
-                                ChatAlertLibrary.errorChatAlert(player);
-                            }
-                        } else {
-                            sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
-                        }
-                    });
-                } else {
-                    ChatAlertLibrary.errorChatAlert(player);
+                //Check if target isn't same player
+                if (alertSamePlayer(player, user, target)) {
+                    return;
                 }
-            });
-        }
-        return true;
-    }
 
-    @Command(names = {"friends list", "friend list", "f list", "f l"}, usage = "/<command> [page]")
-    public boolean friendsList(CommandSender commandSender, CommandContext context) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            // Get base user
-            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                // Obtain first player
+                CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(target.getName()), targetAsyncResponse -> {
+                    if (targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                        User firstRecord = targetAsyncResponse.getResponse();
 
-                    int page = 1;
-                    if (context.getArgumentsLength() > 1) {
-                        page = Integer.parseInt(context.getArgument(0));
-                    }
-
-                    User user = userAsyncResponse.getResponse();
-                    try {
-                        Set<User> playerList = this.friendshipProvider.listFriendsSync(user.getId());
-                        if (playerList.size() > 0) {
-                            Pagination<User> pagination = new GammaPagination<>(8, playerList);
-                            player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
-
-                            // << Friends (Page X of X) >>
-                            TextComponent leftArrow = new TextComponent("<<");
-                            leftArrow.setColor(ChatColor.YELLOW);
-                            leftArrow.setBold(true);
-                            leftArrow.setHoverEvent(
-                                    new HoverEvent(
-                                            HoverEvent.Action.SHOW_TEXT,
-                                            new ComponentBuilder(
-                                                    this.translatableField.getUnspacedField(
-                                                            user.getLanguage(),
-                                                            "commons_pagination_click"
-                                                    ).replace("%%page%%", "" + (page - 1))
-                                            ).color(ChatColor.YELLOW).create()
-                                    )
-                            );
-                            leftArrow.setClickEvent(
-                                    new ClickEvent(
-                                            ClickEvent.Action.RUN_COMMAND,
-                                            "/friends list " + (page - 1)
-                                    )
-                            );
-
-                            TextComponent actualPages = new TextComponent(" " +
-                                    this.translatableField.getField(
-                                            user.getLanguage(),
-                                            "commons_friends_word"
-                                    ) +
+                        // Check if first player is online
+                        if (!this.onlineStatusManager.isPlayerOnline(firstRecord.getId())) {
+                            ChatAlertLibrary.errorChatAlert(player,
                                     this.translatableField.getUnspacedField(
                                             user.getLanguage(),
-                                            "commons_pagination_of"
-                                    ).replace(
-                                            "%%first%%",
-                                            "" + page
-                                    ).replace(
-                                            "%%last%%",
-                                            "" + pagination.totalPages()
-                                    ) + " "
+                                            "commons_friends_force_offline"
+                                    ) + "."
                             );
-                            actualPages.setColor(ChatColor.GOLD);
-
-                            TextComponent rightArrow = new TextComponent(">>");
-                            rightArrow.setColor(ChatColor.YELLOW);
-                            rightArrow.setBold(true);
-                            rightArrow.setHoverEvent(
-                                    new HoverEvent(
-                                            HoverEvent.Action.SHOW_TEXT,
-                                            new ComponentBuilder(
-                                                    this.translatableField.getUnspacedField(
-                                                            user.getLanguage(),
-                                                            "commons_pagination_click"
-                                                    ).replace("%%page%%", "" + (page + 1))
-                                            ).color(ChatColor.YELLOW).create()
-                                    )
-                            );
-                            rightArrow.setClickEvent(
-                                    new ClickEvent(
-                                            ClickEvent.Action.RUN_COMMAND,
-                                            "/friends list " + (page + 1)
-                                    )
-                            );
-
-                            paginateType(player, page, user, pagination, leftArrow, actualPages, rightArrow);
-                        } else {
-                            player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
-                            player.sendMessage(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));
-                            player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                            return;
                         }
-                    } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
-                        ChatAlertLibrary.errorChatAlert(
-                                player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_error")
-                        );
+
+                        // Force between sender and first if not first argument
+                        if ((second != null && second.getName().equalsIgnoreCase(player.getName()))) {
+                            // Check if player has higher permissions
+                            if (hasLowerPermissions(user, firstRecord, player)) return;
+
+                            // Detect if players are already friends
+                            if (alertFriendshipStatus(firstRecord, user, player, true)) {
+                                return;
+                            }
+
+                            forcedActions(player, user, user, firstRecord);
+                            return;
+                        }
+
+                        if (second != null) {
+                            CallbackWrapper.addCallback(this.userStorageProvider.findUserByName(second.getName()), secondAsyncResponse -> {
+                                if (secondAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+                                    User secondRecord = secondAsyncResponse.getResponse();
+
+                                    if (
+                                            user.getPrimaryGroup().getPriority() > firstRecord.getPrimaryGroup().getPriority() ||
+                                                    user.getPrimaryGroup().getPriority() > secondRecord.getPrimaryGroup().getPriority()
+                                    ) {
+                                        ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
+                                                user.getLanguage(),
+                                                "commons_friends_force_lower_permissions") + ".");
+                                        return;
+                                    }
+
+                                    // Detect if players are already friends
+                                    if (alertFriendshipStatus(firstRecord, secondRecord, player, true)) {
+                                        return;
+                                    }
+
+                                    forcedActions(player, user, firstRecord, secondRecord);
+                                } else {
+                                    sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
+                                }
+                            });
+                        } else {
+                            ChatAlertLibrary.errorChatAlert(player);
+                        }
+                    } else {
+                        sendNotFoundMessage(targetAsyncResponse.getThrowedException().getClass(), player, user);
                     }
-                } else {
-                    ChatAlertLibrary.errorChatAlert(player);
-                }
-            });
-        }
+                });
+            } else {
+                ChatAlertLibrary.errorChatAlert(player);
+            }
+        });
         return true;
     }
 
-    private void paginateType(Player player, int page, User user, Pagination<User> pagination, TextComponent leftArrow, TextComponent actualPages, TextComponent rightArrow) {
-        TextComponent finalComponent = new TextComponent("");
-        if (page != 1 && pagination.totalPages() != 1) finalComponent.addExtra(leftArrow);
+    @ACommand(names = {"l", "list"})
+    public boolean friendsList(@Injected(true) @Sender Player player, @Optional("1") Integer page) {
+        // Get base user
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
+            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
 
-        finalComponent.addExtra(actualPages);
-        if (page != pagination.totalPages()) finalComponent.addExtra(rightArrow);
-
-        player.spigot().sendMessage(finalComponent);
-
-        pagination.getPage(1).forEach(friend -> {
-            ChatColor color = ChatColor.RED;
-            String field = "commons_friends_was";
-            if (this.onlineStatusManager.isPlayerOnline(friend.getId())) {
-                field = "commons_friends_in";
-                color = ChatColor.YELLOW;
-            }
-            player.sendMessage(
-                    this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
-                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getSessionInfo().getLastGame()
-            );
-        });
-        player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
-    }
-
-    @Command(names = {"friends requests", "f requests", "friend requests"}, usage = "/<command> [page]")
-    public boolean friendsRequests(CommandSender commandSender, CommandContext context) {
-        if (commandSender instanceof Player) {
-            Player player = (Player) commandSender;
-            CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
-                if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-
-                    int page = 1;
-                    if (context.getArgumentsLength() > 1) {
-                        page = Integer.parseInt(context.getArgument(0));
-                    }
-
-                    User user = userAsyncResponse.getResponse();
-                    Set<User> playerList = this.friendshipProvider.getRequestsSync(user.getId());
+                User user = userAsyncResponse.getResponse();
+                try {
+                    Set<User> playerList = this.friendshipProvider.listFriendsSync(user.getId());
                     if (playerList.size() > 0) {
                         Pagination<User> pagination = new GammaPagination<>(8, playerList);
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
 
-                        // << Requests (Page X of X) >>
+                        // << Friends (Page X of X) >>
                         TextComponent leftArrow = new TextComponent("<<");
                         leftArrow.setColor(ChatColor.YELLOW);
                         leftArrow.setBold(true);
@@ -616,14 +493,14 @@ public class FriendCommand implements CommandClass {
                         leftArrow.setClickEvent(
                                 new ClickEvent(
                                         ClickEvent.Action.RUN_COMMAND,
-                                        "/friends requests " + (page - 1)
+                                        "/friends list " + (page - 1)
                                 )
                         );
 
                         TextComponent actualPages = new TextComponent(" " +
                                 this.translatableField.getField(
                                         user.getLanguage(),
-                                        "commons_friends_requests"
+                                        "commons_friends_word"
                                 ) +
                                 this.translatableField.getUnspacedField(
                                         user.getLanguage(),
@@ -655,7 +532,7 @@ public class FriendCommand implements CommandClass {
                         rightArrow.setClickEvent(
                                 new ClickEvent(
                                         ClickEvent.Action.RUN_COMMAND,
-                                        "/friends requests " + (page + 1)
+                                        "/friends list " + (page + 1)
                                 )
                         );
 
@@ -665,11 +542,125 @@ public class FriendCommand implements CommandClass {
                         player.sendMessage(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));
                         player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
                     }
-                } else {
-                    ChatAlertLibrary.errorChatAlert(player);
+                } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
+                    ChatAlertLibrary.errorChatAlert(
+                            player, this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_error")
+                    );
                 }
-            });
-        }
+            } else {
+                ChatAlertLibrary.errorChatAlert(player);
+            }
+        });
+
+        return true;
+    }
+
+    private void paginateType(Player player, int page, User user, Pagination<User> pagination, TextComponent leftArrow, TextComponent actualPages, TextComponent rightArrow) {
+        TextComponent finalComponent = new TextComponent("");
+        if (page != 1 && pagination.totalPages() != 1) finalComponent.addExtra(leftArrow);
+
+        finalComponent.addExtra(actualPages);
+        if (page != pagination.totalPages()) finalComponent.addExtra(rightArrow);
+
+        player.spigot().sendMessage(finalComponent);
+
+        pagination.getPage(1).forEach(friend -> {
+            ChatColor color = ChatColor.RED;
+            String field = "commons_friends_was";
+            if (this.onlineStatusManager.isPlayerOnline(friend.getId())) {
+                field = "commons_friends_in";
+                color = ChatColor.YELLOW;
+            }
+            player.sendMessage(
+                    this.userFormatter.getUserFormat(friend, this.bukkitAPI.getConfig().getString("realm")) + " " + color +
+                            this.translatableField.getField(user.getLanguage(), field).toLowerCase() + user.getSessionInfo().getLastGame()
+            );
+        });
+        player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+    }
+
+    @ACommand(names = "requests")
+    public boolean friendsRequests(@Injected(true) @Sender Player player, @Optional("1") Integer page) {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
+            if (userAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
+
+                User user = userAsyncResponse.getResponse();
+                Set<User> playerList = this.friendshipProvider.getRequestsSync(user.getId());
+                if (playerList.size() > 0) {
+                    Pagination<User> pagination = new GammaPagination<>(8, playerList);
+                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+
+                    // << Requests (Page X of X) >>
+                    TextComponent leftArrow = new TextComponent("<<");
+                    leftArrow.setColor(ChatColor.YELLOW);
+                    leftArrow.setBold(true);
+                    leftArrow.setHoverEvent(
+                            new HoverEvent(
+                                    HoverEvent.Action.SHOW_TEXT,
+                                    new ComponentBuilder(
+                                            this.translatableField.getUnspacedField(
+                                                    user.getLanguage(),
+                                                    "commons_pagination_click"
+                                            ).replace("%%page%%", "" + (page - 1))
+                                    ).color(ChatColor.YELLOW).create()
+                            )
+                    );
+                    leftArrow.setClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/friends requests " + (page - 1)
+                            )
+                    );
+
+                    TextComponent actualPages = new TextComponent(" " +
+                            this.translatableField.getField(
+                                    user.getLanguage(),
+                                    "commons_friends_requests"
+                            ) +
+                            this.translatableField.getUnspacedField(
+                                    user.getLanguage(),
+                                    "commons_pagination_of"
+                            ).replace(
+                                    "%%first%%",
+                                    "" + page
+                            ).replace(
+                                    "%%last%%",
+                                    "" + pagination.totalPages()
+                            ) + " "
+                    );
+                    actualPages.setColor(ChatColor.GOLD);
+
+                    TextComponent rightArrow = new TextComponent(">>");
+                    rightArrow.setColor(ChatColor.YELLOW);
+                    rightArrow.setBold(true);
+                    rightArrow.setHoverEvent(
+                            new HoverEvent(
+                                    HoverEvent.Action.SHOW_TEXT,
+                                    new ComponentBuilder(
+                                            this.translatableField.getUnspacedField(
+                                                    user.getLanguage(),
+                                                    "commons_pagination_click"
+                                            ).replace("%%page%%", "" + (page + 1))
+                                    ).color(ChatColor.YELLOW).create()
+                            )
+                    );
+                    rightArrow.setClickEvent(
+                            new ClickEvent(
+                                    ClickEvent.Action.RUN_COMMAND,
+                                    "/friends requests " + (page + 1)
+                            )
+                    );
+
+                    paginateType(player, page, user, pagination, leftArrow, actualPages, rightArrow);
+                } else {
+                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                    player.sendMessage(ChatColor.RED + this.translatableField.getUnspacedField(user.getLanguage(), "commons_friends_no_friends"));
+                    player.sendMessage(ChatColor.AQUA + ChatGlyphs.SEPARATOR.getContent());
+                }
+            } else {
+                ChatAlertLibrary.errorChatAlert(player);
+            }
+        });
         return true;
     }
 
@@ -697,7 +688,7 @@ public class FriendCommand implements CommandClass {
         if (user.getPrimaryGroup().getPriority() > target.getPrimaryGroup().getPriority()) {
             ChatAlertLibrary.errorChatAlert(player, this.translatableField.getUnspacedField(
                     user.getLanguage(),
-                    "commons_friends_force_lower_permissions")  + ".");
+                    "commons_friends_force_lower_permissions") + ".");
             return true;
         } else {
             return false;
