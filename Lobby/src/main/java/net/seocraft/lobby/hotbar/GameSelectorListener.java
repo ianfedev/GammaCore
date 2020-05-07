@@ -13,15 +13,22 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 
-public class GameSelectorListener implements Listener  {
+public class GameSelectorListener implements Listener {
 
-    @Inject private CloudManager cloudManager;
+    @Inject
+    private CloudManager cloudManager;
 
     @EventHandler
     public void lobbySelectorListener(InventoryClickEvent event) {
-        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta()) return;
+        if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR || !event.getCurrentItem().hasItemMeta())
+            return;
         HumanEntity entity = event.getWhoClicked();
         ItemStack clickedItem = event.getCurrentItem();
+
+        if (clickedItem == null) {
+            return;
+        }
+
         if ((entity instanceof Player)) {
             Player player = (Player) entity;
             if (NBTTagHandler.hasString(clickedItem, "game_selector_opt")) {
