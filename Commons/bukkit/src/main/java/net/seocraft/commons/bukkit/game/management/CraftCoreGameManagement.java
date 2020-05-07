@@ -15,6 +15,7 @@ import net.seocraft.api.bukkit.game.management.MapFileManager;
 import net.seocraft.api.bukkit.game.map.BaseMapConfiguration;
 import net.seocraft.api.bukkit.game.map.GameMap;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.MatchAssignationProvider;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
@@ -61,7 +62,6 @@ public class CraftCoreGameManagement implements CoreGameManagement {
 
     private Gamemode gamemode;
     private SubGamemode subGamemode;
-    private Set<Player> waitingPlayers;
     private Set<Player> spectatingPlayers;
     private Set<Match> actualMatches;
     private Multimap<String, User> matchAssignation;
@@ -72,7 +72,6 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     public void initializeGameCore(@NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) {
         this.gamemode = gamemode;
         this.subGamemode = subGamemode;
-        this.waitingPlayers = new HashSet<>();
         this.spectatingPlayers = new HashSet<>();
         this.actualMatches = new HashSet<>();
         this.matchAssignation = ArrayListMultimap.create();
@@ -88,36 +87,6 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public @NotNull SubGamemode getSubGamemode() {
         return this.subGamemode;
-    }
-
-    @Override
-    public @NotNull Set<Player> getWaitingPlayers() {
-        return this.waitingPlayers;
-    }
-
-    @Override
-    public void addWaitingPlayer(@NotNull Player player) {
-        this.waitingPlayers.add(player);
-    }
-
-    @Override
-    public void removeWaitingPlayer(@NotNull Player player) {
-        this.waitingPlayers.remove(player);
-    }
-
-    @Override
-    public @NotNull Set<Player> getSpectatingPlayers() {
-        return this.spectatingPlayers;
-    }
-
-    @Override
-    public void addSpectatingPlayer(@NotNull Player player) {
-        this.spectatingPlayers.add(player);
-    }
-
-    @Override
-    public void removeSpectatingPlayer(@NotNull Player player) {
-        this.spectatingPlayers.remove(player);
     }
 
     @Override
@@ -174,23 +143,6 @@ public class CraftCoreGameManagement implements CoreGameManagement {
             }
         }
         this.actualMatches = updatedMatches;
-    }
-
-    @Override
-    public void addMatchPlayer(@NotNull String match, @NotNull User player) {
-        this.matchAssignation.put(match, player);
-    }
-
-    @Override
-    public void addSpectatorPlayer(@NotNull String match, @NotNull User player) {
-        this.spectatorAssignation.put(match, player);
-        this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getId().equalsIgnoreCase(player.getId()));
-    }
-
-    @Override
-    public void removeMatchPlayer(@NotNull String match, @NotNull User player) {
-        this.matchAssignation.entries().removeIf((entry) -> entry.getValue().getId().equalsIgnoreCase(player.getId()));
-        this.spectatorAssignation.entries().removeIf((entry) -> entry.getValue().getId().equalsIgnoreCase(player.getId()));
     }
 
     @Override
@@ -444,15 +396,5 @@ public class CraftCoreGameManagement implements CoreGameManagement {
     @Override
     public void removeMatchTime(@NotNull String match) {
         this.remainingTime.remove(match);
-    }
-
-    @Override
-    public @NotNull Multimap<String, User> getMatchAssignations() {
-        return this.matchAssignation;
-    }
-
-    @Override
-    public @NotNull Multimap<String, User> getSpectatorAssignations() {
-        return this.spectatorAssignation;
     }
 }

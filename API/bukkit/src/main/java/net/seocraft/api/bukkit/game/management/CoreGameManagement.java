@@ -1,6 +1,5 @@
 package net.seocraft.api.bukkit.game.management;
 
-import com.google.common.collect.Multimap;
 import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.map.GameMap;
@@ -26,31 +25,11 @@ public interface CoreGameManagement {
 
     @NotNull SubGamemode getSubGamemode();
 
-    @NotNull Set<Player> getWaitingPlayers();
-
-    void addWaitingPlayer(@NotNull Player player);
-
-    void removeWaitingPlayer(@NotNull Player player);
-
-    @NotNull Set<Player> getSpectatingPlayers();
-
-    void addSpectatingPlayer(@NotNull Player player);
-
-    void removeSpectatingPlayer(@NotNull Player player);
-
     void initializeMatch() throws IOException, Unauthorized, NotFound, BadRequest, InternalServerError;
 
     void finishMatch(@NotNull Match match);
 
     void updateMatch(@NotNull Match match) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException;
-
-    void addMatchPlayer(@NotNull String match, @NotNull User player);
-
-    void addSpectatorPlayer(@NotNull String match, @NotNull User player);
-
-    void removeMatchPlayer(@NotNull String match, @NotNull User player);
-
-    Set<Match> getActualMatches();
 
     @NotNull Set<Player> getMatchPlayers(@NotNull String match);
 
@@ -59,10 +38,6 @@ public interface CoreGameManagement {
     @NotNull Set<User> getMatchSpectatorsUsers(@NotNull String match);
 
     @NotNull Set<User> getMatchUsers(@NotNull String match);
-
-    @Nullable Match getPlayerMatch(@NotNull Player player);
-
-    @Nullable Match getPlayerMatch(@NotNull User user);
 
     @NotNull GameMap getMatchMap(@NotNull Match match);
 
@@ -79,9 +54,5 @@ public interface CoreGameManagement {
     boolean hasRemainingTime(@NotNull String match);
 
     void removeMatchTime(@NotNull String match);
-
-    @NotNull Multimap<String, User> getMatchAssignations();
-
-    @NotNull Multimap<String, User> getSpectatorAssignations();
 
 }

@@ -142,7 +142,7 @@ public class NPCRedirector implements ServerRedirector {
                     }
 
                     try {
-                        Match match = matchProvider.findMatchByIdSync(matchId);
+                        Match match = matchProvider.getCachedMatchSync(matchId);
 
                         if (match.getStatus() == MatchStatus.WAITING) {
                             Optional<Server> server = serverManager.getServerByQuerySync(

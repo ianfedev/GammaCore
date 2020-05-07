@@ -7,6 +7,8 @@ import net.seocraft.api.bukkit.event.GameReadyEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.MatchAssignationProvider;
+import net.seocraft.api.bukkit.game.match.PlayerType;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
@@ -38,6 +40,7 @@ public class CraftGameStartManager implements GameStartManager {
     @Inject private UserFormatter userFormatter;
     @Inject private TranslatableField translatableField;
     @Inject private LobbyScoreboardManager lobbyScoreboardManager;
+    @Inject private MatchAssignationProvider matchAssignationProvider;
     @Inject private CommonsBukkit instance;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private RedisClient client;
@@ -206,7 +209,7 @@ public class CraftGameStartManager implements GameStartManager {
             match.setStatus(MatchStatus.STARTING);
             this.coreGameManagement.updateMatch(match);
             Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
-            this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.coreGameManagement.getWaitingPlayers().remove(player));
+            this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.matchAssignationProvider.assignPlayer(player.getDatabaseIdentifier(), match, PlayerType.ACTIVE));
             this.coreGameManagement.removeMatchTime(match.getId());
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException ex) {
             this.kickErrorPlayers(match);

@@ -5,6 +5,7 @@ import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.event.GameFinishedEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.MatchProvider;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.match.partial.Team;
 import net.seocraft.api.bukkit.game.match.partial.TeamMember;
@@ -26,6 +27,7 @@ public class GameFinishedListener implements Listener {
 
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private CloudManager cloudManager;
+    @Inject private MatchProvider matchProvider;
     @Inject private CommonsBukkit instance;
 
     @EventHandler
@@ -47,10 +49,11 @@ public class GameFinishedListener implements Listener {
             this.coreGameManagement.updateMatch(gameMatch);
             this.coreGameManagement.finishMatch(gameMatch);
             this.coreGameManagement.getMatchPlayers(gameMatch.getId()).forEach(player -> this.cloudManager.sendPlayerToGroup(player, this.coreGameManagement.getGamemode().getLobbyGroup()));
+            Set<Match> matches = this.matchProvider.getServerMatches();
 
             if (
                     this.instance.getServerRecord().getMatches().size() < this.instance.getServerRecord().getMaxTotal() &&
-                    this.coreGameManagement.getActualMatches().size() < this.instance.getServerRecord().getMaxRunning()
+                    matches.size() < this.instance.getServerRecord().getMaxRunning()
             ) {
                 this.coreGameManagement.initializeMatch();
             }

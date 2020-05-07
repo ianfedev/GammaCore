@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Set;
 
 public interface MatchProvider {
@@ -32,7 +33,11 @@ public interface MatchProvider {
             @Nullable String subGamemode,
             @Nullable String map,
             @NotNull MatchStatus status
-            );
+    );
+
+    @NotNull ListenableFuture<AsyncResponse<Match>> getCachedMatch(@NotNull String id);
+
+    @NotNull Match getCachedMatchSync(@NotNull String id) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
 
     @NotNull ListenableFuture<AsyncResponse<Match>> findMatchById(@NotNull String id);
 
@@ -48,5 +53,7 @@ public interface MatchProvider {
     @NotNull Match updateMatch(@NotNull Match match) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
 
     @NotNull Set<Match> getUserWonMatches(@NotNull User user, @NotNull Gamemode gamemode, @NotNull SubGamemode subGamemode) throws IOException, Unauthorized, BadRequest, NotFound, InternalServerError;
+
+    @NotNull Set<Match> getServerMatches();
 
 }

@@ -5,6 +5,8 @@ import net.seocraft.api.bukkit.creator.intercept.PacketManager;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.MatchAssignation;
+import net.seocraft.api.bukkit.game.match.MatchDataProvider;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -34,7 +36,7 @@ public class UserDisconnectListener implements Listener {
 
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private GameLoginManager gameLoginManager;
-    @Inject private CoreGameManagement coreGameManagement;
+    @Inject private MatchDataProvider matchDataProvider;
     @Inject private ServerManager serverManager;
     @Inject private CommonsBukkit commonsBukkit;
     @Inject private PacketManager packetManager;
@@ -52,10 +54,10 @@ public class UserDisconnectListener implements Listener {
             updatableRecord.getOnlinePlayers().remove(user.getId());
             this.serverManager.updateServer(updatableRecord);
             if (this.commonsBukkit.getServerRecord().getServerType().equals(ServerType.GAME)) {
-                Match playerMatch = this.coreGameManagement.getPlayerMatch(user);
+                MatchAssignation playerMatch = this.matchDataProvider.getPlayerMatch(user.getId());
                 if (playerMatch != null) {
                     this.gameLoginManager.matchPlayerLeave(
-                            playerMatch,
+                            playerMatch.getMatch(),
                             user,
                             player
                     );

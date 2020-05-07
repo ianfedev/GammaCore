@@ -41,7 +41,6 @@ public class GameMatchFinder implements MatchFinder {
         }
         if (!matchList.isEmpty()) {
             Match selectedMatch = matchList.stream().findAny().get();
-            System.out.println("Selected match: " + selectedMatch.getId());
 
             Optional<Server> server = this.serverManager.getServerByQuerySync(
                     null,
@@ -83,7 +82,7 @@ public class GameMatchFinder implements MatchFinder {
                                     break;
                                 }
                                 assert match != null;
-                                Match selectedMatch = this.matchProvider.findMatchByIdSync(match);
+                                Match selectedMatch = this.matchProvider.getCachedMatchSync(match);
                                 return new GameResult(foundServer, selectedMatch, spectable);
                             } else {
                                 throw new InternalServerError("Error obtaining match server");

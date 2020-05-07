@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
-import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.*;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.user.UserFormatter;
 import net.seocraft.api.core.user.User;
@@ -24,7 +24,9 @@ import java.util.Set;
 public class PlayerSpectatorListener implements Listener {
 
     @Inject private CoreGameManagement coreGameManagement;
+    @Inject private MatchDataProvider matchDataProvider;
     @Inject private TranslatableField translatableField;
+    @Inject private MatchAssignationProvider matchAssignationProvider;
     @Inject private UserFormatter userFormatter;
     @Inject private BukkitAPI bukkitAPI;
 
@@ -42,10 +44,7 @@ public class PlayerSpectatorListener implements Listener {
                 player.teleport(this.coreGameManagement.getSpectatorSpawnLocation(gameMatch));
             }
 
-            this.coreGameManagement.removeMatchPlayer(gameMatch.getId(), user);
-            this.coreGameManagement.addSpectatorPlayer(gameMatch.getId(), user);
-            this.coreGameManagement.addSpectatingPlayer(player);
-
+            this.matchAssignationProvider.assignPlayer(user.getId(), gameMatch, PlayerType.SPECTATOR);
             Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(gameMatch.getId());
             matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(gameMatch.getId()));
 
@@ -71,8 +70,10 @@ public class PlayerSpectatorListener implements Listener {
             player.setGameMode(GameMode.ADVENTURE);
             player.getInventory().clear();
 
+            MatchAssignation matchAssignation = this.matchDataProvider.getPlayerMatch(user.getId());
+
             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-                if (!this.coreGameManagement.getSpectatingPlayers().contains(onlinePlayer)) {
+                if (matchAssignation != null && matchAssignation.getPlayerType() != PlayerType.SPECTATOR) {
                     onlinePlayer.hidePlayer(player);
                 } else {
                     // TODO: Ghost mode

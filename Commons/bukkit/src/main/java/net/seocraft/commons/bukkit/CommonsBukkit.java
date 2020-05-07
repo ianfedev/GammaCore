@@ -98,7 +98,6 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private WhisperCommand whisperCommand;
     @Inject private PunishmentCommand punishmentCommand;
     @Inject private FriendCommand friendCommand;
-    @Inject private MatchCommand matchCommand;
 
     @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
@@ -114,7 +113,7 @@ public class CommonsBukkit extends JavaPlugin {
     public boolean pairedGame = false;
     private boolean cloudDeploy = false;
     public int pairingRunnable;
-    @NotNull public Server serverRecord;
+    @NotNull private Server serverRecord;
 
     @Override
     public void onEnable() {
@@ -160,7 +159,6 @@ public class CommonsBukkit extends JavaPlugin {
         dispatcher.registerCommandClass(whisperCommand);
         dispatcher.registerCommandClass(punishmentCommand);
         dispatcher.registerCommandClass(friendCommand);
-        dispatcher.registerCommandClass(matchCommand);
         dispatcher.registerCommandClass(verificationCommand);
         dispatcher.registerCommandClass(premiumCommand);
 
