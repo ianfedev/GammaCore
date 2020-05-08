@@ -19,13 +19,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.io.IOException;
-import java.util.Set;
 
 public class PlayerSpectatorListener implements Listener {
 
     @Inject private CoreGameManagement coreGameManagement;
     @Inject private MatchDataProvider matchDataProvider;
     @Inject private TranslatableField translatableField;
+    @Inject private MatchMapProvider matchMapProvider;
     @Inject private MatchAssignationProvider matchAssignationProvider;
     @Inject private UserFormatter userFormatter;
     @Inject private BukkitAPI bukkitAPI;
@@ -39,17 +39,15 @@ public class PlayerSpectatorListener implements Listener {
 
         try {
             if (gameMatch.getStatus().equals(MatchStatus.WAITING)) {
-                player.teleport(this.coreGameManagement.getLobbyLocation(gameMatch));
+                player.teleport(this.matchMapProvider.getLobbyLocation(gameMatch));
             } else {
-                player.teleport(this.coreGameManagement.getSpectatorSpawnLocation(gameMatch));
+                player.teleport(this.matchMapProvider.getSpectatorSpawnLocation(gameMatch));
             }
 
             this.matchAssignationProvider.assignPlayer(user.getId(), gameMatch, PlayerType.SPECTATOR);
-            Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(gameMatch.getId());
-            matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(gameMatch.getId()));
 
             if (event.isManual()) {
-                matchPlayers.forEach(onlinePlayer -> {
+                this.matchDataProvider.getMatchParticipants(gameMatch).forEach(onlinePlayer -> {
                     Player playerRecord = Bukkit.getPlayer(onlinePlayer.getUsername());
                     if (playerRecord != null && playerRecord.hasPermission("commons.staff.match.spectate.messages")) {
                         ChatAlertLibrary.infoAlert(

@@ -48,7 +48,7 @@ public class LobbySelectorHologramUpdater implements SelectorHologramUpdater {
             Gamemode gamemode;
 
             try {
-                gamemode = gamemodeProvider.getGamemodeSync(gamemodeId);
+                gamemode = gamemodeProvider.findGamemodeByIdSync(gamemodeId);
                 if (gamemode == null) {
                     return;
                 }

@@ -32,7 +32,6 @@ public class BukkitServerLoad implements ServerLoad {
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ServerDisconnectRequest serverDisconnectRequest;
     @Inject private MatchCleanupRequest matchCleanupRequest;
-    @Inject private CoreGameManagement coreGameManagement;
     @Inject private RedisClient redisClient;
 
     public Server setupServer() throws Unauthorized, BadRequest, NotFound, InternalServerError {
@@ -55,10 +54,9 @@ public class BukkitServerLoad implements ServerLoad {
 
             Gamemode gamemode;
             if (type == ServerType.GAME || type == ServerType.LOBBY) {
-                gamemode = this.gamemodeHandler.getGamemodeSync(
+                gamemode = this.gamemodeHandler.findGamemodeByIdSync(
                         configuration.getString("game.gamemode")
                 );
-                if (gamemode == null) return null;
                 Set<SubGamemode> subGamemodes = gamemode.getSubGamemodes();
 
                 if (type == ServerType.GAME) {
@@ -69,8 +67,6 @@ public class BukkitServerLoad implements ServerLoad {
                             )
                             .findFirst();
                     if (!subGamemode.isPresent()) throw new NotFound("Sub Gamemode not found");
-
-                    this.coreGameManagement.initializeGameCore(gamemode, subGamemode.get());
 
                     return this.serverManager.loadServer(
                             Bukkit.getServerName(),

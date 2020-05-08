@@ -8,6 +8,7 @@ import net.seocraft.api.bukkit.game.map.MapProvider;
 import net.seocraft.api.bukkit.game.party.PartyProvider;
 import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.commons.bukkit.game.gamemode.CoreGamemodeProvider;
+import net.seocraft.commons.bukkit.game.gamemode.GamemodeModule;
 import net.seocraft.commons.bukkit.game.management.*;
 import net.seocraft.commons.bukkit.game.map.CoreMapProvider;
 import net.seocraft.commons.bukkit.game.match.MatchModule;
@@ -18,7 +19,7 @@ public class GameModule extends ProtectedModule {
     @Override
     protected void configure() {
         install(new MatchModule());
-        bind(GamemodeProvider.class).to(CoreGamemodeProvider.class);
+        install(new GamemodeModule());
         bind(MapProvider.class).to(CoreMapProvider.class);
         bind(MapFileManager.class).to(CraftMapFileManager.class);
         bind(PartyProvider.class).to(GamePartyProvider.class);
@@ -29,7 +30,6 @@ public class GameModule extends ProtectedModule {
         expose(CoreGameManagement.class);
         expose(GameStartManager.class);
         expose(MapFileManager.class);
-        expose(GamemodeProvider.class);
         expose(MapProvider.class);
         expose(PartyProvider.class);
     }

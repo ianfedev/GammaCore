@@ -7,7 +7,7 @@
         <groupId>net.seocraft</groupId>
         <artifactId>commons</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>0.4.0</version>
+        <version>0.5.0</version>
     </parent>
 
     <artifactId>commons-bukkit</artifactId>
@@ -89,18 +89,6 @@
                                 </filter>
                             </filters>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.2.6</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>

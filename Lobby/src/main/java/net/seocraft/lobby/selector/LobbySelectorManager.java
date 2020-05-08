@@ -40,7 +40,7 @@ public class LobbySelectorManager implements SelectorManager {
                 if (gameString != null) {
 
                     try {
-                        Gamemode gamemode = this.gamemodeProvider.getGamemodeSync(gameString);
+                        Gamemode gamemode = this.gamemodeProvider.findGamemodeByIdSync(gameString);
                         SubGamemode subGamemode = null;
 
                         if (gamemode != null) {

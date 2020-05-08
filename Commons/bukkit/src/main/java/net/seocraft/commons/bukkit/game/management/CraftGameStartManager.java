@@ -6,9 +6,7 @@ import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.event.GameReadyEvent;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
-import net.seocraft.api.bukkit.game.match.Match;
-import net.seocraft.api.bukkit.game.match.MatchAssignationProvider;
-import net.seocraft.api.bukkit.game.match.PlayerType;
+import net.seocraft.api.bukkit.game.match.*;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
@@ -37,10 +35,13 @@ import java.util.Set;
 public class CraftGameStartManager implements GameStartManager {
 
     @Inject private CoreGameManagement coreGameManagement;
+    @Inject private MatchProvider matchProvider;
     @Inject private UserFormatter userFormatter;
     @Inject private TranslatableField translatableField;
+    @Inject private MatchTimerProvider matchTimerProvider;
     @Inject private LobbyScoreboardManager lobbyScoreboardManager;
     @Inject private MatchAssignationProvider matchAssignationProvider;
+    @Inject private MatchDataProvider matchDataProvider;
     @Inject private CommonsBukkit instance;
     @Inject private BukkitAPI bukkitAPI;
     @Inject private RedisClient client;
@@ -50,14 +51,13 @@ public class CraftGameStartManager implements GameStartManager {
 
         if (!this.client.getHashFields(getScheduledString()).containsKey(match.getId())) {
 
-            Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
-            involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+            Set<User> involvedUsers = this.matchDataProvider.getMatchParticipants(match);
 
             CountdownTimer timer = new CountdownTimer(
                     this.instance,
                     30,
                     (time) -> {
-                        this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
+                        this.matchTimerProvider.updateMatchRemaingTime(match, time.getSecondsLeft());
                         this.lobbyScoreboardManager.updateBoardCountDown(match, time.getSecondsLeft());
                         if (time.isImportantSecond()) involvedUsers.forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                     },
@@ -73,9 +73,8 @@ public class CraftGameStartManager implements GameStartManager {
 
         Map<String, String> temporalCountdown = this.client.getHashFields(getScheduledString());
 
-        Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
-        int matchUsers =  involvedUsers.size();
-        involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+        Set<User> involvedUsers = this.matchDataProvider.getMatchParticipants(match);
+        int matchUsers =  this.matchDataProvider.getMatchParticipants(match, PlayerType.HOLDING).size();
         if (temporalCountdown.containsKey(match.getId())) {
             int cancellableTask = Integer.parseInt(temporalCountdown.get(match.getId()));
             Bukkit.getScheduler().cancelTask(cancellableTask);
@@ -104,10 +103,10 @@ public class CraftGameStartManager implements GameStartManager {
                         }
                     }),
                     (time) -> {
-                        this.coreGameManagement.updateMatchRemaingTime(match.getId(), time.getSecondsLeft());
+                        this.matchTimerProvider.updateMatchRemaingTime(match, time.getSecondsLeft());
                         this.lobbyScoreboardManager.updateBoardCountDown(match, time.getSecondsLeft());
                         if (time.isImportantSecond()) {
-                            this.coreGameManagement.getMatchUsers(match.getId())
+                            this.matchDataProvider.getMatchParticipants(match)
                                     .forEach(user -> this.sendCountdownAlert(Bukkit.getPlayer(user.getUsername()), time.getSecondsLeft(), user.getLanguage()));
                         }
                     },
@@ -133,14 +132,13 @@ public class CraftGameStartManager implements GameStartManager {
     public void cancelMatchCountdown(@NotNull Match match) {
         Map<String, String> temporalCountdown = this.client.getHashFields(getScheduledString());
         if (temporalCountdown.containsKey(match.getId())) {
-            Set<User> involvedUsers = this.coreGameManagement.getMatchUsers(match.getId());
-            involvedUsers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+            Set<User> involvedUsers = this.matchDataProvider.getMatchParticipants(match);
             int taskId = Integer.parseInt(temporalCountdown.get(match.getId()));
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
-            this.coreGameManagement.removeMatchTime(match.getId());
+            this.matchTimerProvider.removeMatchTime(match);
             this.lobbyScoreboardManager.updateBoardCountDown(match, -1);
-            this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
+            this.matchTimerProvider.updateMatchRemaingTime(match, -1);
             involvedUsers.forEach(user -> {
                 Player player = Bukkit.getPlayer(user.getUsername());
                 if (player != null) {
@@ -163,10 +161,10 @@ public class CraftGameStartManager implements GameStartManager {
 
             Bukkit.getScheduler().cancelTask(taskId);
             this.client.deleteHash(getScheduledString(), match.getId());
-            this.coreGameManagement.updateMatchRemaingTime(match.getId(), -1);
-            this.coreGameManagement.removeMatchTime(match.getId());
+            this.matchTimerProvider.updateMatchRemaingTime(match, -1);
+            this.matchTimerProvider.removeMatchTime(match);
             this.lobbyScoreboardManager.updateBoardCountDown(match, -1);
-            this.coreGameManagement.getMatchUsers(match.getId()).forEach(matchUser -> {
+            this.matchDataProvider.getMatchParticipants(match).forEach(matchUser -> {
                 Player player = Bukkit.getPlayer(matchUser.getUsername());
                 if (player != null) {
                     if (silent) {
@@ -189,7 +187,7 @@ public class CraftGameStartManager implements GameStartManager {
 
     @Override
     public void kickErrorPlayers(Match match) {
-        this.coreGameManagement.getMatchUsers(match.getId()).forEach(user -> {
+        this.matchDataProvider.getMatchParticipants(match).forEach(user -> {
             Player player = Bukkit.getPlayer(user.getUsername());
             if (player != null) {
                 player.kickPlayer(
@@ -207,10 +205,10 @@ public class CraftGameStartManager implements GameStartManager {
         try {
             this.client.deleteHash(getScheduledString(), match.getId());
             match.setStatus(MatchStatus.STARTING);
-            this.coreGameManagement.updateMatch(match);
+            this.matchProvider.updateMatch(match);
             Bukkit.getPluginManager().callEvent(new GameReadyEvent(match));
-            this.coreGameManagement.getMatchPlayers(match.getId()).forEach(player -> this.matchAssignationProvider.assignPlayer(player.getDatabaseIdentifier(), match, PlayerType.ACTIVE));
-            this.coreGameManagement.removeMatchTime(match.getId());
+            this.matchDataProvider.getMatchParticipants(match, PlayerType.HOLDING).forEach(p -> this.matchAssignationProvider.assignPlayer(p.getId(), match, PlayerType.ACTIVE));
+            this.matchTimerProvider.removeMatchTime(match);
         } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException ex) {
             this.kickErrorPlayers(match);
         }

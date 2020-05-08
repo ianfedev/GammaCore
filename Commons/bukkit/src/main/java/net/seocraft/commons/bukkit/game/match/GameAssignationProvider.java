@@ -40,4 +40,11 @@ public class GameAssignationProvider implements MatchAssignationProvider {
         this.redisClient.deleteHash("match:" + id, id);
     }
 
+    @Override
+    public @NotNull Match clearMatchAssignations(@NotNull Match match) {
+        this.redisClient.deleteString("match:" + match.getId());
+        match.getMatchRecord().clear();
+        return match;
+    }
+
 }

@@ -6,7 +6,7 @@
         <groupId>net.seocraft</groupId>
         <artifactId>api-parent</artifactId>
         <relativePath>../pom.xml</relativePath>
-        <version>0.4.0</version>
+        <version>0.5.0</version>
     </parent>
 
     <artifactId>api-core</artifactId>
@@ -60,19 +60,5 @@
                 <directory>${basedir}/src/main/resources/</directory>
             </resource>
         </resources>
-        <plugins>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>2.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 </project>

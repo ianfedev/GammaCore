@@ -3,8 +3,11 @@ package net.seocraft.commons.bukkit.listener.game;
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.event.GameFinishedEvent;
+import net.seocraft.api.bukkit.game.gamemode.Gamemode;
+import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
 import net.seocraft.api.bukkit.game.match.Match;
+import net.seocraft.api.bukkit.game.match.MatchDataProvider;
 import net.seocraft.api.bukkit.game.match.MatchProvider;
 import net.seocraft.api.bukkit.game.match.partial.MatchStatus;
 import net.seocraft.api.bukkit.game.match.partial.Team;
@@ -15,6 +18,7 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.bukkit.CommonsBukkit;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -26,7 +30,9 @@ import java.util.logging.Level;
 public class GameFinishedListener implements Listener {
 
     @Inject private CoreGameManagement coreGameManagement;
+    @Inject private MatchDataProvider matchDataProvider;
     @Inject private CloudManager cloudManager;
+    @Inject private GamemodeProvider gamemodeProvider;
     @Inject private MatchProvider matchProvider;
     @Inject private CommonsBukkit instance;
 
@@ -46,9 +52,16 @@ public class GameFinishedListener implements Listener {
                 gameMatch.setWinner(winnerList);
             }
 
-            this.coreGameManagement.updateMatch(gameMatch);
+            this.matchProvider.updateMatch(gameMatch);
             this.coreGameManagement.finishMatch(gameMatch);
-            this.coreGameManagement.getMatchPlayers(gameMatch.getId()).forEach(player -> this.cloudManager.sendPlayerToGroup(player, this.coreGameManagement.getGamemode().getLobbyGroup()));
+            String game = "main_lobby";
+            Gamemode gamemode = this.gamemodeProvider.getServerGamemode();
+            if (gamemode != null) game = gamemode.getLobbyGroup();
+            String finalGame = game;
+            this.matchDataProvider.getMatchParticipants(gameMatch).forEach(user -> {
+                Player player = Bukkit.getPlayer(user.getUsername());
+                if (player != null) this.cloudManager.sendPlayerToGroup(player, finalGame);
+            });
             Set<Match> matches = this.matchProvider.getServerMatches();
 
             if (

@@ -31,7 +31,7 @@ public class GameStartedListener implements Listener {
             Match match = event.getMatch();
             match.setTeams(event.getUpdatableTeam());
             match.setStatus(MatchStatus.STARTING);
-            this.coreGameManagement.updateMatch(match);
+            this.matchProvider.updateMatch(match);
 
             Set<Match> serverMatches = this.matchProvider.getServerMatches();
 

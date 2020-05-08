@@ -4,13 +4,18 @@ import com.google.inject.Inject;
 import net.seocraft.api.bukkit.BukkitAPI;
 import net.seocraft.api.bukkit.event.GamePlayerLeaveEvent;
 import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
-import net.seocraft.api.bukkit.game.management.CoreGameManagement;
+import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
+import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.management.FinderResult;
 import net.seocraft.api.bukkit.game.management.GameLoginManager;
 import net.seocraft.api.bukkit.game.management.GameStartManager;
 import net.seocraft.api.bukkit.game.match.*;
 import net.seocraft.api.bukkit.game.scoreboard.LobbyScoreboardManager;
 import net.seocraft.api.bukkit.user.UserFormatter;
+import net.seocraft.api.core.http.exceptions.BadRequest;
+import net.seocraft.api.core.http.exceptions.InternalServerError;
+import net.seocraft.api.core.http.exceptions.NotFound;
+import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.user.User;
 import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import net.seocraft.commons.bukkit.game.management.menu.SpectatorToolbar;
@@ -27,9 +32,10 @@ import java.util.logging.Level;
 
 public class CraftGameSessionManager implements GameLoginManager {
 
-    @Inject private CoreGameManagement coreGameManagement;
+    @Inject private GamemodeProvider gamemodeProvider;
     @Inject private MatchDataProvider matchDataProvider;
     @Inject private MatchAssignationProvider gameAssignationProvider;
+    @Inject private MatchMapProvider matchMapProvider;
     @Inject private GameStartManager gameStartManager;
     @Inject private TranslatableField translatableField;
     @Inject private LobbyScoreboardManager lobbyScoreboardManager;
@@ -48,7 +54,7 @@ public class CraftGameSessionManager implements GameLoginManager {
         player.setFoodLevel(20);
         player.getInventory().clear();
         try {
-            player.teleport(this.coreGameManagement.getLobbyLocation(match.getMatch()));
+            player.teleport(this.matchMapProvider.getLobbyLocation(match.getMatch()));
             player.setGameMode(GameMode.ADVENTURE);
             this.gameAssignationProvider.assignPlayer(user.getId(), match.getMatch(), PlayerType.HOLDING);
 
@@ -56,6 +62,10 @@ public class CraftGameSessionManager implements GameLoginManager {
                 online.hidePlayer(player);
                 player.hidePlayer(online);
             });
+
+            int players = 0;
+            SubGamemode gamemode = this.gamemodeProvider.getServerSubgamemode();
+            if (gamemode != null) players = gamemode.getMaxPlayers();
 
             Set<User> matchUsers = this.matchDataProvider.getMatchParticipants(match.getMatch(), PlayerType.HOLDING);
             Set<User> matchPlayers = this.matchDataProvider.getMatchParticipants(match.getMatch());
@@ -75,7 +85,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                             )
                             .replace(
                                     "%%max%%",
-                                    ChatColor.AQUA + "" + this.coreGameManagement.getSubGamemode().getMaxPlayers() + ChatColor.YELLOW
+                                    ChatColor.AQUA + "" + players + ChatColor.YELLOW
                             );
 
             for (User matchPlayer : matchPlayers) {
@@ -96,11 +106,11 @@ public class CraftGameSessionManager implements GameLoginManager {
                     )
             );
 
-            if (matchUsers.size() >= this.coreGameManagement.getSubGamemode().getMinPlayers()) {
+            if (gamemode != null && matchUsers.size() >= gamemode.getMinPlayers()) {
                 this.gameStartManager.startMatchCountdown(match.getMatch());
             }
 
-        } catch (IOException e) {
+        } catch (IOException | InternalServerError | NotFound | Unauthorized | BadRequest e) {
             Bukkit.getLogger().log(Level.WARNING, "[Game API] There was an error paring user {0} to a match. ({1})",
                     new Object[]{user.getUsername(), e.getMessage()});
             player.kickPlayer(ChatColor.RED +  this.translatableField.getUnspacedField(user.getLanguage(), "commons_pairing_error"));
@@ -114,10 +124,20 @@ public class CraftGameSessionManager implements GameLoginManager {
         MatchAssignation assignation = this.matchDataProvider.getPlayerMatch(player.getDatabaseIdentifier());
 
         if (assignation != null) {
-            if (assignation.getPlayerType() == PlayerType.SPECTATOR) {
+            Set<User> matchUsers = this.matchDataProvider.getMatchParticipants(match, PlayerType.HOLDING);
+            Set<User> matchPlayers = this.matchDataProvider.getMatchParticipants(match);
 
-                Set<User> matchPlayers = this.coreGameManagement.getMatchUsers(match.getId());
-                matchPlayers.addAll(this.coreGameManagement.getMatchSpectatorsUsers(match.getId()));
+
+            int players = 0;
+            SubGamemode gamemode = null;
+            try {
+                gamemode = this.gamemodeProvider.getServerSubgamemode();
+            } catch (Unauthorized | InternalServerError | BadRequest | NotFound | IOException ex) {
+                Bukkit.getLogger().log(Level.WARNING, "[GameAPI] There was an error retreiving Gamemode for stats.", ex);
+            }
+            if (gamemode != null) players = gamemode.getMaxPlayers();
+
+            if (assignation.getPlayerType() == PlayerType.SPECTATOR) {
 
                 matchPlayers.forEach(onlinePlayer -> {
                     Player playerRecord = Bukkit.getPlayer(onlinePlayer.getUsername());
@@ -137,10 +157,6 @@ public class CraftGameSessionManager implements GameLoginManager {
                 return;
             }
 
-
-            Set<User> matchUsers = this.matchDataProvider.getMatchParticipants(match, PlayerType.HOLDING);
-            Set<User> matchPlayers = this.matchDataProvider.getMatchParticipants(match);
-
             if (assignation.getPlayerType() == PlayerType.HOLDING) {
                 String leaveMessage = ChatColor.YELLOW +
                         this.translatableField.getUnspacedField(user.getLanguage(), "commons_left_dynamic")
@@ -157,7 +173,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                                 )
                                 .replace(
                                         "%%max%%",
-                                        ChatColor.AQUA + "" + this.coreGameManagement.getSubGamemode().getMaxPlayers() + ChatColor.YELLOW
+                                        ChatColor.AQUA + "" + players + ChatColor.YELLOW
                                 );
 
                 for (User matchPlayer : matchPlayers) {
@@ -170,7 +186,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                 }
             }
 
-            if (matchUsers.size() < this.coreGameManagement.getSubGamemode().getMinPlayers()) {
+            if (gamemode != null && matchUsers.size() < gamemode.getMinPlayers()) {
                 this.gameStartManager.cancelMatchCountdown(match);
             }
 

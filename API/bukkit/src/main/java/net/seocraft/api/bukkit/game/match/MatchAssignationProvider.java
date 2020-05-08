@@ -14,4 +14,6 @@ public interface MatchAssignationProvider {
 
     void unassignPlayer(@NotNull Match match, @NotNull String id);
 
+    @NotNull Match clearMatchAssignations(@NotNull Match match);
+
 }

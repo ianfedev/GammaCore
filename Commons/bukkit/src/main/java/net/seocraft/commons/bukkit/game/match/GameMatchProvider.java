@@ -61,7 +61,7 @@ public class GameMatchProvider implements MatchProvider {
         Gamemode gamemodeRecord;
         try {
             gamemodeRecord = Optional
-                    .ofNullable(this.gamemodeProvider.getGamemodeSync(gamemode))
+                    .ofNullable(this.gamemodeProvider.findGamemodeByIdSync(gamemode))
                     .orElseThrow(() -> new InternalServerError("Error finding author record."));
         } catch (Unauthorized | BadRequest | NotFound | IOException | InternalServerError unauthorized) {
             throw new InternalServerError("Error finding author record.");

@@ -2,10 +2,7 @@ package net.seocraft.commons.bukkit.listener.game;
 
 import com.google.inject.Inject;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
-import net.seocraft.api.bukkit.game.match.Match;
-import net.seocraft.api.bukkit.game.match.MatchAssignation;
-import net.seocraft.api.bukkit.game.match.MatchDataProvider;
-import net.seocraft.api.bukkit.game.match.PlayerType;
+import net.seocraft.api.bukkit.game.match.*;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +15,7 @@ import java.io.IOException;
 public class PlayerDamageListener implements Listener {
 
     @Inject private CoreGameManagement coreGameManagement;
+    @Inject private MatchMapProvider matchMapProvider;
     @Inject private MatchDataProvider matchDataProvider;
 
     @EventHandler
@@ -29,13 +27,13 @@ public class PlayerDamageListener implements Listener {
                 if (event.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
                     try {
                         if (match.getPlayerType() == PlayerType.HOLDING) {
-                            player.teleport(this.coreGameManagement.getLobbyLocation(match.getMatch()));
+                            player.teleport(this.matchMapProvider.getLobbyLocation(match.getMatch()));
                             event.setCancelled(true);
                             return;
                         }
 
                         if (match.getPlayerType() == PlayerType.SPECTATOR) {
-                            player.teleport(this.coreGameManagement.getSpectatorSpawnLocation(match.getMatch()));
+                            player.teleport(this.matchMapProvider.getSpectatorSpawnLocation(match.getMatch()));
                             event.setCancelled(true);
                             return;
                         }
