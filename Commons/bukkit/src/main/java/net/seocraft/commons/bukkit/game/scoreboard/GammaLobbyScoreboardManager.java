@@ -27,7 +27,6 @@ import java.io.IOException;
 public class GammaLobbyScoreboardManager implements LobbyScoreboardManager {
 
     @Inject private Plugin plugin;
-    @Inject private CoreGameManagement coreGameManagement;
     @Inject private GamemodeProvider gamemodeProvider;
     @Inject private MatchMapProvider matchMapProvider;
     @Inject private MatchTimerProvider matchTimerProvider;

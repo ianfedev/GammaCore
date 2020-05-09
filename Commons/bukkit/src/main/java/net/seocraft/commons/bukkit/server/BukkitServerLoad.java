@@ -6,6 +6,8 @@ import net.seocraft.api.bukkit.game.gamemode.Gamemode;
 import net.seocraft.api.bukkit.game.gamemode.GamemodeProvider;
 import net.seocraft.api.bukkit.game.gamemode.SubGamemode;
 import net.seocraft.api.bukkit.game.management.CoreGameManagement;
+import net.seocraft.api.bukkit.game.match.MatchAssignation;
+import net.seocraft.api.bukkit.game.match.MatchAssignationProvider;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -113,6 +115,7 @@ public class BukkitServerLoad implements ServerLoad {
         String token = this.serverTokenQuery.getToken();
         this.redisClient.deleteHash("authorization", this.instance.getServerRecord().getId());
         this.redisClient.clearHash("scheduledStarts:" + this.instance.getServerRecord().getId());
+        this.instance.getServerRecord().getMatches().forEach(match -> this.redisClient.deleteString("match:" + match));
         if (this.instance.getServerRecord().getServerType() == ServerType.GAME) this.matchCleanupRequest.executeRequest(token, this.instance.getServerRecord().getId());
         this.serverDisconnectRequest.executeRequest(token);
     }
