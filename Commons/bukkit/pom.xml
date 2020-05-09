@@ -65,7 +65,7 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>Commons-Bukkit</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
