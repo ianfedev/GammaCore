@@ -48,7 +48,7 @@ public class AdminChatCommand implements CommandAction {
     @Override
     public boolean execute(CommandContext commandContext) {
         Player sender = (Player) commandContext.getObject(CommandSender.class, "SENDER");
-        Optional<String> message = commandContext.getValue(commandContext.getParts("password").get(0));
+        Optional<String> message = commandContext.getValue(commandContext.getParts("message").get(0));
         Optional<Boolean> important = commandContext.getValue(commandContext.getParts("important").get(0));
 
         message.ifPresent(s -> CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(sender.getDatabaseIdentifier()), userResponse -> {
