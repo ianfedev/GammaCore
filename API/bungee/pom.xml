@@ -33,7 +33,7 @@
     </dependencies>
 
     <build>
-        <finalName>API-Bungee</finalName>
+        <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>

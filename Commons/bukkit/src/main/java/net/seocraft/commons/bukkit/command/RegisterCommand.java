@@ -1,42 +1,39 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.AbstractAdvancedCommand;
-import me.fixeddev.bcm.CommandContext;
+import me.fixeddev.ebcm.*;
+import me.fixeddev.ebcm.part.ArgumentPart;
 import net.seocraft.api.bukkit.user.UserLoginManagement;
 import net.seocraft.api.bukkit.utils.ChatAlertLibrary;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Optional;
 
-public class RegisterCommand extends AbstractAdvancedCommand {
+public class RegisterCommand implements CommandAction {
 
     @Inject private UserLoginManagement userLoginManagement;
 
-    public RegisterCommand() {
-        super(
-                new String[]{"register", "registro"},
-                "/<command> <password>",
-                "Command used to register new users at the network",
-                "",
-                "",
-                new ArrayList<>(),
-                1,
-                1,
-                false,
-                new ArrayList<>()
-        );
+    public @NotNull Command getCommand() {
+        return ImmutableCommand.builder(CommandData.builder("register"))
+                .addPart(ArgumentPart.builder("password", String.class).setRequired(true).build())
+                .setAction(this)
+                .build();
     }
 
     @Override
     public boolean execute(CommandContext commandContext) {
-        Player player = (Player) commandContext.getNamespace().getObject(CommandSender.class, "sender");
-        try {
-            this.userLoginManagement.registerUser(player, commandContext.getArgument(0));
-        } catch (IOException e) {
-            ChatAlertLibrary.errorChatAlert(player);
+        CommandSender sender = commandContext.getObject(CommandSender.class, "SENDER");
+        Optional<String> password = commandContext.getValue(commandContext.getParts("password").get(0));
+        if (password.isPresent()) {
+            try {
+                this.userLoginManagement.registerUser((Player) sender, password.get());
+            } catch (IOException e) {
+                ChatAlertLibrary.errorChatAlert((Player) sender);
+                e.printStackTrace();
+            }
         }
         return true;
     }

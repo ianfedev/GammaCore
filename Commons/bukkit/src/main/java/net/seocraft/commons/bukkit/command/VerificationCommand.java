@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.Injected;
+import me.fixeddev.ebcm.parametric.annotation.Named;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
 import net.seocraft.api.core.http.exceptions.BadRequest;
@@ -22,6 +24,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+@ACommand(names = {"verify", "linkaccount", "verificar", "link"})
 public class VerificationCommand implements CommandClass {
 
     @Inject private UserStorageProvider userStorageProvider;
@@ -30,8 +33,8 @@ public class VerificationCommand implements CommandClass {
     @Inject private ServerTokenQuery serverTokenQuery;
     @Inject private ObjectMapper mapper;
 
-    @Command(names = {"verify", "linkaccount", "verificar", "link"}, usage = "/<command> <mail>")
-    public boolean mainCommand(CommandSender commandSender, String mail) {
+    @ACommand(names = {""})
+    public boolean mainCommand(@Injected(true) @Named("SENDER") CommandSender commandSender, @Named("mail") String mail) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {

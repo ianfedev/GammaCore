@@ -1,10 +1,11 @@
 package net.seocraft.commons.bukkit.authentication;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.basic.Namespace;
-import me.fixeddev.bcm.basic.exceptions.CommandException;
-import me.fixeddev.bcm.basic.exceptions.CommandUsageException;
-import me.fixeddev.bcm.basic.exceptions.NoPermissionsException;
+import me.fixeddev.ebcm.bukkit.BukkitCommandManager;
+import me.fixeddev.ebcm.exception.CommandException;
+import me.fixeddev.ebcm.exception.CommandParseException;
+import me.fixeddev.ebcm.exception.CommandUsageException;
+import me.fixeddev.ebcm.internal.namespace.Namespace;
 import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
@@ -22,6 +23,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 public class AuthenticationCommandsListener implements Listener {
@@ -54,7 +57,9 @@ public class AuthenticationCommandsListener implements Listener {
             namespace.setObject(CommandSender.class, "sender", event.getPlayer());
 
             try {
-                if (this.instance.parametricCommandHandler.dispatchCommand(namespace, event.getMessage().substring(1))) {
+                List<String> arguments = new ArrayList<>();
+                arguments.add(event.getMessage().substring(1));
+                 if (this.instance.getCommandManager().execute(namespace, arguments)) {
                     event.setCancelled(true);
                 }
 
@@ -63,8 +68,6 @@ public class AuthenticationCommandsListener implements Listener {
                 event.getPlayer().sendMessage(ex.getMessage());
                 Bukkit.getLogger().log(Level.SEVERE, ex.getMessage(), ex);
 
-            } catch (NoPermissionsException ex) {
-                event.getPlayer().sendMessage(ChatColor.RED + ex.getMessage());
             } catch (CommandUsageException ex) {
                 String message = ChatColor.RED + ChatColor.translateAlternateColorCodes('&', ex.getMessage());
                 String[] splitMessage = message.split("\n");
@@ -74,6 +77,8 @@ public class AuthenticationCommandsListener implements Listener {
                 for (String s : splitMessage) {
                     event.getPlayer().sendMessage(s);
                 }
+            } catch (CommandParseException e) {
+                Bukkit.getLogger().log(Level.WARNING, "There was an error parsing command", e);
             }
         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException exception) {
             ChatAlertLibrary.errorChatAlert(

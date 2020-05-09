@@ -1,8 +1,10 @@
 package net.seocraft.lobby.command;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.Injected;
+import me.fixeddev.ebcm.parametric.annotation.Named;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
 import net.seocraft.api.core.concurrent.AsyncResponse;
 import net.seocraft.api.core.concurrent.CallbackWrapper;
@@ -17,8 +19,8 @@ public class HidingGadgetCommand implements CommandClass {
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private HidingGadgetManager hidingGadgetManager;
 
-    @Command(names = {"hideplayers", "hidep", "hp"})
-    public boolean mainCommand(CommandSender commandSender) {
+    @ACommand(names = {"hideplayers", "hidep", "hp"})
+    public boolean mainCommand(@Injected(true) @Named("SENDER") CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
             CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(player.getDatabaseIdentifier()), userAsyncResponse -> {
@@ -30,7 +32,7 @@ public class HidingGadgetCommand implements CommandClass {
                         this.hidingGadgetManager.enableHiding(player);
                     }
                 } else {
-                    ChatAlertLibrary.errorChatAlert(player, null);
+                    ChatAlertLibrary.errorChatAlert(player);
                 }
             });
         }

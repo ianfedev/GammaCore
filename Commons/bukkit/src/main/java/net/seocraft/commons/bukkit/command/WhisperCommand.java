@@ -1,10 +1,11 @@
 package net.seocraft.commons.bukkit.command;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
-import me.fixeddev.bcm.parametric.annotation.JoinedString;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.ConsumedArgs;
+import me.fixeddev.ebcm.parametric.annotation.Injected;
+import me.fixeddev.ebcm.parametric.annotation.Named;
 import net.seocraft.api.bukkit.whisper.WhisperManager;
 import net.seocraft.api.bukkit.whisper.WhisperResponse;
 import net.seocraft.api.core.concurrent.AsyncResponse;
@@ -25,14 +26,13 @@ import java.util.logging.Level;
 public class WhisperCommand implements CommandClass {
 
     @Inject private WhisperManager whisperManager;
-    @Inject private ObjectMapper mapper;
     @Inject private UserStorageProvider userStorageProvider;
     @Inject private TranslatableField translator;
 
     private Channel<String> messager;
 
-    @Command(names = {"msg", "whisper", "tell", "w", "m", "t"}, min = 2, usage = "/<command> <target> <message>")
-    public boolean whisperCommand(CommandSender commandSender, OfflinePlayer target, @JoinedString String message) {
+    @ACommand(names = {"msg", "whisper", "tell", "w", "m", "t"})
+    public boolean whisperCommand(@Injected(true) @Named("SENDER")CommandSender commandSender, @Named("target") OfflinePlayer target, @ConsumedArgs(0) String message) {
 
         if (commandSender instanceof Player) {
             Player sender = (Player) commandSender;
@@ -90,7 +90,7 @@ public class WhisperCommand implements CommandClass {
         return player.getAddress().toString().split(":")[0].replace("/", "");
     }
 
-    @Command(names = {"testMessager"}, max = 0)
+    @ACommand(names = {"testMessager"})
     public boolean testMessager() {
         messager.sendMessage("test");
         Bukkit.broadcastMessage("Send message test");

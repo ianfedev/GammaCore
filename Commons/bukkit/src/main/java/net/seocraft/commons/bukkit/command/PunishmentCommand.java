@@ -1,10 +1,9 @@
 package net.seocraft.commons.bukkit.command;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.CommandContext;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
-import me.fixeddev.bcm.parametric.annotation.Flag;
+import me.fixeddev.ebcm.CommandContext;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.*;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentProvider;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
@@ -44,8 +43,14 @@ public class PunishmentCommand implements CommandClass {
     @Inject private PunishmentActions punishmentActions;
     @Inject private UserStorageProvider userStorageProvider;
 
-    @Command(names = {"ban", "tempban", "suspender", "st", "tb", "tban", "pban", "sp"}, permission = "commons.staff.punish", min = 1, usage = "/<command> <target> [duration] [reason] [-s]")
-    public boolean banCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
+    @ACommand(names = {"ban", "tempban", "suspender", "st", "tb", "tban", "pban", "sp"}, permission = "commons.staff.punish")
+    public boolean banCommand(
+            @Injected(true) @Named("SENDER") CommandSender sender,
+            @Named("target") OfflinePlayer target,
+            @Default @Named("duration") String duration,
+            @Default @ConsumedArgs(-1) @Named("reason") String reason,
+            @Flag('s') boolean silent
+    ) {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -54,7 +59,7 @@ public class PunishmentCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Detecting auto punishment
-                    if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
+                    if (player.getName().equalsIgnoreCase(target.getName())) {
                         ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                 user.getLanguage(), "commons_punish_yourself"
                         ) + ".");
@@ -74,7 +79,7 @@ public class PunishmentCommand implements CommandClass {
                             if (hasLowerPermissions(user, targetRecord, player)) return;
 
                             // Create punishment if reason or duration is provided
-                            if (context.getArgumentsLength() == 1) {
+                            if (duration == null) {
 
                                 if (!player.hasPermission("commons.staff.punish.permaban")) {
                                     ChatAlertLibrary.errorChatAlert(
@@ -115,10 +120,9 @@ public class PunishmentCommand implements CommandClass {
                             }
 
                             //Parsing first argument as provided date
-                            String stringDuration = context.getArgument(1);
                             long millisDuration;
                             try {
-                                millisDuration = TimeUtils.parseDuration(stringDuration);
+                                millisDuration = TimeUtils.parseDuration(duration);
                             } catch (NumberFormatException ex) {
                                 millisDuration = 0L;
                             }
@@ -137,7 +141,7 @@ public class PunishmentCommand implements CommandClass {
 
                                 String banReason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_ban")
                                         + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
-                                if (context.getArgumentsLength() > 2) banReason = context.getJoinedArgs(2);
+                                if (reason != null) banReason = reason;
                                 long expirationDate = TimeUtils.getUnixStamp(ZonedDateTime.now().plus(
                                         Duration.ofMillis(millisDuration)
                                 ));
@@ -179,7 +183,7 @@ public class PunishmentCommand implements CommandClass {
                                 return;
                             }
 
-                            String banReason = context.getJoinedArgs(1);
+                            String banReason = duration + reason;
                             try {
                                 Punishment punishment = this.punishmentProvider.createPunishment(
                                         PunishmentType.BAN,
@@ -224,8 +228,8 @@ public class PunishmentCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"kick", "expulsar"}, permission = "commons.staff.kick", min = 1, usage = "/<command> <target> [reason] [-s]")
-    public boolean kickCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
+    @ACommand(names = {"kick", "expulsar"}, permission = "commons.staff.kick")
+    public boolean kickCommand(@Injected(true) @Named("SENDER") CommandSender sender, @Named("target") OfflinePlayer target, @Default @ConsumedArgs(-1) String reasonRaw, @Flag('s') boolean silent) {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -234,7 +238,7 @@ public class PunishmentCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Detecting auto punishment
-                    if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
+                    if (player.getName().equalsIgnoreCase(target.getName())) {
                         ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                 user.getLanguage(), "commons_punish_yourself"
                         ) + ".");
@@ -255,7 +259,7 @@ public class PunishmentCommand implements CommandClass {
 
                             String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_kick")
                                     + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
-                            if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
+                            if (reasonRaw != null) reason = reasonRaw;
 
                             try {
                                 Punishment punishment = this.punishmentProvider.createPunishment(
@@ -296,8 +300,8 @@ public class PunishmentCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"warn", "advertir"}, permission = "commons.staff.warn", min = 1, usage = "/<command> <target> [reason] [-s]")
-    public boolean warnCommand(CommandSender sender, CommandContext context, OfflinePlayer target, @Flag('s') boolean silent) {
+    @ACommand(names = {"warn", "advertir"}, permission = "commons.staff.warn")
+    public boolean warnCommand(@Injected(true) @Named("SENDER") CommandSender sender, @Named("target") OfflinePlayer target, @Default @Named("reason") String reasonRaw, @Flag('s') boolean silent) {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
@@ -306,7 +310,7 @@ public class PunishmentCommand implements CommandClass {
                     User user = userAsyncResponse.getResponse();
 
                     //Detecting auto punishment
-                    if (player.getName().equalsIgnoreCase(context.getArgument(0))) {
+                    if (player.getName().equalsIgnoreCase(target.getName())) {
                         ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(
                                 user.getLanguage(), "commons_punish_yourself"
                         ) + ".");
@@ -327,7 +331,7 @@ public class PunishmentCommand implements CommandClass {
 
                             String reason = this.translator.getField(targetRecord.getLanguage(), "commons_punish_warn")
                                     + this.translator.getUnspacedField(targetRecord.getLanguage(), "commons_punish_no_reason").toLowerCase();
-                            if (context.getArgumentsLength() > 1) reason = context.getJoinedArgs(1);
+                            if (reason != null) reason = reasonRaw;
 
                             try {
                                 Punishment punishment = this.punishmentProvider.createPunishment(

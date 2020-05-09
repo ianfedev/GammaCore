@@ -2,8 +2,8 @@ package net.seocraft.commons.bukkit.command;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.CommandClass;
-import me.fixeddev.bcm.parametric.annotation.Command;
+import me.fixeddev.ebcm.parametric.CommandClass;
+import me.fixeddev.ebcm.parametric.annotation.ACommand;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -33,7 +33,7 @@ public class PremiumCommand implements CommandClass {
     @Inject private PremiumStatusManager premiumStatusManager;
     @Inject private TranslatableField translatableField;
 
-    @Command(names = {"premium"})
+    @ACommand(names = {"premium"})
     public boolean holderCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
@@ -82,7 +82,7 @@ public class PremiumCommand implements CommandClass {
         return true;
     }
 
-    @Command(names = {"premiumswitch"})
+    @ACommand(names = {"premiumswitch"})
     public boolean mainCommand(CommandSender commandSender) {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;

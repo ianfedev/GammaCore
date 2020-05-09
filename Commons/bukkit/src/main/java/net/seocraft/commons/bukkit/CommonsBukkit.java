@@ -5,10 +5,15 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
-import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
-import me.fixeddev.bcm.bukkit.CommandSenderAuthorizer;
-import me.fixeddev.bcm.parametric.ParametricCommandHandler;
-import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
+import me.fixeddev.ebcm.CommandManager;
+import me.fixeddev.ebcm.SimpleCommandManager;
+import me.fixeddev.ebcm.bukkit.BukkitAuthorizer;
+import me.fixeddev.ebcm.bukkit.BukkitCommandManager;
+import me.fixeddev.ebcm.bukkit.BukkitMessager;
+import me.fixeddev.ebcm.bukkit.parameter.provider.BukkitModule;
+import me.fixeddev.ebcm.parameter.provider.ParameterProviderRegistry;
+import me.fixeddev.ebcm.parametric.ParametricCommandBuilder;
+import me.fixeddev.ebcm.parametric.ReflectionParametricCommandBuilder;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.announcement.AnnouncementHandler;
 import net.seocraft.api.bukkit.creator.intercept.PacketManager;
@@ -99,17 +104,16 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private PunishmentCommand punishmentCommand;
     @Inject private FriendCommand friendCommand;
 
-    @Inject private CommandSenderAuthorizer commandSenderAuthorizer;
     @Inject private ServerLoad serverLoad;
     @Inject private MapFileManager mapFileManager;
 
     @Inject private PacketManager packetManager;
     @Inject private NPCSpawnListener npcSpawnListener;
     @Inject private NPCUseListener npcUseListener;
+    private BukkitCommandManager commandManager;
 
     public List<UUID> unregisteredPlayers = new ArrayList<>();
     public Map<UUID, Integer> loginAttempts = new HashMap<>();
-    public ParametricCommandHandler parametricCommandHandler;
     public boolean pairedGame = false;
     private boolean cloudDeploy = false;
     public int pairingRunnable;
@@ -117,9 +121,16 @@ public class CommonsBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        parametricCommandHandler = new ParametricCommandHandler(commandSenderAuthorizer, null, ParameterProviderRegistry.createRegistry(), getLogger());
-        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), null, ParameterProviderRegistry.createRegistry());
-        saveDefaultConfig();
+
+        ParameterProviderRegistry registry = ParameterProviderRegistry.createRegistry();
+        registry.installModule(new BukkitModule());
+
+        CommandManager commandManager = new SimpleCommandManager(new BukkitAuthorizer(),
+                new BukkitMessager(),
+                registry);
+        this.commandManager = new BukkitCommandManager(commandManager, this.getName());
+
+        ParametricCommandBuilder commandBuilder = new ReflectionParametricCommandBuilder();
 
         try {
             this.serverRecord = this.serverLoad.setupServer();
@@ -136,8 +147,8 @@ public class CommonsBukkit extends JavaPlugin {
                         this,
                         ()  -> {
                             Bukkit.getLogger().log(
-                                Level.SEVERE,
-                                "[GameAPI] No game was paired during last 2 minutes, shutting down server."
+                                    Level.SEVERE,
+                                    "[GameAPI] No game was paired during last 2 minutes, shutting down server."
                             );
                             Bukkit.shutdown();
                         },
@@ -154,13 +165,13 @@ public class CommonsBukkit extends JavaPlugin {
         this.packetManager.addPacketListener(this.npcSpawnListener);
         this.packetManager.addPacketListener(this.npcUseListener);
 
-        dispatcher.registerCommand(adminChatCommand);
-        dispatcher.registerCommandClass(adminChatSettings);
-        dispatcher.registerCommandClass(whisperCommand);
-        dispatcher.registerCommandClass(punishmentCommand);
-        dispatcher.registerCommandClass(friendCommand);
-        dispatcher.registerCommandClass(verificationCommand);
-        dispatcher.registerCommandClass(premiumCommand);
+        this.commandManager.registerCommand(adminChatCommand.getCommand());
+        this.commandManager.registerCommands(commandBuilder.fromClass(adminChatSettings));
+        this.commandManager.registerCommands(commandBuilder.fromClass(whisperCommand));
+        this.commandManager.registerCommands(commandBuilder.fromClass(punishmentCommand));
+        this.commandManager.registerCommands(commandBuilder.fromClass(friendCommand));
+        this.commandManager.registerCommands(commandBuilder.fromClass(verificationCommand));
+        this.commandManager.registerCommands(commandBuilder.fromClass(premiumCommand));
 
         getServer().getPluginManager().registerEvents(gamePairingListener, this);
         getServer().getPluginManager().registerEvents(acClickInventoryListener, this);
@@ -169,7 +180,7 @@ public class CommonsBukkit extends JavaPlugin {
         getServer().getPluginManager().registerEvents(disabledPluginsCommandListener, this);
         getServer().getPluginManager().registerEvents(userDisconnectListener, this);
         if (!getConfig().getBoolean("authentication.enabled", false))
-            dispatcher.registerCommandClass(lobbyCommand);
+            this.commandManager.registerCommands(commandBuilder.fromClass(lobbyCommand));
 
         if (getConfig().getBoolean("announcement.enabled")) announcementHandler.startAnnouncementDisplaying();
 
@@ -241,8 +252,8 @@ public class CommonsBukkit extends JavaPlugin {
     }
 
     private void enableAuthentication() {
-        parametricCommandHandler.registerCommand(loginCommand);
-        parametricCommandHandler.registerCommand(registerCommand);
+        this.commandManager.registerCommand(loginCommand.getCommand());
+        this.commandManager.registerCommand(registerCommand.getCommand());
 
         getServer().getPluginManager().registerEvents(authenticationCommandsListener, this);
         getServer().getPluginManager().registerEvents(authenticationLanguageMenuListener, this);
@@ -272,4 +283,7 @@ public class CommonsBukkit extends JavaPlugin {
         return this.cloudDeploy;
     }
 
+    public BukkitCommandManager getCommandManager() {
+        return commandManager;
+    }
 }
