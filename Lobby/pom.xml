@@ -33,15 +33,7 @@
         </dependency>
         <dependency>
             <groupId>me.fixeddev</groupId>
-            <artifactId>ebcm-universal</artifactId>
-            <version>1.9.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.fixeddev</groupId>
-            <artifactId>ebcm-universal</artifactId>
-            <version>1.9.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <artifactId>ebcm-bukkit</artifactId>
         </dependency>
     </dependencies>
 

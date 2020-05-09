@@ -1,7 +1,6 @@
 package net.seocraft.commons.bukkit.game.management;
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import net.seocraft.api.bukkit.cloud.CloudManager;
 import net.seocraft.api.bukkit.event.GameInvalidationEvent;
 import net.seocraft.api.bukkit.event.GameSpectatorSetEvent;
