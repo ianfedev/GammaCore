@@ -20,6 +20,8 @@ public class MatchModule extends ProtectedModule {
         expose(MatchAssignationProvider.class);
         expose(MatchCacheManager.class);
         expose(MatchDataProvider.class);
+        expose(MatchMapProvider.class);
+        expose(MatchTimerProvider.class);
         expose(MatchFinder.class);
     }
 
