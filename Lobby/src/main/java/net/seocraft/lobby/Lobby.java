@@ -2,8 +2,15 @@ package net.seocraft.lobby;
 
 import com.google.inject.Inject;
 import com.google.inject.Scopes;
-import me.fixeddev.bcm.bukkit.BukkitCommandHandler;
-import me.fixeddev.bcm.parametric.providers.ParameterProviderRegistry;
+import me.fixeddev.ebcm.CommandManager;
+import me.fixeddev.ebcm.SimpleCommandManager;
+import me.fixeddev.ebcm.bukkit.BukkitAuthorizer;
+import me.fixeddev.ebcm.bukkit.BukkitCommandManager;
+import me.fixeddev.ebcm.bukkit.BukkitMessager;
+import me.fixeddev.ebcm.bukkit.parameter.provider.BukkitModule;
+import me.fixeddev.ebcm.parameter.provider.ParameterProviderRegistry;
+import me.fixeddev.ebcm.parametric.ParametricCommandBuilder;
+import me.fixeddev.ebcm.parametric.ReflectionParametricCommandBuilder;
 import me.fixeddev.inject.ProtectedBinder;
 import net.seocraft.api.bukkit.lobby.HidingGadgetManager;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
@@ -46,6 +53,8 @@ public class Lobby extends JavaPlugin {
     @NotNull private final Set<SelectorNPC> lobbyNPC = new HashSet<>();
     @NotNull private final Map<Player, Integer> lobbyMenuClose = new HashMap<>();
 
+    private CommandManager commandManager;
+
     @Inject private CommonsBukkit instance;
 
     @Inject private HidingGadgetCommand hidingGadgetCommand;
@@ -78,10 +87,19 @@ public class Lobby extends JavaPlugin {
 
         saveDefaultConfig();
         setupLobbyWorld();
-        BukkitCommandHandler dispatcher = new BukkitCommandHandler(getLogger(), null, ParameterProviderRegistry.createRegistry());
 
-        dispatcher.registerCommandClass(this.hidingGadgetCommand);
-        dispatcher.registerCommandClass(this.teleportCommand);
+        ParameterProviderRegistry registry = ParameterProviderRegistry.createRegistry();
+        registry.installModule(new BukkitModule());
+
+        CommandManager commandManager = new SimpleCommandManager(new BukkitAuthorizer(),
+                new BukkitMessager(),
+                registry);
+        this.commandManager = new BukkitCommandManager(commandManager, this.getName());
+
+        ParametricCommandBuilder commandBuilder = new ReflectionParametricCommandBuilder();
+
+        commandManager.registerCommands(commandBuilder.fromClass(this.hidingGadgetCommand));
+        commandManager.registerCommands(commandBuilder.fromClass(this.teleportCommand));
 
         getServer().getPluginManager().registerEvents(this.inventoryCloseListener, this);
         getServer().getPluginManager().registerEvents(this.gameSelectorListener, this);

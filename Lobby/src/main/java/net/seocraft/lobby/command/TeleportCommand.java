@@ -1,10 +1,10 @@
 package net.seocraft.lobby.command;
 
 import com.google.inject.Inject;
-import me.fixeddev.bcm.parametric.annotation.Optional;
 import me.fixeddev.ebcm.bukkit.parameter.provider.annotation.Sender;
 import me.fixeddev.ebcm.parametric.CommandClass;
 import me.fixeddev.ebcm.parametric.annotation.ACommand;
+import me.fixeddev.ebcm.parametric.annotation.Default;
 import me.fixeddev.ebcm.parametric.annotation.Flag;
 import me.fixeddev.ebcm.parametric.annotation.Injected;
 import net.seocraft.api.bukkit.lobby.TeleportManager;
@@ -39,7 +39,7 @@ public class TeleportCommand implements CommandClass {
     }
 
     @ACommand(names = {"spawn"}, permission = "commons.staff.lobby.spawn")
-    public boolean spawnCommand(@Injected(true) @Sender Player player, @Optional OfflinePlayer target, @Flag('s') boolean silent) {
+    public boolean spawnCommand(@Injected(true) @Sender Player player, @Default OfflinePlayer target, @Flag('s') boolean silent) {
         if (target != null) {
             this.teleportManager.spawnTeleport(player, target, silent);
         } else {
