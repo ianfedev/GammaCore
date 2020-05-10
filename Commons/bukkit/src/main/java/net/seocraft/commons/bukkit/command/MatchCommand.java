@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.logging.Level;
 
-@ACommand(names = {"match help"}, permission = "commons.staff.match.help")
+@ACommand(names = {"match"}, permission = "commons.staff.match.help")
 public class MatchCommand implements CommandClass {
 
     @Inject private GameStartManager gameStartManager;
