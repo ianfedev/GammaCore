@@ -22,7 +22,7 @@ public class CoreGamemodeCache implements GamemodeCache {
 
     @Override
     public void cacheMatch(@NotNull Gamemode gamemode) throws JsonProcessingException {
-        this.redisClient.setString("gamemdoe:" + gamemode.getId(), objectMapper.writeValueAsString(gamemode));
+        this.redisClient.setString("gamemode:" + gamemode.getId(), objectMapper.writeValueAsString(gamemode));
         this.redisClient.setExpiration("gamemode:" + gamemode.getId(), 120);
     }
 
