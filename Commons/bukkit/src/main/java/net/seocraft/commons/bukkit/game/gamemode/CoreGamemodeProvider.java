@@ -92,15 +92,15 @@ public class CoreGamemodeProvider implements GamemodeProvider {
     @Override
     public @NotNull Set<Gamemode> listGamemodesSync() throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
         String gamemodeResponse = this.gamemodeListRequest.executeRequest();
-        Set<Gamemode> gamemdoeSet = this.mapper.readValue(gamemodeResponse, new TypeReference<Set<Gamemode>>(){});
-        gamemdoeSet.forEach(gamemode -> {
+        Set<Gamemode> gamemodeSet = this.mapper.readValue(gamemodeResponse, new TypeReference<Set<Gamemode>>(){});
+        gamemodeSet.forEach(gamemode -> {
             try {
                 this.gamemodeCache.cacheMatch(gamemode);
             } catch (JsonProcessingException e) {
                 Bukkit.getLogger().log(Level.WARNING, "There was an error retreiving a gamemode from gamemode list", e);
             }
         });
-        return gamemdoeSet;
+        return gamemodeSet;
     }
 
     @Override
