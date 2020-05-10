@@ -100,6 +100,7 @@ public class CommonsBukkit extends JavaPlugin {
     @Inject private PremiumCommand premiumCommand;
     @Inject private VerificationCommand verificationCommand;
     @Inject private LobbyCommand lobbyCommand;
+    @Inject private MatchCommand matchCommand;
     @Inject private WhisperCommand whisperCommand;
     @Inject private PunishmentCommand punishmentCommand;
     @Inject private FriendCommand friendCommand;
@@ -166,6 +167,7 @@ public class CommonsBukkit extends JavaPlugin {
         this.packetManager.addPacketListener(this.npcUseListener);
 
         this.commandManager.registerCommand(adminChatCommand.getCommand());
+        this.commandManager.registerCommands(commandBuilder.fromClass(matchCommand));
         this.commandManager.registerCommands(commandBuilder.fromClass(adminChatSettings));
         this.commandManager.registerCommands(commandBuilder.fromClass(whisperCommand));
         this.commandManager.registerCommands(commandBuilder.fromClass(punishmentCommand));
