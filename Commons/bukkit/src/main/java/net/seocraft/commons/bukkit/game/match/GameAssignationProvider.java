@@ -32,12 +32,12 @@ public class GameAssignationProvider implements MatchAssignationProvider {
 
     @Override
     public void assignPlayer(@NotNull String id, @NotNull Match match, @NotNull PlayerType type) {
-        this.redisClient.setHash("match:" + id, id, type.toString());
+        this.redisClient.setHash("match:" + match.getId(), id, type.toString());
     }
 
     @Override
     public void unassignPlayer(@NotNull Match match, @NotNull String id) {
-        this.redisClient.deleteHash("match:" + id, id);
+        this.redisClient.deleteHash("match:" + match.getId(), id);
     }
 
     @Override
