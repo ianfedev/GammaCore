@@ -17,6 +17,7 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.api.core.redis.messager.Channel;
 import net.seocraft.api.core.redis.messager.Messager;
+import net.seocraft.api.core.user.User;
 import net.seocraft.api.core.user.UserExpulsion;
 import net.seocraft.api.core.user.UserStorageProvider;
 import net.seocraft.commons.bukkit.server.BukkitTokenQuery;
@@ -51,7 +52,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
     }
 
     @Override
-    public @NotNull Punishment createPunishment(@NotNull PunishmentType punishmentType, @NotNull String punisher, @NotNull String punished, @NotNull String server, @Nullable Match match, @NotNull String lastIp, @NotNull String reason, long expiration, boolean automatic, boolean silent) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
+    public @NotNull Punishment createPunishment(@NotNull PunishmentType punishmentType, @NotNull User issuer, @NotNull User punished, @NotNull String server, @Nullable Match match, @NotNull String lastIp, @NotNull String reason, long expiration, boolean automatic, boolean silent) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
 
         if (punishmentType.equals(PunishmentType.BAN)) {
             Punishment previousPunishment = getLastPunishmentSync(punishmentType, punished);
@@ -62,7 +63,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
             }
         }
 
-        Punishment punishment = new UserPunishment(UUID.randomUUID().toString(), punishmentType, punisher, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent, true);
+        Punishment punishment = new UserPunishment(UUID.randomUUID().toString(), punishmentType, issuerg, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent, true);
         this.punishmentCreateRequest.executeRequest(
                 this.mapper.writeValueAsString(
                         punishment

@@ -3,6 +3,7 @@ package net.seocraft.commons.bukkit.punishment;
 import net.seocraft.api.bukkit.game.match.Match;
 import net.seocraft.api.bukkit.punishment.Punishment;
 import net.seocraft.api.bukkit.punishment.PunishmentType;
+import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,8 +13,8 @@ public class UserPunishment implements Punishment {
 
     @NotNull private String id;
     @NotNull private PunishmentType punishmentType;
-    @NotNull private String punisherId;
-    @NotNull private String punishedId;
+    @NotNull private User issuer;
+    @NotNull private User punished;
     @NotNull private String server;
     @Nullable private Match match;
     @Nullable private String lastIp;
@@ -26,11 +27,11 @@ public class UserPunishment implements Punishment {
     private boolean active;
 
     @ConstructorProperties({"_id", "type", "punisher", "punished", "server", "match", "last_ip", "reason", "expires", "created_at", "automatic", "appealed", "silent", "active"})
-    UserPunishment(@NotNull String id, @NotNull PunishmentType punishmentType, @NotNull String punisherId, @NotNull String punishedId, @NotNull String server, @Nullable Match match, @Nullable String lastIp, @NotNull String reason, long expiration, long createdAt, boolean automatic, boolean appealed, boolean silent, boolean active) {
+    UserPunishment(@NotNull String id, @NotNull PunishmentType punishmentType, @NotNull User issuer, @NotNull User punished, @NotNull String server, @Nullable Match match, @Nullable String lastIp, @NotNull String reason, long expiration, long createdAt, boolean automatic, boolean appealed, boolean silent, boolean active) {
         this.id = id;
         this.punishmentType = punishmentType;
-        this.punisherId = punisherId;
-        this.punishedId = punishedId;
+        this.issuer = issuer;
+        this.punished = punished;
         this.server = server;
         this.match = match;
         this.lastIp = lastIp;
@@ -49,18 +50,18 @@ public class UserPunishment implements Punishment {
     }
 
     @Override
-    public @NotNull PunishmentType getPunishmentType() {
+    public @NotNull PunishmentType getType() {
         return this.punishmentType;
     }
 
     @Override
-    public @NotNull String getPunisherId() {
-        return punisherId;
+    public @NotNull User getIssuer() {
+        return this.issuer;
     }
 
     @Override
-    public @NotNull String getPunishedId() {
-        return punishedId;
+    public @NotNull User getPunished() {
+        return punished;
     }
 
     @Override

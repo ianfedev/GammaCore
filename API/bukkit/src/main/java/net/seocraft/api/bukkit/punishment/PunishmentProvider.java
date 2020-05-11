@@ -7,6 +7,7 @@ import net.seocraft.api.core.http.exceptions.BadRequest;
 import net.seocraft.api.core.http.exceptions.InternalServerError;
 import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
+import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,8 +18,8 @@ public interface PunishmentProvider {
 
     @NotNull
     Punishment createPunishment(@NotNull PunishmentType punishmentType,
-                                @NotNull String punisher,
-                                @NotNull String punished,
+                                @NotNull User issuer,
+                                @NotNull User punished,
                                 @NotNull String server,
                                 @Nullable Match match,
                                 @NotNull String lastIp,

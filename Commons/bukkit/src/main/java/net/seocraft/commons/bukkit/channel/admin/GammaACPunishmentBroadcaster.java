@@ -31,10 +31,10 @@ public class GammaACPunishmentBroadcaster implements ACPunishmentBroadcaster {
     public void broadcastPunishment(@NotNull Punishment punishment) {
         String r = this.bukkitAPI.getConfig().getString("realm");
 
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunishedId()), punishedRecord -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunished()), punishedRecord -> {
             if (punishedRecord.getStatus().equals(AsyncResponse.Status.SUCCESS)) {
                 User punished = punishedRecord.getResponse();
-                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunisherId()), punisherRecord -> {
+                CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getIssuer()), punisherRecord -> {
                     if (punisherRecord.getStatus().equals(AsyncResponse.Status.SUCCESS)) {
                         User punisher = punisherRecord.getResponse();
                         this.participantsProvider.getChannelParticipants().forEach((user) -> {
@@ -51,11 +51,11 @@ public class GammaACPunishmentBroadcaster implements ACPunishmentBroadcaster {
 
                                 // Checks punishment type
 
-                                if (punishment.getPunishmentType().equals(PunishmentType.WARN))
+                                if (punishment.getType().equals(PunishmentType.WARN))
                                     message = message + ChatColor.GREEN + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_warned").toLowerCase();
-                                if (punishment.getPunishmentType().equals(PunishmentType.KICK))
+                                if (punishment.getType().equals(PunishmentType.KICK))
                                     message = message + ChatColor.YELLOW + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_kicked").toLowerCase();
-                                if (punishment.getPunishmentType().equals(PunishmentType.BAN))
+                                if (punishment.getType().equals(PunishmentType.BAN))
                                     message = message + ChatColor.RED + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_banned").toLowerCase();
                                 message = message + ChatColor.GRAY + this.translatableField.getField(user.getLanguage(), "commons_ac_punishment_to").toLowerCase();
 

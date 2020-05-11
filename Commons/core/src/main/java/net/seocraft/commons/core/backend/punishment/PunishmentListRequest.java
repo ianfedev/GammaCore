@@ -14,7 +14,7 @@ import java.util.Map;
 public class PunishmentListRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
-    private HashMap<String, String> params = new HashMap<>();
+    private String body;
 
     @Override
     public Map<String, String> getHeaders() {
@@ -22,22 +22,20 @@ public class PunishmentListRequest extends HttpRequest {
     }
 
     @Override
-    public Map<String, String> getQueryStrings() {
-        return this.params;
+    public String getJSONParams() {
+        return body;
     }
 
     public HttpType getType() {
-        return HttpType.GET;
+        return HttpType.POST;
     }
 
     public String getURL() {
-        return "punishment/list-model";
+        return "punishment/list";
     }
 
-    public String executeRequest(@Nullable String type, @Nullable String playerId, boolean active, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.params.put("type", type);
-        this.params.put("id", playerId);
-        this.params.put("active", Boolean.toString(active));
+    public String executeRequest(@Nullable String body, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.body = body;
         this.headers.put("authorization", token);
         return getResponse();
     }

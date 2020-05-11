@@ -25,7 +25,7 @@ public class PunishmentGetRequest extends HttpRequest {
     }
 
     public String getURL() {
-        return "punishment/get-model/" + this.punishmentId;
+        return "punishment/get/" + this.punishmentId;
     }
 
     public String executeRequest(String punishmentId, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {

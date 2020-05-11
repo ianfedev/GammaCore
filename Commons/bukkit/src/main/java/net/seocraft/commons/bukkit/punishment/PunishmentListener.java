@@ -25,12 +25,12 @@ public class PunishmentListener implements ChannelListener<Punishment> {
 
     @Override
     public void receiveMessage(Punishment punishment) {
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunishedId()), targetAsyncResponse -> {
+        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunished()), targetAsyncResponse -> {
             User targetData = targetAsyncResponse.getResponse();
             Player target = Bukkit.getPlayer(targetData.getUsername());
 
             if (target != null && targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                switch (punishment.getPunishmentType()) {
+                switch (punishment.getType()) {
                     case BAN: {
                         this.punishmentActions.broadcastBan(punishment);
                         BridgedUserBan.banPlayer(expulsionChannel, punishment, targetData);

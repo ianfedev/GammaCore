@@ -15,7 +15,7 @@ import java.util.Map;
 public class PunishmentGetLastRequest extends HttpRequest {
 
     private HashMap<String, String> headers = new HashMap<>();
-    private HashMap<String, String> params = new HashMap<>();
+    private String body;
 
     @Override
     public Map<String, String> getHeaders() {
@@ -23,21 +23,20 @@ public class PunishmentGetLastRequest extends HttpRequest {
     }
 
     public HttpType getType() {
-        return HttpType.GET;
+        return HttpType.POST;
     }
 
     @Override
-    public Map<String, String> getQueryStrings() {
-        return this.params;
+    public String getJSONParams() {
+        return body;
     }
 
     public String getURL() {
         return "punishment/get-last";
     }
 
-    public String executeRequest(@Nullable String type, @NotNull String punishmentId, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
-        this.params.put("id", punishmentId);
-        this.params.put("type", type);
+    public String executeRequest(@NotNull String body, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+        this.body = body;
         this.headers.put("authorization", token);
         return getResponse();
     }

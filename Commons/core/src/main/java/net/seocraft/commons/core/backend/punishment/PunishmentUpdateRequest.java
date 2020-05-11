@@ -6,6 +6,7 @@ import net.seocraft.api.core.http.exceptions.NotFound;
 import net.seocraft.api.core.http.exceptions.Unauthorized;
 import net.seocraft.commons.core.backend.http.HttpRequest;
 import net.seocraft.commons.core.backend.http.HttpType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -35,7 +36,7 @@ public class PunishmentUpdateRequest extends HttpRequest {
         return body;
     }
 
-    public String executeRequest(@Nullable String punishment, String punishmentId, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
+    public String executeRequest(@NotNull String punishment, String punishmentId, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = punishment;
         this.punishmentId = punishmentId;
         this.headers.put("authorization", token);
