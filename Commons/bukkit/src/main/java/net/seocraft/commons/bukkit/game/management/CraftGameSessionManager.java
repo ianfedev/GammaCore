@@ -81,7 +81,7 @@ public class CraftGameSessionManager implements GameLoginManager {
                             )
                             .replace(
                                     "%%actual%%",
-                                    ChatColor.AQUA + "" + matchUsers + ChatColor.YELLOW
+                                    ChatColor.AQUA + "" + matchUsers.size() + ChatColor.YELLOW
                             )
                             .replace(
                                     "%%max%%",
@@ -119,7 +119,7 @@ public class CraftGameSessionManager implements GameLoginManager {
     }
 
     @Override
-    public void matchPlayerLeave(@NotNull Match match, @NotNull User user, @NotNull Player player) {
+    public void matchPlayerLeave(@NotNull Match match, @NotNull User user, @NotNull Player player) throws Unauthorized, InternalServerError, BadRequest, NotFound, IOException {
 
         MatchAssignation assignation = this.matchDataProvider.getPlayerMatch(player.getDatabaseIdentifier());
 
@@ -184,6 +184,9 @@ public class CraftGameSessionManager implements GameLoginManager {
                         uPlayer.sendMessage(leaveMessage);
                     }
                 }
+
+                this.lobbyScoreboardManager.retrieveGameBoard(match, player, user);
+
             }
 
             if (gamemode != null && matchUsers.size() < gamemode.getMinPlayers()) {
