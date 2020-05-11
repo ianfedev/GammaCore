@@ -259,7 +259,7 @@ public class UserJoinListener implements Listener {
                         FinderResult.class
                 );
                 this.gameLoginManager.matchPlayerJoin(result, user, player);
-                this.redisClient.deleteString(pairing);
+                this.redisClient.deleteString("pairing:" + user.getId());
                 Bukkit.getPluginManager().callEvent(new GamePlayerJoinEvent(user));
             } else {
                 player.kickPlayer(ChatColor.RED + "You were not paired to this server, please try again.");
