@@ -28,7 +28,7 @@ public class MatchGetRequest extends HttpRequest {
 
     @Override
     public String getURL() {
-        return "match/create" + this.id;
+        return "match/get/" + this.id;
     }
 
     public String executeRequest(@NotNull String id, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
