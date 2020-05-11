@@ -18,7 +18,7 @@ public class GameStats implements Stats {
 
     @ConstructorProperties({
             "_id",
-            "user",
+            "username",
             "dungeon",
             "skyWars",
             "tntGames"
