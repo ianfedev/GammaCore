@@ -31,8 +31,6 @@ public class GameStatsProvider implements StatsProvider {
                 this.serverTokenQuery.getToken()
         );
 
-        System.out.print(stats);
-
         return this.mapper.readValue(stats, Stats.class);
     }
 
