@@ -85,8 +85,8 @@ public class PunishmentCommand implements CommandClass {
                             try {
                                 Punishment punishment = this.punishmentProvider.createPunishment(
                                         PunishmentType.BAN,
-                                        user.getId(),
-                                        targetRecord.getId(),
+                                        user,
+                                        targetRecord,
                                         "unknown",
                                         null,
                                         getPlayerIP((Player) target),
@@ -142,8 +142,8 @@ public class PunishmentCommand implements CommandClass {
                             try {
                                 Punishment punishment = this.punishmentProvider.createPunishment(
                                         PunishmentType.BAN,
-                                        user.getId(),
-                                        targetRecord.getId(),
+                                        user,
+                                        targetRecord,
                                         serverName,
                                         null,
                                         getPlayerIP((Player) target),
@@ -181,8 +181,8 @@ public class PunishmentCommand implements CommandClass {
                         try {
                             Punishment punishment = this.punishmentProvider.createPunishment(
                                     PunishmentType.BAN,
-                                    user.getId(),
-                                    targetRecord.getId(),
+                                    user,
+                                    targetRecord,
                                     serverName,
                                     null,
                                     getPlayerIP((Player) target),
@@ -258,8 +258,8 @@ public class PunishmentCommand implements CommandClass {
                         try {
                             Punishment punishment = this.punishmentProvider.createPunishment(
                                     PunishmentType.KICK,
-                                    user.getId(),
-                                    targetRecord.getId(),
+                                    user,
+                                    targetRecord,
                                     serverName,
                                     null,
                                     getPlayerIP((Player) target),
@@ -329,8 +329,8 @@ public class PunishmentCommand implements CommandClass {
                         try {
                             Punishment punishment = this.punishmentProvider.createPunishment(
                                     PunishmentType.WARN,
-                                    user.getId(),
-                                    targetRecord.getId(),
+                                    user,
+                                    targetRecord,
                                     serverName,
                                     null,
                                     getPlayerIP((Player) target),
