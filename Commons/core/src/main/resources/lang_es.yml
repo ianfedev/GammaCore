@@ -1,28 +1,3 @@
-# ----------------------------- #
-#  %%black%% = Black            #
-#  %%dark_blue%% = Dark Blue    #
-#  %%dark_green%% = Dark Green  #
-#  %%dark_aqua%% = Dark Aqua    #
-#  %%dark_red%% = Dark Red      #
-#  %%dark_purple%% = Dark Purp. #
-#  %%gold%% = Gold              #
-#  %%gray%% = Gray              #
-#  %%dark_gray%% = Dark Gray    #
-#  %%blue%% = Blue              #
-#  %%green%% = Green            #
-#  %%aqua%% = Aqua              #
-#  %%red%% = Red                #
-#  %%light_purple%% = Light P.  #
-#  %%yellow%% = Yellow          #
-#  %%white%% = White            #
-#  %%obfuscated%% = Obfuscated  #
-#  %%bold%% = Bold              #
-#  %%strike%% = Striketrough    #
-#  %%underline%% = Underline    #
-#  %%italic%% = Italic          #
-#  %%reset%% = Reset            #
-# ----------------------------- #
-
 network_final_name: Seocraft Network
 
 # Authentication related translations
