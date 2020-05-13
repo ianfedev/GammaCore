@@ -12,4 +12,6 @@ public interface UserExpulsion {
 
     boolean isPermanent();
 
+    boolean isKick();
+
 }

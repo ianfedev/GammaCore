@@ -268,6 +268,11 @@ public class PunishmentCommand implements CommandClass {
                                     false,
                                     silent
                             );
+                            BridgedUserBan.banPlayer(
+                                    this.messager.getChannel("proxyBan", UserExpulsion.class),
+                                    punishment,
+                                    targetRecord
+                            );
                             this.punishmentActions.kickPlayer(target.getPlayer(), targetRecord, punishment);
                         } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException unauthorized) {
                             ChatAlertLibrary.errorChatAlert(player, this.translator.getUnspacedField(

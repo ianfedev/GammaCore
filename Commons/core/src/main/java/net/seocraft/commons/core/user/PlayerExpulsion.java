@@ -12,13 +12,15 @@ public class PlayerExpulsion implements UserExpulsion {
      @NotNull private String reason;
      private long expiration;
      private boolean permanent;
+     private boolean kick;
 
-     @ConstructorProperties({"user", "reason", "expiration", "permanent"})
-     public PlayerExpulsion(@NotNull User user, @NotNull String reason, long expiration, boolean permanent) {
+     @ConstructorProperties({"user", "reason", "expiration", "permanent", "kick"})
+     public PlayerExpulsion(@NotNull User user, @NotNull String reason, long expiration, boolean permanent, boolean kick) {
           this.user = user;
           this.reason = reason;
           this.expiration = expiration;
           this.permanent = permanent;
+          this.kick = kick;
      }
 
      @Override
@@ -39,5 +41,10 @@ public class PlayerExpulsion implements UserExpulsion {
      @Override
      public boolean isPermanent() {
           return this.permanent;
+     }
+
+     @Override
+     public boolean isKick() {
+          return this.kick;
      }
 }
