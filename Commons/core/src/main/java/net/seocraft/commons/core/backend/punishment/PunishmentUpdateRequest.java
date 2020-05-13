@@ -40,6 +40,6 @@ public class PunishmentUpdateRequest extends HttpRequest {
         this.body = punishment;
         this.punishmentId = punishmentId;
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 }

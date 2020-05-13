@@ -13,40 +13,33 @@ import org.bukkit.entity.Player;
 
 public class PunishmentListener implements ChannelListener<Punishment> {
 
-    private UserStorageProvider userStorageProvider;
     private PunishmentActions punishmentActions;
     private Channel<UserExpulsion> expulsionChannel;
 
-    PunishmentListener(UserStorageProvider userStorageProvider, PunishmentActions punishmentActions, Channel<UserExpulsion> expulsionChannel) {
-        this.userStorageProvider = userStorageProvider;
+    PunishmentListener(PunishmentActions punishmentActions, Channel<UserExpulsion> expulsionChannel) {
         this.punishmentActions = punishmentActions;
         this.expulsionChannel = expulsionChannel;
     }
 
     @Override
     public void receiveMessage(Punishment punishment) {
-        CallbackWrapper.addCallback(this.userStorageProvider.getCachedUser(punishment.getPunished()), targetAsyncResponse -> {
-            User targetData = targetAsyncResponse.getResponse();
-            Player target = Bukkit.getPlayer(targetData.getUsername());
-
-            if (target != null && targetAsyncResponse.getStatus() == AsyncResponse.Status.SUCCESS) {
-                switch (punishment.getType()) {
-                    case BAN: {
-                        this.punishmentActions.broadcastBan(punishment);
-                        BridgedUserBan.banPlayer(expulsionChannel, punishment, targetData);
-                        break;
-                    }
-                    case KICK: {
-                        this.punishmentActions.kickPlayer(target.getPlayer(), targetData, punishment);
-                        break;
-                    }
-                    case WARN: {
-                        this.punishmentActions.warnPlayer(target.getPlayer(), targetData, punishment);
-                        break;
-                    }
-                    default: break;
-                }
+        User targetData = punishment.getPunished();
+        Player target = Bukkit.getPlayer(targetData.getUsername());
+        switch (punishment.getType()) {
+            case BAN: {
+                this.punishmentActions.broadcastBan(punishment);
+                BridgedUserBan.banPlayer(expulsionChannel, punishment, targetData);
+                break;
             }
-        });
+            case KICK: {
+                this.punishmentActions.kickPlayer(target.getPlayer(), targetData, punishment);
+                break;
+            }
+            case WARN: {
+                this.punishmentActions.warnPlayer(target.getPlayer(), targetData, punishment);
+                break;
+            }
+            default: break;
+        }
     }
 }

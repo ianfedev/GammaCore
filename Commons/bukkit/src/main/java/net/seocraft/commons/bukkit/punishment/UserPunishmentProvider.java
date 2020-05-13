@@ -2,6 +2,7 @@ package net.seocraft.commons.bukkit.punishment;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.inject.Inject;
@@ -48,14 +49,14 @@ public class UserPunishmentProvider implements PunishmentProvider {
         this.executorService = executorService;
         this.punishmentChannel = messager.getChannel("punishments", Punishment.class);
         this.expulsionChannel = messager.getChannel("proxyBan", UserExpulsion.class);
-        this.punishmentChannel.registerListener(new PunishmentListener(userStorageProvider, punishmentActions, expulsionChannel));
+        this.punishmentChannel.registerListener(new PunishmentListener(punishmentActions, expulsionChannel));
     }
 
     @Override
     public @NotNull Punishment createPunishment(@NotNull PunishmentType punishmentType, @NotNull User issuer, @NotNull User punished, @NotNull String server, @Nullable Match match, @NotNull String lastIp, @NotNull String reason, long expiration, boolean automatic, boolean silent) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
 
         if (punishmentType.equals(PunishmentType.BAN)) {
-            Punishment previousPunishment = getLastPunishmentSync(punishmentType, punished);
+            Punishment previousPunishment = getLastPunishmentSync(punishmentType, punished.getId());
 
             if (previousPunishment != null) {
                 previousPunishment.setActive(false);
@@ -63,7 +64,7 @@ public class UserPunishmentProvider implements PunishmentProvider {
             }
         }
 
-        Punishment punishment = new UserPunishment(UUID.randomUUID().toString(), punishmentType, issuerg, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent, true);
+        Punishment punishment = new UserPunishment(UUID.randomUUID().toString(), punishmentType, issuer, punished, server, match, lastIp, reason, expiration, 0, automatic, false, silent, true);
         this.punishmentCreateRequest.executeRequest(
                 this.mapper.writeValueAsString(
                         punishment
@@ -106,10 +107,12 @@ public class UserPunishmentProvider implements PunishmentProvider {
 
     @Override
     public @Nullable Punishment getLastPunishmentSync(@Nullable PunishmentType type, @NotNull String playerId) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
-        String typeString = "warn";
-        if (type != null) typeString = type.toString();
 
-        String response = this.punishmentGetLastRequest.executeRequest(typeString, playerId, this.serverTokenQuery.getToken());
+        ObjectNode node =  this.mapper.createObjectNode();
+        if (type != null) node.put("type", type.toString().toLowerCase());
+         node.put("punished", playerId.toLowerCase());
+
+        String response = this.punishmentGetLastRequest.executeRequest(this.mapper.writeValueAsString(node), this.serverTokenQuery.getToken());
         if (response.equals("")) return null;
         return this.mapper.readValue(
                 response,
@@ -131,10 +134,14 @@ public class UserPunishmentProvider implements PunishmentProvider {
 
     @Override
     public List<Punishment> getPunishmentsSync(@Nullable PunishmentType type, @Nullable String playerId, boolean active) throws Unauthorized, BadRequest, NotFound, InternalServerError, IOException {
-        String typeString = null;
-        if (type != null) typeString = type.toString();
+
+        ObjectNode node =  this.mapper.createObjectNode();
+        if (type != null) node.put("type", type.toString().toLowerCase());
+        if (playerId != null) node.put("punished", playerId.toLowerCase());
+        if (active) node.put("active", "true");
+
         return this.mapper.readValue(
-                this.punishmentListRequest.executeRequest(typeString, playerId, active, this.serverTokenQuery.getToken()),
+                this.punishmentListRequest.executeRequest(this.mapper.writeValueAsString(node), this.serverTokenQuery.getToken()),
                 new TypeReference<Set<Punishment>>(){}
         );
     }

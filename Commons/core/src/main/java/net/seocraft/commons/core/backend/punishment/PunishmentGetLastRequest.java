@@ -38,7 +38,7 @@ public class PunishmentGetLastRequest extends HttpRequest {
     public String executeRequest(@NotNull String body, @NotNull String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = body;
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 
 }

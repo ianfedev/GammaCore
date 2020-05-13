@@ -37,7 +37,7 @@ public class PunishmentListRequest extends HttpRequest {
     public String executeRequest(@Nullable String body, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.body = body;
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 
 }

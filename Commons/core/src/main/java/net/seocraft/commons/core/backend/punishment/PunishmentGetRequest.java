@@ -31,7 +31,7 @@ public class PunishmentGetRequest extends HttpRequest {
     public String executeRequest(String punishmentId, String token) throws Unauthorized, BadRequest, NotFound, InternalServerError {
         this.punishmentId = punishmentId;
         this.headers.put("authorization", token);
-        return getResponse();
+        return getEpsilonResponse();
     }
 
 }
