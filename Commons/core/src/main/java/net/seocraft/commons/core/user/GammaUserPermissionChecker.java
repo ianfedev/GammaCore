@@ -12,6 +12,7 @@ import net.seocraft.api.core.user.partial.GroupAssignation;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,14 @@ public class GammaUserPermissionChecker implements UserPermissionChecker {
     }
 
     private Set<String> getFlattenPermissions(User user) {
-        return user.getGroupAssignation().stream().map(GroupAssignation::getGroup).flatMap(group -> group.getPermissions().stream()).collect(Collectors.toSet());
+
+        Set<String> permission = new HashSet<>();
+
+        for (GroupAssignation group : user.getGroupAssignation()) {
+            permission.addAll(group.getGroup().getPermissions());
+        }
+
+        return permission;
     }
 
 }
