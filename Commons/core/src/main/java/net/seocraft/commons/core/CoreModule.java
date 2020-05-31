@@ -24,10 +24,14 @@ public class CoreModule extends ProtectedModule {
 
     @Override
     protected void configure() {
+        
         install(new RedisModule());
         install(new SessionModule());
-        bind(ListeningExecutorService.class).toInstance(MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8)));
-        bind(ExecutorService.class).to(ListeningExecutorService.class);
+
+        ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(8));
+
+        bind(ListeningExecutorService.class).toInstance(executor);
+        bind(ExecutorService.class).toInstance(executor);
         bind(CooldownManager.class).to(CoreCooldownManager.class);
         bind(UserStorageProvider.class).to(GammaUserStorageProvider.class).in(Scopes.SINGLETON);
         bind(UserPermissionChecker.class).to(GammaUserPermissionChecker.class).in(Scopes.SINGLETON);
@@ -39,6 +43,7 @@ public class CoreModule extends ProtectedModule {
         expose(CooldownManager.class);
         expose(OnlineStatusManager.class);
         expose(ServerManager.class);
+
     }
 
 }
