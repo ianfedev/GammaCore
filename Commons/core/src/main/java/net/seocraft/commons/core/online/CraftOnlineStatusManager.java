@@ -8,6 +8,7 @@ import net.seocraft.api.core.user.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,18 +41,24 @@ public class CraftOnlineStatusManager implements OnlineStatusManager {
 
     @Override
     public @NotNull Set<User> getOnlinePlayers() {
-        return this.client.getKeys("user:*")
-                .stream().map((key) -> {
-                    User user;
-                    try {
-                        user = this.mapper.readValue(
-                                this.client.getString(key),
-                                User.class
-                        );
-                        if (isPlayerOnline(user.getId())) return user;
-                        return null;
-                    } catch (IOException ignore) {}
-                    return null;
-                }).filter(Objects::nonNull).collect(Collectors.toSet());
+        Set<String> onlineUserKeys = this.client.getKeys("user:*");
+        Set<User> onlineUserSet = new HashSet<>();
+
+        for (String key : onlineUserKeys) {
+            User user = null;
+            try {
+                user = this.mapper.readValue(
+                        this.client.getString(key),
+                        User.class
+                );
+            } catch (IOException ignored) {}
+
+            if (user != null && isPlayerOnline(user.getId())) {
+                onlineUserSet.add(user);
+            }
+
+        }
+
+        return onlineUserSet;
     }
 }
