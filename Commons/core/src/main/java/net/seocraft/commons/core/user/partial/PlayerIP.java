@@ -7,12 +7,12 @@ import java.beans.ConstructorProperties;
 
 public class PlayerIP implements IPRecord {
 
-    @NotNull private String number;
-    @NotNull private String country;
-    @NotNull private boolean primary;
+    @NotNull private final String number;
+    @NotNull private final String country;
+    private final boolean primary;
 
     @ConstructorProperties({"number", "country", "primary"})
-    public PlayerIP(@NotNull String number, @NotNull String country, @NotNull boolean primary) {
+    public PlayerIP(@NotNull String number, @NotNull String country, boolean primary) {
         this.number = number;
         this.country = country;
         this.primary = primary;
