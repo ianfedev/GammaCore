@@ -49,9 +49,6 @@ public class LobbySelectorHologramUpdater implements SelectorHologramUpdater {
 
             try {
                 gamemode = gamemodeProvider.findGamemodeByIdSync(gamemodeId);
-                if (gamemode == null) {
-                    return;
-                }
             } catch (Unauthorized | BadRequest | NotFound | InternalServerError | IOException exception) {
                 Bukkit.getLogger().log(Level.WARNING, "[Lobby] Couldn't update selector holograms", exception);
                 return;
