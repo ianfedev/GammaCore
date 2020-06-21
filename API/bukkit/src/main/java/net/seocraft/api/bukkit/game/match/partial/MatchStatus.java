@@ -3,18 +3,18 @@ package net.seocraft.api.bukkit.game.match.partial;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum MatchStatus {
-    @JsonProperty("preparing")
+    @JsonProperty("Preparing")
     PREPARING,
-    @JsonProperty("waiting")
+    @JsonProperty("Waiting")
     WAITING,
-    @JsonProperty("starting")
+    @JsonProperty("Starting")
     STARTING,
-    @JsonProperty("ingame")
+    @JsonProperty("Ingame")
     INGAME,
-    @JsonProperty("finished")
+    @JsonProperty("Finished")
     FINISHED,
-    @JsonProperty("invalidated")
+    @JsonProperty("Invalidated")
     INVALIDATED,
-    @JsonProperty("forced")
+    @JsonProperty("Forced")
     FORCED
 }
